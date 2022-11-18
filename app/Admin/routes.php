@@ -1,5 +1,6 @@
 <?php
 
+
 use Encore\Admin\Facades\Admin;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -14,5 +15,7 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index')->name('home');
+    $router->get('/dev', 'HomeController@devindex')->name('home');
+    $router->resource('users', UserController::class);
 
 });

@@ -43,7 +43,7 @@ return [
         ],
         'admin' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/admin'),
+            'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
