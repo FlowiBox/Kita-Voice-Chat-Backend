@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\Common;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -36,6 +37,12 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            if ($request->is('api/*')) {
+                return Common::apiResponse (false,'Unauthenticated',[],401);
+            }
         });
     }
 }

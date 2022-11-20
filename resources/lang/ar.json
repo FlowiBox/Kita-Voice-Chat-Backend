@@ -13,5 +13,13 @@
     "Operation log": "سجل العمليات",
     "App": "التطبيق",
     "Email": "بريد الكتروني",
-    "action": "عمليات"
+    "action": "عمليات",
+    "male": "ذكر",
+    "registered successfully": "تم التسجيل بنجاح",
+    "required": "مطلوب",
+    "exists":"محجوز",
+    "this field is": "هذا الحقل",
+    "validation errors": "أخطاء التحقق من صحة المدخلات",
+    "credentials does't match": "بيانات الاعتماد لا تتطابق",
+    "Unauthenticated": "غير مصدق"
 }

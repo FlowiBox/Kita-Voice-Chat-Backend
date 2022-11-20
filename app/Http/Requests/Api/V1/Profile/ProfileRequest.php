@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api\V1\Auth;
+namespace App\Http\Requests\Api\V1\Profile;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
-class LoginRequest extends FormRequest
+class ProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,22 +26,10 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [];
-        if ($this->get('type') == 'email_pass') {
-            $rules['email'] = ['required','email'];
-            $rules['password'] = ['required'];
-        }elseif ($this->get ('type') == 'phone_pass'){
-            $rules['phone'] = ['required'];
-            $rules['password'] = ['required'];
-        }elseif ($this->get ('type') == 'google'){
-            $rules['google_id'] = ['required'];
-        }elseif ($this->get ('type') == 'facebook'){
-            $rules['facebook_id'] = ['required'];
-        }else{
-            $rules['phone'] = ['required'];
-            $rules['password'] = ['required'];
-        }
-        return $rules;
+        return [
+            'email'=>[Rule::unique('users')->ignore($this->user()->id),'email'],
+            'phone'=>[Rule::unique('users')->ignore($this->user()->id)]
+        ];
     }
 
     public function failedValidation ( Validator $validator )

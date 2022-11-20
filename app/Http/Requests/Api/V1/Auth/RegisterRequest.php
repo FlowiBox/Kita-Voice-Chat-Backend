@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Api\V1\Auth;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RegisterRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +25,42 @@ class RegisterRequest extends FormRequest
      */
     public function rules()
     {
+        $rules = [];
+        if ($this->get('type') == 'email_pass') {
+            $rules['email'] = ['required','unique:users','email'];
+            $rules['password'] = ['required'];
+        }elseif ($this->get ('type') == 'phone_pass'){
+            $rules['phone'] = ['required','unique:users'];
+            $rules['password'] = ['required'];
+        }elseif ($this->get ('type') == 'google'){
+            $rules['google_id'] = ['required','unique:users'];
+        }elseif ($this->get ('type') == 'facebook'){
+            $rules['facebook_id'] = ['required','unique:users'];
+        }else{
+            $rules['phone'] = ['required','unique:users'];
+            $rules['password'] = ['required'];
+        }
+        return $rules;
+    }
+
+    public function failedValidation ( Validator $validator )
+    {
+        throw new HttpResponseException(response()->json(
+            [
+                'success'   => false,
+
+                'message'   => __ ('validation errors'),
+
+                'data'      => $validator->errors()
+            ]
+        ));
+    }
+
+    public function messages ()
+    {
         return [
-            //
+            'required'=>__ ('required'),
+            'unique'=>__ ('exists')
         ];
     }
 }
