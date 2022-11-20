@@ -22,6 +22,7 @@ class UserController extends AdminController
         $this->title = __('User');
     }
 
+
     /**
      * Make a grid builder.
      *
@@ -30,9 +31,11 @@ class UserController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new User());
+        $grid->quickSearch ();
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('email', __('Email'));
+        $grid->column('isOnline', __('isOnline'));
         return $grid;
     }
 

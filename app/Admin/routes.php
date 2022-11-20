@@ -13,9 +13,7 @@ Route::group([
     'middleware'    => config('admin.route.middleware'),
     'as'            => config('admin.route.prefix') . '.',
 ], function (Router $router) {
-
     $router->get('/', 'HomeController@index')->name('home');
-    $router->get('/dev', 'HomeController@devindex')->name('home');
-    $router->resource('users', UserController::class);
-
+    $router->get('/dev', 'HomeController@devindex')->name('dev-home');
+    $router->resource('users', 'UserController');
 });

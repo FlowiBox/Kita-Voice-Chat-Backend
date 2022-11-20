@@ -37,7 +37,7 @@ return [
     'show'                  => 'عرض',
     'entries'               => 'المدخلات',
     'captcha'               => 'كود التحقق',
-    'action'                => 'الحدث5',
+    'action'                => 'عمليات',
     'title'                 => 'العنوان',
     'description'           => 'الوصف',
     'back'                  => 'عودة',

@@ -48,7 +48,7 @@ class AddFieldsToUsersTable extends Migration
             $table->string('img_3')->nullable ()->comment ('');
             $table->unsignedInteger('points')->default (0)->nullable ()->comment ('غرفتي المفضلة');
             $table->string('login_ip')->nullable ()->comment ('');
-            $table->string('device_token')->nullable ()->comment ('');
+            $table->string('device_token')->unique ()->nullable ()->comment ('');
             $table->unsignedInteger ('scale')->default (0)->nullable ()->comment ('معدل الدوران مقسم إلى نسبة وحدة (٪)');
             $table->unsignedTinyInteger('is_idcard')->default (0)->nullable ()->comment ('التاكد من الهوية 0 لم تؤكد 1 تم تاكيدها');
 
@@ -56,8 +56,9 @@ class AddFieldsToUsersTable extends Migration
 
         Schema::create ('profiles',function (Blueprint $table){
             $table->id ();
+            $table->foreignId ('user_id')->constrained('users')->onDelete ('cascade');
             $table->string('avatar')->nullable ()->comment ('');
-            $table->unsignedTinyInteger('sex')->default (0)->nullable ()->comment ('');
+            $table->unsignedTinyInteger('gender')->default (0)->nullable ()->comment ('');
             $table->dateTime('birthday')->nullable ()->comment ('');
             $table->string('province')->nullable ()->comment ('');
             $table->string('city')->nullable ()->comment ('');
