@@ -13,4 +13,10 @@ class Common{
             $statusCode
         );
     }
+
+    public static function upload($folder,$file){
+        $file->store('/',$folder);
+        $fileName = $file->hashName();
+        return $folder.DIRECTORY_SEPARATOR.$fileName;
+    }
 }

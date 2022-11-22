@@ -105,6 +105,11 @@ class ProfileController extends Controller
         if ($data['country']){
             $profile->country = $data['country'];
         }
+        if ($request->hasFile ('image')){
+            $img = $request->file ('image');
+            $image = Common::upload ('profile',$img);
+            $profile->avatar = $image;
+        }
         $profile->save();
         $out = new UserResource($user);
         return Common::apiResponse (true,'profile updated successfully',$out,200);
