@@ -18,4 +18,6 @@ Route::group([
     $router->resource('users', 'UserController');
     $router->resource('vips', 'VipController');
     $router->resource('rooms', 'RoomController');
+    $router->resource('blacks', 'BlackListController');
+    $router->resource('codes', 'CodeController');
 });

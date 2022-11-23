@@ -22,5 +22,7 @@
     "validation errors": "أخطاء التحقق من صحة المدخلات",
     "credentials does't match": "بيانات الاعتماد لا تتطابق",
     "Unauthenticated": "غير مصدق",
-    "rooms": "الغرف"
+    "rooms": "الغرف",
+    "Black List": "القائمة السوداء",
+    "Phone Codes": "اكواد الهواتف"
 }

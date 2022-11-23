@@ -36,7 +36,11 @@ class LoginRequest extends FormRequest
             $rules['google_id'] = ['required'];
         }elseif ($this->get ('type') == 'facebook'){
             $rules['facebook_id'] = ['required'];
-        }else{
+        }elseif ($this->get ('type') == 'phone_code'){
+            $rules['phone']=['required'];
+            $rules['code']=['required'];
+        }
+        else{
             $rules['phone'] = ['required'];
             $rules['password'] = ['required'];
         }

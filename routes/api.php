@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix ('auth')->group (function (){
     Route::post ('register',[\App\Http\Controllers\Api\V1\Auth\RegisterController::class,'register']);
     Route::post ('login',[\App\Http\Controllers\Api\V1\Auth\LoginController::class,'login']);
+    Route::post ('send-code',[\App\Http\Controllers\Api\V1\Auth\LoginController::class,'sendPhoneCode']);
 });
 
 Route::middleware('auth:sanctum')->group (function (){
