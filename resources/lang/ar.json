@@ -21,5 +21,6 @@
     "this field is": "هذا الحقل",
     "validation errors": "أخطاء التحقق من صحة المدخلات",
     "credentials does't match": "بيانات الاعتماد لا تتطابق",
-    "Unauthenticated": "غير مصدق"
+    "Unauthenticated": "غير مصدق",
+    "rooms": "الغرف"
 }

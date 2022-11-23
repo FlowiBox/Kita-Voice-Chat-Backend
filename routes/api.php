@@ -26,4 +26,10 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('get/{id}',[\App\Http\Controllers\Api\V1\ProfileController::class,'show']);
         Route::post ('update',[\App\Http\Controllers\Api\V1\ProfileController::class,'update']);
     });
+    Route::prefix ('relations')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\UserController::class,'userFriend']);
+        Route::post ('follow',[\App\Http\Controllers\Api\V1\FollowController::class,'follow']);
+        Route::post ('un-follow',[\App\Http\Controllers\Api\V1\FollowController::class,'unFollow']);
+    });
+
 });

@@ -16,4 +16,6 @@ Route::group([
     $router->get('/', 'HomeController@index')->name('home');
     $router->get('/dev', 'HomeController@devindex')->name('dev-home');
     $router->resource('users', 'UserController');
+    $router->resource('vips', 'VipController');
+    $router->resource('rooms', 'RoomController');
 });

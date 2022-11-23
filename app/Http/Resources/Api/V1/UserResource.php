@@ -14,22 +14,19 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        if ($this->auth_token){
-            return [
-                'name'=>$this->name,
-                'email'=>$this->email,
-                'phone'=>$this->phone,
-                'profile'=>new ProfileResource($this->profile),
-                'auth_token'=>$this->auth_token
-            ];
-        }
-        return [
+        $data = [
+            'id'=>$this->id,
             'name'=>$this->name,
             'email'=>$this->email,
             'phone'=>$this->phone,
-            'google_id'=>$this->google_id,
-            'facebook_id'=>$this->facebook_id,
+            'number_of_fans'=>$this->numberOfFans(),
+            'number_of_followings'=>$this->numberOfFollowings(),
+            'number_of_friends'=>$this->numberOfFriends(),
             'profile'=>new ProfileResource($this->profile),
         ];
+        if ($this->auth_token){
+            $data['auth_token'] = $this->auth_token;
+        }
+        return $data;
     }
 }
