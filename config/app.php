@@ -2,6 +2,9 @@
 
 return [
 
+
+    'cache'=>env ('CACHE_ENABLE','disabled'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

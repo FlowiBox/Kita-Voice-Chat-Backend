@@ -32,5 +32,11 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('follow',[\App\Http\Controllers\Api\V1\FollowController::class,'follow']);
         Route::post ('un-follow',[\App\Http\Controllers\Api\V1\FollowController::class,'unFollow']);
     });
+    Route::prefix ('rooms')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\RoomController::class,'index']);
+        Route::get ('/{id}',[\App\Http\Controllers\Api\V1\RoomController::class,'show']);
+        Route::post ('/create',[\App\Http\Controllers\Api\V1\RoomController::class,'store']);
+        Route::post ('/{id}/edit',[\App\Http\Controllers\Api\V1\RoomController::class,'update']);
+    });
 
 });

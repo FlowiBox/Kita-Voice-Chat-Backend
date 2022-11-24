@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Room extends Model
 {
-
+    protected $guarded = ['id'];
 }
