@@ -15,7 +15,7 @@ class CreateVipsTable extends Migration
     {
         Schema::create('vips', function (Blueprint $table) {
             $table->id();
-            $table->integer ('vip')->default (0)->comment ('1,2,3,4,0..قيمة ال vip');
+            $table->integer ('type')->default (0)->comment ('1 نجمة شارب 2 ذهبي حاد 3 كبار الشخصيات');
             $table->integer ('level')->default (0)->comment ('المستوى');
             $table->bigInteger ('exp')->default (0)->comment ('خبرة');
             $table->bigInteger ('di')->default (0)->comment ('ماسات');

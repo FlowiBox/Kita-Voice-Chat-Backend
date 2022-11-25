@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\V1;
 
+use App\Helpers\Common;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -24,6 +25,26 @@ class UserResource extends JsonResource
             'number_of_friends'=>$this->numberOfFriends(),
             'profile'=>new ProfileResource($this->profile),
         ];
+
+        $additional = [
+            'star_level'=>Common::getLevel ($this->id,1),
+            'gold_level'=>Common::getLevel ($this->id,2),
+            'vip_level'=>Common::getLevel ($this->id,3),
+            'hz_level'=>Common::getHzLevel ($this->id,3),
+            'is_follow'=>Common::IsFollow ($request->user ()->id,$this->id),
+            'star_img'=>Common::getLevel ($this->id,1,true),
+            'gold_img'=>Common::getLevel ($this->id,2,true),
+            'vip_img'=>Common::getLevel ($this->id,3,true),
+            'images'=>[
+                $this->img_1,
+                $this->img_2,
+                $this->img_3,
+            ],
+            'room_info'=>Common::getRoomInfo ($this->id),
+            'user_gifts'=>Common::getUserGifts ($this->id)
+        ];
+
+
         if ($this->auth_token){
             $data['auth_token'] = $this->auth_token;
         }
