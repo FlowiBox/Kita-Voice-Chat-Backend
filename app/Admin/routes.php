@@ -13,11 +13,23 @@ Route::group([
     'middleware'    => config('admin.route.middleware'),
     'as'            => config('admin.route.prefix') . '.',
 ], function (Router $router) {
-    $router->get('/', 'HomeController@index')->name('home');
-    $router->get('/dev', 'HomeController@devindex')->name('dev-home');
+
+
+
+    //resources
     $router->resource('users', 'UserController');
     $router->resource('vips', 'VipController');
     $router->resource('rooms', 'RoomController');
     $router->resource('blacks', 'BlackListController');
     $router->resource('codes', 'CodeController');
+    $router->resource ('gifts','GiftController');
+    $router->resource ('wares','WareController');
+    $router->resource ('coupons','CouponController');
+
+
+    //--------------------
+    $router->get('/', 'HomeController@index')->name('home');
+    $router->get('/dev', 'HomeController@devindex')->name('dev-home');
+
+
 });

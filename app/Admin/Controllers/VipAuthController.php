@@ -2,8 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Helpers\Common;
-use App\Models\Gift;
+use App\Models\VipAuth;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -11,7 +10,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class GiftController extends Controller
+class VipAuthController extends Controller
 {
     use HasResourceActions;
 
@@ -80,22 +79,18 @@ class GiftController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Gift);
+        $grid = new Grid(new VipAuth);
 
         $grid->id('ID');
-        $grid->name('name');
-        $grid->e_name('e_name');
         $grid->type('type');
-        $grid->vip_level('vip_level');
-        $grid->column('hot',trans ('hot'));
-        $grid->column('is_play',trans ('is_play'))->switch (Common::getSwitchStates ());
-        $grid->price('price');
-        $grid->column('img',trans ('image'))->image ('','30');
-        $grid->column('show_img',trans ('show_img'))->image ('','30');
-        $grid->column('show_img2',trans ('show_img2'))->image ('','30');
-        $grid->sort('sort');
-        $grid->column('enable',trans ('enable'))->switch (Common::getSwitchStates ());
-
+        $grid->level('level');
+        $grid->enable('enable');
+        $grid->name('name');
+        $grid->title('title');
+        $grid->img_0('img_0');
+        $grid->img_1('img_1');
+        $grid->created_at(trans('admin.created_at'));
+        $grid->updated_at(trans('admin.updated_at'));
 
         return $grid;
     }
@@ -108,21 +103,16 @@ class GiftController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Gift::findOrFail($id));
+        $show = new Show(VipAuth::findOrFail($id));
 
         $show->id('ID');
-        $show->name('name');
-        $show->e_name('e_name');
         $show->type('type');
-        $show->vip_level('vip_level');
-        $show->hot('hot');
-        $show->is_play('is_play');
-        $show->price('price');
-        $show->img('img');
-        $show->show_img('show_img');
-        $show->show_img2('show_img2');
-        $show->sort('sort');
+        $show->level('level');
         $show->enable('enable');
+        $show->name('name');
+        $show->title('title');
+        $show->img_0('img_0');
+        $show->img_1('img_1');
         $show->created_at(trans('admin.created_at'));
         $show->updated_at(trans('admin.updated_at'));
 
@@ -136,24 +126,18 @@ class GiftController extends Controller
      */
     protected function form()
     {
-
-
-        $form = new Form(new Gift);
+        $form = new Form(new VipAuth);
 
         $form->display('ID');
+        $form->text('type', 'type');
+        $form->text('level', 'level');
+        $form->text('enable', 'enable');
         $form->text('name', 'name');
-        $form->text('e_name', 'e_name');
-        $form->select('type', 'type')->options ([1=>__ ('normal'),2=>__ ('hot'),3=>__ ('other')]);
-        $form->number('vip_level', 'vip_level')->min (0)->placeholder (__ ('less than 256'));
-        $form->number('hot', 'hot')->min (0);
-        $form->switch('is_play', __ ('is_play'))->states (Common::getSwitchStates ());
-        $form->currency('price', 'price')->symbol ('💎');
-        $form->image('img', 'img');
-        $form->image('show_img', 'show_img');
-        $form->image('show_img2', 'show_img2');
-        $form->number('sort', 'sort');
-        $form->switch('enable', 'enable')->states (Common::getSwitchStates ());
-
+        $form->text('title', 'title');
+        $form->text('img_0', 'img_0');
+        $form->text('img_1', 'img_1');
+        $form->display(trans('admin.created_at'));
+        $form->display(trans('admin.updated_at'));
 
         return $form;
     }

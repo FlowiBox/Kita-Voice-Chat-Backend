@@ -33,7 +33,7 @@ class VipController extends AdminController
         $grid = new Grid(new Vip());
         $grid->quickSearch ();
         $grid->column('id', __('Id'));
-        $grid->column('vip', __('Vip'));
+        $grid->column('type', __('Type'));
         $grid->column('level', __('Level'));
         $grid->column('exp', __('Exp'));
         $grid->column('di', __('Diamonds'));
@@ -53,7 +53,7 @@ class VipController extends AdminController
         $show = new Show(Vip::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('vip', __('Vip'))->number ();
+        $show->field('type', __('Type'))->number ();
         $show->field('level', __('Level'))->number ();
         $show->field('exp', __('Exp'))->number ();
         $show->field('di', __('Diamonds'))->number ();
@@ -74,7 +74,7 @@ class VipController extends AdminController
     {
         $form = new Form(new Vip());
 
-        $form->number('vip', __('Vip'));
+        $form->number('type', __('Type'));
         $form->number('level', __('Level'));
         $form->number('exp', __('Exp'));
         $form->number('di', __('Diamonds'));

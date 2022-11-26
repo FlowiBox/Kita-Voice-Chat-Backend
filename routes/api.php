@@ -38,5 +38,8 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('/create',[\App\Http\Controllers\Api\V1\RoomController::class,'store']);
         Route::post ('/{id}/edit',[\App\Http\Controllers\Api\V1\RoomController::class,'update']);
     });
+    Route::prefix ('mall')->group (function (){
+        Route::get ('wares',[\App\Http\Controllers\Api\V1\MallController::class,'index']);
+    });
 
 });

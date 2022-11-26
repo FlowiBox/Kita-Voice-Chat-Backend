@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Common;
 use App\Traits\FollowTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,6 +42,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = ['my_store'];
+
 
     public function profile(){
         return $this->hasOne (Profile::class);
@@ -50,6 +53,10 @@ class User extends Authenticatable
         if ($value){
             $this->attributes['password'] = bcrypt ($value);
         }
+    }
+
+    public function getMyStoreAttribute(){
+        return Common::my_store ($this->attributes['id']);
     }
 
 

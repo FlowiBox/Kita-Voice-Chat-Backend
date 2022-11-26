@@ -2,8 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Helpers\Common;
-use App\Models\Gift;
+use App\Models\StoreLog;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -11,7 +10,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class GiftController extends Controller
+class StoreLogController extends Controller
 {
     use HasResourceActions;
 
@@ -80,22 +79,20 @@ class GiftController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Gift);
+        $grid = new Grid(new StoreLog);
 
         $grid->id('ID');
-        $grid->name('name');
-        $grid->e_name('e_name');
-        $grid->type('type');
-        $grid->vip_level('vip_level');
-        $grid->column('hot',trans ('hot'));
-        $grid->column('is_play',trans ('is_play'))->switch (Common::getSwitchStates ());
-        $grid->price('price');
-        $grid->column('img',trans ('image'))->image ('','30');
-        $grid->column('show_img',trans ('show_img'))->image ('','30');
-        $grid->column('show_img2',trans ('show_img2'))->image ('','30');
-        $grid->sort('sort');
-        $grid->column('enable',trans ('enable'))->switch (Common::getSwitchStates ());
-
+        $grid->user_id('user_id');
+        $grid->get_nums('get_nums');
+        $grid->get_type('get_type');
+        $grid->now_nums('now_nums');
+        $grid->adduser('adduser');
+        $grid->symbol('symbol');
+        $grid->types('types');
+        $grid->union_id('union_id');
+        $grid->family_id('family_id');
+        $grid->created_at(trans('admin.created_at'));
+        $grid->updated_at(trans('admin.updated_at'));
 
         return $grid;
     }
@@ -108,21 +105,18 @@ class GiftController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Gift::findOrFail($id));
+        $show = new Show(StoreLog::findOrFail($id));
 
         $show->id('ID');
-        $show->name('name');
-        $show->e_name('e_name');
-        $show->type('type');
-        $show->vip_level('vip_level');
-        $show->hot('hot');
-        $show->is_play('is_play');
-        $show->price('price');
-        $show->img('img');
-        $show->show_img('show_img');
-        $show->show_img2('show_img2');
-        $show->sort('sort');
-        $show->enable('enable');
+        $show->user_id('user_id');
+        $show->get_nums('get_nums');
+        $show->get_type('get_type');
+        $show->now_nums('now_nums');
+        $show->adduser('adduser');
+        $show->symbol('symbol');
+        $show->types('types');
+        $show->union_id('union_id');
+        $show->family_id('family_id');
         $show->created_at(trans('admin.created_at'));
         $show->updated_at(trans('admin.updated_at'));
 
@@ -136,24 +130,20 @@ class GiftController extends Controller
      */
     protected function form()
     {
-
-
-        $form = new Form(new Gift);
+        $form = new Form(new StoreLog);
 
         $form->display('ID');
-        $form->text('name', 'name');
-        $form->text('e_name', 'e_name');
-        $form->select('type', 'type')->options ([1=>__ ('normal'),2=>__ ('hot'),3=>__ ('other')]);
-        $form->number('vip_level', 'vip_level')->min (0)->placeholder (__ ('less than 256'));
-        $form->number('hot', 'hot')->min (0);
-        $form->switch('is_play', __ ('is_play'))->states (Common::getSwitchStates ());
-        $form->currency('price', 'price')->symbol ('💎');
-        $form->image('img', 'img');
-        $form->image('show_img', 'show_img');
-        $form->image('show_img2', 'show_img2');
-        $form->number('sort', 'sort');
-        $form->switch('enable', 'enable')->states (Common::getSwitchStates ());
-
+        $form->text('user_id', 'user_id');
+        $form->text('get_nums', 'get_nums');
+        $form->text('get_type', 'get_type');
+        $form->text('now_nums', 'now_nums');
+        $form->text('adduser', 'adduser');
+        $form->text('symbol', 'symbol');
+        $form->text('types', 'types');
+        $form->text('union_id', 'union_id');
+        $form->text('family_id', 'family_id');
+        $form->display(trans('admin.created_at'));
+        $form->display(trans('admin.updated_at'));
 
         return $form;
     }
