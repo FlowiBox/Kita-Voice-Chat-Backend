@@ -77,10 +77,10 @@ trait RoomTrait
 
 
         $data['mic_users']= UserResource::collection ($mic_user) ;
-        $data['auction']= $paimai;
-        $data['audio']=  $shiyin ;
+//        $data['auction']= $paimai;
+//        $data['audio']=  $shiyin ;
         $data['room_users']= UserResource::collection ($room_user);
-        $data['sea_users']= UserResource::collection ($sea_user);
+//        $data['sea_users']= UserResource::collection ($sea_user);
 
 
         return $data;
