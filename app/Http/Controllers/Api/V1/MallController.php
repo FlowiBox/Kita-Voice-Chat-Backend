@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WareResource;
-use App\Models\ًWare;
+use App\Models\Ware;
 use Illuminate\Http\Request;
 
 class MallController extends Controller
@@ -20,7 +20,7 @@ class MallController extends Controller
         if (!$request->type){
             return Common::apiResponse (false,'type is required',null,401);
         }
-        $wares = ًWare::query ()->where ('enable','1')->where ('type',$request->type)->get ();
+        $wares = Ware::query ()->where ('enable','1')->where ('type',$request->type)->get ();
         return Common::apiResponse (true,'',WareResource::collection ($wares),200);
     }
 

@@ -3,7 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Helpers\Common;
-use App\Models\ًWare;
+use App\Models\Ware;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -80,7 +80,7 @@ class WareController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new ًWare);
+        $grid = new Grid(new Ware);
 
         $grid->id('ID');
         $grid->column('get_type')->select (
@@ -106,7 +106,7 @@ class WareController extends Controller
                 7=>trans ('Badge'),
             ]
         );
-        $grid->name('name');
+        $grid->column('name')->editable ();
         $grid->title('title');
         $grid->column('price')->currency ();
         $grid->score('score');
@@ -128,7 +128,7 @@ class WareController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(ًWare::findOrFail($id));
+        $show = new Show(Ware::findOrFail($id));
 
         $show->id('ID');
         $show->get_type('get_type');
@@ -159,7 +159,7 @@ class WareController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new ًWare);
+        $form = new Form(new Ware());
 
         $form->display('ID');
         $form->select('get_type', trans('get_type'))->options (
@@ -184,7 +184,12 @@ class WareController extends Controller
                 6=>trans ('Microphone Aperture'),
                 7=>trans ('Badge'),
             ]
-        );
+        )->rules ('required');
+//        ->rules (function ($form){
+//            if (!$id = $form->model()->id) {
+//                return 'required';
+//            }
+//        });
         $form->text('name', trans('name'));
         $form->text('title', trans('title'));
         $form->currency('price', trans('price'))->symbol ('💰');

@@ -25,6 +25,7 @@ Route::group([
     $router->resource ('gifts','GiftController');
     $router->resource ('wares','WareController');
     $router->resource ('coupons','CouponController');
+    $router->resource ('configs','ConfigController');
 
 
     //--------------------

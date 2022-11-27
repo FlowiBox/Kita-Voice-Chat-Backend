@@ -6,11 +6,13 @@ use App\Models\Room;
 use App\Models\Vip;
 use App\Traits\HelperTraits\AdminTrait;
 use App\Traits\HelperTraits\CalcsTrait;
+use App\Traits\HelperTraits\MoneyTrait;
+use App\Traits\HelperTraits\RoomTrait;
 use Illuminate\Support\Facades\DB;
 
 class Common{
 
-    use CalcsTrait , AdminTrait;
+    use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait;
 
     public static function apiResponse(bool $success,$message,$data,$statusCode = 200,$paginates = null){
         return response ()->json (
@@ -74,6 +76,7 @@ class Common{
         $uid = DB::table('rooms')->where('roomVisitor', 'like', '%' . $user_id . '%')->value('uid');
         return $uid ?: 0;
     }
+
     protected static function userNowRooms($user_id = null)
     {
         if (!$user_id) {
@@ -97,6 +100,14 @@ class Common{
             $roomInfo =(object)[];
         }
         return $roomInfo;
+    }
+
+    public static function getConfig($name = null){
+        if (!$name) {
+            return '';
+        }
+        $val = DB::table('configs')->where('name', $name)->value('value');
+        return $val;
     }
 
 

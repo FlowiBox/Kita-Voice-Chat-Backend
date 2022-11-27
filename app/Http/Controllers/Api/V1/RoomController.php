@@ -11,10 +11,12 @@ use App\Http\Resources\Api\V1\RoomResource;
 use App\Models\Room;
 use App\Repositories\Room\RoomRepo;
 use App\Repositories\Room\RoomRepoInterface;
+use App\Traits\HelperTraits\RoomTrait;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
 {
+
 
     protected $repo;
 
@@ -128,4 +130,9 @@ class RoomController extends Controller
     {
         //
     }
+
+
+
+
+
 }

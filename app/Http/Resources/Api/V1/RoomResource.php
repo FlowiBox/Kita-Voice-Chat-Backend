@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\V1;
 
+use App\Helpers\Common;
 use App\Models\User;
 use App\Repositories\User\UserRepo;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -31,12 +32,13 @@ class RoomResource extends JsonResource
             'is_recommended'=>$this->is_recommended,
         ];
         if (!$request['remove_visitors']){
+            $data['room_users'] = Common::get_room_users ($this->owner ()->id,$request->user ()->id);
             $data['background'] = $this->room_background;
             $data['mics'] = explode (',',$this->microphone);
             $data['is_mics_free']=$this->free_mic;
             $data['owner'] = $this->owner ();
             $data['admins'] = $this->admins ();
-            $data['visitors'] = $this->visitors ();
+//            $data['visitors'] = $this->visitors ();
             $data['speak_ban_list'] = $this->banList ();
             $data['muted_list']=$this->muteList ();
             $data['black_list']=$this->blackList ();
