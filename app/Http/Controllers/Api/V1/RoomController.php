@@ -33,7 +33,6 @@ class RoomController extends Controller
      */
     public function index(Request $request)
     {
-        $request['remove_visitors'] = true;
         return Common::apiResponse (true,'',RoomResource::collection (CacheHelper::get ('rooms',$this->repo->all ($request))),200);
     }
 
@@ -70,8 +69,9 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
+        $request['show'] = true;
         return Common::apiResponse (true,'',new RoomResource($this->repo->find ($id)),200);
     }
 

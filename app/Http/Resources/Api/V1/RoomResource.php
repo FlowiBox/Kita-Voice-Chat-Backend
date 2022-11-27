@@ -31,7 +31,7 @@ class RoomResource extends JsonResource
             'room_intro'=>$this->room_intro,
             'is_recommended'=>$this->is_recommended,
         ];
-        if (!$request['remove_visitors']){
+        if ($request['show']){
             $data['room_users'] = Common::get_room_users ($this->owner ()->id,$request->user ()->id);
             $data['background'] = $this->room_background;
             $data['mics'] = explode (',',$this->microphone);
