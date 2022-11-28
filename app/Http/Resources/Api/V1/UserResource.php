@@ -35,7 +35,7 @@ class UserResource extends JsonResource
             'gold_level'=>Common::getLevel ($this->id,2),
             'vip_level'=>Common::getLevel ($this->id,3),
             'hz_level'=>Common::getHzLevel ($this->id,3),
-            'is_follow'=>Common::IsFollow ($request->user ()->id,$this->id),
+            'is_follow'=>Common::IsFollow (@$request->user ()->id,$this->id),
             'star_img'=>Common::getLevel ($this->id,1,true),
             'gold_img'=>Common::getLevel ($this->id,2,true),
             'vip_img'=>Common::getLevel ($this->id,3,true),
