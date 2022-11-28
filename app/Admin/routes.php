@@ -18,6 +18,7 @@ Route::group([
 
     //resources
     $router->resource('users', 'UserController');
+    $router->resource('profiles', 'ProfileController');
     $router->resource('vips', 'VipController');
     $router->resource('rooms', 'RoomController');
     $router->resource('blacks', 'BlackListController');
@@ -26,6 +27,7 @@ Route::group([
     $router->resource ('wares','WareController');
     $router->resource ('coupons','CouponController');
     $router->resource ('configs','ConfigController');
+    $router->resource ('categories','RoomCategoryController');
 
 
     //--------------------

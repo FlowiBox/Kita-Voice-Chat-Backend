@@ -22,8 +22,8 @@ class CreateRoomsTable extends Migration
             $table->string('room_cover')->comment('غطاء الغرفة صورة')->nullable();
             $table->string('room_intro')->default('مرحبا بكم في غرفتي')->comment('إعلان الغرفة')->nullable();
             $table->string('room_pass')->comment('كلمة المرور الغرفة')->nullable();
-            $table->string('room_class')->default('5')->comment('القسم الرئيسي')->nullable();
-            $table->string('room_type')->index()->default('16')->comment('فئة الغرفة الفرعية')->nullable();
+            $table->string('room_class')->default('5')->comment('القسم الرئيسي يتم اختيارة من جدول الكاتيجوري')->nullable();
+            $table->string('room_type')->index()->default('16')->comment('فئة الغرفة الفرعية يتم اختيارة من جدول الكاتيجوري')->nullable();
             $table->string('room_welcome')->default('مرحبا بكم في غرفتي ~ أتمنى أن تستمتع ~')->comment('تحية الغرفة')->nullable();
             $table->text('room_admin')->comment('مدير الغرفة')->nullable();
             $table->text('room_visitor')->comment('شاغلو الغرفة الحاليون ، قم بإزالة المالك')->nullable();

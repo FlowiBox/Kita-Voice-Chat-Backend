@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Room;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -82,44 +83,27 @@ class RoomController extends Controller
         $grid = new Grid(new Room);
 
         $grid->id('ID');
-        $grid->numid('numid');
-        $grid->uid('uid');
-        $grid->room_status('room_status');
-        $grid->room_name('room_name');
-        $grid->room_cover('room_cover');
-        $grid->room_intro('room_intro');
-        $grid->room_pass('room_pass');
-        $grid->room_class('room_class');
-        $grid->room_type('room_type');
-        $grid->room_welcome('room_welcome');
-        $grid->room_admin('room_admin');
-        $grid->room_visitor('room_visitor');
-        $grid->room_speak('room_speak');
-        $grid->room_sound('room_sound');
-        $grid->room_black('room_black');
-        $grid->week_star('week_star');
-        $grid->ranking('ranking');
-        $grid->is_popular('is_popular');
-        $grid->secret_chat('secret_chat');
-        $grid->is_top('is_top');
-        $grid->sort('sort');
-        $grid->room_background('room_background');
+        $grid->column('numid',trans ('custom id'));
+        $grid->column('uid',trans ('room owner'))->display (function ($uid){
+            $user = User::query ()->findOrFail ($uid);
+            return "<a href='users/$uid'>$user->name</a>";
+        });
+
+
+        $grid->column('room_status')->using (
+            [
+                1=>trans ('normal'),
+                2=>trans ('closed'),
+                3=>trans ('baned'),
+                4=>trans ('canceled')
+            ]
+        );
+        $grid->column('room_name');
+        $grid->column('room_cover');
+        $grid->column('room_intro');
         $grid->microphone('microphone');
-        $grid->super_uid('super_uid');
-        $grid->is_afk('is_afk');
-        $grid->hot('hot');
-        $grid->room_judge('room_judge');
-        $grid->is_prohibit_sound('is_prohibit_sound');
-        $grid->openid('openid');
-        $grid->commission_proportion('commission_proportion');
-        $grid->fresh_time('fresh_time');
-        $grid->start_hour('start_hour');
-        $grid->end_hour('end_hour');
-        $grid->is_recommended('is_recommended');
-        $grid->play_num('play_num');
         $grid->free_mic('free_mic');
-        $grid->created_at(trans('admin.created_at'));
-        $grid->updated_at(trans('admin.updated_at'));
+
 
         return $grid;
     }
@@ -188,43 +172,28 @@ class RoomController extends Controller
 
         $form->display('ID');
         $form->text('numid', 'numid');
-        $form->text('uid', 'uid');
-        $form->text('room_status', 'room_status');
+
+        $form->select('room_status', 'room_status')->options (
+            [
+                1=>trans ('normal'),
+                2=>trans ('closed'),
+                3=>trans ('baned'),
+                4=>trans ('canceled')
+            ]
+        );
         $form->text('room_name', 'room_name');
-        $form->text('room_cover', 'room_cover');
+        $form->image('room_cover', 'room_cover');
         $form->text('room_intro', 'room_intro');
         $form->text('room_pass', 'room_pass');
-        $form->text('room_class', 'room_class');
+
         $form->text('room_type', 'room_type');
         $form->text('room_welcome', 'room_welcome');
-        $form->text('room_admin', 'room_admin');
-        $form->text('room_visitor', 'room_visitor');
-        $form->text('room_speak', 'room_speak');
-        $form->text('room_sound', 'room_sound');
-        $form->text('room_black', 'room_black');
-        $form->text('week_star', 'week_star');
-        $form->text('ranking', 'ranking');
-        $form->text('is_popular', 'is_popular');
-        $form->text('secret_chat', 'secret_chat');
-        $form->text('is_top', 'is_top');
-        $form->text('sort', 'sort');
-        $form->text('room_background', 'room_background');
-        $form->text('microphone', 'microphone');
-        $form->text('super_uid', 'super_uid');
-        $form->text('is_afk', 'is_afk');
-        $form->text('hot', 'hot');
-        $form->text('room_judge', 'room_judge');
-        $form->text('is_prohibit_sound', 'is_prohibit_sound');
-        $form->text('openid', 'openid');
-        $form->text('commission_proportion', 'commission_proportion');
-        $form->text('fresh_time', 'fresh_time');
-        $form->text('start_hour', 'start_hour');
-        $form->text('end_hour', 'end_hour');
+
+
         $form->text('is_recommended', 'is_recommended');
-        $form->text('play_num', 'play_num');
+
         $form->text('free_mic', 'free_mic');
-        $form->display(trans('admin.created_at'));
-        $form->display(trans('admin.updated_at'));
+
 
         return $form;
     }
