@@ -87,7 +87,7 @@ class RoomController extends Controller
         $grid->column('uid',trans ('room owner'))->display (function ($uid){
             $user = User::query ()->find ($uid);
             if($user){
-                return "<a href='users/$uid'>".$user->name != '' ? : trans('no name')."</a>";
+                return "<a href='users/$uid'>".$user->name != '' ? $user->name : trans('no name')."</a>";
             }
             return "N/A";
         });
