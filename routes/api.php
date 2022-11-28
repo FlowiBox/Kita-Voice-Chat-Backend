@@ -22,7 +22,10 @@ Route::prefix ('auth')->group (function (){
 });
 
 Route::middleware('auth:sanctum')->group (function (){
-    Route::get ('my-data',[\App\Http\Controllers\Api\V1\UserController::class,'show']);
+    Route::get ('my-data',[\App\Http\Controllers\Api\V1\UserController::class,'my_data']);
+    Route::prefix ('users')->group (function (){
+        Route::get ('/{id}',[\App\Http\Controllers\Api\V1\UserController::class,'show']);
+    });
     Route::prefix ('profile')->group (function (){
         Route::get ('get/{id}',[\App\Http\Controllers\Api\V1\ProfileController::class,'show']);
         Route::post ('update',[\App\Http\Controllers\Api\V1\ProfileController::class,'update']);
@@ -40,6 +43,9 @@ Route::middleware('auth:sanctum')->group (function (){
     });
     Route::prefix ('mall')->group (function (){
         Route::get ('wares',[\App\Http\Controllers\Api\V1\MallController::class,'index']);
+    });
+    Route::prefix ('gifts')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\GiftController::class,'index']);
     });
 
 });
