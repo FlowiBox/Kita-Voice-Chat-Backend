@@ -23,7 +23,7 @@ class LoginController extends Controller
                 return $this->loginWithPhonePassword ($fields);
             case 'google':
                 $fields = ['name'=>$request->name,'email' => $request->email,'google_id' => $request->google_id];
-                return $this->loginWithPhoneCode ($fields);
+                return $this->loginWithGoogle ($fields);
             case 'phone_code':
                 $fields = ['phone' => $request->phone,'code'=>$request->code];
                 return $this->loginWithPhoneCode ($fields);
