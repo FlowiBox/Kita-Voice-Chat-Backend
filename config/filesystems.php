@@ -48,6 +48,7 @@ return [
             'visibility' => 'public',
         ],
 
+
         'profile' => [
             'driver' => 'local',
             'root' => storage_path('app/public/profile'),

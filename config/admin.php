@@ -138,6 +138,7 @@ return [
         'excepts' => [
             'auth/login',
             'auth/logout',
+            'locale',
         ],
     ],
 
@@ -409,6 +410,46 @@ return [
 
             // Set to `false` if you want to disable this extension
             'enable' => true,
+        ],
+        'material-ui' => [
+            // If the value is set to false, this extension will be disabled
+            'enable' => false
+        ],
+        'multi-language' => [
+            'enable' => false,
+            // the key should be same as var locale in config/app.php
+            // the value is used to show
+            'languages' => [
+                'en' => 'English',
+                'ar' => 'Arabic',
+            ],
+            // default locale
+            'default' => 'ar',
+            // if or not show multi-language login page, optional, default is true
+            'show-login-page' => true,
+            // if or not show multi-language navbar, optional, default is true
+            'show-navbar' => true,
+            // the cookie name for the multi-language var, optional, default is 'locale'
+            'cookie-name' => 'locale'
+        ],
+        'cropper' => [
+
+            // If you want to turn off this extension, set it to false
+            'enable' => true,
+        ],
+        'watermark' => [
+            'enable' => false,
+            'config' => [
+                'content' => 'yai-chat', // Admin::user()->username, or Admin::user()->name or fixed value like 'internal info'
+                'width' => '100px',
+                'height' => '120px',
+                'textAlign' => 'left',
+                'textBaseline' => 'alphabetic',
+                'font' => '15px Times New Roman',
+                'fillStyle' => 'rgba(204,204,204,0.4)',
+                'rotate' => 30,
+                'zIndex' => 1000,
+            ]
         ]
     ],
 ];

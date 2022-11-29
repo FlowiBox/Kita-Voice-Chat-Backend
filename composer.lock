@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e42e3e66ab29e905f48477e19043a278",
+    "content-hash": "d5681d15a86bd8a0a0bc48e3521503fc",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1379,6 +1379,118 @@
             "time": "2022-10-26T14:07:24+00:00"
         },
         {
+            "name": "jxlwqq/material-ui",
+            "version": "1.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/material-ui.git",
+                "reference": "b14700437fe2a1aec0717ad51a1195d4cae227a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/material-ui/zipball/b14700437fe2a1aec0717ad51a1195d4cae227a6",
+                "reference": "b14700437fe2a1aec0717ad51a1195d4cae227a6",
+                "shasum": ""
+            },
+            "require": {
+                "encore/laravel-admin": ">=1.6.1",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jxlwqq\\MaterialUI\\MaterialUIServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jxlwqq\\MaterialUI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jxlwqq",
+                    "email": "jxlwqq@gmail.com"
+                }
+            ],
+            "description": "material ui for laravel-admin",
+            "homepage": "https://github.com/jxlwqq/material-ui",
+            "keywords": [
+                "extension",
+                "laravel-admin"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel-admin-extensions/material-ui/issues",
+                "source": "https://github.com/laravel-admin-extensions/material-ui/tree/master"
+            },
+            "time": "2019-04-28T10:50:40+00:00"
+        },
+        {
+            "name": "jxlwqq/watermark",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/watermark.git",
+                "reference": "5f164e00e3ce9382292006c4bf917ca60bc21e39"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/watermark/zipball/5f164e00e3ce9382292006c4bf917ca60bc21e39",
+                "reference": "5f164e00e3ce9382292006c4bf917ca60bc21e39",
+                "shasum": ""
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Jxlwqq\\Watermark\\WatermarkServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jxlwqq\\Watermark\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jxlwqq",
+                    "email": "jxlwqq@gmail.com"
+                }
+            ],
+            "description": "generate text watermark with canvas",
+            "homepage": "https://github.com/jxlwqq/watermark",
+            "keywords": [
+                "extension",
+                "laravel-admin"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel-admin-extensions/watermark/issues",
+                "source": "https://github.com/laravel-admin-extensions/watermark/tree/1.0.1"
+            },
+            "time": "2021-02-25T08:28:01+00:00"
+        },
+        {
             "name": "laravel-admin-ext/chartjs",
             "version": "v1.0.0",
             "source": {
@@ -1436,6 +1548,64 @@
             "time": "2018-09-16T17:28:26+00:00"
         },
         {
+            "name": "laravel-admin-ext/cropper",
+            "version": "1.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/cropper.git",
+                "reference": "9af669d6e7f4a7c4d45322ca14065a910f24af93"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/cropper/zipball/9af669d6e7f4a7c4d45322ca14065a910f24af93",
+                "reference": "9af669d6e7f4a7c4d45322ca14065a910f24af93",
+                "shasum": ""
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\Cropper\\CropperServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Encore\\Cropper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "EVA09",
+                    "email": "940173803@qq.com"
+                }
+            ],
+            "description": "Integrate Cropper into laravel-admin",
+            "homepage": "https://github.com/laravel-admin-extensions/cropper",
+            "keywords": [
+                "cropper",
+                "extension",
+                "image",
+                "laravel-admin"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel-admin-extensions/cropper/issues",
+                "source": "https://github.com/laravel-admin-extensions/cropper/tree/1.0.6"
+            },
+            "time": "2020-07-14T08:00:32+00:00"
+        },
+        {
             "name": "laravel-admin-ext/helpers",
             "version": "v2.0.2",
             "source": {
@@ -1490,6 +1660,121 @@
                 "source": "https://github.com/laravel-admin-extensions/helpers/tree/v2.0.2"
             },
             "time": "2021-10-11T09:41:51+00:00"
+        },
+        {
+            "name": "laravel-admin-ext/media-player",
+            "version": "v1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/media-player.git",
+                "reference": "398c10efd40a8f6b03fade0aa9cb0ddf1a72a75e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/media-player/zipball/398c10efd40a8f6b03fade0aa9cb0ddf1a72a75e",
+                "reference": "398c10efd40a8f6b03fade0aa9cb0ddf1a72a75e",
+                "shasum": ""
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\Admin\\MediaPlayer\\MediaPlayerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Encore\\Admin\\MediaPlayer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "z-song",
+                    "email": "zosong@126.com"
+                }
+            ],
+            "description": "Intergrates mediaelement into laravel-admin",
+            "homepage": "https://github.com/laravel-admin-ext/media-player",
+            "keywords": [
+                "audio",
+                "extension",
+                "laravel-admin",
+                "player",
+                "video"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel-admin-extensions/media-player/issues",
+                "source": "https://github.com/laravel-admin-extensions/media-player/tree/v1.1"
+            },
+            "time": "2019-12-11T02:55:35+00:00"
+        },
+        {
+            "name": "laravel-admin-extensions/multi-language",
+            "version": "0.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/multi-language.git",
+                "reference": "945bf16f23747a4c6233837db96746e795ef5239"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/multi-language/zipball/945bf16f23747a4c6233837db96746e795ef5239",
+                "reference": "945bf16f23747a4c6233837db96746e795ef5239",
+                "shasum": ""
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "KevinSoft\\MultiLanguage\\MultiLanguageServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "KevinSoft\\MultiLanguage\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "wangxk",
+                    "email": "wangxkww@foxmail.com"
+                }
+            ],
+            "description": "适用于laravel-admin的多语言支持扩展",
+            "homepage": "https://github.com/laravel-admin-extensions/multi-language",
+            "keywords": [
+                "extension",
+                "laravel-admin"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel-admin-extensions/multi-language/issues",
+                "source": "https://github.com/laravel-admin-extensions/multi-language/tree/0.0.6"
+            },
+            "time": "2020-02-29T05:25:42+00:00"
         },
         {
             "name": "laravel/framework",
