@@ -28,6 +28,7 @@ Route::group([
     $router->resource ('coupons','CouponController');
     $router->resource ('configs','ConfigController');
     $router->resource ('categories','RoomCategoryController');
+    $router->resource ('countries','CountryController');
 
 
     //--------------------

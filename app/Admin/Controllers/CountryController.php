@@ -2,8 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Helpers\Common;
-use App\Models\RoomCategory;
+use App\Models\Country;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -11,7 +10,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class RoomCategoryController extends Controller
+class CountryController extends Controller
 {
     use HasResourceActions;
 
@@ -80,12 +79,17 @@ class RoomCategoryController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new RoomCategory);
+        $grid = new Grid(new Country);
 
         $grid->id('ID');
         $grid->name(trans('name'));
-        $grid->column('img',trans ('img'))->image ('',30);
-        $grid->column('enable',trans ('enable'))->switch (Common::getSwitchStates ());
+        $grid->e_name(trans('english name'));
+        $grid->phone_code(trans('phone_code'));
+        $grid->language(trans ('language'));
+        $grid->iso(trans('iso'));
+        $grid->iso3(trans('iso3'));
+        $grid->continent_name(trans('continent name'));
+        $grid->e_continent_name(trans('english continent name'));
 
 
         return $grid;
@@ -99,15 +103,18 @@ class RoomCategoryController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(RoomCategory::findOrFail($id));
+        $show = new Show(Country::findOrFail($id));
 
         $show->id('ID');
-        $show->parent_id('parent_id');
-        $show->name('name');
-        $show->img('img');
-        $show->enable('enable');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
+        $show->name(trans('name'));
+        $show->e_name(trans('english name'));
+        $show->phone_code(trans('phone code'));
+        $show->language(trans('language'));
+        $show->iso(trans('iso'));
+        $show->iso3(trans('iso3'));
+        $show->continent_name(trans('continent name'));
+        $show->e_continent_name(trans('english continent name'));
+
 
         return $show;
     }
@@ -119,20 +126,18 @@ class RoomCategoryController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new RoomCategory);
+        $form = new Form(new Country);
 
         $form->display('ID');
-        $form->select ('parent_id',trans ('parent'))->options (function (){
-            $options = [0=>trans ('root')];
-            $cats = RoomCategory::query ()->where ('id','!=',$this->id)->where ('enable',1)->where ('parent_id',0)->get ();
-            foreach ($cats as $cat){
-                $options[$cat->id] = $cat->name;
-            }
-            return $options;
-        });
         $form->text('name', trans('name'));
-        $form->image('img', trans('img'));
-        $form->switch('enable', trans('enable'))->states (Common::getSwitchStates ());
+        $form->text('e_name', trans('english name'));
+        $form->text('phone_code', trans('phone code'));
+        $form->text('language', trans('language'));
+        $form->text('iso', trans('iso'));
+        $form->text('iso3', trans('iso3'));
+        $form->text('continent_name', trans('continent name'));
+        $form->text('e_continent_name', trans('english continent name'));
+
 
         return $form;
     }

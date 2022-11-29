@@ -3,6 +3,7 @@ namespace App\Repositories\Room;
 use App\Helpers\CacheHelper;
 use App\Helpers\Common;
 use App\Models\Room;
+use App\Models\User;
 
 class RoomRepo implements RoomRepoInterface {
 
@@ -17,6 +18,11 @@ class RoomRepo implements RoomRepoInterface {
         $result = $this->model->where(function ($q) use ($req){
             if ($search = $req->search){
                 $q->where('name',$search)->orWhere('id',$search);
+            }
+            if ($req->country_id){
+                $q->whereHas('owner',function ($q) use ($req){
+                    $q->where('country_id',$req->country_id);
+                });
             }
         })->orderBy($req->ord?:'id',$req->sort?:'DESC');
 

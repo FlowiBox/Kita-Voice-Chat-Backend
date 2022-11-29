@@ -2,8 +2,10 @@
 
 namespace App\Admin\Controllers;
 
+use App\Helpers\Common;
 use App\Models\Room;
 use App\Http\Controllers\Controller;
+use App\Models\RoomCategory;
 use App\Models\User;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -101,11 +103,11 @@ class RoomController extends Controller
                 4=>trans ('canceled')
             ]
         );
-        $grid->column('room_name');
-        $grid->column('room_cover');
-        $grid->column('room_intro');
-        $grid->microphone('microphone');
-        $grid->free_mic('free_mic');
+        $grid->column('room_name',trans ('room name'));
+        $grid->column('room_cover',trans ('room cover'))->image ('',30);
+        $grid->column('room_intro',trans ('room_intro'));
+        $grid->column('microphone',trans ('microphone'));
+        $grid->column('free_mic',trans ('free mic'))->switch (Common::getSwitchStates ());
 
 
         return $grid;
@@ -184,18 +186,32 @@ class RoomController extends Controller
                 4=>trans ('canceled')
             ]
         );
-        $form->text('room_name', 'room_name');
-        $form->image('room_cover', 'room_cover');
-        $form->text('room_intro', 'room_intro');
-        $form->text('room_pass', 'room_pass');
+        $form->text('room_name', trans('room name'));
+        $form->image('room_cover', trans('room cover'));
+        $form->text('room_intro', trans('room intro'));
+        $form->text('room_pass', trans('room pass'));
+        $form->select ('room_class')->options (function (){
+            $options = [];
+            $cats = RoomCategory::query ()->where ('enable',1)->where ('parent_id',0)->get ();
+            foreach ($cats as $cat){
+                $options[$cat->id] = $cat->name;
+            }
+            return $options;
+        });
+        $form->select('room_type', trans('room type'))->options (function (){
+            $options = [];
+            $cats = RoomCategory::query ()->where ('enable',1)->where ('parent_id',$this->room_class)->get ();
+            foreach ($cats as $cat){
+                $options[$cat->id] = $cat->name;
+            }
+            return $options;
+        });
+        $form->text('room_welcome', trans('room welcome'));
 
-        $form->text('room_type', 'room_type');
-        $form->text('room_welcome', 'room_welcome');
 
+        $form->switch('is_recommended', trans('is recommended'))->states (Common::getSwitchStates ());
 
-        $form->text('is_recommended', 'is_recommended');
-
-        $form->text('free_mic', 'free_mic');
+        $form->switch('free_mic', trans('free mic'))->states (Common::getSwitchStates ());
 
 
         return $form;
