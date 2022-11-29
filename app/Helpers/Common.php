@@ -1,5 +1,6 @@
 <?php
 namespace App\Helpers;
+use App\Models\Config;
 use App\Models\Follow;
 use App\Models\GiftLog;
 use App\Models\Room;
@@ -15,6 +16,8 @@ class Common{
     use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait;
 
     public static function apiResponse(bool $success,$message,$data,$statusCode = 200,$paginates = null){
+
+
         return response ()->json (
             [
                 'success'   => $success,
@@ -23,10 +26,21 @@ class Common{
 
                 'data'      => $data == [] || $data == null ? null : $data,
 
+                'extra_data'=> [
+                    'storage_base_url'=>self::getConf ('storage_base_url') ?:asset ('storage')
+                ],
+
                 'paginates' =>$paginates
             ],
             $statusCode
         );
+    }
+
+    public static function getConf($key){
+        if ($conf = Config::query ()->where('name',$key)->first ()){
+            return $conf->value;
+        }
+        return null;
     }
 
     public static function upload($folder,$file){
