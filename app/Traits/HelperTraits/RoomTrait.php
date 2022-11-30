@@ -105,7 +105,7 @@ trait RoomTrait
         if ($is_afk) {
             return $user_id;
         }
-        $uid = DB::table('rooms')->where('roomVisitor', 'like', '%' . $user_id . '%')->value('uid');
+        $uid = DB::table('rooms')->where('room_visitor', 'like', '%' . $user_id . '%')->value('uid');
         return $uid ?: 0;
     }
 
@@ -214,6 +214,60 @@ trait RoomTrait
         }
 
         return $status;
+    }
+
+
+
+    public static function check_gap_hand($uid,$type = 1,$group = 'roomowner_id'){
+        if ($type == 1) {
+            $time = 'today';
+        } elseif ($type == 2) {
+            $time = 'week';
+        } elseif ($type == 3) {
+            $time = 'month';
+        }
+        $where['roomowner_id']= $uid;
+        $exp = DB::table('gift_logs')->where($where)->whereTime('created_at', $time)->sum('giftPrice') ? : 0;
+
+        $exp2 = (array)DB::table('gift_logs')->whereTime('created_at', $time)->selectRaw("sum(giftPrice) as exp")->groupByRaw($group)
+            ->having("exp", ">",$exp)->orderBy("exp", "asc")->first ();
+        $exp2 = $exp2 ? $exp2['exp'] : '';
+        if(!$exp2){
+            $data['gap'] = 0;
+        }else{
+            $cha = ($exp2 - $exp);
+            $gap=self::room_hot($cha);
+            $data['gap'] = $gap;
+        }
+        $data['exp'] = self::room_hot($exp);
+        return $data;
+    }
+
+    public static function micSortHand($user_id = null ,$uid = null){
+        $data=(array)DB::table('mics','a')
+            ->where(['a.roomowner_id'=>$uid])
+            ->selectRaw('a.id,a.user_id,a.type')
+            ->orderBy('a.id','asc')
+            ->first();
+
+        $i=$j=$sort=$shiyin_sort=0;
+        foreach ($data as $k => &$v) {
+            if($v['type']==1){
+                $i++;
+                if($v['user_id'] == $user_id) $sort=$i;
+            }elseif($v['type']==2){
+                $j++;
+                if($v['user_id'] == $user_id) $shiyin_sort=$j;
+            }
+
+        }
+        unset($v);
+        $arr['sort']=$sort;
+        $arr['num']=$i;
+
+        $arr['audio_sort']=$shiyin_sort;
+        $arr['audio_num']=$j;
+        return $arr;
     }
 
 }
