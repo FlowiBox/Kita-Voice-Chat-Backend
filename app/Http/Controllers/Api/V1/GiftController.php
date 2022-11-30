@@ -15,4 +15,16 @@ class GiftController extends Controller
         $gifts = Gift::query ()->where ('enable',1)->where ('type',$request->type)->where ('vip_level','<=',Common::getLevel ($user->id,3))->orderBy ('sort')->get ();
         return Common::apiResponse (true,'',GiftResource::collection ($gifts),200);
     }
+
+
+
+
+
+
+
+
+
+
+
+
 }

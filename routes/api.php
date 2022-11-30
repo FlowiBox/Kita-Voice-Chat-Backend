@@ -40,6 +40,8 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('/{id}',[\App\Http\Controllers\Api\V1\RoomController::class,'show']);
         Route::post ('/create',[\App\Http\Controllers\Api\V1\RoomController::class,'store']);
         Route::post ('/{id}/edit',[\App\Http\Controllers\Api\V1\RoomController::class,'update']);
+
+        Route::post('enter_room',[\App\Http\Controllers\Api\V1\RoomController::class,'enter_room']);
     });
     Route::prefix ('mall')->group (function (){
         Route::get ('wares',[\App\Http\Controllers\Api\V1\MallController::class,'index']);

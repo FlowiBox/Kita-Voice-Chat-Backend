@@ -15,7 +15,7 @@ class Common{
 
     use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait;
 
-    public static function apiResponse(bool $success,$message,$data,$statusCode = 200,$paginates = null){
+    public static function apiResponse(bool $success,$message,$data = null,$statusCode = 200,$paginates = null){
 
 
         return response ()->json (
@@ -78,43 +78,7 @@ class Common{
         return $id ? 1 : 0;
     }
 
-    protected static function userNowRoom($user_id = null)
-    {
-        if (!$user_id) {
-            return false;
-        }
-        $is_afk = DB::table('rooms')->where('uid', $user_id)->value('is_afk');
-        if ($is_afk) {
-            return $user_id;
-        }
-        $uid = DB::table('rooms')->where('roomVisitor', 'like', '%' . $user_id . '%')->value('uid');
-        return $uid ?: 0;
-    }
 
-    protected static function userNowRooms($user_id = null)
-    {
-        if (!$user_id) {
-            return false;
-        }
-        $is_afk = Room::query ()->where('uid', $user_id)->value('is_afk');
-        if ($is_afk) {
-            return $user_id;
-        }
-        $uid = Room::query ()->where('uid',$user_id)->value('uid');
-        return $uid ?: 0;
-    }
-
-    public static function getRoomInfo($user_id = null){
-        $room_id = self::userNowRooms ($user_id);
-        if ($room_id) {
-            $roomInfo = Room::query ()->select(['uid', 'room_name', 'hot','room_cover'])->where('uid', $room_id)->first ();
-            $roomInfo['hot'] = self::room_hot($roomInfo['hot']);
-            $roomInfo['room_name'] = urldecode($roomInfo['room_name']);
-        } else {
-            $roomInfo =(object)[];
-        }
-        return $roomInfo;
-    }
 
     public static function getConfig($name = null){
         if (!$name) {

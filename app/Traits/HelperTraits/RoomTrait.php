@@ -6,6 +6,7 @@ namespace App\Traits\HelperTraits;
 
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Mic;
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -84,6 +85,135 @@ trait RoomTrait
 
 
         return $data;
+    }
+
+
+    //Get blacklist list
+    public static function getUserBlackList($user_id = null) {
+        if (!$user_id) return [];
+        $ids = DB::table('black_lists')->where('user_id', $user_id)->where('status', 1)->pluck('from_uid')->toArray ();
+        return $ids;
+    }
+
+
+    public static function userNowRoom($user_id = null)
+    {
+        if (!$user_id) {
+            return false;
+        }
+        $is_afk = DB::table('rooms')->where('uid', $user_id)->value('is_afk');
+        if ($is_afk) {
+            return $user_id;
+        }
+        $uid = DB::table('rooms')->where('roomVisitor', 'like', '%' . $user_id . '%')->value('uid');
+        return $uid ?: 0;
+    }
+
+    public static function userNowRooms($user_id = null)
+    {
+        if (!$user_id) {
+            return false;
+        }
+        $is_afk = Room::query ()->where('uid', $user_id)->value('is_afk');
+        if ($is_afk) {
+            return $user_id;
+        }
+        $uid = Room::query ()->where('uid',$user_id)->value('uid');
+        return $uid ?: 0;
+    }
+
+    public static function getRoomInfo($user_id = null){
+        $room_id = self::userNowRooms ($user_id);
+        if ($room_id) {
+            $roomInfo = Room::query ()->select(['uid', 'room_name', 'hot','room_cover'])->where('uid', $room_id)->first ();
+            $roomInfo['hot'] = self::room_hot($roomInfo['hot']);
+            $roomInfo['room_name'] = urldecode($roomInfo['room_name']);
+        } else {
+            $roomInfo =(object)[];
+        }
+        return $roomInfo;
+    }
+
+
+
+    //exit room - perform action
+    public static function quit_hand($uid,$user_id){
+        $Visitor=DB::table('rooms')->where(['uid'=>$uid])->value('room_visitor');
+        $room_visitor=explode(',', $Visitor);
+        //homeowner exits room
+        if($uid == $user_id){
+            DB::table('rooms')->where('uid',$uid)->update(['is_afk'=>0]);
+            // return $Visitor;
+        }
+        if( $uid != $user_id && !in_array($user_id, $room_visitor)){
+            return $Visitor;
+        }
+        foreach ($room_visitor as $k => &$v) {
+            if($user_id == $v){
+                unset($room_visitor[$k]);
+            }
+        }
+        $new_visitor=trim(implode(',', $room_visitor),',');
+        DB::table('rooms')->where('uid',$uid)->update(['room_visitor'=>$new_visitor]);
+        //mic
+        self::go_microphone_hand($uid,$user_id);
+        //Remove mic
+        self::delMicHand($user_id);
+//        self::updrycheck($user_id);
+        return $new_visitor;
+    }
+
+
+    //Down the wheat - execute the operation
+    public static function go_microphone_hand($uid,$user_id){
+        $microphone = DB::table('rooms')->where('uid',$uid)->value('microphone');
+        $microphone = explode(',', $microphone);
+        if(!$microphone || !in_array($user_id, $microphone)){
+            return 0;
+        }
+        for ($i=0; $i < count($microphone); $i++) {
+            if($microphone[$i] == $user_id){
+                $position = $i;
+            }
+        }
+        $microphone[$position] = 0;
+        $microphone = implode(',', $microphone);
+        $result = DB::table('rooms')->where('uid',$uid)->update(['microphone'=>$microphone]);
+
+        //clear timer
+        Db::table('time_logs')->where(['uid'=>$uid,'user_id'=>$user_id])->delete();
+
+        return $result;
+    }
+
+    //Remove mic discharge operation
+    public static function delMicHand($user_id){
+        $res=DB::table('mics')->where(['user_id'=>$user_id])->delete();
+        return $res;
+    }
+
+    //In the online state, modify the user status
+    public static function updrycheck($ry_uid)
+    {
+        import('RongCloud/RongCloud', VENDOR_PATH);
+        $AppKey = self::getConf('ry_app_key');
+        $AppSecret = self::getConf('ry_app_secret');
+        $RongSDK = new \RongCloud\RongCloud($AppKey, $AppSecret);
+        $user = [
+            'id' => $ry_uid,
+        ];
+        $res = $RongSDK->getUser()->Onlinestatus()->check($user);
+        $status = 0;
+        if($res['code'] == 200){
+            //Query whether the user exists
+            $info = Db::table('users')->where(['id'=>$ry_uid])->first ();
+            if ($info && $res['status'] == 1 && $res['status'] != $info['isOnline']){
+                Db::table('users')->where(array('id'=>$ry_uid))->update(['isOnline'=>$res['status'],'online_time'=>time()]);
+            }
+            $status =  Db::table('users')->where(['id'=>$ry_uid])->value('isOnline');
+        }
+
+        return $status;
     }
 
 }
