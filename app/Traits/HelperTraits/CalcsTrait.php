@@ -74,6 +74,15 @@ Trait CalcsTrait
         }
     }
 
+    public static function getCpLevel($cp_id)
+    {
+        $exp = DB::table('cp')->where(['id' => $cp_id])->value('exp');
+        $where['type'] = 5;
+        $where['exp'] = ['elt', $exp];
+        $level = DB::table('vips')->where($where)->orderByRaw('id desc')->limit(1)->value('level');
+        return $level;
+    }
+
     public static function room_hot ( $hot = null )
     {
         $hot = (int)$hot;
@@ -308,7 +317,13 @@ Trait CalcsTrait
     }
 
 
-
+    public static function check_first_cp($user_id, $fromUid, $status)
+    {
+        $where = 'user_id|fromUid = '.$user_id;
+        $where .=' and status = '. $status;
+        $id = DB::table('cps')->whereRaw($where)->whereRaw("`user_id` = {$fromUid} OR `fromUid` = {$fromUid}")->value('id');
+        return $id;
+    }
 
 
 

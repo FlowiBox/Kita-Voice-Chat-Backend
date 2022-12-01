@@ -270,4 +270,62 @@ trait RoomTrait
         return $arr;
     }
 
+
+    public static function roomDataFormat($data = array())
+    {
+        if (!$data) {
+            return [];
+        }
+        foreach ($data as $k => &$v) {
+            if (isset($v['openid'])) {
+                $v['openid'] = !empty($v['openid']) ?: '';
+            }
+            $v['room_name'] = urldecode($v['room_name']);
+            if (isset($v['hot'])) {
+                $v['hot'] = self::room_hot($v['hot']);
+            }
+            if (isset($v['microphone'])) {
+                $mic_arr = explode(',', $v['microphone']);
+                $zc = array_pop($mic_arr);
+                $v['host'] = $zc > 1000 ? self::getUserField($zc, 'nickname') : '';
+            }
+        }
+        return $data;
+    }
+
+
+    //Get user information
+    public static function getUserField($user_id=null,$field=null){
+        if(!$user_id || !$field)    return '';
+        $user = User::query ()->find ($user_id);
+        if(in_array ($field,['avatar','gender','birthday','province','city','country'])){
+            return @$user->profile->{$field};
+        }
+        $value=@$user->{$field};
+        return $value ? : '';
+    }
+
+
+
+    //Get nickname color according to vip level
+    public static function getNickColorByVip($level=0){
+        $color = '#ffffff';
+        if($level < 3){
+            $color='#ffffff';
+        }elseif($level>=3 && $level<7){
+            $color='#93ffa5';
+        }elseif($level>=7 && $level<11){
+            $color='#8ce1fe';
+        }elseif($level>=11 && $level<15){
+            $color='#ffc6e1';
+        }elseif($level>=15 && $level<18){
+            $color='#e09dff';
+        }elseif($level>=18 && $level<=20){
+            $color='#fff585';
+        }else{
+            $color = '#000000';
+        }
+        return $color;
+    }
+
 }

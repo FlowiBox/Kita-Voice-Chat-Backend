@@ -37,7 +37,7 @@ class CreateRoomsTable extends Migration
             $table->unsignedTinyInteger('is_top')->default('2')->comment('ما إذا كان التمسك بالقمة 1 هو 2 ليس كذلك')->nullable();
             $table->unsignedTinyInteger('sort')->nullable();
             $table->unsignedInteger('room_background')->comment('معرف صورة خلفية الغرفة')->nullable();
-            $table->string('microphone')->default('0,0,0,0,0,0,0,0,0')->comment('معلومات الميكروفون فارغة 0 ، -1 يقفل الميكروفون ، والآخرون مستخدمون')->nullable();
+            $table->string('microphone')->default('0,0,0,0,0,0,0,0,0,0')->comment('معلومات الميكروفون فارغة 0 ، -1 يقفل الميكروفون ، والآخرون مستخدمون')->nullable();
             $table->unsignedTinyInteger('super_uid')->default('2')->comment('ما إذا كان يمكن لصاحب الغرفة تعيين نسبة المشاركة')->nullable();
             $table->unsignedTinyInteger('is_afk')->comment('0 اترك 1 يلعب')->nullable();
             $table->unsignedInteger('hot')->comment('0 لا 1 نعم')->nullable();

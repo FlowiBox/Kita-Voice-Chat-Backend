@@ -38,4 +38,30 @@ class UserController extends Controller
         }
     }
 
+    //my favorite room
+    public function get_myfavorite(Request $request)
+    {
+        $user = $request->user ();
+        $list = $user->value('mykeep');
+        $mykeep = explode(',', $list);
+        $room = DB::table('rooms','t1')
+            ->join('users','t1.uid','=','users.id','left')
+            ->select(['t1.numid','t1.uid','t1.room_name','t1.room_cover','t1.hot','t1.is_afk','users.nickname'])
+            ->whereIn('t1.uid',$mykeep)
+            ->get();
+        $room=Common::roomDataFormat($room);
+        $ar1=$ar2=[];
+        foreach ($room as $key => &$v) {
+            if($v['is_afk'] == 1){
+                $ar1[]=$v;
+            }else{
+                $ar2[]=$v;
+            }
+        }
+        unset($v);
+        $arr['on']  = $ar1;
+        $arr['off'] = $ar2;
+        return common::apiResponse(1,'',$arr);
+    }
+
 }
