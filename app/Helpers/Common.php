@@ -17,6 +17,9 @@ class Common{
 
     public static function apiResponse(bool $success,$message,$data = null,$statusCode = 200,$paginates = null){
 
+        if ($success == false){
+            $statusCode = 422;
+        }
 
         return response ()->json (
             [

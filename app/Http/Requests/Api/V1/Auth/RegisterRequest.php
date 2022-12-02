@@ -33,6 +33,7 @@ class RegisterRequest extends FormRequest
             $rules['password'] = ['required'];
         }elseif ($this->get ('type') == 'phone_pass'){
             $rules['phone'] = ['required','unique:users'];
+            $rules['code'] = ['required'];
             $rules['password'] = ['required'];
         }elseif ($this->get ('type') == 'google'){
             $rules['google_id'] = ['required','unique:users'];

@@ -35,7 +35,7 @@ class LoginController extends Controller
     protected function loginWithEmailPassword($fields){
         if (Auth::attempt($fields)){
             $user = \auth()->user();
-            $user->tokens()->delete();
+            $this->logoutAsConfiguration($user);
             $token = $user->createToken('api_token')->plainTextToken;
             $user->auth_token=$token;
             return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
@@ -45,9 +45,10 @@ class LoginController extends Controller
     }
 
     protected function loginWithPhonePassword($fields){
+
         if (Auth::attempt($fields)){
             $user = \auth()->user();
-            $user->tokens()->delete();
+            $this->logoutAsConfiguration($user);
             $token = $user->createToken('api_token')->plainTextToken;
             $user->auth_token=$token;
             return Common::apiResponse (false,'logged in successfully',new UserResource($user),200);
@@ -57,9 +58,9 @@ class LoginController extends Controller
     }
 
     protected function loginWithGoogle($data){
-        $user = User::query ()->find ($data['google_id']);
+        $user = User::query ()->whereNotNull ('google_id')->where ('google_id',$data['google_id'])->first ();
         if ($user){
-            $user->tokens()->delete();
+            $this->logoutAsConfiguration($user);
             $token = $user->createToken('api_token')->plainTextToken;
             $user->auth_token=$token;
             return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
@@ -114,10 +115,16 @@ class LoginController extends Controller
 
 
     protected function userWithToken($user){
-        $user->tokens()->delete();
+        $this->logoutAsConfiguration($user);
         $token = $user->createToken('api_token')->plainTextToken;
         $user->auth_token=$token;
         return $user;
+    }
+
+    public function logoutAsConfiguration($user){
+        if (Common::getConf ('login_from_only_one_device')){
+            $user->tokens()->delete();
+        }
     }
 
 
