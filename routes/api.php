@@ -66,4 +66,15 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\GiftController::class,'index']);
     });
 
+    Route::prefix ('countries')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\HomeController::class,'allCountries']);
+        Route::get ('/{id}',[\App\Http\Controllers\Api\V1\HomeController::class,'getCountry']);
+    });
+
+    Route::prefix ('room_category')->group (function (){
+        Route::get ('classes',[\App\Http\Controllers\Api\V1\HomeController::class,'allClasses']);
+        Route::get ('types',[\App\Http\Controllers\Api\V1\HomeController::class,'getTypes']);
+        Route::get ('types_by_class/{id}',[\App\Http\Controllers\Api\V1\HomeController::class,'getClassChildren']);
+    });
+
 });

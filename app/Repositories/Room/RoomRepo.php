@@ -17,12 +17,18 @@ class RoomRepo implements RoomRepoInterface {
     {
         $result = $this->model->where(function ($q) use ($req){
             if ($search = $req->search){
-                $q->where('name',$search)->orWhere('id',$search);
+                $q->where('room_name',$search)->orWhere('numid',$search);
             }
             if ($req->country_id){
                 $q->whereHas('owner',function ($q) use ($req){
                     $q->where('country_id',$req->country_id);
                 });
+            }
+            if ($req->class){
+                $q->where('room_class',$req->class);
+            }
+            if ($req->type){
+                $q->where('room_type',$req->type);
             }
         })->orderBy($req->ord?:'id',$req->sort?:'DESC');
 

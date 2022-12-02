@@ -8,8 +8,34 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Room extends Model
 {
     protected $guarded = ['id'];
+    protected $appends = ['lang','country'];
 
     public function owner(){
         return $this->belongsTo (User::class,'uid','id');
+    }
+
+    public function getLangAttribute(){
+        return @$this->owner->country->language;
+    }
+
+    public function getCountryAttribute(){
+        $country = @$this->owner->country;
+        if ($country){
+            return [
+                'id'=>$country->id,
+                'name' => app ()->getLocale () == 'ar' ? $country->name : $country->e_name,
+                'flag'=>$country->flag
+            ];
+        }
+
+    }
+
+
+    public function myClass(){
+        return $this->belongsTo (RoomCategory::class,'room_class')->select ('name','img');
+    }
+
+    public function myType(){
+        return $this->belongsTo (RoomCategory::class,'room_type')->select ('name','img');
     }
 }

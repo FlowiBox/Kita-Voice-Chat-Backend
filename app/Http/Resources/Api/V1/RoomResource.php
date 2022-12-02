@@ -19,17 +19,20 @@ class RoomResource extends JsonResource
     {
         $data = [
             'id'=>$this->id,
+            'owner_id'=>$this->uid,
             'room_id'=>$this->numid,
             'name'=>$this->room_name,
             'visitors_count'=>$this->visitors ()->count (),
             'cover'=>$this->room_cover,
-            'class'=>$this->room_class,
-            'type'=>$this->room_type,
+            'class'=>$this->myClass,
+            'type'=>$this->myType,
             'is_hot'=>$this->hot,
             'is_popular'=>$this->is_popular,
             'room_status'=>$this->room_status,
             'room_intro'=>$this->room_intro,
             'is_recommended'=>$this->is_recommended,
+            'lang'=>$this->lang,
+            'country'=>$this->country
         ];
         if ($request['show']){
             $data['room_users'] = Common::get_room_users ($this->owner ()->id,$request->user ()->id);

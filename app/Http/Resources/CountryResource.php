@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WareResource extends JsonResource
+class CountryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,10 @@ class WareResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'name'=>$this->name,
-            'title'=>$this->title,
-            'price'=>$this->price,
-            'color'=>$this->color,
-            'expire'=>$this->expire == 0 ? 99999999 : $this->expire,
-            'image'=>$this->show_img
+            'name'=> app ()->getLocale () == 'ar' ? $this->name : $this->e_name,
+            'flag'=>$this->flag,
+            'lang'=>$this->language,
+            'phone_code'=>$this->phone_code
         ];
     }
 }

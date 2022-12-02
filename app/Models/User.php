@@ -42,7 +42,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['my_store'];
+    protected $appends = ['my_store','lang'];
 
 
     public function profile(){
@@ -62,6 +62,14 @@ class User extends Authenticatable
 
     public function setDec($field_name,$value){
         $this->attributes[$field_name] -= $value;
+    }
+
+    public function country(){
+        return $this->belongsTo (Country::class)->select ('id','name','flag');
+    }
+
+    public function getLangAttribute(){
+        return @$this->country->language;
     }
 
 

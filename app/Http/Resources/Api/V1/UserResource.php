@@ -27,7 +27,9 @@ class UserResource extends JsonResource
             'level'=>Common::level_center ($this->id),
             'vip'=>Common::vip_center ($this->id),
             'income'=>Common::user_income ($this->id),
-            'my_store'=>$this->my_store
+            'my_store'=>$this->my_store,
+            'lang'=>$this->lang,
+            'country'=>$this->country
         ];
 
         $additional = [

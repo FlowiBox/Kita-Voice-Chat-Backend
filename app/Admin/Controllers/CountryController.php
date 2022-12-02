@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Helpers\Common;
 use App\Models\Country;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -86,10 +87,12 @@ class CountryController extends Controller
         $grid->e_name(trans('english name'));
         $grid->phone_code(trans('phone_code'));
         $grid->language(trans ('language'));
+        $grid->column ('flag',trans ('flag'))->image ('',30);
         $grid->iso(trans('iso'));
         $grid->iso3(trans('iso3'));
         $grid->continent_name(trans('continent name'));
         $grid->e_continent_name(trans('english continent name'));
+        $grid->column ('status',trans ('status'))->switch (Common::getSwitchStates ());
 
 
         return $grid;
@@ -133,10 +136,12 @@ class CountryController extends Controller
         $form->text('e_name', trans('english name'));
         $form->text('phone_code', trans('phone code'));
         $form->text('language', trans('language'));
+        $form->image ('flag',trans ('flag'));
         $form->text('iso', trans('iso'));
         $form->text('iso3', trans('iso3'));
         $form->text('continent_name', trans('continent name'));
         $form->text('e_continent_name', trans('english continent name'));
+        $form->switch ('status',trans ('status'))->states (Common::getSwitchStates ());
 
 
         return $form;
