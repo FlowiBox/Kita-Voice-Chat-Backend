@@ -77,4 +77,8 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('types_by_class/{id}',[\App\Http\Controllers\Api\V1\HomeController::class,'getClassChildren']);
     });
 
+    Route::prefix ('backgrounds')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\HomeController::class,'allBackgrounds']);
+    });
+
 });

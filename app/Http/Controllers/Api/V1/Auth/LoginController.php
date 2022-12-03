@@ -86,7 +86,7 @@ class LoginController extends Controller
         if (!$request->phone){
             return Common::apiResponse (false,'require phone',null,422);
         }
-        $code = rand (1111,9999);
+        $code = rand (111111,999999);
         Code::query ()->create (
             [
                 'phone'=>$request->phone,

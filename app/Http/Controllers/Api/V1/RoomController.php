@@ -9,7 +9,9 @@ use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\EditRoomRequest;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Background;
 use App\Models\Room;
+use App\Models\RoomCategory;
 use App\Models\User;
 use App\Repositories\Room\RoomRepo;
 use App\Repositories\Room\RoomRepoInterface;
@@ -107,15 +109,40 @@ class RoomController extends Controller
             if ($request->room_name){
                 $room->room_name = $request->room_name;
             }
-            if ($request->room_mics){
-                $room->microphone = $request->room_mics;
-            }
+
             if ($request->hasFile ('room_cover')){
                 $room->room_cover = Common::upload ('rooms',$request->file ('room_cover'));
             }
-            if ($request->hasFile ('room_background')){
-                $room->room_cover = Common::upload ('rooms',$request->file ('room_background'));
+            if ($request->room_background){
+                if (!Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
+                    return Common::apiResponse (0,'background not found');
+                }
+                $room->room_background = $request->room_background;
             }
+
+            if ($request->free_mic){
+                $room->free_mic = $request->free_mic;
+            }
+
+            if ($request->room_intro){
+                $room->room_intro = $request->room_intro;
+            }
+
+            if ($request->room_pass){
+                $room->room_pass = $request->room_pass;
+            }
+
+            if ($request->room_type){
+                if (!RoomCategory::query ()->where ('id',$request->room_type)->where ('enable',1)->exists ()) return Common::apiResponse (0,'type not found');
+                $room->room_type = $request->room_type;
+            }
+
+            if ($request->room_class){
+                if (!RoomCategory::query ()->where ('id',$request->room_class)->where ('enable',1)->exists ()) return Common::apiResponse (0,'class not found');
+                $room->room_type = $request->room_type;
+            }
+
+
             $this->repo->save ($room);
             return Common::apiResponse (true,'updated',new RoomResource($room),200);
         }catch (\Exception $exception){

@@ -9,6 +9,16 @@ class Room extends Model
 {
     protected $guarded = ['id'];
     protected $appends = ['lang','country'];
+//    protected $attributes = ['room_background'];
+
+    protected $casts = [
+
+    ];
+
+
+    public function getRoomBackgroundAttribute($val){
+        return @Background::query ()->where ('id',$val)->first ()->img;
+    }
 
     public function owner(){
         return $this->belongsTo (User::class,'uid','id');

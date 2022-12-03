@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CountryResource;
+use App\Models\Background;
 use App\Models\Country;
 use App\Models\RoomCategory;
 use Illuminate\Http\Request;
@@ -37,5 +38,9 @@ class HomeController extends Controller
 
     public function getTypes(){
         return Common::apiResponse (1,'',RoomCategory::query ()->whereHas ('parent')->select ('id','name','img')->get ());
+    }
+
+    public function allBackgrounds(){
+        return Common::apiResponse (1,'',Background::query ()->where('enable',1)->select ('id','img')->get (),200);
     }
 }

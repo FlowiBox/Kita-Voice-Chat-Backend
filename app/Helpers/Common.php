@@ -21,6 +21,10 @@ class Common{
             $statusCode = 422;
         }
 
+        if ($success == true && $statusCode == null){
+            $statusCode = 200;
+        }
+
         return response ()->json (
             [
                 'success'   => $success,
