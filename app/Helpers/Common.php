@@ -15,9 +15,9 @@ class Common{
 
     use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait;
 
-    public static function apiResponse(bool $success,$message,$data = null,$statusCode = 200,$paginates = null){
+    public static function apiResponse(bool $success,$message,$data = null,$statusCode = null,$paginates = null){
 
-        if ($success == false){
+        if ($success == false && $statusCode == null){
             $statusCode = 422;
         }
 

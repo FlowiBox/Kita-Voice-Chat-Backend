@@ -13,7 +13,8 @@ Trait RequestTrait{
                 'message'   => __ ('validation errors'),
 
                 'data'      => $validator->errors()
-            ]
+            ],
+            400
         ));
     }
 
