@@ -47,6 +47,7 @@ class LoginRequest extends FormRequest
             $rules['password'] = ['required'];
         }
         return $rules;
+
     }
 
 }
