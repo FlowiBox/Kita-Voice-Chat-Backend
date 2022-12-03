@@ -24,6 +24,9 @@ class LoginController extends Controller
             case 'google':
                 $fields = ['name'=>$request->name,'email' => $request->email,'google_id' => $request->google_id];
                 return $this->loginWithGoogle ($fields);
+            case 'facebook':
+                $fields = ['name'=>$request->name,'email' => $request->email,'facebook_id' => $request->facebook_id];
+                return $this->loginWithFacebook ($fields);
             case 'phone_code':
                 $fields = ['phone' => $request->phone,'code'=>$request->code];
                 return $this->loginWithPhoneCode ($fields);
@@ -73,6 +76,31 @@ class LoginController extends Controller
                         'name'=>$data['name'],
                         'email'=>$data['email'],
                         'google_id'=>$data['google_id']
+                    ]
+                );
+                $token = $user->createToken('api_token')->plainTextToken;
+                $user->auth_token=$token;
+                return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+            }
+        }
+    }
+
+    protected function loginWithFacebook($data){
+        $user = User::query ()->whereNotNull ('facebook_id')->where ('facebook_id',$data['facebook_id'])->first ();
+        if ($user){
+            $this->logoutAsConfiguration($user);
+            $token = $user->createToken('api_token')->plainTextToken;
+            $user->auth_token=$token;
+            return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+        }else{
+            if (User::query ()->whereNotNull ('email')->where ('email',$data['email'])->exists ()){
+                return Common::apiResponse (false,'email already taken',[],401);
+            }else{
+                $user = User::query ()->create (
+                    [
+                        'name'=>$data['name'],
+                        'email'=>$data['email'],
+                        'facebook_id'=>$data['facebook_id']
                     ]
                 );
                 $token = $user->createToken('api_token')->plainTextToken;

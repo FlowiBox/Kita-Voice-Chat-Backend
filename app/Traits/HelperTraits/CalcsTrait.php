@@ -13,7 +13,7 @@ Trait CalcsTrait
     {
         $star_num = GiftLog ::where ( 'receiver_id' , $user_id ) -> sum ( 'giftPrice' );
         $gold_num = GiftLog ::where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
-        $vip_num  = GiftLog ::where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
+        $vip_num  = GiftLog ::where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' ); //count by purchased coins
 
         if ( $type == 1 ) {
             $total = $star_num;

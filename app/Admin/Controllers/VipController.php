@@ -33,7 +33,13 @@ class VipController extends AdminController
         $grid = new Grid(new Vip());
         $grid->quickSearch ();
         $grid->column('id', __('Id'));
-        $grid->column('type', __('Type'));
+        $grid->column('type', __('Type'))->select (
+            [
+                1=>__ ('broadcaster level'),
+                2=>__ ('honor level'),
+                3=>__ ('vip'),
+            ]
+        );
         $grid->column('level', __('Level'));
         $grid->column('exp', __('Exp'));
         $grid->column('di', __('Diamonds'));
@@ -74,7 +80,13 @@ class VipController extends AdminController
     {
         $form = new Form(new Vip());
 
-        $form->number('type', __('Type'));
+        $form->select('type', __('Type'))->options (
+            [
+                1=>__ ('broadcaster level'),
+                2=>__ ('honor level'),
+                3=>__ ('vip'),
+            ]
+        );
         $form->number('level', __('Level'));
         $form->number('exp', __('Exp'));
         $form->number('di', __('Diamonds'));
