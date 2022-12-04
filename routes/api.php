@@ -81,4 +81,11 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\HomeController::class,'allBackgrounds']);
     });
 
+
+    Route::prefix ('user_info')->group (function (){
+        Route::get ('my_pack',[\App\Http\Controllers\Api\V1\UserController::class,'my_pack']);
+    });
+
+
+
 });

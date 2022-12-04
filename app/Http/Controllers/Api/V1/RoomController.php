@@ -310,6 +310,9 @@ class RoomController extends Controller
 
         //homeowner information
         $user=(array)DB::table('users')->select('id','dress_1','dress_4')->find($owner_id);
+        if (!$user){
+            return Common::apiResponse (false,'room owner may be deleted');
+        }
         $txk=DB::table('wares')->where(['id'=>$user['dress_1']])->value('img1');
         $room_info['txk']=$txk;
         $room_info['mic_color']=DB::table('wares')->where(['id'=>$user['dress_4']])->value('color') ? : '#ffffff';

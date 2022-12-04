@@ -264,6 +264,72 @@ Trait CalcsTrait
         ];
     }
 
+
+
+    //my backpack  type
+
+    //1 gem
+    //2 gifts - not used
+    //3 coupons
+    //4 avatar frames
+    //5 bubble boxes
+    //6 entry effects
+    //7 mic on the aperture
+    //8 badges
+
+    public function my_pack($user_id,$type){
+        if(!in_array($type,[1,2,3,4,5,6,7]))    return '';
+        $where['a.user_id']=$user_id;
+        $where['a.type']=$type;
+        //$where['b.enable']=1;
+        if($type == 2){
+            $data=DB::table('pack')->alias('a')->join('gifts b','a.target_id = b.id')
+                ->where($where)
+                ->field("a.*,b.name,b.show_img,b.price")
+                ->select();
+        }else{
+            $data=DB::table('pack')->alias('a')->join('wares b','a.target_id = b.id')
+                ->where($where)
+                ->field("a.*,b.name,b.show_img,b.title,b.color")
+                ->select();
+        }
+        if(in_array($type,[4,5,6,7])){
+            $dress_id=Db::table('users')->where(['id'=>$user_id])->value("dress_".$type);
+        }
+        foreach ($data as $k => &$v) {
+            $v['show_img']=$this->auth->setFilePath($v['show_img']);
+            $v['is_dress']=0;
+            if(in_array($type,[4,5,6,7])){
+                $v['title']= empty($v['expire']) ? "permanent" : date('Y-m-d H:i:s',$v['expire'])."expire";
+                $v['is_dress']= $dress_id == $v['target_id']  ? 1 : 0;
+                $v['color']= $v['color'] ? : '';
+            }elseif($type == 2){
+                $v['title'] = "have".$v['num']."value".$v['num']*$v['price']."diamond";
+                $v['color'] = '';
+            }else{
+                $v['title']="have".$v['num']."indivual ".$v['title'];
+                $v['color']= $v['color'] ? : '';
+            }
+
+            //status changed to read
+            if ($v['is_read'] == 1){
+                Db::table('pack')->where(array('id'=>$v['id']))->update(array('is_read'=>0));
+            }
+
+        }
+
+        //Update reading status
+        // $redisMod  = RedisCli();
+        // $cacheKey  = sprintf(Rediskey::getKey('pack'), $user_id);
+        // $v = $redisMod->get($cacheKey);
+        // if ($v == $type){
+        //     $redisMod->delete($cacheKey);
+        // }
+        $this->ApiReturn(1,'',$data);
+    }
+
+
+
     //المستوى الأقصى ونقاط الخبرة
     public static function getNextLevel ( $type = null , $level = null , $field = null )
     {
