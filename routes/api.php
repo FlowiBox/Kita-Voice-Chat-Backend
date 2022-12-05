@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group (function (){
 
         Route::post('enter_room',[\App\Http\Controllers\Api\V1\RoomController::class,'enter_room']);
         Route::post('quit_room',[\App\Http\Controllers\Api\V1\RoomController::class,'quit_room']);
+        Route::post('kick_out_of_room',[\App\Http\Controllers\Api\V1\RoomController::class,'out_room']);
         Route::post('getRoomUsers',[\App\Http\Controllers\Api\V1\RoomController::class,'getRoomUsers']);
         Route::post('microphone_status',[\App\Http\Controllers\Api\V1\RoomController::class,'microphone_status']);
         Route::post('up_microphone',[\App\Http\Controllers\Api\V1\RoomController::class,'up_microphone']);

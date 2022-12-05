@@ -78,6 +78,7 @@ class Common{
     }
 
     // هل اتابعه
+
     public static function IsFollow($user_id = null,$followed_user_id = null){
         if(!$user_id || !$followed_user_id) return 0;
         if($user_id == $followed_user_id)   return 1;

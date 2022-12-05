@@ -212,11 +212,16 @@ class RoomController extends Controller
             foreach ($is_black as $k => &$v) {
                 $arr=explode("#",$v);
                 $sjc= time() - $arr[1];
-                if($sjc < 180 && $arr[0] == $user_id ){
-                    Common::apiResponse(false,__('No entry for '). $arr[1] .__(' minutes after being kicked out of the room'));
+                $rt = $arr[2] - $sjc;
+                $h = floor ($rt/3600);
+                $r = $rt%3600;
+                $m = floor($r/60);
+                $s = $r%60;
+                if($sjc < $arr[2] && $arr[0] == $user_id ){
+                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"]);
                 }
 
-                if($sjc >= 180){
+                if($sjc >= $arr[2]){
                     unset($is_black[$k]);
                 }
             }
@@ -340,6 +345,38 @@ class RoomController extends Controller
         if (!empty($monadsInfo) && !empty($monadsInfo['addtime'])){
             $room_info['strto_time'] = (time() - $monadsInfo['addtime']);
         }
+
+        foreach ($room_info as $k => &$v){
+            if (!$v){
+                if (in_array ($k,['is_afk','gap','exp','sort','num','audio_sort','audio_num','strto_time'])){
+                    $v = 0;
+                }else{
+                    $v = '';
+                }
+            }
+        }
+
+        $room_info['is_muted']=false;
+
+        $muted_list = explode (',',$room_info['room_sound']);
+        if (in_array ($user_id,$muted_list)){
+            $room_info['is_muted']=true;
+        }
+        $type = RoomCategory::find($room_info['room_type']);
+        if (!$type){
+            $room_info['room_type'] = '';
+        }else{
+            $room_info['room_type'] = $type->name;
+        }
+
+        $bg = Background::find($room_info['room_background']);
+        if (!$bg){
+            $room_info['room_background'] = '';
+        }else{
+            $room_info['room_background'] = $bg->img;
+        }
+
+
 
 //        //Are you a master? 0=No 1=Yes
 //        $skill_apply_count = Db::table('skill_apply')->where(array('user_id'=>$user_id,'status'=>1))->count();
@@ -761,33 +798,39 @@ class RoomController extends Controller
 
 
     //kick out of the room
-    public function out_room(){
-        $data = $this->request->request();
-        $uid = $this->request->request('uid') ? : 0;
-        $black_id = $this->request->request('user_id') ? : 0;
-        if(!$uid || !$black_id)  $this->ApiReturn(0,'缺少参数');
-        $black_list = DB::name('rooms')->where('uid',$uid)->value('roomBlack');
+    public function out_room(Request $request){
+        $uid = $request->owner_id ? : 0;
+        $black_id = $request->user_id ? : 0;
+        $duration = $request->minutes ? : 5;
+        if(!$uid || !$black_id) return Common::apiResponse (0,'invalid data');
+        $black_list = DB::table('rooms')->where('uid',$uid)->value('room_black');
         if($black_list == null){
-            $black_list = $black_id.'#'.time();
+            $black_list = $black_id.'#'.time().'#'.($duration * 60);
         }else{
             $list = explode(',', $black_list);
-            for ($i=0; $i < count($list); $i++) {
-                $is_repeat = strstr($list[$i],$black_id);
-                if($is_repeat){
-                    $black_list = str_replace($is_repeat,'',$black_list);
-                    $black_list = preg_replace('#,{2,}#',',',$black_list);
+            $exists = false;
+            foreach ($list as &$item) {
+                $black = explode ('#',$item);
+                if ($black[0] == $black_id){
+                    $item = $black_id.'#'.time().'#'.($duration * 60);
+                    $exists = true;
                 }
             }
-            $black_list = trim($black_list.','.$black_id.'#'.time(),',');
+            if (!$exists){
+                array_push ($list,$black_id.'#'.time().'#'.($duration * 60));
+            }
+
+            $black_list = implode (',',$list);
+
         }
-        $result = DB::name('rooms')->where('uid',$uid)->update(['roomBlack'=>$black_list]);
+        $result = DB::table('rooms')->where('uid',$uid)->update(['room_black'=>$black_list]);
 
         if($result){
-            //退出房间
-            $this->quit_hand($uid,$data['user_id']);
-            $this->ApiReturn(1,'成功');
+            //exit the room
+            Common::quit_hand($uid,$black_id);
+            return Common::apiResponse(1,'success');
         }else{
-            $this->ApiReturn(0,'失败');
+            return Common::apiResponse(0,'fail');
         }
     }
 

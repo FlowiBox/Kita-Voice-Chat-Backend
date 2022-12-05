@@ -54,7 +54,7 @@ class LoginController extends Controller
             $this->logoutAsConfiguration($user);
             $token = $user->createToken('api_token')->plainTextToken;
             $user->auth_token=$token;
-            return Common::apiResponse (false,'logged in successfully',new UserResource($user),200);
+            return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
         }else{
             return Common::apiResponse (false,'credentials does\'t match',[],401);
         }
