@@ -77,7 +77,11 @@ class RoomController extends Controller
     public function show(Request $request,$id)
     {
         $request['show'] = true;
-        return Common::apiResponse (true,'',new RoomResource($this->repo->find ($id)),200);
+        $room = Room::find($id);
+        if (!$room){
+           return Common::apiResponse(0,'not found');
+        }
+        return Common::apiResponse (true,'',new RoomResource($room),200);
     }
 
     /**
@@ -164,6 +168,19 @@ class RoomController extends Controller
 
 //------------------------------------------------------------------ops----------------------------------------------------------------
 
+    //get_room_by_owner_id
+
+    public function get_room_by_owner_id(Request $request){
+        $request['show'] = true;
+        $room = Room::where('uid',$request->owner_id)->first();
+        if (!$room){
+            return Common::apiResponse(0,'not found');
+        }
+        return Common::apiResponse (true,'',new RoomResource($room),200);
+    }
+
+
+
     //enter the room
     public function enter_room(Request $request)
     {
@@ -207,6 +224,7 @@ class RoomController extends Controller
         }
         //kicked out of the room
         $roomBlack = DB::table('rooms')->where('uid',$owner_id)->value('room_black');
+
         if(!empty($roomBlack)){
             $is_black = explode(',', $roomBlack);
             foreach ($is_black as $k => &$v) {
@@ -228,6 +246,13 @@ class RoomController extends Controller
             $roomBlack = implode(",", $is_black);
             DB::table('rooms')->where('uid',$owner_id)->update(['room_black'=>trim($roomBlack,',')]);
         }
+
+//        $room_ban = DB::table('rooms')->where('uid',$owner_id)->value('room_speak');
+//        $arr_room_ban = explode (',',$room_ban);
+
+//        if (in_array ($user_id,$arr_room_ban)){
+//            return Common::apiResponse (false,'you are in room ban list');
+//        }
 
 
         //Total value of all gifts received      stopped here
@@ -275,11 +300,12 @@ class RoomController extends Controller
         }
 
         $uid_black = explode(',', $room_info['room_speak']);
+
         for ($i=0; $i < count($uid_black); $i++) {
             if($uid_black[$i] == $owner_id){
-                $room_info['uid_black'] = 2;   //homeowners ban typing
+                $room_info['uid_black'] = 2;   //homeowners ban writing
             }else{
-                $room_info['uid_black'] = 1;   //Homeowner does not ban typing
+                $room_info['uid_black'] = 1;   //Homeowner does not ban writing
             }
         }
 
@@ -356,12 +382,6 @@ class RoomController extends Controller
             }
         }
 
-        $room_info['is_muted']=false;
-
-        $muted_list = explode (',',$room_info['room_sound']);
-        if (in_array ($user_id,$muted_list)){
-            $room_info['is_muted']=true;
-        }
         $type = RoomCategory::find($room_info['room_type']);
         if (!$type){
             $room_info['room_type'] = '';
@@ -928,6 +948,9 @@ class RoomController extends Controller
     public function is_admin(Request $request){
         $uid=$request->owner_id;
         $admin_id=$request->user_id;
+        if ($request->user ()->id != $uid){
+            return Common::apiResponse(0,'not allowed');
+        }
         if(!$uid || !$admin_id) return Common::apiResponse(0,'invalid data');
         if($uid == $admin_id)    return Common::apiResponse(0,'invalid data');
         $roomVisitor=DB::table('rooms')->where('uid',$uid)->value('room_visitor');
@@ -955,6 +978,9 @@ class RoomController extends Controller
     public function remove_admin(Request $request){
         $uid=$request->owner_id;
         $admin_id=$request->user_id;
+        if ($request->user ()->id != $uid){
+            return Common::apiResponse(0,'not allowed');
+        }
         if(!$uid || !$admin_id)  return Common::apiResponse(0,'invalid data');
         $roomAdmin=DB::table('rooms')->where('uid',$uid)->value('room_admin');
         $adm_arr= !$roomAdmin ? [] : explode(",", $roomAdmin);
@@ -976,6 +1002,9 @@ class RoomController extends Controller
         $user_id=$request->user_id;
         if(!$uid || !$user_id) return Common::apiResponse(0,'invalid data');
         if($uid == $user_id)    return Common::apiResponse(0,'Illegal operation');
+//        if ($request->user ()->id != $uid){
+//            return Common::apiResponse(0,'not allowed');
+//        }
         $roomVisitor=DB::table('rooms')->where('uid',$uid)->value('room_visitor');
         $vis_arr= !$roomVisitor ? [] : explode(",", $roomVisitor);
         if(!in_array($user_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room');
@@ -993,11 +1022,12 @@ class RoomController extends Controller
         $str=implode(",", $spe_arr);
         $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_speak'=>$str]);
         if($res){
-            return Common::apiResponse(1,'Succeeded adding ban');
+            return Common::apiResponse(1,'Succeeded adding writing ban for 3 minutes');
         }else{
-            return Common::apiResponse(0,'Failed to add ban');
+            return Common::apiResponse(0,'Failed to add writing ban');
         }
     }
+
 
 
 

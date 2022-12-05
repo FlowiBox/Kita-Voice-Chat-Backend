@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group (function (){
     });
     Route::prefix ('rooms')->group (function (){
 
-        Route::post ('get_other_user',[\App\Http\Controllers\Api\V1\RoomController::class,'get_other_user']);
+//        Route::post ('get_other_user',[\App\Http\Controllers\Api\V1\RoomController::class,'get_other_user']);
 
 
 
@@ -54,7 +54,10 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post('unlock_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'open_microphone']);
         Route::post('mute_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'is_sound']);
         Route::post('unmute_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'remove_sound']);
-
+        Route::post('get_room_by_owner_id',[\App\Http\Controllers\Api\V1\RoomController::class,'get_room_by_owner_id']);
+        Route::post('add_admin_to_room',[\App\Http\Controllers\Api\V1\RoomController::class,'is_admin']);
+        Route::post('remove_admin',[\App\Http\Controllers\Api\V1\RoomController::class,'remove_admin']);
+        Route::post('ban_user_from_writing',[\App\Http\Controllers\Api\V1\RoomController::class,'is_black']);
 
 
 
