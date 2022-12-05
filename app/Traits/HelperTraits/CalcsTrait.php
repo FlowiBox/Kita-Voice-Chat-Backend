@@ -392,7 +392,46 @@ Trait CalcsTrait
     }
 
 
+    public static function getBrithdayMsg($birthday=null,$type = 1)
+    {
+        if(!$birthday)  return false;
+        if(!in_array($type, [0,1,2]))   return false;
+        list($year,$month,$day) = explode("-",$birthday);
+        $year_diff = date("Y") - $year;
+        $month_diff = date("m") - $month;
+        $day_diff  = date("d") - $day;
+        if ($month_diff < 0 || ($month_diff == 0 && $day_diff < 0)){
+            $year_diff--;
+        }
+        $info[]=($year_diff < 0 ) ? 0 : $year_diff;
 
+        $animals = array(
+            'mouse', 'Cattle', 'Tiger', 'rabbit', 'dragon', 'snake',
+            'horse', 'sheep', 'monkey', 'chicken', 'dog', 'pig'
+        );
+        $key = abs(($year - 1900) % 12);
+        $info[]=$animals[$key];
+        $signs = array(
+            array('20'=>'Aquarius'),
+            array('19'=>'Pisces'),
+            array('21'=>'Aries'),
+            array('20'=>'Taurus'),
+            array('21'=>'Gemini'),
+            array('22'=>'Cancer'),
+            array('23'=>'Leo'),
+            array('23'=>'Virgo'),
+            array('23'=>'Libra'),
+            array('24'=>'Scorpio'),
+            array('22'=>'Sagittarius'),
+            array('22'=>'Capricorn')
+        );
+        $arr=$signs[$month-1];
+        if($day < key($arr)){
+            $arr=$signs[($month-2 < 0) ? 11 : $month-2];
+        }
+        $info[]=current($arr);
+        return $info[$type];
+    }
 
 
 }

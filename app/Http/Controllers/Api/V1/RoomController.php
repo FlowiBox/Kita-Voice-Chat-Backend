@@ -162,7 +162,7 @@ class RoomController extends Controller
     }
 
 
-//----------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------ops----------------------------------------------------------------
 
     //enter the room
     public function enter_room(Request $request)
@@ -376,18 +376,6 @@ class RoomController extends Controller
             $room_info['room_background'] = $bg->img;
         }
 
-
-
-//        //Are you a master? 0=No 1=Yes
-//        $skill_apply_count = Db::table('skill_apply')->where(array('user_id'=>$user_id,'status'=>1))->count();
-//        $room_info['is_god'] = ($skill_apply_count > 0) ? 1 : 0;
-//        // Task - watch the live broadcast for 5 minutes
-//        fin_task($user_id,6);
-//        // Task - watch 3 live streams
-//        fin_task($user_id,9);
-
-
-
         return Common::apiResponse (true,'',$room_info);
     }
 
@@ -432,7 +420,6 @@ class RoomController extends Controller
         $res['visitors']=$visitor;
         return Common::apiResponse(1,'',$res);
     }
-
 
 
     // mic sequence list
@@ -512,8 +499,6 @@ class RoomController extends Controller
         $arr['microphone']=$mic;
         return Common::apiResponse(1,'',$arr);
     }
-
-
 
 
     // on the mic
@@ -614,21 +599,17 @@ class RoomController extends Controller
     }
 
 
-
-
-
-
     //lock mic place
     public function shut_microphone(Request $request)
     {
         $data = $request;
         $position = $data['position'];
         if($position <0 || $position >9) return Common::apiResponse(0,__('position error'));
-//        $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
-//        $admins = explode (',',$admins);
-//        if($request->user ()->id != $data['owner_id'] || !in_array ($request->user ()->id,$admins) ) {
-//            return Common::apiResponse(0,__('you dont have permission'));
-//        }
+        $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
+        $admins = explode (',',$admins);
+        if($request->user ()->id != $data['owner_id'] || !in_array ($request->user ()->id,$admins) ) {
+            return Common::apiResponse(0,__('you dont have permission'));
+        }
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
         $microphone[$position] = -1;
@@ -642,18 +623,17 @@ class RoomController extends Controller
     }
 
 
-
     //open mic place
     public function open_microphone(Request $request)
     {
         $data = $request;
         $position = $data['position'];
         if($position <0 || $position >9)  return Common::apiResponse(0,__('position error'));
-//        $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
-//        $admins = explode (',',$admins);
-//        if($request->user ()->id != $data['owner_id'] || !in_array ($request->user ()->id,$admins) ) {
-//            return Common::apiResponse(0,__('you dont have permission'));
-//        }
+        $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
+        $admins = explode (',',$admins);
+        if($request->user ()->id != $data['owner_id'] || !in_array ($request->user ()->id,$admins) ) {
+            return Common::apiResponse(0,__('you dont have permission'));
+        }
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
         $microphone[$position] = 0;
@@ -667,94 +647,16 @@ class RoomController extends Controller
     }
 
 
-
-
-
-    //gift list
-    public function gift_list()
-    {
-        $user_id=$this->user_id;
-        $RedisCache=new RedisCache;
-        //礼物
-        $gifts=$RedisCache->getRedisData('room','gift_list',60);
-        //宝石
-        $baoshi=$RedisCache->getRedisData('room','baoshi_list');
-
-        //我的
-        //宝石
-        $my_baoshi=Db::name('pack')->where(['a.type'=>1,'a.user_id'=>$user_id,'b.enable'=>1])
-            ->alias('a')
-            ->join('wares b','a.target_id = b.id')
-            ->field('a.id,a.num,a.target_id,b.get_type,a.expire,b.name,b.price,b.img1,b.img2,b.show_img,b.type')
-            ->select();
-
-        //爆音卡
-        $my_baoyin=Db::name('pack')->where(['a.type'=>3,'a.user_id'=>$user_id,'a.target_id'=>6,'b.enable'=>1])
-            ->alias('a')
-            ->join('wares b','a.target_id = b.id')
-            ->field('a.id,a.num,a.target_id,b.get_type,a.expire,b.name,b.price,b.img1,b.img2,b.show_img,b.type')
-            ->select();
-        $data=array_merge($my_baoshi,$my_baoyin);
-        foreach ($data as $k2 => &$v2) {
-            //四期
-            $v2['price_004']= $v2['get_type'] == 4 ? $v2['price'] : get_wares_allway($v2['get_type']);
-            //四期前
-            $v2['id']=$v2['target_id'];
-            $v2['price']= "x".$v2['num'];
-            $v2['img']=$this->auth->setFilePath($v2['img1']);
-            $v2['show_img']=$this->auth->setFilePath($v2['show_img']);
-            $v2['show_img2']=$this->auth->setFilePath($v2['img2']);
-            $v2['wares_type']=$v2['type'];
-            $v2['type']=$v2['show_img2'] ? 2 : 1;
-        }
-        unset($v2);
-        //我的礼物
-        $my_gift=Db::name('pack')->where(['a.type'=>2,'a.user_id'=>$user_id])->alias('a')
-            ->join('gifts b','a.target_id = b.id')
-            ->field('a.id,a.num,a.target_id,a.get_type,b.name,b.price,b.img,b.show_img,b.show_img2,b.type')
-            ->order("price asc")
-            ->select();
-        foreach ($my_gift as $k3 => &$v3){
-            //四期
-            $v3['price_004']= $v3['price'];
-            //四期前
-            $v3['id']=$v3['target_id'];
-            $v3['wares_type'] = 2;
-            $v3['price']="x".$v3['num'];
-            $v3['img']=$this->auth->setFilePath($v3['img']);
-            $v3['show_img']=$this->auth->setFilePath($v3['show_img']);
-            $v3['show_img2']=$this->auth->setFilePath($v3['show_img2']);
-        }
-        unset($v3);
-        $res_arr=array_merge($data,$my_gift);
-        $n=0;
-        foreach ($res_arr as $k => &$va) {
-            $va['is_check']=$n ? 0 : 1;
-            $n++;
-            $va['e_name']='';
-        }
-        unset($va);
-        $mizuan=DB::name('users')->where('id',$user_id)->value('mizuan');
-        $arr['gifts']=$gifts;
-        $arr['baoshi']=$baoshi;
-        $arr['my_wares']=$res_arr;
-        $arr['mizuan']=$mizuan;
-        $this->ApiReturn(1,'获取成功',$arr);
-    }
-
-
-
-
     //Turn off user microphone
     public function is_sound(Request $request){
         $user_id = $request->user_id ? : 0;
         $uid = $request->owner_id ? : 0;
         if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'));
-//        $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
-//        $admins = explode (',',$admins);
-//        if($request->user ()->id != $uid || !in_array ($request->user ()->id,$admins) ) {
-//            return Common::apiResponse(0,__('you dont have permission'));
-//        }
+        $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
+        $admins = explode (',',$admins);
+        if($request->user ()->id != $uid || !in_array ($request->user ()->id,$admins) ) {
+            return Common::apiResponse(0,__('you dont have permission'));
+        }
         $sound = DB::table('rooms')->where('uid',$uid)->value('room_sound');
         $sound_arr=explode(',', $sound);
         if(in_array($user_id , $sound_arr)) return Common::apiResponse (0,__ ('The user is already muted, please do not repeat the settings'));
@@ -774,11 +676,11 @@ class RoomController extends Controller
         $user_id = $request->user_id ? : 0;
         $uid = $request->owner_id ? : 0;
         if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'));
-//        $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
-//        $admins = explode (',',$admins);
-//        if($request->user ()->id != $uid || !in_array ($request->user ()->id,$admins) ) {
-//            return Common::apiResponse(0,__('you dont have permission'));
-//        }
+        $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
+        $admins = explode (',',$admins);
+        if($request->user ()->id != $uid || !in_array ($request->user ()->id,$admins) ) {
+            return Common::apiResponse(0,__('you dont have permission'));
+        }
         $sound = DB::table('rooms')->where('uid',$uid)->value('room_sound');
         $sound_arr=explode(',', $sound);
         if(!in_array($user_id , $sound_arr))  return Common::apiResponse(0,__('The user is no longer in the ban list, please do not repeat the settings'));
@@ -792,10 +694,6 @@ class RoomController extends Controller
             return Common::apiResponse(0,__('Unmute failed'));
         }
     }
-
-
-    //---------------------------------------------------- here
-
 
     //kick out of the room
     public function out_room(Request $request){
@@ -835,43 +733,41 @@ class RoomController extends Controller
     }
 
     //make favorite room
-    public function room_mykeep(){
-        $data = $this->request->request();
-        $uid = $data['uid'];
-        $user_id = $this->user_id;
-        $mykeep_list = DB::name('users')->where('id',$user_id)->value('mykeep');
+    public function room_mykeep(Request $request){
+        $data = $request;
+        $uid = $data['owner_id'];
+        $user_id = $request->user ()->id;
+        $mykeep_list = DB::table('users')->where('id',$user_id)->value('mykeep');
         $mykeep_arr=explode(",", $mykeep_list);
-        if(in_array($uid, $mykeep_arr)) $this->ApiReturn(0,'请勿重复收藏');
+        if(in_array($uid, $mykeep_arr)) return Common::apiResponse(0,'Do not repeat favorites');
 
         array_unshift($mykeep_arr,$uid);
         $str=trim(implode(",", $mykeep_arr),",");
-        $res=DB::name('users')->where('id',$user_id)->update(['mykeep'=>$str]);
+        $res=DB::table('users')->where('id',$user_id)->update(['mykeep'=>$str]);
         if($res){
-            // 任务--收藏一个房间
-            fin_task($user_id,3);
-            $this->ApiReturn(1,'收藏成功');
+            return Common::apiResponse(1,'success');
         }else{
-            $this->ApiReturn(0,'收藏失败');
+            return Common::apiResponse(0,'failed');
         }
     }
 
 
     //cancel favorite room
-    public function remove_mykeep(){
-        $data = $this->request->request();
-        $uid = $data['uid'];
-        $user_id = $this->user_id;
-        $mykeep_list = DB::name('users')->where('id',$user_id)->value('mykeep');
+    public function remove_mykeep(Request $request){
+        $data = $request;
+        $uid = $data['owner_id'];
+        $user_id = $request->user ()->id;
+        $mykeep_list = DB::table('users')->where('id',$user_id)->value('mykeep');
         $mykeep_arr=explode(",", $mykeep_list);
-        if(!in_array($uid, $mykeep_arr)) $this->ApiReturn(0,'尚未收藏此房间');
+        if(!in_array($uid, $mykeep_arr)) return Common::apiResponse(0,'This room has not been favorited');
         $key=array_search($uid,$mykeep_arr);
         unset($mykeep_arr[$key]);
         $str=trim(implode(",", $mykeep_arr),",");
-        $res=DB::name('users')->where('id',$user_id)->update(['mykeep'=>$str]);
+        $res=DB::table('users')->where('id',$user_id)->update(['mykeep'=>$str]);
         if($res){
-            $this->ApiReturn(1,'取消成功');
+            return Common::apiResponse(1,'success');
         }else{
-            $this->ApiReturn(0,'取消失败');
+            return Common::apiResponse(0,'failed');
         }
     }
 
@@ -879,39 +775,39 @@ class RoomController extends Controller
     //Whether to set a password
     public function is_pass(){
         $uid = $this->request->request('uid') ? : 0;
-        if(!$uid)   $this->ApiReturn(0,'缺少参数');
-        $result = DB::name('rooms')->where('uid',$uid)->value('room_pass');
+        if(!$uid)   return Common::apiResponse(0,'invalid data');
+        $result = DB::table('rooms')->where('uid',$uid)->value('room_pass');
         if($result){
-            $this->ApiReturn(2,'房间已设密码，请输入密码');
+            return Common::apiResponse(1,'The room has a password, please enter the password',['is_password'=>1]);
         }else{
-            $this->ApiReturn(1,'房间没有密码');
+            return Common::apiResponse(1,'room without password',['is_password'=>0]);
         }
     }
 
     //Get other users in the room
-    public function get_other_user(){
-        $data = $this->request->request();
-        $uid = $data['uid'];
+    public function get_other_user(Request $request){
+        $data = $request;
+        $uid = $data['owner_id'];
         $user_id = $data['user_id'];;
-        $my_id = $data['my_id'];
+        $my_id = $request->user ()->id;
 
-        $room_info = DB::name('rooms')->where('uid',$uid)->field(['roomAdmin','roomSpeak','roomJudge','roomSound'])->select();
-
+        $room_info = DB::table('rooms')->where('uid',$uid)->select(['room_admin','room_speak','room_judge','room_sound'])->get()->toArray ();
+        $room_info[0] = (array)$room_info[0];
         $room_info[0]['user_type'] = 5;
-        $roomAdmin = explode(',', $room_info[0]['roomAdmin']);
+        $roomAdmin = explode(',', $room_info[0]['room_admin']);
         for ($i=0; $i < count($roomAdmin); $i++) {
             if($roomAdmin[$i] == $user_id){
                 $room_info[0]['user_type'] = 2;
             }
         }
-        $roomJudge = explode(',', $room_info[0]['roomJudge']);
+        $roomJudge = explode(',', $room_info[0]['room_judge']);
         for ($i=0; $i < count($roomJudge); $i++) {
             if($roomJudge[$i] == $user_id){
                 $room_info[0]['user_type'] = 4;
             }
         }
         $room_info[0]['is_speak'] = 1;
-        $is_speak = explode(',', $room_info[0]['roomSpeak']);
+        $is_speak = explode(',', $room_info[0]['room_speak']);
         for ($i=0; $i < count($is_speak); $i++) {
             if($is_speak[$i] == $user_id){
                 $room_info[0]['is_speak'] = 2;
@@ -925,45 +821,49 @@ class RoomController extends Controller
         //     }
         // }
 
-        $is_sound_arr =$room_info[0]['roomSound'] ? explode(',', $room_info[0]['roomSound']) : [];
+        $is_sound_arr =$room_info[0]['room_sound'] ? explode(',', $room_info[0]['room_sound']) : [];
         $room_info[0]['is_sound'] = in_array($user_id, $is_sound_arr) ? 2 : 1;
 
 
 
-        $result = DB::name('users')->where('id',$user_id)->field(['id','nickname','headimgurl','sex','birthday',"islh"])->select();
+        $result = DB::table('users')->where('id',$user_id)->select(['id','nickname'])->get()->toArray ();
 
-        $is_follows=IsFollow($my_id,$user_id);
+        $result[0] = (array)$result[0];
+
+        $is_follows=Common::IsFollow($my_id,$user_id);
 
         $result[0]['is_follows'] = $is_follows ? 1 : 2;
 
+        $user = User::find($result[0]['id']);
 
-        $result[0]['headimgurl'] = $this->auth->setFilePath($result[0]['headimgurl']);
-        $result[0]['age'] = getBrithdayMsg($result[0]['birthday'],0)?:0;
+        $result[0]['image'] = @$user->profile->avatar;
+        $result[0]['age'] = Common::getBrithdayMsg(@$user->profile->birthday,0)?:0;
 
         $result[0]['user_type'] = $room_info[0]['user_type'];
         $result[0]['is_speak'] = $room_info[0]['is_speak'];
         $result[0]['is_sound'] = $room_info[0]['is_sound'];
 
-        $star_level=$this->getVipLevel($user_id,1);
-        $gold_level=$this->getVipLevel($user_id,2);
-        $vip_level=$this->getVipLevel($user_id,3);
-        $star_img=DB::name('vip')->where('level',$star_level)->where('type',1)->value('img');
-        $gold_img=DB::name('vip')->where('level',$gold_level)->where('type',2)->value('img');
-        $vip_img=DB::name('vip')->where('level',$vip_level)->where('type',3)->value('img');
-        $result[0]['star_img']=$this->auth->setFilePath($star_img);
-        $result[0]['gold_img']=$this->auth->setFilePath($gold_img);
-        $result[0]['vip_img']=$this->auth->setFilePath($vip_img);
+
+        $star_level=Common::getLevel($user_id,1);
+        $gold_level=Common::getLevel($user_id,2);
+        $vip_level=Common::getLevel($user_id,3);
+        $star_img=DB::table('vips')->where('level',$star_level)->where('type',1)->value('img');
+        $gold_img=DB::table('vips')->where('level',$gold_level)->where('type',2)->value('img');
+        $vip_img=DB::table('vips')->where('level',$vip_level)->where('type',3)->value('img');
+        $result[0]['star_img']=$star_img;
+        $result[0]['gold_img']=$gold_img;
+        $result[0]['vip_img']=$vip_img;
 
         $result[0]['is_time'] = 0;
-        $info = Db::name('time_log')->field('created_at,time')->where(array('uid'=>$uid,'muid'=>$result[0]['id']))->order('id desc')->limit(1)->find();
-        //echo Db::name('time_log')->getlastsql();
+        $info = Db::table('time_logs')->selectRaw('created_at,time')->where(array('uid'=>$uid,'user_id'=>$result[0]['id']))->orderByRaw('id desc')->limit(1)->first ();
+
         if (!empty($info) && $info['time'] && $info['created_at']){
             $endTime = ($info['time'] + $info['created_at']);
             $remainTime = ($endTime - time());
             $result[0]['is_time'] = $remainTime < 0 ? 0 : 1;
-            //删除计时时间
+            //delete timer
             if ($remainTime < 0){
-                Db::name('time_log')->where(array('uid'=>$uid,'muid'=>$result[0]['id']))->delete();
+                Db::table('time_logs')->where(array('uid'=>$uid,'user_id'=>$result[0]['id']))->delete();
             }
         }
 
@@ -973,9 +873,9 @@ class RoomController extends Controller
 
 
         if($result){
-            $this->ApiReturn(1,'获取成功',$result);
+            return Common::apiResponse(1,'success',$result);
         }else{
-            $this->ApiReturn(2,'取消失败');
+            return Common::apiResponse(0,'failed');
         }
 
     }
@@ -1014,92 +914,92 @@ class RoomController extends Controller
 
     //Room background list
     public function room_background(){
-        $data=DB::name('backgrounds')->where(['enable'=>1])->field('id,img')->select();
-        foreach ($data as $k => &$v) {
-            $v['img']=$this->auth->setFilePath($v['img']);
-        }
-        $this->ApiReturn(1,'',$data);
+        $data=DB::table('backgrounds')->where(['enable'=>1])->selectRaw('id,img')->get();
+        return Common::apiResponse (1,'',$data);
     }
 
     public function room_type(){
-        $data=DB::name('room_categories')->where(['pid'=>0,'enable'=>1])->field("id,name")->select();
-        $this->ApiReturn(1,'',$data);
+        $data=DB::table('room_categories')->where(['pid'=>0,'enable'=>1])->selectRaw("id,name")->get();
+        return Common::apiResponse(1,'',$data);
     }
 
 
     //set as admin
-    public function is_admin(){
-        $uid=input('uid/d',0);
-        $admin_id=input('admin_id/d',0);
-        if(!$uid || !$admin_id) $this->ApiReturn(0,'缺少参数');
-        if($uid == $admin_id)    $this->ApiReturn(0,'违规操作');
-        $roomVisitor=DB::name('rooms')->where('uid',$uid)->value('roomVisitor');
+    public function is_admin(Request $request){
+        $uid=$request->owner_id;
+        $admin_id=$request->user_id;
+        if(!$uid || !$admin_id) return Common::apiResponse(0,'invalid data');
+        if($uid == $admin_id)    return Common::apiResponse(0,'invalid data');
+        $roomVisitor=DB::table('rooms')->where('uid',$uid)->value('room_visitor');
         $vis_arr= !$roomVisitor ? [] : explode(",", $roomVisitor);
-        if(!in_array($admin_id, $vis_arr))   $this->ApiReturn(0,'该用户不在此房间');
+        if(!in_array($admin_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room');
 
 
-        $roomAdmin=DB::name('rooms')->where('uid',$uid)->value('roomAdmin');
+        $roomAdmin=DB::table('rooms')->where('uid',$uid)->value('room_admin');
         $adm_arr= !$roomAdmin ? [] : explode(",", $roomAdmin);
-        if(in_array($admin_id, $adm_arr))   $this->ApiReturn(0,'该用户已是管理员,请勿重复设置');
-        if(count($adm_arr) >= 15)   $this->ApiReturn(0,'房间管理员已满');
+        if(in_array($admin_id, $adm_arr))   return Common::apiResponse(0,'This user is already an administrator, please do not repeat the settings');
+        if(count($adm_arr) >= 15)    return Common::apiResponse(0,'room manager is full');
 
         $adm_arr=array_merge($adm_arr,[$admin_id]);
         $str=implode(",",$adm_arr);
 
-        $res=DB::name('rooms')->where(['uid'=>$uid])->update(['roomAdmin'=>$str]);
+        $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_admin'=>$str]);
         if($res){
-            $this->ApiReturn(1,'设置管理员成功');
+            return Common::apiResponse(1,'Set administrator successfully');
         }else{
-            $this->ApiReturn(0,'设置管理员失败');
+            return Common::apiResponse(0,'Failed to set administrator');
         }
     }
 
     //cancel manager
-    public function remove_admin(){
-        $uid=input('uid/d',0);
-        $admin_id=input('admin_id/d',0);
-        if(!$uid || !$admin_id) $this->ApiReturn(0,'缺少参数');
-        $roomAdmin=DB::name('rooms')->where('uid',$uid)->value('roomAdmin');
+    public function remove_admin(Request $request){
+        $uid=$request->owner_id;
+        $admin_id=$request->user_id;
+        if(!$uid || !$admin_id)  return Common::apiResponse(0,'invalid data');
+        $roomAdmin=DB::table('rooms')->where('uid',$uid)->value('room_admin');
         $adm_arr= !$roomAdmin ? [] : explode(",", $roomAdmin);
-        if(!in_array($admin_id, $adm_arr))   $this->ApiReturn(0,'该用户不是此房间管理员');
+        if(!in_array($admin_id, $adm_arr))   return Common::apiResponse(0,'This user is not an administrator of this room');
         $key=array_search($admin_id,$adm_arr);
         unset($adm_arr[$key]);
         $str=implode(",", $adm_arr);
-        $res=DB::name('rooms')->where(['uid'=>$uid])->update(['roomAdmin'=>$str]);
+        $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_admin'=>$str]);
         if($res){
-            $this->ApiReturn(1,'取消管理员成功');
+            return Common::apiResponse(1,'Cancel administrator successfully');
         }else{
-            $this->ApiReturn(0,'取消管理员失败');
+            return Common::apiResponse(0,'Failed to cancel administrator');
         }
     }
 
     //add ban
-    public function is_black(){
-        $uid=input('uid/d',0);
-        $user_id=input('user_id/d',0);
-        if(!$uid || !$user_id) $this->ApiReturn(0,'缺少参数');
-        if($uid == $user_id)    $this->ApiReturn(0,'违规操作');
-        $roomVisitor=DB::name('rooms')->where('uid',$uid)->value('roomVisitor');
+    public function is_black(Request $request){
+        $uid=$request->owner_id;
+        $user_id=$request->user_id;
+        if(!$uid || !$user_id) return Common::apiResponse(0,'invalid data');
+        if($uid == $user_id)    return Common::apiResponse(0,'Illegal operation');
+        $roomVisitor=DB::table('rooms')->where('uid',$uid)->value('room_visitor');
         $vis_arr= !$roomVisitor ? [] : explode(",", $roomVisitor);
-        if(!in_array($user_id, $vis_arr))   $this->ApiReturn(0,'该用户不在此房间');
+        if(!in_array($user_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room');
 
 
-        $roomSpeak=DB::name('rooms')->where('uid',$uid)->value('roomSpeak');
+        $roomSpeak=DB::table('rooms')->where('uid',$uid)->value('room_speak');
         $spe_arr= !$roomSpeak ? [] : explode(",", $roomSpeak);
         foreach ($spe_arr as $k => &$v) {
             $arr=explode("#",$v);
-            if($arr[0] == $user_id) $this->ApiReturn(0,'该用户已在禁言列表中');
+            if($arr[0] == $user_id) return Common::apiResponse(0,'This user is already on the ban list');
         }
         $shic=time() + 180;
         $jinyan=$user_id."#".$shic;
         $spe_arr=array_merge($spe_arr,[$jinyan]);
         $str=implode(",", $spe_arr);
-        $res=DB::name('rooms')->where(['uid'=>$uid])->update(['roomSpeak'=>$str]);
+        $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_speak'=>$str]);
         if($res){
-            $this->ApiReturn(1,'添加禁言成功');
+            return Common::apiResponse(1,'Succeeded adding ban');
         }else{
-            $this->ApiReturn(0,'添加禁言失败');
+            return Common::apiResponse(0,'Failed to add ban');
         }
     }
+
+
+
 
 }
