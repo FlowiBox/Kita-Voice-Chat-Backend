@@ -793,14 +793,14 @@ class RoomController extends Controller
 
 
     //Whether to set a password
-    public function is_pass(){
-        $uid = $this->request->request('uid') ? : 0;
+    public function is_pass(Request $request){
+        $uid = $request->owner_id ? : 0;
         if(!$uid)   return Common::apiResponse(0,'invalid data');
         $result = DB::table('rooms')->where('uid',$uid)->value('room_pass');
         if($result){
-            return Common::apiResponse(1,'The room has a password, please enter the password',['is_password'=>1]);
+            return Common::apiResponse(1,'The room has a password, please enter the password',['is_password'=>true]);
         }else{
-            return Common::apiResponse(1,'room without password',['is_password'=>0]);
+            return Common::apiResponse(1,'room without password',['is_password'=>false]);
         }
     }
 

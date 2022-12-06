@@ -58,6 +58,8 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post('add_admin_to_room',[\App\Http\Controllers\Api\V1\RoomController::class,'is_admin']);
         Route::post('remove_admin',[\App\Http\Controllers\Api\V1\RoomController::class,'remove_admin']);
         Route::post('ban_user_from_writing',[\App\Http\Controllers\Api\V1\RoomController::class,'is_black']);
+        Route::post('room_background_list',[\App\Http\Controllers\Api\V1\RoomController::class,'room_background']);
+        Route::post('check_if_has_pass',[\App\Http\Controllers\Api\V1\RoomController::class,'is_pass']);
 
 
 
