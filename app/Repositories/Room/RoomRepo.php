@@ -45,7 +45,7 @@ class RoomRepo implements RoomRepoInterface {
 
     public function create ( $data )
     {
-        $this->model->create($data);
+        return $this->model->create($data);
     }
 
     public function update ( $req , $id )
