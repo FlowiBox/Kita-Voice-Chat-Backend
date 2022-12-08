@@ -62,9 +62,9 @@ class RoomController extends Controller
         $request['show']=true;
         try {
            $room = $this->repo->create (array_merge($request->validated (),['uid'=>$request->user ()->id]));
-            return Common::apiResponse (true,'created',null,200);
+            return Common::apiResponse (true,'created',new RoomResource($room),200);
         }catch (\Exception $exception){
-            return Common::apiResponse (false,$exception->getMessage (),new RoomResource($room),$exception->getCode ());
+            return Common::apiResponse (false,$exception->getMessage (),null,$exception->getCode ());
         }
 
     }
