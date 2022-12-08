@@ -35,7 +35,7 @@ class RoomResource extends JsonResource
             'country'=>$this->country
         ];
         if ($request['show']){
-            $data['room_users'] = Common::get_room_users ($this->owner ()->id,$request->user ()->id);
+            $data['room_users'] = Common::get_room_users (@$this->owner ()->id,$request->user ()->id);
             $data['background'] = $this->room_background;
             $data['mics'] = explode (',',$this->microphone);
             $data['is_mics_free']=$this->free_mic;

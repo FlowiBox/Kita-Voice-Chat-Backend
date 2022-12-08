@@ -59,11 +59,12 @@ class RoomController extends Controller
      */
     public function store(CreateRoomRequest $request)
     {
+        $request['show']=true;
         try {
-            $this->repo->create (array_merge($request->validated (),['uid'=>$request->user ()->id]));
+           $room = $this->repo->create (array_merge($request->validated (),['uid'=>$request->user ()->id]));
             return Common::apiResponse (true,'created',null,200);
         }catch (\Exception $exception){
-            return Common::apiResponse (false,$exception->getMessage (),null,$exception->getCode ());
+            return Common::apiResponse (false,$exception->getMessage (),new RoomResource($room),$exception->getCode ());
         }
 
     }
@@ -1027,9 +1028,6 @@ class RoomController extends Controller
             return Common::apiResponse(0,'Failed to add writing ban');
         }
     }
-
-
-
 
 
 }
