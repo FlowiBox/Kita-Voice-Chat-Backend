@@ -190,10 +190,10 @@ class RoomController extends Controller
         $owner_id       = $request['owner_id'];
         $user_id   = $request->user ()->id;
 
-        if($owner_id == $user_id){
-            $res=DB::table('users')->where('id',$user_id)->value('is_idcard');
-            if(!$res)  return Common::apiResponse(false,'Please complete real-name authentication first');
-        }
+//        if($owner_id == $user_id){
+//            $res=DB::table('users')->where('id',$user_id)->value('is_idcard');
+//            if(!$res)  return Common::apiResponse(false,'Please complete real-name authentication first');
+//        }
         $black_list=Common::getUserBlackList($owner_id);
         if(in_array($user_id, $black_list)) return Common::apiResponse(false,__('You have been blocked by the other party'));
         $room_info = (array)DB::table('rooms','rooms')
