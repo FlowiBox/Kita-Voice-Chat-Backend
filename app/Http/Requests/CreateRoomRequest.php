@@ -30,7 +30,7 @@ class CreateRoomRequest extends FormRequest
     {
         return [
             'numid'=>[
-                'required','unique:rooms'
+                'unique:rooms'
             ],
             'room_name'=>[
                 'required'
