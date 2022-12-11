@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Models\Follow;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FollowController extends Controller
@@ -12,6 +13,9 @@ class FollowController extends Controller
     public function follow(Request $request){
         if ($request->user ()->id == $request->user_id){
             return Common::apiResponse (false,'cant follow your self',null,200);
+        }
+        if (!User::query ()->find ($request->user_id)){
+            return Common::apiResponse (false,'this user not found',null,200);
         }
         Follow::query ()->updateOrCreate (
             [
