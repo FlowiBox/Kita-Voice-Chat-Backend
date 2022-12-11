@@ -79,30 +79,30 @@ class ProfileController extends Controller
     {
         $data = $request->all ();
         $user = $request->user ();
-        if ($data['name']){
+        if ($request->name){
             $user->name = $data['name'];
         }
-        if ($data['email']){
+        if ($request->email){
             $user->email = $data['email'];
         }
-        if ($data['phone']){
+        if ($request->phone){
             $user->phone = $data['phone'];
         }
         $user->save();
         $profile = $user->profile;
-        if ($data['gender']){
+        if ($request->gender){
             $profile->gender = $data['gender'] == 'female' ? 0 : 1;
         }
-        if ($data['birthday']){
+        if ($request->birthday){
             $profile->birthday = $data['birthday'];
         }
-        if ($data['province']){
+        if ($request->province){
             $profile->province = $data['province'];
         }
-        if ($data['city']){
+        if ($request->city){
             $profile->city = $data['city'];
         }
-        if ($data['country']){
+        if ($request->country){
             $profile->country = $data['country'];
         }
         if ($request->hasFile ('image')){
