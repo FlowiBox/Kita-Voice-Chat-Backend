@@ -113,6 +113,9 @@ class RoomController extends Controller
 
         try {
             $room = $this->repo->find ($id);
+            if(!$room){
+                return Common::apiResponse (false,'not found',null,404);
+            }
             if ($room->uid != $request->user ()->id && !in_array ($request->user ()->id,explode (',',$room->room_admin))){
                 return Common::apiResponse (false,'not allowed',null,401);
             }
