@@ -61,6 +61,10 @@ class RoomController extends Controller
     {
         $request['show']=true;
         try {
+            $room = Room::query ()->where('uid',$request->user ()->id)->exists ();
+            if ($room){
+                return Common::apiResponse (false,'you are already have a room');
+            }
            $room = $this->repo->create (array_merge($request->validated (),['uid'=>$request->user ()->id]));
             return Common::apiResponse (true,'created',new RoomResource($room),200);
         }catch (\Exception $exception){
