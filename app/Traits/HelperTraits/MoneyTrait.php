@@ -112,7 +112,7 @@ trait MoneyTrait
 
 
     //reduce the value
-    function userStoreDec($user_id, $get_nums, $get_type, $jb_type) {
+    public static function userStoreDec($user_id, $get_nums, $get_type, $jb_type) {
         $get_nums=abs($get_nums);
         if($get_nums == 0) return false;
         $res = User::query()->findOrFail ($user_id)->setDec($jb_type, $get_nums);
@@ -162,6 +162,111 @@ trait MoneyTrait
         $order_no = $prefix . date("YmdHis") . rand(100000, 999999);
         return $order_no;
     }
+
+
+
+    public static function userPackStoreInc($user_id,$type,$target_id,$get_nums,$use_type = '5',$get_type='5') {
+        $get_nums=abs($get_nums);
+        if($get_nums == 0) return false;
+
+        $where['user_id']=$user_id;
+        $where['type']=$type;
+        $where['target_id']=$target_id;
+        $num=DB::table('pack')->where($where)->first();
+        $wares=DB::table('wares')->find($target_id);
+        if(!$num){
+            //$params = $_POST['row'];
+            $info['user_id']=$user_id;
+            $info['get_type']=$get_type;
+            $info['type']=$type;
+            $info['target_id']=$target_id;
+            $info['num']=$get_nums;
+            $info['expire']= $wares->expire ? time()+($wares->expire * 86400 * $get_nums) : 0;
+            //$info['expire']= $params['expire'] ? strtotime($params['expire']) : 0;
+            $info['addtime']=time();
+            $res=DB::table('pack')->insertGetId($info);
+            $now_nums=$get_nums;
+        }else{
+            $res=DB::table('pack')->where($where)->increment('num',$get_nums);
+            $now_nums=DB::table('pack')->where($where)->value('num');
+            $pack_expire=DB::table('pack')->where($where)->value('expire');
+            $expire=$wares['expire'] ? ($pack_expire + ($wares['expire'] * 86400 * $get_nums)) : 0;
+            DB::table('pack')->where($where)->update(array('expire'=>$expire));
+        }
+
+
+        if(in_array($type, [1,2,3])){//gems, gifts, coupons
+            self::addPackLog($user_id,$type,$target_id,$get_nums,$use_type,$now_nums);
+        }
+        return $res;
+    }
+//reduce the value
+    public static function userPackStoreDec($user_id,$type,$target_id,$get_nums,$use_type = '1') {
+        $get_nums=abs($get_nums);
+        if($get_nums == 0) return false;
+        $where['user_id']=$user_id;
+        $where['type']=$type;
+        $where['target_id']=$target_id;
+        $num=DB::table('pack')->where($where)->value('num');
+        if(!$num || $num < $get_nums)   return false;
+        if($num == $get_nums){
+            $res = DB::table('pack')->where($where)->delete();
+            $now_nums=0;
+        }else{
+            $res = DB::table('pack')->where($where)->decrement('num',$get_nums);
+            $now_nums=DB::table('pack')->where($where)->value('num');
+        }
+        self::addPackLog($user_id,$type,$target_id,$get_nums, $use_type, $now_nums);
+        return $res;
+    }
+//create record
+    public static function addPackLog($user_id,$type,$target_id,$get_nums, $use_type, $now_nums) {
+        $info['user_id'] = $user_id;
+        $info['use_type'] = $use_type;
+        $info['type'] = $type;
+        $info['target_id'] = $target_id;
+        $info['get_nums'] = $get_nums;
+        $info['now_nums'] = $now_nums;
+        $info['addtime'] = time();
+        $res = Db::table('pack_log')->insertGetId($info);
+        return $res;
+    }
+
+//increase value
+    public static function userStoreInc($user_id, $get_nums, $get_type, $jb_type) {
+        $get_nums=abs($get_nums);
+        if($get_nums == 0) return false;
+        if ($get_type == 99) {
+            $now_nums = 0;
+            $res = 1;
+        } else {
+            $res = Db::table('users')->where(['id' => $user_id])->increment($jb_type, $get_nums);
+            $now_nums = Db::table('users')->where(['id' => $user_id])->value($jb_type);
+        }
+        if (!$res) return false;
+        self::addTranmoney($user_id, $get_nums, $get_type, $now_nums,'');
+        return $res;
+    }
+//Increase guild value
+    public static function userUnionStoreInc($user_id, $get_nums, $get_type, $jb_type) {
+        $get_nums=abs($get_nums);
+        if($get_nums == 0) return false;
+        if ($get_type == 99) {
+            $now_nums = 0;
+            $res = 1;
+        } else {
+            //Increase guild income
+            Db::table('user_unions')->where(['users_id' => $user_id])->increment('total_price', $get_nums);
+            $res = Db::table('user_unions')->where(['users_id' => $user_id])->increment($jb_type, $get_nums);
+            Db::table('user_unions')->where(['users_id' => $user_id])->increment('unsettled_price', $get_nums);
+
+            $now_nums = Db::table('user_unions')->where(['users_id' => $user_id])->selectRaw($jb_type.',union_id')->first();
+        }
+        if (!$res) return false;
+        self::addTranmoney($user_id, $get_nums, $get_type, $now_nums[$jb_type],'',$now_nums['union_id']);
+        return $res;
+    }
+
 
 
 }

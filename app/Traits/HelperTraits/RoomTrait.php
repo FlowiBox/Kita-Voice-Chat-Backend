@@ -328,4 +328,201 @@ trait RoomTrait
         return $color;
     }
 
+
+
+
+    //Increase the accumulative value after opening the room mode. Added in the fourth phase
+    public static function add_play_num($uid,$user_id,$price){
+        $where['uid']=$uid;
+        $where['user_id']=$user_id;
+        $data=DB::table('play_num_logs')->where($where)->first();
+        if(!$data){
+            $info['uid']=$uid;
+            $info['user_id']=$user_id;
+            $info['price']=$price;
+            DB::table('play_num_logs')->insertGetId($info);
+        }else{
+            DB::table('play_num_logs')->where($where)->increment('price',$price);
+        }
+
+    }
+
+
+
+    public static function unlock_wares($user_id, $cp_id = null)
+    {
+        if ($cp_id) {
+            $level = self::getCpLevel($cp_id);
+            $get_type = 8;
+        } else {
+            $get_type = 1;
+            $level = self::getLevel($user_id, 3);
+        }
+        $type = [4, 5, 6, 7, 8];
+        foreach ($type as $k => &$v) {
+            $where['get_type'] = $get_type;
+            $where['enable'] = 1;
+            $where['level'] = ['elt', $level];
+            $where['type'] = $v;
+            $wares = DB::table('wares')->where($where)->selectRaw('id,type,expire')->orderByRaw("id desc")->limit(1)->first();
+            if (!$wares) {
+                continue;
+            }
+            $where_pack['user_id'] = $user_id;
+            $where_pack['get_type'] = $get_type;
+            $where_pack['type'] = $v;
+            $target_id = DB::table('pack')->where($where_pack)->value('target_id');
+            if ($wares->id == $target_id) {
+                continue;
+            }
+            if (!$target_id) {
+                $arr['user_id'] = $user_id;
+                $arr['get_type'] = $get_type;
+                $arr['type'] = $v;
+                $arr['target_id'] = $wares->id;
+                $arr['addtime'] = time();
+                $arr['expire'] = $wares['expire'] ? time() + $wares['expire'] * 86400 : 0;
+                $res = Db::table('pack')->insert($arr);
+            } else {
+                $res = DB::table('pack')->where($where_pack)->update(['target_id' => $wares['id']]);
+            }
+            if ($res && in_array($v, [4, 5, 6, 7]) && $get_type == 1) {
+                $dress = 'dress_' . $v;
+                DB::table('users')->where(['id' => $user_id])->update([$dress => $wares['id']]);
+            }
+        }
+    }
+
+
+    public static function update_user_total($user_id = null, $type = null, $coins = null)
+    {
+        if (!$user_id || !$type || !$coins) {
+            return false;
+        }
+        $data = DB::table('user_totals')->where(['user_id' => $user_id])->first();
+        if ($type == 1) {
+            DB::table('user_totals')->where(['user_id' => $user_id])->increment('room', $coins);
+        } elseif ($type == 2) {
+            DB::table('user_totals')->where(['user_id' => $user_id])->increment('send', $coins);
+            $vip_level = self::getLevel_two($user_id, 3);
+            $res = DB::table('user_totals')->where(['user_id' => $user_id])->update(['vip_level' => $vip_level]);
+            if ($res) {
+                self::add_user_official($user_id, 1, $vip_level);
+            }
+        } elseif ($type == 3) {
+            DB::table('user_totals')->where(['user_id' => $user_id])->increment('gain', $coins);
+        } elseif ($type == 4) {
+            $cp_level = self::getUserMaxCpLevel($user_id, 'level');
+            $res = DB::table('user_total')->where(['user_id' => $user_id])->update(['cp_level' => $cp_level]);
+            if ($res) {
+                self::add_user_official($user_id, 8, $cp_level);
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public static function getLevel_two($user_id = null, $type = null, $is_img = null)
+    {
+        if (!$user_id || !$type) {
+            return 0;
+        }
+        $gold_num = DB::table('user_totals')->where('user_id', $user_id)->value('send');
+        $star_num = DB::table('user_totals')->where('user_id', $user_id)->value('gain');
+        if ($type == 1) {
+            $coins = $star_num;
+        } elseif ($type == 2 || $type == 3) {
+            $coins = $gold_num;
+        } else {
+            return 0;
+        }
+        if (!$coins && $is_img == 'img') {
+            return '';
+        }
+        if (!$coins) {
+            return 0;
+        }
+        $level = DB::table('vips')->where(['type' => $type])->where('mizuan', '<=', $coins)->orderBy('id', 'desc')->limit(1)->value('level');
+
+        if ($is_img == 'img') {
+            if ($level) {
+
+                $img = DB::table('vips')->where(['level' => $level, 'type' => $type])->value('img');
+                return $img;
+            } else {
+                return '';
+            }
+        } else {
+            return $level;
+        }
+    }
+    public static function getUserMaxCpLevel($user_id = null, $field = null)
+    {
+        if (!$user_id || !$field) {
+            return 0;
+        }
+        $where['user_id|fromUid'] = $user_id;
+        $where['status'] = 1;
+        $cp = DB::table('cps')->where($where)->orderByRaw('exp desc')->limit(1)->first();
+        if (!$cp) {
+            return 0;
+        }
+        $exp = $cp->exp;
+        $where_vip['type'] = 5;
+        $where_vip['exp'] = ['elt', $exp];
+        $level = DB::table('vips')->where($where_vip)->orderByRaw('id desc')->limit(1)->value('level');
+        if ($field == 'level') {
+            return $level;
+        } else {
+            return $cp[$field] ?: 0;
+        }
+    }
+
+    public static function add_user_official($user_id, $get_type, $level)
+    {
+        if ($get_type == 1) {
+            $where['type'] = 3;
+            $class = "VIP";
+        } elseif ($get_type == 8) {
+            $where['type'] = 5;
+            $class = "Guardian CP";
+        } else {
+            return false;
+        }
+        $where['level'] = $level;
+        $where['enable'] = 1;
+        $auth = DB::table('vip_auth')->where($where)->value('name');
+        if (!$auth) {
+            return false;
+        }
+        $content = "Congratulations," . $class . 'level reached' . $level . 'Level up, successfully unlocked' . $auth . 'privilege~';
+        self::addOfficialMessage('', $user_id, $content);
+    }
+
+    protected static function addOfficialMessage($title = null , $user_id, $content)
+    {
+        $title = $title ?: 'system notification';
+        $info['title'] = $title;
+        $info['user_id'] = $user_id;
+        $info['content'] = $content;
+        $info['created_at'] = date('Y-m-d H:i:s', time());
+        $res = DB::table('official_messages')->insertGetId($info);
+        return $res;
+    }
+
+    public static function fin_task($user_id,$task_id){
+        $task=Db::table('tasks')->where(['id'=>$task_id,'enable'=>1])->first();
+        if(!$task)  return 0;
+        $user_task=Db::table('user_tasks')->where(['user_id'=>$user_id])->first();
+        if($task['type'] == 1 && !substr_count($user_task['not_fin_1'],$task_id))   return 0;
+        $field='fin_'.$task['type'];
+        $str=$user_task[$field];
+        $num=substr_count($str,$task_id);
+        if($num == $task['num'])    return 0;
+        $str_arr=explode(',', $str);
+        $str_arr[]=$task_id;
+        $info[$field]=trim(implode(',', $str_arr),',');
+        Db::table('user_tasks')->where(['user_id'=>$user_id])->update($info);
+        return 1;
+    }
 }

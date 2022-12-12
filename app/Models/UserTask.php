@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Pack extends Model
+class UserTask extends Model
 {
-
+    protected $table = 'user_tasks';
 }

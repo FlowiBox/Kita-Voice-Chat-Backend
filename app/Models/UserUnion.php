@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Pack extends Model
+class UserUnion extends Model
 {
-
+    protected $table = 'user_unions';
 }
