@@ -43,20 +43,24 @@ class GiftLogController extends Controller
         $data=$request;
         $data['user_id'] = $request->user ()->id;
         if(!$data['id'] || !$data['owner_id'] || !$data['user_id'] || !$data['toUid'] || !$data['num'] )
-            return Common::apiResponse(0,'Missing parameters',$data);
+            return Common::apiResponse(0,'Missing parameters',$data->all ());
         if($data['num'] < 1)    return Common::apiResponse(0,'The number of gifts cannot be less than 1');
-        $gift=DB::table('gifts')->select(['id','name','type','price','vip_level,is_play,img'])->where(['id'=>$data['id']])->where('enable',1)->first();
+        $gift=DB::table('gifts')->select(['id','name','type','price','vip_level','is_play','img'])->where(['id'=>$data['id']])->where('enable',1)->first();
+
         $user=DB::table('users')->select(['id','di'])->where(['id'=>$data['user_id']])->first();
+
         if(!$gift) return Common::apiResponse(0,'Gift does not exist or has been removed');
-        $room=DB::table('rooms')->where(['uid'=>$data['owner_id']])->select('id,uid,room_visitor,play_num')->first();
+        $room=DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,uid,room_visitor,play_num')->first();
+
         if(!$room)  return Common::apiResponse(0,'room does not exist');
         $vis_arr=explode(",",$room->room_visitor);
         $vis_arr[]=$data['owner_id'];
+
         if(!in_array($data['user_id'],$vis_arr))    return Common::apiResponse(0,'you are not in this room');
 
         //Determine whether to send
         $vip_level=Common::getLevel($data['user_id'],3);
-        if($vip_level < $gift['vip_level'])   return Common::apiResponse(0,'vip'.$gift['vip_level'].'to send this gift');
+        if($vip_level < $gift->vip_level)   return Common::apiResponse(0,'vip '.$gift->vip_level.' to send this gift');
         $to_arr=explode(',', $data['toUid']);
         foreach ($to_arr as $k1 => &$v1) {
             if(!in_array($v1,$vis_arr))    return Common::apiResponse(0,'User is not in this room');
@@ -64,8 +68,9 @@ class GiftLogController extends Controller
         }
         unset($v1);
 
+
         //Number of backpacks
-        $pack_gift_num=DB::table('pack')->where(['type'=>2,'user_id'=>$data['user_id'],'target_id'=>$data['id']])->value('num') ? : 0;
+        $pack_gift_num=DB::table('packs')->where(['type'=>2,'user_id'=>$data['user_id'],'target_id'=>$data['id']])->value('num') ? : 0;
         //Total sent quantity
         $send_num=$data['num'] * count($to_arr);
 
@@ -73,11 +78,11 @@ class GiftLogController extends Controller
             if($pack_gift_num <= $send_num){
                 //Calculate required diamonds
                 $shengyu_num=$send_num - $pack_gift_num;
-                $sum_gift_price=$shengyu_num * $gift['price'];
+                $sum_gift_price=$shengyu_num * $gift->price;
                 if($user->di < $sum_gift_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!');
             }
         }else{
-            $total_price=$gift['price'] * $send_num;
+            $total_price=$gift->price * $send_num;
             if($user->di < $total_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!');
         }
 
@@ -92,7 +97,7 @@ class GiftLogController extends Controller
                 }else{
                     //Calculate required diamonds
                     $shengyu_num=$send_num - $pack_gift_num;
-                    $sum_gift_price=$shengyu_num * $gift['price'];
+                    $sum_gift_price=$shengyu_num * $gift->price;
                     if($user['di'] < $sum_gift_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!');
                     //Delete all the gifts in the backpack, deduct the difference diamonds
                     Common::userPackStoreDec($data['user_id'],2,$data['id'],$pack_gift_num);
@@ -103,11 +108,12 @@ class GiftLogController extends Controller
                 if($user['di'] < $total_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!');
                 $shenngyu_price=$total_price;
             }
+
             $i=0;
             $res=$push=[];
             foreach ($to_arr as $k => &$v) {
                 $i++;
-                $this->sendGifts($data['id'],$data['uid'],$data['num'],$gift['name'],$gift['price'],$data['user_id'],$v,0);
+                $this->sendGifts($data['id'],$data['owner_id'],$data['num'],$gift->name,$gift->price,$data['user_id'],$v,0);
                 $level= Common::getLevel($v,3);
                 $res_arr['nick_color'] = Common::getNickColorByVip($level);
                 $res_arr['is_first'] = 0;
@@ -118,12 +124,12 @@ class GiftLogController extends Controller
 
 
                 //numerical play
-                if($room['play_num'] == 1){
-                    $price = $data['num'] * $gift['price'];
+                if($room->play_num == 1){
+                    $price = $data['num'] * $gift->price;
                     Common::add_play_num($data['owner_id'],$v,$price);
                 }
                 //broadcast
-                if($gift['is_play'] == 1){
+                if($gift->is_play == 1){
                     $info['uid']=$data['owner_id'];
                     $info['user_name']=Common::getUserField($data['user_id'],'nickname');
                     $info['to_name']=Common::getUserField($v,'nickname');
@@ -140,7 +146,7 @@ class GiftLogController extends Controller
             if($i == count($to_arr)){
                 //Unlock vip, cp level items, and dress up the latest items
                 Common::unlock_wares($data['user_id']);
-                $total_mizuan= $send_num * $gift['price'];
+                $total_mizuan= $send_num * $gift->price;
                 //Homeowner's total turnover
                 Common::update_user_total($data['uid'],1,$total_mizuan);
                 //The total amount issued by the user
@@ -149,10 +155,10 @@ class GiftLogController extends Controller
                 Common::fin_task($data['user_id'],7);
             }
             //commit transaction
-            Db::commit();
-        } catch (\Exception $e) {
+            DB::commit();
+        } catch (\Exception $e) {dd ($e);
             //rollback transaction
-            Db::rollback();
+            DB::rollback();
             return Common::apiResponse(0,'Gift delivery failed');
         }
         $return_arr['users']=$res;
@@ -163,24 +169,24 @@ class GiftLogController extends Controller
     //Execute send gift
     protected function sendGifts($id,$uid,$num,$name,$price,$user_id,$toUid,$is_play){
         $info['giftId']=$id;
-        $info['uid']=$uid;
+        $info['roomowner_id']=$uid;
         $info['giftNum']=$num;
         $info['giftName']=$name;
         $info['giftPrice']=$price * $num;
-        $info['user_id']=$user_id;
-        $info['fromUid']=$toUid;
+        $info['sender_id']=$user_id;
+        $info['receiver_id']=$toUid;
         $info['is_play']=$is_play ? 2 : 1;
         $info['type']=2;
         $info['created_at']=$info['updated_at']=date('Y-m-d H:i:s',time());
 
 
         //Calculate the share
-        $income=$this->calculate($uid,$toUid,$info['giftPrice']);
+        $income = $this->calculate($uid,$toUid,$info['giftPrice']);
         $info['platform_obtain']=$income['platform'];   //platform
-        $info['toUid_obtain']=$income['toUid'];     //recipient
-        $info['uid_obtain']=$income['uid']+$income['uid_yj'];//homeowner
+        $info['receiver_obtain']=$income['toUid'];     //recipient
+        $info['roomowner_obtain']=$income['uid']+$income['uid_yj'];//homeowner
         //get guild
-        $union=Db::table('user_union')->where(['users_id' => $toUid,'check_status'=>1])->first ();
+        $union=Db::table('user_unions')->where(['user_id' => $toUid,'check_status'=>1])->first ();
         if ($union){
             $info['union_id']= $union['union_id'];//guild
         }
@@ -188,7 +194,7 @@ class GiftLogController extends Controller
         if($res){
             if($income['uid'] > 0) {
                 //Increase guild income and records
-                $union=Db::table('user_unions')->where(['users_id' => $uid,'check_status'=>1])->first();
+                $union=Db::table('user_unions')->where(['user_id' => $uid,'check_status'=>1])->first();
                 if ($union){
                     Common::userUnionStoreInc($uid,$income['uid'],31,'room_coins');
                 }else{
@@ -197,7 +203,7 @@ class GiftLogController extends Controller
             }
             if($income['uid_yj'] > 0) {
                 //Increase guild income and records
-                $union=Db::table('user_unions')->where(['users_id' => $uid,'check_status'=>1])->first();
+                $union=Db::table('user_unions')->where(['user_id' => $uid,'check_status'=>1])->first();
                 if ($union){
                     Common::userUnionStoreInc($uid,$income['uid_yj'],32,'room_coins');
                 }else{
@@ -206,7 +212,7 @@ class GiftLogController extends Controller
             }
             if($income['toUid'] > 0)  {
                 //Increase guild income and records
-                $union=Db::table('user_unions')->where(['users_id' => $toUid,'check_status'=>1])->first();
+                $union=Db::table('user_unions')->where(['user_id' => $toUid,'check_status'=>1])->first();
                 if ($union){
                     Common::userUnionStoreInc($toUid,$income['toUid'],21,'coins');
                 }else{
@@ -226,8 +232,11 @@ class GiftLogController extends Controller
     }
 
     //Calculate the income of all parties
-    protected function calculate($uid,$fromUid,$total){
+    public function calculate($uid,$toUid,$total){
         $room_user=DB::table('users')->select(['id','is_sign','scale','is_leader'])->where('id',$uid)->first();
+        if (!$room_user){
+            throw new \Exception('room owner not found');
+        }
         $room_scale = Common::getConfig('platform_share');
         $room_scale = $room_scale ? $room_scale : 30;//Platform share
         if(!$room_user->is_sign){//non-contract homeowner
@@ -241,7 +250,7 @@ class GiftLogController extends Controller
             //platform
             $platform=$total*($room_scale-$room_user->scale)/100;
             if($room_user->is_leader){
-                $scale=DB::table('leader')->where('uid',$uid)->where('user_id',$fromUid)->where('status',2)->value('scale') ? : 100;
+                $scale=DB::table('leaders')->where('uid',$uid)->where('user_id',$toUid)->where('status',2)->value('scale') ? : 100;
             }else{
                 $scale = 100;
             }

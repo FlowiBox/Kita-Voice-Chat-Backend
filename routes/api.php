@@ -75,6 +75,7 @@ Route::middleware('auth:sanctum')->group (function (){
     });
     Route::prefix ('gifts')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\GiftController::class,'index']);
+        Route::post ('/send',[\App\Http\Controllers\Api\V1\GiftLogController::class,'gift_queue_six']);
     });
 
     Route::prefix ('countries')->group (function (){

@@ -130,10 +130,9 @@ trait MoneyTrait
         $info['get_nums'] = $get_nums;
         $info['get_type'] = $get_type;
         $info['now_nums'] = $now_nums;
-        $info['addtime']  = time();
         $info['symbol']    = $symbol;
         $info['types']    = self::getTypesByGettype($get_type);
-        $res = Db::table('store_log')->insertGetId($info);
+        $res = Db::table('store_logs')->insertGetId($info);
         return $res;
     }
 
@@ -207,14 +206,14 @@ trait MoneyTrait
         $where['user_id']=$user_id;
         $where['type']=$type;
         $where['target_id']=$target_id;
-        $num=DB::table('pack')->where($where)->value('num');
+        $num=DB::table('packs')->where($where)->value('num');
         if(!$num || $num < $get_nums)   return false;
         if($num == $get_nums){
             $res = DB::table('pack')->where($where)->delete();
             $now_nums=0;
         }else{
-            $res = DB::table('pack')->where($where)->decrement('num',$get_nums);
-            $now_nums=DB::table('pack')->where($where)->value('num');
+            $res = DB::table('packs')->where($where)->decrement('num',$get_nums);
+            $now_nums=DB::table('packs')->where($where)->value('num');
         }
         self::addPackLog($user_id,$type,$target_id,$get_nums, $use_type, $now_nums);
         return $res;
@@ -228,7 +227,7 @@ trait MoneyTrait
         $info['get_nums'] = $get_nums;
         $info['now_nums'] = $now_nums;
         $info['addtime'] = time();
-        $res = Db::table('pack_log')->insertGetId($info);
+        $res = Db::table('pack_logs')->insertGetId($info);
         return $res;
     }
 

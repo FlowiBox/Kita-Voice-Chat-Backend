@@ -41,6 +41,7 @@ class UserController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('email', __('Email'));
+        $grid->column('di', __('Diamonds'))->editable ();
         $grid->column('isOnline', __('isOnline'));
         return $grid;
     }
@@ -82,6 +83,7 @@ class UserController extends AdminController
             }
             return $ops;
         });
+        $form->currency ('di',__('Diamonds'));
         $form->email('email', __('Email'));
         $form->password('password', __('Password'));
 
