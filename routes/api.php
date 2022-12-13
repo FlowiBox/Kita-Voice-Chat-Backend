@@ -98,6 +98,10 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('my_pack',[\App\Http\Controllers\Api\V1\UserController::class,'my_pack']);
     });
 
+    Route::prefix ('community')->group (function (){
+        Route::get ('official_messages',[\App\Http\Controllers\Api\V1\CommunityController::class,'official_messages']);
+    });
+
 
 
 });
