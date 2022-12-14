@@ -119,7 +119,7 @@ class BackgroundController extends Controller
 
         $form->display('ID');
         $form->image('img', trans('image'));
-        $form->text('enable', 'enable');
+        $form->switch('enable', __('enable'))->states (Common::getSwitchStates ());
 
         return $form;
     }
