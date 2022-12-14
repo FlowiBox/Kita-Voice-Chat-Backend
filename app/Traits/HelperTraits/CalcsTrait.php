@@ -143,6 +143,7 @@ Trait CalcsTrait
             } , self ::star_end_time ( 4 )
         );
 
+
         $arr['user_coins'] = DB ::table ( 'users' ) -> where ( 'id' , $user_id ) -> value ( 'coins' );
 
         $arr['day_sum']      = DB ::table ( 'store_logs' ) -> where ( 'user_id' , $user_id ) -> where ( 'get_type' , 21 )

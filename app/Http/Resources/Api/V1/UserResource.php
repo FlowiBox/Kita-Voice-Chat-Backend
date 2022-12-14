@@ -25,6 +25,7 @@ class UserResource extends JsonResource
             'number_of_friends'=>$this->numberOfFriends(),
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
+            'diamonds'=>$this->di,
             'vip'=>Common::vip_center ($this->id),
             'income'=>Common::user_income ($this->id),
             'my_store'=>$this->my_store,
