@@ -29,6 +29,7 @@ Route::group([
     $router->resource ('configs','ConfigController');
     $router->resource ('categories','RoomCategoryController');
     $router->resource ('countries','CountryController');
+    $router->resource ('backgrounds','BackgroundController');
 
 
     //--------------------

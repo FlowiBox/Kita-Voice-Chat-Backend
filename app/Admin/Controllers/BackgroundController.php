@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Helpers\Common;
 use App\Models\Background;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
@@ -82,10 +83,8 @@ class BackgroundController extends Controller
         $grid = new Grid(new Background);
 
         $grid->id('ID');
-        $grid->img('img');
-        $grid->enable('enable');
-        $grid->created_at(trans('admin.created_at'));
-        $grid->updated_at(trans('admin.updated_at'));
+        $grid->column('img',trans ('image'))->image ('',30);
+        $grid->column('enable',trans ('enable'))->switch (Common::getSwitchStates ());
 
         return $grid;
     }
@@ -119,10 +118,8 @@ class BackgroundController extends Controller
         $form = new Form(new Background);
 
         $form->display('ID');
-        $form->text('img', 'img');
+        $form->image('img', trans('image'));
         $form->text('enable', 'enable');
-        $form->display(trans('admin.created_at'));
-        $form->display(trans('admin.updated_at'));
 
         return $form;
     }
