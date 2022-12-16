@@ -226,7 +226,8 @@ class GiftLogController extends Controller
             //The total amount received by the user
             Common::update_user_total($toUid,3,$info['giftPrice']);
             return 1;
-        }else{
+        }
+        else{
             return 0;
         }
     }
@@ -246,9 +247,9 @@ class GiftLogController extends Controller
             $data['uid_yj']=0;//homeowner
         }else{
             //Room running water
-            $stream=$total*$room_user->scale/100;
+            $stream = $total * $room_user->scale/100;
             //platform
-            $platform=$total*($room_scale-$room_user->scale)/100;
+            $platform = $total * ($room_scale-$room_user->scale)/100;
             if($room_user->is_leader){
                 $scale=DB::table('leaders')->where('uid',$uid)->where('user_id',$toUid)->where('status',2)->value('scale') ? : 100;
             }else{
@@ -256,8 +257,8 @@ class GiftLogController extends Controller
             }
             //recipient
             $room_scale_sign = (100 - $room_scale)/100;
-            $get_gift=$total * $room_scale_sign * $scale /100;
-            $uid_yj = $total * $room_scale_sign * (100 - $scale)/100;
+            $get_gift=$total * ($room_scale_sign * $scale /100);
+            $uid_yj = $total * ($room_scale_sign * (100 - $scale)/100);
 
             $data['uid']=$stream;//Room running water
             $data['toUid']=$get_gift;//recipient
@@ -265,7 +266,8 @@ class GiftLogController extends Controller
             $data['uid_yj']=$uid_yj;//homeowner
         }
         $data=array_map(function($val){
-            return round($val*0.1,2);
+            $gvic = Common::getConf ('gift_value_in_coins')?:0.1;
+            return round($val*$gvic,2);
         }, $data);
         return $data;
     }
