@@ -102,6 +102,11 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('official_messages',[\App\Http\Controllers\Api\V1\CommunityController::class,'official_messages']);
     });
 
+    Route::prefix ('emojis')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\EmojiController::class,'index']);
+        Route::get ('/{id}',[\App\Http\Controllers\Api\V1\EmojiController::class,'show']);
+    });
+
 
 
 });

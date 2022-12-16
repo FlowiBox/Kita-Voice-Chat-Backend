@@ -30,6 +30,7 @@ Route::group([
     $router->resource ('categories','RoomCategoryController');
     $router->resource ('countries','CountryController');
     $router->resource ('backgrounds','BackgroundController');
+    $router->resource ('emojis','EmojiController');
 
 
     //--------------------
