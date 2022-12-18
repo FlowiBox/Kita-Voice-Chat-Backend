@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helpers\Agora;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CountryResource;
@@ -9,6 +10,7 @@ use App\Models\Background;
 use App\Models\Country;
 use App\Models\RoomCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -42,5 +44,22 @@ class HomeController extends Controller
 
     public function allBackgrounds(){
         return Common::apiResponse (1,'',Background::query ()->where('enable',1)->select ('id','img')->get (),200);
+    }
+
+
+    public function generateAgoraToken(Request $request){
+        $user_id = $request->user ()->id;
+        if ($request->type == 'rtc'){
+            $token = Agora::RTCToken ($request->user_id?:$user_id,$request->channel_name,$request->role);
+            if (!$token){
+                return Common::apiResponse (0,'error');
+            }
+            return Common::apiResponse (1,'',['rtc_token'=>$token]);
+        }
+        $token = Agora::RTMToken ($request->user_id?:$user_id);
+        if (!$token){
+            return Common::apiResponse (0,'error');
+        }
+        return Common::apiResponse (1,'',['rtm_token'=>$token]);
     }
 }

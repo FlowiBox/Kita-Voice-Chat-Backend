@@ -83,7 +83,7 @@ class ConfigController extends Controller
 
         $grid->id('ID');
         $grid->name(trans('name'));
-        $grid->value(trans('value'));
+        $grid->column('value',trans('value'))->editable ();
         $grid->desc(trans ('description'));
 
         return $grid;

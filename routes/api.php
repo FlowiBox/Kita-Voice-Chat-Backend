@@ -107,6 +107,10 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('/{id}',[\App\Http\Controllers\Api\V1\EmojiController::class,'show']);
     });
 
+    Route::prefix ('agora')->group (function (){
+        Route::post ('/generate_token',[\App\Http\Controllers\Api\V1\HomeController::class,'generateAgoraToken']);
+    });
+
 
 
 });

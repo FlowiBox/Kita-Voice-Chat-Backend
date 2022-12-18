@@ -67,6 +67,10 @@ class RoomController extends Controller
                 return Common::apiResponse (false,'you are already have a room');
             }
            $room = $this->repo->create (array_merge($request->all (),['uid'=>$request->user ()->id]));
+            if ($request->hasFile ('room_cover')){
+                $room->room_cover = Common::upload ('rooms',$request->file ('room_cover'));
+                $room->save();
+            }
             return Common::apiResponse (true,'created',new RoomResource($room),200);
         }catch (\Exception $exception){
             return Common::apiResponse (false,$exception->getMessage (),null,$exception->getCode ());
