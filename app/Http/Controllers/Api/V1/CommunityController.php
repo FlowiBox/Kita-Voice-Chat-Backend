@@ -25,7 +25,7 @@ class CommunityController extends Controller
 
         foreach ($data as $k => &$v) {
             $v->url = $v->url ?: '';
-            $v->is_read = DB::table('off_reads')->where('user_id', $user_id)->where('off_id', $v['id'])->value('id') ? 1 : 0;
+            $v->is_read = DB::table('off_reads')->where('user_id', $user_id)->where('off_id', $v->id)->value('id') ? 1 : 0;
             //Mark unread messages as read
             if ($v->is_read == 0) {
                 $arr['off_id'] = $v->id;
