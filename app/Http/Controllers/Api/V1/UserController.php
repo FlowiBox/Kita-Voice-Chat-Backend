@@ -6,6 +6,7 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -166,27 +167,27 @@ class UserController extends Controller
             $keywords = 'sender_id';
         }
         if ($type == 1) {
-            $time = 'today';
+            $query = DB::table('gift_logs')->whereDay('created_at', Carbon::now ()->day);
         } elseif ($type == 2) {
-            $time = 'week';
+            $query = DB::table('gift_logs')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
         } elseif ($type == 3) {
-            $time = 'month';
+            $query = DB::table('gift_logs')->whereMonth('created_at', Carbon::now()->month);
         }
-        $query = DB::table('gift_logs')->whereTime('created_at', $time);
         $data=$query->selectRaw("sum(giftPrice) as exp ,". $keywords)->groupBy($keywords)->orderByRaw("exp desc")->limit($limit)->get();
         $i=$l=0;
         foreach ($data as $k => & $v) {
             $i++;
             $users = User::query ()->find($v->{$keywords});
             $v->user_id = $v->{$keywords};
-            $v->exp = ceil($v['exp']);
+            $v->exp = ceil($v->exp);
             $v->avatar = @$users->profile->avatar?:'';
             $v->nickname = $users->nickname?:'';
-            $v->sex = @$users->profile->gender?:'';
+            $v->sex = @$users->profile->gender == 1?trans ('male'):trans ('female');
             $v->stars_img = Common::getLevel($v->{$keywords}, 1 ,'img');
             $v->gold_img = Common::getLevel($v->{$keywords}, 2 ,'img');
             $v->vip_img = Common::getLevel($v->{$keywords}, 3 ,'img');
             if ($v->{$keywords} == $user_id) $l = $i;
+            unset($v->{$keywords});
         }
         unset($v);
         //empty data
@@ -207,9 +208,18 @@ class UserController extends Controller
         $user->stars_img = Common::getLevel($user->id, 1 ,'img');
         $user->gold_img = Common::getLevel($user->id, 2 ,'img');
         $user->vip_img = Common::getLevel($user->id, 3 ,'img');
-        $exp=DB::table('gift_logs')->whereTime('created_at', $time)->where($keywords,$user_id)->sum('giftPrice');
+        if ($type == 1) {
+            $q = DB::table('gift_logs')->whereDay('created_at', Carbon::now ()->day);
+        } elseif ($type == 2) {
+            $q = DB::table('gift_logs')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+        } elseif ($type == 3) {
+            $q = DB::table('gift_logs')->whereMonth('created_at', Carbon::now()->month);
+        }
+        $exp=$q->where($keywords,$user_id)->sum('giftPrice');
         $user->exp = ceil($exp);
-        $arr['user'][0] = $user;
+        $user->avatar = @$user->profile->avatar;
+        $user->sex = @$user->profile->gender == 1 ? 'male' : 'female';
+        $arr['user'][0] = $user->only('id','exp','nickname','avatar','sex','sort','stars_img','gold_img','vip_img');
 
         $arr['top'] = array_slice($data->toArray (), 0, 3);
         $arr['other'] = array_slice($data->toArray (), 3);

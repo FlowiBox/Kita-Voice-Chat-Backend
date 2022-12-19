@@ -28,13 +28,9 @@ Trait CalcsTrait
             $total = 0;
         }
 
-        if ( ! $total ) {
-            return 0;
-        }
-
         $level = Vip ::query () -> where ( ['type' => $type] ) -> where ( 'di' , '<=' , $total ) -> orderByDesc ( 'di' ) -> limit ( 1 ) -> value ( 'level' );
 
-        if ( $is_image ) {
+        if ( $is_image != false ) {
             if ( $level > 0 ) {
                 $img = Vip ::query () -> where ( ['level' => $level , 'type' => $type] ) -> value ( 'img' );
                 return $img;
