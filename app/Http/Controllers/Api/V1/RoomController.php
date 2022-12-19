@@ -62,9 +62,11 @@ class RoomController extends Controller
         $request['show']=true;
         $request['numid']=rand (111111,999999);
         try {
-            $room = Room::query ()->where('uid',$request->user ()->id)->exists ();
+            $room = Room::query ()->where('uid',$request->user ()->id)->first ();
             if ($room){
-                return Common::apiResponse (false,'you are already have a room');
+                $room->room_status = 1;
+                $room->save ();
+                return Common::apiResponse (true,'you are already have a room',new RoomResource($room),200);
             }
            $room = $this->repo->create (array_merge($request->all (),['uid'=>$request->user ()->id]));
             if ($request->hasFile ('room_cover')){

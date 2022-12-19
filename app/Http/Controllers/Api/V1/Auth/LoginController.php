@@ -89,9 +89,6 @@ class LoginController extends Controller
                 );
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
-                if (!$this->canLogin($user)){
-                    return Common::apiResponse (false,'you are blocked',[],401);
-                }
                 return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
             }
         }
@@ -103,9 +100,11 @@ class LoginController extends Controller
             $this->logoutAsConfiguration($user);
             $token = $user->createToken('api_token')->plainTextToken;
             $user->auth_token=$token;
-            if (!$this->canLogin($user)){
+
+            if (!$this->canLogin($user)){dd ($this->canLogin($user));
                 return Common::apiResponse (false,'you are blocked',[],401);
             }
+
             return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
         }else{
             if (User::query ()->whereNotNull ('email')->where ('email',$data['email'])->exists ()){
@@ -115,14 +114,11 @@ class LoginController extends Controller
                     [
                         'name'=>$data['name'],
                         'email'=>$data['email'],
-                        'facebook_id'=>$data['facebook_id']
+                        'facebook_id'=>$data['facebook_id'],
                     ]
                 );
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
-                if (!$this->canLogin($user)){
-                    return Common::apiResponse (false,'you are blocked',[],401);
-                }
                 return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
             }
         }

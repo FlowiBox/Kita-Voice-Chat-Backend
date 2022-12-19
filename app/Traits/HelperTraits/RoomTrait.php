@@ -155,6 +155,9 @@ trait RoomTrait
         }
         $new_visitor=trim(implode(',', $room_visitor),',');
         DB::table('rooms')->where('uid',$uid)->update(['room_visitor'=>$new_visitor]);
+        if (count (explode (',',$new_visitor)) < 1){
+            DB::table('rooms')->where('uid',$uid)->update(['room_status'=>2]);
+        }
         //mic
         self::go_microphone_hand($uid,$user_id);
         //Remove mic
