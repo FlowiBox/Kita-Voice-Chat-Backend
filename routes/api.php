@@ -111,6 +111,10 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('/generate_token',[\App\Http\Controllers\Api\V1\HomeController::class,'generateAgoraToken']);
     });
 
+    Route::prefix ('ranking')->group (function (){
+        Route::post ('/',[\App\Http\Controllers\Api\V1\UserController::class,'ranking']);
+    });
+
 
 
 });

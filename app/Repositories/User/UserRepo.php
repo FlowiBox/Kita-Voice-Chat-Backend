@@ -15,7 +15,7 @@ class UserRepo implements UserRepoInterface {
     {
         $result = $this->model->where(function ($q) use ($req){
             if ($search = $req->search){
-                $req->where('name',$search)->orWhere('id',$search);
+                $req->where('name',$search)->orWhere('id',$search)->orWhere('nickname',$search);
             }
         })->orderBy($req->ord?:'id',$req->sort?:'DESC');
 

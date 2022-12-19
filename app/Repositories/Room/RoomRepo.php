@@ -17,7 +17,7 @@ class RoomRepo implements RoomRepoInterface {
     {
         $result = $this->model->where('room_status',1)->where(function ($q) use ($req){
             if ($search = $req->search){
-                $q->where('room_name',$search)->orWhere('numid',$search);
+                $q->where('room_name',$search)->orWhere('numid',$search)->orWhere('uid',$search);
             }
             if ($req->country_id){
                 $q->whereHas('owner',function ($q) use ($req){

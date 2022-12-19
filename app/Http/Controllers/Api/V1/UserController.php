@@ -144,4 +144,78 @@ class UserController extends Controller
     }
 
 
+
+
+    //leaderboard
+    public function ranking(Request $request) {
+        $class = $request->class  ? : 1; //1 star sharp 2 gold sharp
+        $type = $request->type ? : 1; //1 day list 2 week list March list
+        if (!in_array($class, [1, 2]) || !in_array($type, [1, 2, 3])) return Common::apiResponse (0,'Parameter error');
+        $is_home=$request->is_home;
+        $limit = $is_home ? 3 : 30;
+        $arr=$this->rankingHand($class,$type,$request->user (),$limit);
+        return Common::apiResponse(1,'',$arr);
+    }
+    public function rankingHand($class,$type,$user,$limit=30) {
+        $user_id = $user->id;
+        if (!in_array($class, [1, 2]) || !in_array($type, [1, 2, 3])) return Common::apiResponse (0,'Parameter error');
+
+        if ($class == 1) {
+            $keywords = 'receiver_id';
+        } elseif ($class = 2) {
+            $keywords = 'sender_id';
+        }
+        if ($type == 1) {
+            $time = 'today';
+        } elseif ($type == 2) {
+            $time = 'week';
+        } elseif ($type == 3) {
+            $time = 'month';
+        }
+        $query = DB::table('gift_logs')->whereTime('created_at', $time);
+        $data=$query->selectRaw("sum(giftPrice) as exp ,". $keywords)->groupBy($keywords)->orderByRaw("exp desc")->limit($limit)->get();
+        $i=$l=0;
+        foreach ($data as $k => & $v) {
+            $i++;
+            $users = User::query ()->find($v->{$keywords});
+            $v->user_id = $v->{$keywords};
+            $v->exp = ceil($v['exp']);
+            $v->avatar = @$users->profile->avatar?:'';
+            $v->nickname = $users->nickname?:'';
+            $v->sex = @$users->profile->gender?:'';
+            $v->stars_img = Common::getLevel($v->{$keywords}, 1 ,'img');
+            $v->gold_img = Common::getLevel($v->{$keywords}, 2 ,'img');
+            $v->vip_img = Common::getLevel($v->{$keywords}, 3 ,'img');
+            if ($v->{$keywords} == $user_id) $l = $i;
+        }
+        unset($v);
+        //empty data
+        $kong['exp']=0;
+        $kong['user_id']=0;
+        $kong['sex']=0;
+        $kong['avatar']='';
+        $kong['nickname']='';
+        $kong['stars_img']='';
+        $kong['gold_img']='';
+        $kong['vip_img']='';
+        $data[0] = isset($data[0]) ? $data[0] : $kong;
+        $data[1] = isset($data[1]) ? $data[1] : $kong;
+        $data[2] = isset($data[2]) ? $data[2] : $kong;
+        if($limit == 3) return $data;
+        //user
+        $user->sort = $l ? (string)$l : '99+';
+        $user->stars_img = Common::getLevel($user->id, 1 ,'img');
+        $user->gold_img = Common::getLevel($user->id, 2 ,'img');
+        $user->vip_img = Common::getLevel($user->id, 3 ,'img');
+        $exp=DB::table('gift_logs')->whereTime('created_at', $time)->where($keywords,$user_id)->sum('giftPrice');
+        $user->exp = ceil($exp);
+        $arr['user'][0] = $user;
+
+        $arr['top'] = array_slice($data->toArray (), 0, 3);
+        $arr['other'] = array_slice($data->toArray (), 3);
+        return $arr;
+    }
+
+
+
 }
