@@ -200,7 +200,7 @@ class RoomController extends Controller
         if ($room){
             return Common::apiResponse (1,'have a room',null,200);
         }
-        return Common::apiResponse(0,'does not have a room');
+        return Common::apiResponse(0,'does not have a room',null,404);
     }
 
 
