@@ -128,5 +128,14 @@ Route::middleware('auth:sanctum')->group (function (){
     });
 
 
+    Route::prefix ('vip_center')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\UserController::class,'vip_center']);
+    });
+
+    Route::prefix ('search')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\CommunityController::class,'merge_search']);
+    });
+
+
 
 });

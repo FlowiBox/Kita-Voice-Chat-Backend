@@ -2,8 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Helpers\Common;
-use App\Models\VipAuth;
+use App\Models\SearchHistory;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -11,7 +10,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class VipAuthController extends Controller
+class SearchHistoryController extends Controller
 {
     use HasResourceActions;
 
@@ -80,21 +79,16 @@ class VipAuthController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new VipAuth);
+        $grid = new Grid(new SearchHistory);
 
         $grid->id('ID');
-        $grid->column('type',trans ('type'))->select (
-            [
-                3=>trans('vip'),
-                5=>trans ('guardian cp')
-            ]
-        );
-        $grid->column('level',trans ('level'));
-        $grid->column('enable',trans ('enable'))->switch (Common::getSwitchStates ());
-        $grid->column('name',trans ('name'));
-        $grid->column('title',trans ('title'));
-        $grid->column('img_0',trans ('img_0'))->image ('',30);
-        $grid->column('img_1',trans ('img_1'))->image ('',30);
+        $grid->type('type');
+        $grid->user_id('user_id');
+        $grid->search('search');
+        $grid->sort('sort');
+        $grid->created_at(trans('admin.created_at'));
+        $grid->updated_at(trans('admin.updated_at'));
+
         return $grid;
     }
 
@@ -106,16 +100,13 @@ class VipAuthController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(VipAuth::findOrFail($id));
+        $show = new Show(SearchHistory::findOrFail($id));
 
         $show->id('ID');
         $show->type('type');
-        $show->level('level');
-        $show->enable('enable');
-        $show->name('name');
-        $show->title('title');
-        $show->img_0('img_0');
-        $show->img_1('img_1');
+        $show->user_id('user_id');
+        $show->search('search');
+        $show->sort('sort');
         $show->created_at(trans('admin.created_at'));
         $show->updated_at(trans('admin.updated_at'));
 
@@ -129,21 +120,15 @@ class VipAuthController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new VipAuth);
+        $form = new Form(new SearchHistory);
 
         $form->display('ID');
-        $form->select('type', trans('type'))->options (
-            [
-                3=>trans('vip'),
-                5=>trans ('guardian cp')
-            ]
-        );
-        $form->text('level', trans('level'));
-        $form->switch('enable', trans('enable'))->states (Common::getSwitchStates ());
-        $form->text('name', trans('name'));
-        $form->text('title', trans('title'));
-        $form->image('img_0', trans('img_0'));
-        $form->image('img_1', trans('img_1'));
+        $form->text('type', 'type');
+        $form->text('user_id', 'user_id');
+        $form->text('search', 'search');
+        $form->text('sort', 'sort');
+        $form->display(trans('admin.created_at'));
+        $form->display(trans('admin.updated_at'));
 
         return $form;
     }

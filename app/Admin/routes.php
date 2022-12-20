@@ -33,6 +33,7 @@ Route::group([
     $router->resource ('official_msgs','OfficialMessageController');
     $router->resource ('emojis','EmojiController');
     $router->resource ('home_carousels','HomeCarouselController');
+    $router->resource ('vip_prev','VipAuthController');
 
 
     //--------------------

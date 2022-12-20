@@ -239,7 +239,7 @@ Trait CalcsTrait
             $v -> is_on = ($vip_level >= $v -> level) ? 1 : 0;
         }
         unset( $v );
-        $arr['data']     = $data;
+        $arr['my_data']     = $data;
         $arr['vip_auth'] = $vip_auth;
         return $arr;
     }

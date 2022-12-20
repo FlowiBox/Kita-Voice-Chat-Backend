@@ -42,7 +42,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['my_store','lang'];
+    protected $appends = ['my_store','lang','avatar','gender'];
 
 
     public function profile(){
@@ -59,6 +59,14 @@ class User extends Authenticatable
         return Common::my_store ($this->attributes['id']);
     }
 
+    public function getAvatarAttribute(){
+        return $this->profile ()->first ()->value ('avatar')?:'';
+    }
+
+    public function getGenderAttribute(){
+        return $this->profile ()->first ()->value ('gender') == 1?'male':'female';
+    }
+
 
     public function setDec($field_name,$value){
         $this->attributes[$field_name] -= $value;
@@ -69,7 +77,7 @@ class User extends Authenticatable
     }
 
     public function getLangAttribute(){
-        return @$this->country->language;
+        return @$this->country()->first ()->language?:'en';
     }
 
     public function rooms(){

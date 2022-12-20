@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -46,7 +47,7 @@ class CommunityController extends Controller
         $keywords = $request->keywords;
         $user_id = $request->user()->id;
         if (!$keywords || !$user_id) return Common::apiResponse(0, 'Missing parameters');
-        $search = DB::table('search_history')
+        $search = DB::table('search_histories')
             ->where('user_id', $user_id)
             ->where('search', $keywords)
             ->where('type', 2)
@@ -54,23 +55,22 @@ class CommunityController extends Controller
         if (!$search) {
             $info['search'] = $keywords;
             $info['user_id'] = $user_id;
-            $info['addtime'] = time();
-            DB::table('search_history')->insert($info);
+            DB::table('search_histories')->insert($info);
         }
         //user
         $user = array_slice($this->user_search_hand($user_id, $keywords), 0, 2);
         //Room
         $rooms = array_slice($this->room_search_hand($user_id, $keywords), 0, 2);
         //dynamic
-        $dynamics = array_slice($this->dynamics_search_hand($user_id, $keywords), 0, 2);
+//        $dynamics = array_slice($this->dynamics_search_hand($user_id, $keywords), 0, 2);
         //Game Category
-        $gmskill = array_slice($this->gmskill_search_hand($user_id, $keywords), 0, 2);
-        $arr['gmskill'] = $gmskill;
+//        $gmskill = array_slice($this->gmskill_search_hand($user_id, $keywords), 0, 2);
+//        $arr['gmskill'] = $gmskill;
 
         $arr['user'] = $user;
         $arr['rooms'] = $rooms;
-        $arr['dynamics'] = $dynamics;
-        $this->ApiReturn(1, '', $arr);
+//        $arr['dynamics'] = $dynamics;
+        return Common::apiResponse(1, '', $arr);
 
     }
 
@@ -109,25 +109,26 @@ class CommunityController extends Controller
         //用户
         $whereOr = [
             'id' => $keywords,
+            'name'=>$keywords,
             'status' => 1,
         ];
-        $user = DB::name('users')
+        $user = User::query ()
             ->where('nickname', 'like', '%' . $keywords . '%')
             ->where(['status' => 1])
-            ->whereOr(function ($query) use ($whereOr) {
+            ->orWhere(function ($query) use ($whereOr) {
                 $query->where($whereOr);
             })
-            ->page($page, 10)
-            ->field(['id', 'headimgurl', 'nickname', 'sex'])
-            ->select();
+            ->select ('nickname','id')
+            ->forPage($page, 10)
+            ->get();
+
         foreach ($user as $ku => &$vu) {
-            $vu['headimgurl'] = $this->auth->setFilePath($vu['headimgurl']);
-            $vu['is_follow'] = DB::name('follows')->where('user_id', $user_id)->where('followed_user_id', $vu['id'])->where('status', 1)->value('id') ? 1 : 0;
+            $vu->is_follow = DB::table('follows')->where('user_id', $user_id)->where('followed_user_id', $vu->id)->where('status', 1)->value('id') ? 1 : 0;
         }
 
         unset($vu);
         //return json_decode($user,true);
-        return $user;
+        return $user->toArray ();
     }
 
     //搜索房间
@@ -136,32 +137,29 @@ class CommunityController extends Controller
         if (!$user_id || !$keywords) return [];
         //用户
         $whereOr = [
-            'rooms.numid|rooms.uid' => $keywords,
+            'rooms.numid'=>$keywords,
+            'rooms.uid' => $keywords,
             'users.status' => 1,
         ];
-        $rooms = DB::name('rooms')
-            ->alias('rooms')
+        $rooms = DB::table('rooms')
             ->where('rooms.room_name', 'like', '%' . $keywords . '%')
             ->where(['users.status' => 1])
             // ->whereOr('rooms.numid',$keywords)
-            ->join('users', 'rooms.uid=users.id', 'left')
-            ->field(['rooms.room_name', 'rooms.uid', 'rooms.numid', 'rooms.hot', 'rooms.room_cover',
-                        'users.headimgurl', 'users.nickname', 'users.sex'])
-            ->whereOr(function ($query) use ($whereOr) {
+            ->join('users', 'rooms.uid','=','users.id', 'left')
+            ->select(['rooms.room_name', 'rooms.uid', 'rooms.numid', 'rooms.hot', 'rooms.room_cover',
+                         'users.nickname'])
+            ->orWhere(function ($query) use ($whereOr) {
                 $query->where($whereOr);
             })
-            ->order('rooms.hot', 'desc')
-            ->page($page, 10)
-            ->select();
+            ->orderBy('rooms.hot', 'desc')
+            ->forPage($page, 10)
+            ->get();
         foreach ($rooms as $k => &$vr) {
-            $vr['headimgurl'] = $this->auth->setFilePath($vr['headimgurl']);
-            $vr['room_name'] = urldecode($vr['room_name']);
-            $vr['hot'] = room_hot($vr['hot']);
-            $vr['room_cover'] = $this->auth->setFilePath($vr['room_cover']);
+            $vr->hot = Common::room_hot($vr->hot);
         }
         unset($vr);
         //return json_decode($rooms,true);
-        return $rooms;
+        return $rooms->toArray ();
     }
 
     //搜索动态
