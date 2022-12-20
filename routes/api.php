@@ -60,6 +60,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post('ban_user_from_writing',[\App\Http\Controllers\Api\V1\RoomController::class,'is_black']);
         Route::post('room_background_list',[\App\Http\Controllers\Api\V1\RoomController::class,'room_background']);
         Route::post('check_if_has_pass',[\App\Http\Controllers\Api\V1\RoomController::class,'is_pass']);
+        Route::get('check_if_i_have_room',[\App\Http\Controllers\Api\V1\RoomController::class,'amIHaveRoom']);
 
 
 

@@ -195,6 +195,14 @@ class RoomController extends Controller
         return Common::apiResponse (true,'',new RoomResource($room),200);
     }
 
+    public function amIHaveRoom(Request $request){
+        $room = Room::query ()->where ('uid',$request->user ()->id)->exists ();
+        if ($room){
+            return Common::apiResponse (1,'have a room',null,200);
+        }
+        return Common::apiResponse(0,'does not have a room');
+    }
+
 
 
     //enter the room
