@@ -208,15 +208,15 @@ Trait CalcsTrait
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
         $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
 
-        $data['star_num']        = $star_num;
-        $data['gold_num']        = $gold_num;
-        $data['star_level']      = $star_level;
-        $data['next_star_num']   = $next_star_num;
-        $data['next_star_level'] = $next_star_level;
+        $data['star_num']        = $star_num?:0;
+        $data['gold_num']        = $gold_num?:0;
+        $data['star_level']      = $star_level?:0;
+        $data['next_star_num']   = $next_star_num?:0;
+        $data['next_star_level'] = $next_star_level?:0;
 
-        $data['gold_level']      = $gold_level;
-        $data['next_gold_num']   = $next_gold_num;
-        $data['next_gold_level'] = $next_gold_level;
+        $data['gold_level']      = $gold_level?:0;
+        $data['next_gold_num']   = $next_gold_num?:0;
+        $data['next_gold_level'] = $next_gold_level?:0;
         return $data;
     }
 
@@ -228,10 +228,10 @@ Trait CalcsTrait
         $next_vip_num   = self ::getNextLevel ( 3 , $vip_level , 'di' );
         $next_vip_level = self ::getNextLevel ( 3 , $vip_level , 'level' );
 
-        $data['vip_num']        = $vip_num;
-        $data['vip_level']      = $vip_level;
-        $data['next_vip_num']   = $next_vip_num;
-        $data['next_vip_level'] = $next_vip_level;
+        $data['vip_num']        = $vip_num?:0;
+        $data['vip_level']      = $vip_level?:0;
+        $data['next_vip_num']   = $next_vip_num?:0;
+        $data['next_vip_level'] = $next_vip_level?:0;
 
 
         $vip_auth = DB ::table ( 'vip_auth' ) -> where ( ['type' => 3 , 'enable' => 1] ) -> get ();
@@ -330,10 +330,10 @@ Trait CalcsTrait
     //المستوى الأقصى ونقاط الخبرة
     public static function getNextLevel ( $type = null , $level = null , $field = null )
     {
-        if ( ! $type || ! $field ) return 0;
+        if ( !$type || !$field || !$level ) return 0;
         $max  = DB ::table ( 'vips' ) -> where ( ['type' => $type] ) -> orderByDesc ( 'id' ) -> limit ( 1 ) -> value ( $field );
-        $next = DB ::table ( 'vips' ) -> where ( ['type' => $type] ) -> where ( 'level' , '>' , $level ) -> orderBy ( 'level' ) -> limit ( 1 ) -> value ( $field ) ?: 0;
-        return $next ?: $max;
+        $next = DB ::table ( 'vips' ) -> where ( 'type' , $type ) -> where ( 'level' , '>' , $level ) -> orderBy ( 'level' ) -> limit ( 1 ) -> value ( $field )?:0;
+        return ($next ?: $max);
     }
 
 

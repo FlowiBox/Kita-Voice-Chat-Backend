@@ -16,12 +16,12 @@ class WareResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'name'=>$this->name,
-            'title'=>$this->title,
-            'price'=>$this->price,
-            'color'=>$this->color,
+            'name'=>$this->name?:'',
+            'title'=>$this->title?:'',
+            'price'=>$this->price?:0,
+            'color'=>$this->color?:'',
             'expire'=>$this->expire == 0 ? 99999999 : $this->expire,
-            'image'=>$this->show_img
+            'image'=>$this->show_img?:''
         ];
     }
 }

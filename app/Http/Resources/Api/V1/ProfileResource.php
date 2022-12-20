@@ -15,12 +15,12 @@ class ProfileResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'image'=>$this->avatar,
+            'image'=>$this->avatar?:'',
             'gender'=>$this->gender == 1 ? __ ('male') : __ ('female'),
-            'birthday'=>$this->birthday,
-            'province'=>$this->province,
-            'city'=>$this->city,
-            'country'=>$this->country
+            'birthday'=>$this->birthday?:'',
+            'province'=>$this->province?:'',
+            'city'=>$this->city?:'',
+            'country'=>$this->country?:''
         ];
     }
 }

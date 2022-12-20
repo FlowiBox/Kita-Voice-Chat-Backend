@@ -17,11 +17,11 @@ class GiftResource extends JsonResource
         return [
             'id'=>$this->id,
             'name'=>app ()->getLocale () == 'ar' ? $this->name : $this->e_name,
-            'type'=>$this->type,
-            'price'=>$this->price,
-            'img'=>$this->img,
-            'show_img'=>$this->show_img,
-            'show_img2'=>$this->show_img2
+            'type'=>$this->type=1?'normal':'hot',
+            'price'=>$this->price?:0,
+            'img'=>$this->img?:'',
+            'show_img'=>$this->show_img?:'',
+            'show_img2'=>$this->show_img2?:''
         ];
     }
 }

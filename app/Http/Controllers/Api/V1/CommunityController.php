@@ -40,30 +40,30 @@ class CommunityController extends Controller
 
 
 
-    //搜索
-    public function merge_search()
+    //search
+    public function merge_search(Request $request)
     {
-        $keywords = $this->request->request('keywords');
-        $user_id = $this->user_id;
-        if (!$keywords || !$user_id) $this->ApiReturn(0, 'Missing parameters');
-        $search = DB::name('search_history')
+        $keywords = $request->keywords;
+        $user_id = $request->user()->id;
+        if (!$keywords || !$user_id) return Common::apiResponse(0, 'Missing parameters');
+        $search = DB::table('search_history')
             ->where('user_id', $user_id)
             ->where('search', $keywords)
             ->where('type', 2)
-            ->select();
+            ->count();
         if (!$search) {
             $info['search'] = $keywords;
             $info['user_id'] = $user_id;
             $info['addtime'] = time();
-            DB::name('search_history')->insert($info);
+            DB::table('search_history')->insert($info);
         }
-        //用户
+        //user
         $user = array_slice($this->user_search_hand($user_id, $keywords), 0, 2);
-        //房间
+        //Room
         $rooms = array_slice($this->room_search_hand($user_id, $keywords), 0, 2);
-        //动态
+        //dynamic
         $dynamics = array_slice($this->dynamics_search_hand($user_id, $keywords), 0, 2);
-        //游戏分类
+        //Game Category
         $gmskill = array_slice($this->gmskill_search_hand($user_id, $keywords), 0, 2);
         $arr['gmskill'] = $gmskill;
 

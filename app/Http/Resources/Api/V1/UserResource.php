@@ -17,15 +17,15 @@ class UserResource extends JsonResource
     {
         $data = [
             'id'=>$this->id,
-            'name'=>$this->name,
-            'email'=>$this->email,
-            'phone'=>$this->phone,
+            'name'=>$this->name?:'',
+            'email'=>$this->email?:"",
+            'phone'=>$this->phone?:'',
             'number_of_fans'=>$this->numberOfFans(),
             'number_of_followings'=>$this->numberOfFollowings(),
             'number_of_friends'=>$this->numberOfFriends(),
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
-            'diamonds'=>$this->di,
+            'diamonds'=>$this->di?:0,
             'vip'=>Common::vip_center ($this->id),
             'income'=>Common::user_income ($this->id),
             'my_store'=>$this->my_store,
@@ -33,23 +33,23 @@ class UserResource extends JsonResource
             'country'=>$this->country
         ];
 
-        $additional = [
-            'star_level'=>Common::getLevel ($this->id,1),
-            'gold_level'=>Common::getLevel ($this->id,2),
-            'vip_level'=>Common::getLevel ($this->id,3),
-            'hz_level'=>Common::getHzLevel ($this->id,3),
-            'is_follow'=>Common::IsFollow (@$request->user ()->id,$this->id),
-            'star_img'=>Common::getLevel ($this->id,1,true),
-            'gold_img'=>Common::getLevel ($this->id,2,true),
-            'vip_img'=>Common::getLevel ($this->id,3,true),
-            'images'=>[
-                $this->img_1,
-                $this->img_2,
-                $this->img_3,
-            ],
-            'room_info'=>Common::getRoomInfo ($this->id),
-            'user_gifts'=>Common::getUserGifts ($this->id)
-        ];
+//        $additional = [
+//            'star_level'=>Common::getLevel ($this->id,1),
+//            'gold_level'=>Common::getLevel ($this->id,2),
+//            'vip_level'=>Common::getLevel ($this->id,3),
+//            'hz_level'=>Common::getHzLevel ($this->id,3),
+//            'is_follow'=>Common::IsFollow (@$request->user ()->id,$this->id),
+//            'star_img'=>Common::getLevel ($this->id,1,true),
+//            'gold_img'=>Common::getLevel ($this->id,2,true),
+//            'vip_img'=>Common::getLevel ($this->id,3,true),
+//            'images'=>[
+//                $this->img_1,
+//                $this->img_2,
+//                $this->img_3,
+//            ],
+//            'room_info'=>Common::getRoomInfo ($this->id),
+//            'user_gifts'=>Common::getUserGifts ($this->id)
+//        ];
 
 
         if ($this->auth_token){

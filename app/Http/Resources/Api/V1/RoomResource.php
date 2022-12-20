@@ -23,7 +23,7 @@ class RoomResource extends JsonResource
             'room_id'=>$this->numid?:0,
             'name'=>$this->room_name?:'',
             'visitors_count'=>$this->visitors ()->count (),
-            'cover'=>$this->room_cover,
+            'cover'=>$this->room_cover?:'',
             'class'=>$this->myClass?:new \stdClass(),
             'type'=>$this->myType?:new \stdClass(),
             'is_hot'=>$this->hot?:0,
@@ -37,8 +37,8 @@ class RoomResource extends JsonResource
         ];
         if ($request['show']){
             $data['room_users'] = Common::get_room_users (@$this->owner ()->id,$request->user ()->id);
-            $data['background'] = $this->room_background;
-            $data['mics'] = explode (',',$this->microphone);
+            $data['background'] = $this->room_background?:'';
+            $data['mics'] = explode (',',$this->microphone)?:[];
             $data['is_mics_free']=$this->free_mic?:0;
             $data['owner'] = $this->owner ();
             $data['admins'] = $this->admins ();
