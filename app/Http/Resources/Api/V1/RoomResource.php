@@ -19,27 +19,27 @@ class RoomResource extends JsonResource
     {
         $data = [
             'id'=>$this->id,
-            'owner_id'=>$this->uid,
-            'room_id'=>$this->numid,
-            'name'=>$this->room_name,
+            'owner_id'=>$this->uid?:0,
+            'room_id'=>$this->numid?:0,
+            'name'=>$this->room_name?:'',
             'visitors_count'=>$this->visitors ()->count (),
             'cover'=>$this->room_cover,
-            'class'=>$this->myClass,
-            'type'=>$this->myType,
-            'is_hot'=>$this->hot,
-            'is_popular'=>$this->is_popular,
-            'room_status'=>$this->room_status,
+            'class'=>$this->myClass?:new \stdClass(),
+            'type'=>$this->myType?:new \stdClass(),
+            'is_hot'=>$this->hot?:0,
+            'is_popular'=>$this->is_popular?:0,
+            'room_status'=>$this->room_status?:1,
             'password_status'=>$this->room_pass ?true:false,
-            'room_intro'=>$this->room_intro,
-            'is_recommended'=>$this->is_recommended,
-            'lang'=>$this->lang,
-            'country'=>$this->country
+            'room_intro'=>$this->room_intro?:'',
+            'is_recommended'=>$this->is_recommended?:0,
+            'lang'=>$this->lang?:'',
+            'country'=>$this->country?:''
         ];
         if ($request['show']){
             $data['room_users'] = Common::get_room_users (@$this->owner ()->id,$request->user ()->id);
             $data['background'] = $this->room_background;
             $data['mics'] = explode (',',$this->microphone);
-            $data['is_mics_free']=$this->free_mic;
+            $data['is_mics_free']=$this->free_mic?:0;
             $data['owner'] = $this->owner ();
             $data['admins'] = $this->admins ();
 //            $data['visitors'] = $this->visitors ();
