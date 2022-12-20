@@ -32,6 +32,7 @@ Route::group([
     $router->resource ('backgrounds','BackgroundController');
     $router->resource ('official_msgs','OfficialMessageController');
     $router->resource ('emojis','EmojiController');
+    $router->resource ('home_carousels','HomeCarouselController');
 
 
     //--------------------

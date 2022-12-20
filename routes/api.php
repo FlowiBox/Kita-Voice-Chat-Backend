@@ -123,5 +123,10 @@ Route::middleware('auth:sanctum')->group (function (){
     });
 
 
+    Route::prefix ('home_carousels')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\HomeCarouselController::class,'index']);
+    });
+
+
 
 });
