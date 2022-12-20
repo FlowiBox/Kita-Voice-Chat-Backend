@@ -75,28 +75,27 @@ class CommunityController extends Controller
     }
 
 
-    //搜索记录
-    public function searhList()
+    //search history
+    public function searchList(Request $request)
     {
-        $user_id = $this->user_id;
-        if (!$user_id) $this->ApiReturn(0, '缺少参数');
-        $hot = DB::name('search_history')->field(['id', 'search'])->where('type', 1)->order('sort', 'desc')->select();
-        $history = DB::name('search_history')->field(['id', 'search'])->where('type', 2)->where('user_id', $user_id)->select();
+        $user_id = $request->user ()->id;
+        $hot = DB::table('search_histories')->select(['id', 'search'])->where('type', 1)->orderBy('sort', 'desc')->get();
+        $history = DB::table('search_histories')->select(['id', 'search'])->where('type', 2)->where('user_id', $user_id)->get();
         $data['hot'] = $hot;
-        $data['histor'] = $history;
-        $this->ApiReturn(1, '', $data);
+        $data['history'] = $history;
+        return Common::apiResponse(1, '', $data);
     }
 
-    //清空搜索记录
-    public function cleanSarhList()
+    //clear search history
+    public function cleanSearchList(Request $request)
     {
-        $user_id = $this->user_id;
-        if (!$user_id) $this->ApiReturn(0, '缺少参数');
-        $res = DB::name('search_history')->where('type', 2)->where('user_id', $user_id)->delete();
+        $user_id = $request->user ()->id;
+
+        $res = DB::table('search_histories')->where('type', 2)->where('user_id', $user_id)->delete();
         if ($res) {
-            $this->ApiReturn(1, '清空成功');
+            return Common::apiResponse(1, 'Empty successfully');
         } else {
-            $this->ApiReturn(0, '清空失败');
+            return Common::apiResponse(0, 'Empty failed');
         }
 
     }

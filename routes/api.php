@@ -134,6 +134,8 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::prefix ('search')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\CommunityController::class,'merge_search']);
+        Route::get ('/history',[\App\Http\Controllers\Api\V1\CommunityController::class,'searchList']);
+        Route::get ('/clean_search_history',[\App\Http\Controllers\Api\V1\CommunityController::class,'cleanSearchList']);
     });
 
 

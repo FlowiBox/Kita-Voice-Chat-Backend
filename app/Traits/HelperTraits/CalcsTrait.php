@@ -240,7 +240,7 @@ Trait CalcsTrait
         }
         unset( $v );
         $arr['my_data']     = $data;
-        $arr['vip_auth'] = $vip_auth;
+        $arr['vip_prev'] = $vip_auth;
         return $arr;
     }
 
