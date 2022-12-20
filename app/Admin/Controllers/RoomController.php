@@ -178,7 +178,17 @@ class RoomController extends Controller
 
         $form->display('ID');
         $form->text('numid', 'numid');
-
+        $form->select ('uid',trans ('owner'))->options (function (){
+            $users = User::query ()->whereDoesntHave ('rooms')->get ();
+            $arr = [];
+            foreach ($users as $user){
+                $arr[$user->id]=($user->nickname?:$user->name).'[id='.$user->id.']';
+            }
+            if (count ($users) < 1){
+                $arr[0]='no users dose not have room found';
+            }
+            return $arr;
+        });
         $form->select('room_status', 'room_status')->options (
             [
                 1=>trans ('normal'),

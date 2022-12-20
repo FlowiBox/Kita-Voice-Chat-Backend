@@ -72,5 +72,9 @@ class User extends Authenticatable
         return @$this->country->language;
     }
 
+    public function rooms(){
+        return $this->hasMany (Room::class,'uid');
+    }
+
 
 }
