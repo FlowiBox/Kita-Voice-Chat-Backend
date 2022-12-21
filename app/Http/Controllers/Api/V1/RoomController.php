@@ -223,7 +223,7 @@ class RoomController extends Controller
             ->join('users as users','rooms.uid','=','users.id','left')
             ->join('room_categories as room_categories','rooms.room_type','=','room_categories.id','left')
             ->where('rooms.uid',$request['owner_id'])
-            ->select(['rooms.numid as room_id_num','rooms.uid as owner_id','rooms.room_status','rooms.room_name',
+            ->select(['rooms.id as id','rooms.numid as room_id_num','rooms.uid as owner_id','rooms.room_status','rooms.room_name',
                         'rooms.room_cover','room_categories.name','rooms.room_cover','rooms.room_intro',
                         'rooms.room_pass','rooms.room_type','rooms.hot','rooms.room_background','rooms.room_admin',
                         'rooms.room_speak','rooms.room_sound','rooms.microphone','rooms.room_judge','rooms.is_afk',
