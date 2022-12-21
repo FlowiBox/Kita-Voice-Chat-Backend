@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -97,6 +98,8 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::prefix ('user_info')->group (function (){
         Route::get ('my_pack',[\App\Http\Controllers\Api\V1\UserController::class,'my_pack']);
+        Route::get ('my_store',[\App\Http\Controllers\Api\V1\UserController::class,'my_store']);
+        Route::get ('my_income',[\App\Http\Controllers\Api\V1\UserController::class,'my_income']);
     });
 
     Route::prefix ('community')->group (function (){
@@ -132,11 +135,18 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\UserController::class,'vip_center']);
     });
 
+    Route::prefix ('level_center')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\UserController::class,'level_center']);
+    });
+
+
+
     Route::prefix ('search')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\CommunityController::class,'merge_search']);
         Route::get ('/history',[\App\Http\Controllers\Api\V1\CommunityController::class,'searchList']);
         Route::get ('/clean_search_history',[\App\Http\Controllers\Api\V1\CommunityController::class,'cleanSearchList']);
     });
+
 
 
 

@@ -233,4 +233,21 @@ class UserController extends Controller
         return Common::apiResponse (1,'',$vipCenter);
     }
 
+    public function level_center(Request $request){
+        $user = $request->user();
+        $levelCenter = Common::level_center ($user->id);
+        return Common::apiResponse (1,'',$levelCenter);
+    }
+
+    public function my_store(Request $request){
+        $user = $request->user();
+        $myStore = Common::my_store ($user->id);
+        return Common::apiResponse (1,'',$myStore);
+    }
+
+    public function my_income(Request $request){
+        $data = Common::user_income ($request->user ()->id);
+        return Common::apiResponse (1,'',$data);
+    }
+
 }

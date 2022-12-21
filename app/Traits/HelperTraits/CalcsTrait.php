@@ -256,7 +256,12 @@ Trait CalcsTrait
             }
         }
         return [
-            'total_coins' => $coins ,
+            'id'=>$user->id,
+            'diamonds'=>$user->di,
+            'coins'=>$user->coins,
+            'room_coins'=>$user->room_coins,
+            'gold'=>$user->gold,
+            'withdrawal_coins' => (double)$coins ,
             'coupons' => Db ::table ( 'user_coupons' ) -> join ( 'wares' , 'user_coupons.ware_id' , '=' , 'wares.id' ) -> where ( ['user_coupons.user_id' => $user_id , 'wares.enable' => 1] ) -> count ()
         ];
     }
