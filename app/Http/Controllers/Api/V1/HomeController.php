@@ -11,6 +11,7 @@ use App\Models\Country;
 use App\Models\RoomCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -61,5 +62,13 @@ class HomeController extends Controller
             return Common::apiResponse (0,'error');
         }
         return Common::apiResponse (1,'',['rtm_token'=>$token]);
+    }
+
+
+    public function one_page(Request $request){
+        $type = $request->type;
+        if(!$type)  return Common::apiResponse(0,'Missing parameters');
+        $data=DB::table('pages')->where(['type'=>$type])->get();
+        return Common::apiResponse(1,'',$data);
     }
 }

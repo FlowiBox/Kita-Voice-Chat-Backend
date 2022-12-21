@@ -37,6 +37,12 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('follow',[\App\Http\Controllers\Api\V1\FollowController::class,'follow']);
         Route::post ('un-follow',[\App\Http\Controllers\Api\V1\FollowController::class,'unFollow']);
     });
+    Route::prefix ('unions')->group (function (){
+        Route::post ('add_union',[\App\Http\Controllers\Api\V1\UnionController::class,'addUnion']);
+        Route::post ('add_user_to_union',[\App\Http\Controllers\Api\V1\UnionController::class,'addUserUnion']);
+        Route::post ('union_target',[\App\Http\Controllers\Api\V1\UnionController::class,'unionTj']);
+    });
+
     Route::prefix ('rooms')->group (function (){
 
 //        Route::post ('get_other_user',[\App\Http\Controllers\Api\V1\RoomController::class,'get_other_user']);
@@ -100,6 +106,8 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('my_pack',[\App\Http\Controllers\Api\V1\UserController::class,'my_pack']);
         Route::get ('my_store',[\App\Http\Controllers\Api\V1\UserController::class,'my_store']);
         Route::get ('my_income',[\App\Http\Controllers\Api\V1\UserController::class,'my_income']);
+        Route::post ('go_order_list',[\App\Http\Controllers\Api\V1\OrderController::class,'go_order_list']);
+        Route::get ('get_user_union',[\App\Http\Controllers\Api\V1\UnionController::class,'getUserUnion']);
     });
 
     Route::prefix ('community')->group (function (){
