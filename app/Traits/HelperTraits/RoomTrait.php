@@ -247,20 +247,20 @@ trait RoomTrait
     }
 
     public static function micSortHand($user_id = null ,$uid = null){
-        $data=(array)DB::table('mics','a')
+        $data=DB::table('mics','a')
             ->where(['a.roomowner_id'=>$uid])
             ->selectRaw('a.id,a.user_id,a.type')
             ->orderBy('a.id','asc')
-            ->first();
+            ->get();
 
         $i=$j=$sort=$shiyin_sort=0;
         foreach ($data as $k => &$v) {
-            if($v['type']==1){
+            if($v->type==1){
                 $i++;
-                if($v['user_id'] == $user_id) $sort=$i;
-            }elseif($v['type']==2){
+                if($v->user_id == $user_id) $sort=$i;
+            }elseif($v->type==2){
                 $j++;
-                if($v['user_id'] == $user_id) $shiyin_sort=$j;
+                if($v->user_id == $user_id) $shiyin_sort=$j;
             }
 
         }

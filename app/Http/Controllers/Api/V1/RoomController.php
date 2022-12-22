@@ -118,6 +118,8 @@ class RoomController extends Controller
     public function update(EditRoomRequest $request, $id)
     {
 
+
+
         try {
             $room = $this->repo->find ($id);
             if(!$room){
@@ -164,7 +166,9 @@ class RoomController extends Controller
 
 
             $this->repo->save ($room);
-            return Common::apiResponse (true,'updated',new RoomResource($room),200);
+            $request['owner_id'] = $room->uid;
+            return $this->enter_room ($request);
+
         }catch (\Exception $exception){
             return Common::apiResponse (false,$exception->getMessage (),null,500);
         }
@@ -208,9 +212,8 @@ class RoomController extends Controller
     //enter the room
     public function enter_room(Request $request)
     {
-
         $room_pass = $request['room_pass'];
-        $owner_id       = $request['owner_id'];
+        $owner_id  = $request['owner_id'];
         $user_id   = $request->user ()->id;
 
 //        if($owner_id == $user_id){
