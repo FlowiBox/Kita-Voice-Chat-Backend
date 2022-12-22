@@ -82,11 +82,9 @@ class BlackListController extends Controller
         $grid = new Grid(new BlackList);
 
         $grid->id('ID');
-        $grid->user_id('user_id');
-        $grid->from_uid('from_uid');
-        $grid->status('status');
-        $grid->created_at(trans('admin.created_at'));
-        $grid->updated_at(trans('admin.updated_at'));
+        $grid->column('user_id',trans ('user id'));
+        $grid->column('from_uid',trans ('from uid'));
+        $grid->column('status',trans ('status'));
 
         return $grid;
     }

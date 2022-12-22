@@ -85,7 +85,7 @@ class CountryController extends Controller
         $grid->id('ID');
         $grid->name(trans('name'));
         $grid->e_name(trans('english name'));
-        $grid->phone_code(trans('phone_code'));
+        $grid->phone_code(trans('phone code'));
         $grid->language(trans ('language'));
         $grid->column ('flag',trans ('flag'))->image ('',30);
         $grid->iso(trans('iso'));

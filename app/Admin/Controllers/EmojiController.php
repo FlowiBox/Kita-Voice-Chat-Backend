@@ -83,8 +83,8 @@ class EmojiController extends Controller
         $grid = new Grid(new Emoji);
 
         $grid->id('ID');
-        $grid->pid('pid');
-        $grid->name('name');
+        $grid->column('pid',__ ('pid'));
+        $grid->name(__('name'));
         $grid->column('emoji',trans ('emoji'))->image ('',30);
         $grid->t_length('t_length');
         $grid->column('enable',trans ('enable'))->switch (Common::getSwitchStates ());
@@ -109,9 +109,6 @@ class EmojiController extends Controller
         $show->t_length('t_length');
         $show->enable('enable');
         $show->sort('sort');
-        $show->addtime('addtime');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
 
         return $show;
     }
@@ -126,12 +123,19 @@ class EmojiController extends Controller
         $form = new Form(new Emoji);
 
         $form->display('ID');
-        $form->text('pid', 'pid');
-        $form->text('name', 'name');
-        $form->image('emoji', 'emoji');
-        $form->number('t_length', 't_length');
-        $form->switch('enable', 'enable')->states (Common::getSwitchStates ());
-        $form->number('sort', 'sort');
+        $form->select('pid', __('pid'))->options (function (){
+            $ops = [0=>'root'];
+            $ps = Emoji::query ()->where ('enable',1)->where ('pid',0)->where ('id','!=',$this->id)->get ();
+            foreach ($ps as $p){
+                $ops[$p->id] = $p->name;
+            }
+            return $ops;
+        });
+        $form->text('name', __('name'));
+        $form->image('emoji', __('emoji'));
+        $form->number('t_length', __('t_length'));
+        $form->switch('enable', __('enable'))->states (Common::getSwitchStates ());
+        $form->number('sort', __('sort'));
 
         return $form;
     }

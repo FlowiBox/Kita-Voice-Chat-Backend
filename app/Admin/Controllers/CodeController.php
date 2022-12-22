@@ -82,11 +82,8 @@ class CodeController extends Controller
         $grid = new Grid(new Code);
 
         $grid->id('ID');
-        $grid->phone('phone');
-        $grid->code('code');
-        $grid->aid('aid');
-        $grid->created_at(trans('admin.created_at'));
-        $grid->updated_at(trans('admin.updated_at'));
+        $grid->column('phone',trans ('phone'));
+        $grid->column('code',trans ('code'));
 
         return $grid;
     }
@@ -102,12 +99,8 @@ class CodeController extends Controller
         $show = new Show(Code::findOrFail($id));
 
         $show->id('ID');
-        $show->phone('phone');
-        $show->code('code');
-        $show->aid('aid');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
-
+        $show->phone(__('phone'));
+        $show->code(__('code'));
         return $show;
     }
 
@@ -121,11 +114,8 @@ class CodeController extends Controller
         $form = new Form(new Code);
 
         $form->display('ID');
-        $form->text('phone', 'phone');
-        $form->text('code', 'code');
-        $form->text('aid', 'aid');
-        $form->display(trans('admin.created_at'));
-        $form->display(trans('admin.updated_at'));
+        $form->text('phone', trans('phone'));
+        $form->text('code', trans('code'));
 
         return $form;
     }
