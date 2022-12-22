@@ -86,9 +86,9 @@ class EmojiController extends Controller
         $grid->column('pid',__ ('pid'));
         $grid->name(__('name'));
         $grid->column('emoji',trans ('emoji'))->image ('',30);
-        $grid->t_length('t_length');
+        $grid->t_length(__('t_length'));
         $grid->column('enable',trans ('enable'))->switch (Common::getSwitchStates ());
-        $grid->sort('sort');
+        $grid->sort(__('sort'));
         return $grid;
     }
 
