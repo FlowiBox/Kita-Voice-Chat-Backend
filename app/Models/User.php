@@ -60,11 +60,11 @@ class User extends Authenticatable
     }
 
     public function getAvatarAttribute(){
-        return $this->profile ()->first ()->value ('avatar')?:'';
+        return @$this->profile ()->first ()->avatar?:'';
     }
 
     public function getGenderAttribute(){
-        return $this->profile ()->first ()->value ('gender') == 1?'male':'female';
+        return @$this->profile ()->first ()->gender == 1?'male':'female';
     }
 
 
