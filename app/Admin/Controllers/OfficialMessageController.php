@@ -145,7 +145,7 @@ class OfficialMessageController extends Controller
                 1=>trans('system message'),
                 2=>trans('system announcement')
             ]
-        );
+        )->default (1);
         $form->text('url', 'url');
 
         return $form;

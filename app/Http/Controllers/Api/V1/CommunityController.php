@@ -21,7 +21,7 @@ class CommunityController extends Controller
         $data = DB::table('official_messages')
             // ->where('id','not in',$ids)
             ->where('user_id', 'in', [0, $user_id])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->get();
 
         foreach ($data as $k => &$v) {
