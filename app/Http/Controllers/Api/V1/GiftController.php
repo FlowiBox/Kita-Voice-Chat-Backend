@@ -22,12 +22,12 @@ class GiftController extends Controller
     }
 
 
-    //礼物列表
+    //gift list
     public function gift_list()
     {
         $user_id=$this->user_id;
         $RedisCache=new RedisCache;
-        //礼物
+        //Gift
         $gifts=$RedisCache->getRedisData('room','gift_list',60);
         //宝石
         $baoshi=$RedisCache->getRedisData('room','baoshi_list');

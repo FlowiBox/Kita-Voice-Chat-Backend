@@ -357,7 +357,7 @@ class RoomController extends Controller
 
         $room_info['room_visitors_count'] = count(explode (',',$room_info['room_visitor']));
 
-        $room_info['room_pass'] = !empty($room_info['room_pass']) ? : '';
+        $room_info['room_pass'] = !empty($room_info['room_pass']) ? $room_info['room_pass']: '';
         //background
         $back = DB::table('backgrounds')->where('enable',1)->where(['id'=>$room_info['room_background']])->value('img');
         if(!$back){
