@@ -108,8 +108,6 @@ class CommunityController extends Controller
         //用户
         $whereOr = [
             'id' => $keywords,
-            'name'=>$keywords,
-            'status' => 1,
         ];
         $user = User::query ()
             ->where('nickname', 'like', '%' . $keywords . '%')
@@ -136,14 +134,12 @@ class CommunityController extends Controller
         if (!$user_id || !$keywords) return [];
         //用户
         $whereOr = [
-            'rooms.numid'=>$keywords,
             'rooms.uid' => $keywords,
-            'users.status' => 1,
         ];
         $rooms = DB::table('rooms')
             ->where('rooms.room_name', 'like', '%' . $keywords . '%')
             ->where(['users.status' => 1])
-            // ->whereOr('rooms.numid',$keywords)
+//             ->orWhere('rooms.numid',$keywords)
             ->join('users', 'rooms.uid','=','users.id', 'left')
             ->select(['rooms.room_name', 'rooms.uid', 'rooms.numid', 'rooms.hot', 'rooms.room_cover',
                          'users.nickname'])
