@@ -46,7 +46,7 @@ Trait CalcsTrait
             }
         }
         else {
-            return $level;
+            return $level?:0;
         }
 
     }
@@ -66,7 +66,7 @@ Trait CalcsTrait
             return $img;
         }
         else {
-            return $level;
+            return $level?:0;
         }
     }
 
@@ -76,7 +76,7 @@ Trait CalcsTrait
         $where['type'] = 5;
         $where['exp'] = ['elt', $exp];
         $level = DB::table('vips')->where($where)->orderByRaw('id desc')->limit(1)->value('level');
-        return $level;
+        return $level?:0;
     }
 
     public static function room_hot ( $hot = null )

@@ -12,7 +12,7 @@ class GiftController extends Controller
 {
     public function index(Request $request){
         $user = $request->user ();
-        $gifts = Gift::query ()->where ('enable',1)->where ('vip_level','<=',Common::getLevel ($user->id,3));
+        $gifts = Gift::query ()->where ('enable',1)->where ('vip_level','<=',Common::getLevel ($user->id,3)?:0);
         if ($request->type){
             $gifts = $gifts->where ('type',$request->type);
         }
