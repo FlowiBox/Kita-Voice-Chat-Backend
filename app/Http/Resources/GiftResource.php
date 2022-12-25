@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\Common;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class GiftResource extends JsonResource
@@ -21,7 +22,9 @@ class GiftResource extends JsonResource
             'price'=>$this->price?:0,
             'img'=>$this->img?:'',
             'show_img'=>$this->show_img?:'',
-            'show_img2'=>$this->show_img2?:''
+            'show_img2'=>$this->show_img2?:'',
+            'vip_level'=>$this->vip_level ?:0,
+            'is_on'=>($this->vip_level <= Common::getLevel (request ()->user ()->id,3)) ? 1 : 0
         ];
     }
 }
