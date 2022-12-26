@@ -14,6 +14,7 @@ Route::group([
     'as'            => config('admin.route.prefix') . '.',
 ], function (Router $router) {
 
+    $router->resource ('auth/users','AdminUserController');
 
 
     //resources
@@ -42,3 +43,6 @@ Route::group([
 
 
 });
+
+
+
