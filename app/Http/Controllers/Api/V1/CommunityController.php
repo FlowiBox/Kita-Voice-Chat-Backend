@@ -151,6 +151,7 @@ class CommunityController extends Controller
             ->get();
         foreach ($rooms as $k => &$vr) {
             $vr->hot = Common::room_hot($vr->hot);
+            $vr->nickname = $vr->nickname?:'';
         }
         unset($vr);
         //return json_decode($rooms,true);
