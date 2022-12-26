@@ -84,5 +84,9 @@ class User extends Authenticatable
         return $this->hasMany (Room::class,'uid');
     }
 
+    public function getNicknameAttribute($val){
+        return $val?:'';
+    }
+
 
 }
