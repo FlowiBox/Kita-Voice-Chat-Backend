@@ -75,7 +75,7 @@ class HomeController extends Controller
 
     public function countVips(){
         $count = Vip::query ()->where ('type',3)->count ();
-        $vips =  Vip::query ()->where ('type',3)->select ('id','level','type','image')->get ();
+        $vips =  Vip::query ()->where ('type',3)->select ('id','level','type','img')->get ();
         return Common::apiResponse (1,'',['vip_count'=>$count,'vips'=>$vips]);
     }
 }
