@@ -221,7 +221,7 @@ Trait CalcsTrait
     }
 
     //مركز الأعضاء
-    public static function vip_center ( $user_id )
+    public static function vip_center ( $user_id ,$level = null)
     {
         $vip_num        = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
         $vip_level      = self ::getLevel ( $user_id , 3 );
@@ -234,7 +234,11 @@ Trait CalcsTrait
         $data['next_vip_level'] = $next_vip_level?:0;
 
 
-        $vip_auth = DB ::table ( 'vip_auth' ) -> where ( ['type' => 3 , 'enable' => 1] ) -> get ();
+        $vip_auth = DB ::table ( 'vip_auth' ) -> where ( ['type' => 3 , 'enable' => 1] ) ;
+        if ($level){
+            $vip_auth = $vip_auth->where ('level',$level);
+        }
+        $vip_auth = $vip_auth-> get ();
         foreach ($vip_auth as $k => &$v) {
             $v -> is_on = ($vip_level >= $v -> level) ? 1 : 0;
         }
