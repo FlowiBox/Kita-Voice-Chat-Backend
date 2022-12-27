@@ -155,6 +155,8 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('/clean_search_history',[\App\Http\Controllers\Api\V1\CommunityController::class,'cleanSearchList']);
     });
 
+    Route::get ('vip_count',[\App\Http\Controllers\Api\V1\HomeController::class,'countVips']);
+
 
 
 

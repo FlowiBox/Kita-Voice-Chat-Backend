@@ -9,6 +9,7 @@ use App\Http\Resources\CountryResource;
 use App\Models\Background;
 use App\Models\Country;
 use App\Models\RoomCategory;
+use App\Models\Vip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -70,5 +71,10 @@ class HomeController extends Controller
         if(!$type)  return Common::apiResponse(0,'Missing parameters');
         $data=DB::table('pages')->where(['type'=>$type])->get();
         return Common::apiResponse(1,'',$data);
+    }
+
+    public function countVips(){
+        $count = Vip::query ()->where ('type',3)->count ();
+        return Common::apiResponse (1,'',['vip_count'=>$count]);
     }
 }

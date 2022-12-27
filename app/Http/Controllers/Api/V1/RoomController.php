@@ -426,7 +426,7 @@ class RoomController extends Controller
         }
 
         $user = $request->user ();
-        $user->now_room_uid = $room_info['room_uid'];
+        $user->now_room_uid = $room_info['owner_id'];
         $user->save();
         return Common::apiResponse (true,'',$room_info);
     }
