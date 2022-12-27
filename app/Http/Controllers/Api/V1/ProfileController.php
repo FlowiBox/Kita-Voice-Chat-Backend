@@ -88,6 +88,9 @@ class ProfileController extends Controller
         if ($request->phone){
             $user->phone = $data['phone'];
         }
+        if ($request->nickname){
+            $user->nickname = $request->nickname;
+        }
         $user->save();
         $profile = $user->profile;
         if ($request->gender){
