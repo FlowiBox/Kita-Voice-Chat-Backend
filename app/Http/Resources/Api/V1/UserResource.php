@@ -23,6 +23,11 @@ class UserResource extends JsonResource
             'number_of_fans'=>$this->numberOfFans(),
             'number_of_followings'=>$this->numberOfFollowings(),
             'number_of_friends'=>$this->numberOfFriends(),
+            'now_room'=>[
+                'is_in_room'=>$this->now_room_uid != 0,
+                'uid'=>$this->now_room_uid,
+                'is_mine'=>$this->id == $this->now_room_uid
+            ],
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->di?:0,

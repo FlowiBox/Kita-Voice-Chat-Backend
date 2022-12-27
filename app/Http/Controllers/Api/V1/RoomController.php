@@ -425,6 +425,9 @@ class RoomController extends Controller
             $room_info['room_background'] = $bg->img;
         }
 
+        $user = $request->user ();
+        $user->now_room_uid = $room_info['uid'];
+        $user->save();
         return Common::apiResponse (true,'',$room_info);
     }
 
@@ -435,6 +438,9 @@ class RoomController extends Controller
         $user_id=$request->user ()->id;
         $res=Common::quit_hand($request->owner_id,$user_id);
         $visitor_ids_list = explode (',',$res);
+        $user = $request->user ();
+        $user->now_room_uid = 0;
+        $user->save();
         return Common::apiResponse(true,'exited',['visitor_ids_list'=>$visitor_ids_list]);
     }
 
@@ -775,6 +781,11 @@ class RoomController extends Controller
         if($result){
             //exit the room
             Common::quit_hand($uid,$black_id);
+            $user = User::find($black_id);
+            if ($user){
+                $user->now_room_uid = 0;
+                $user->save();
+            }
             return Common::apiResponse(1,'success');
         }else{
             return Common::apiResponse(0,'fail');
