@@ -21,7 +21,10 @@ class WareResource extends JsonResource
             'price'=>$this->price?:0,
             'color'=>$this->color?:'',
             'expire'=>$this->expire == 0 ? 99999999 : $this->expire,
-            'image'=>$this->show_img?:''
+            'image'=>$this->show_img?:'',
+            'img'=>$this->img1?:'',
+            'svg'=>$this->img2?:'',
+            'video'=>$this->img3?:'',
         ];
     }
 }
