@@ -23,7 +23,7 @@ class UserResource extends JsonResource
             'number_of_fans'=>$this->numberOfFans(),
             'number_of_followings'=>$this->numberOfFollowings(),
             'number_of_friends'=>$this->numberOfFriends(),
-            'is_follow'=>Common::IsFollow (@$request->user ()->id,$this->id),
+            'is_follow'=>(bool)Common::IsFollow (@$request->user ()->id,$this->id),
             'now_room'=>[
                 'is_in_room'=>$this->now_room_uid != 0,
                 'uid'=>$this->now_room_uid,
