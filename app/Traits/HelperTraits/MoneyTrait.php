@@ -258,7 +258,6 @@ trait MoneyTrait
             Db::table('user_unions')->where(['users_id' => $user_id])->increment('total_price', $get_nums);
             $res = Db::table('user_unions')->where(['users_id' => $user_id])->increment($jb_type, $get_nums);
             Db::table('user_unions')->where(['users_id' => $user_id])->increment('unsettled_price', $get_nums);
-
             $now_nums = Db::table('user_unions')->where(['users_id' => $user_id])->selectRaw($jb_type.',union_id')->first();
         }
         if (!$res) return false;
