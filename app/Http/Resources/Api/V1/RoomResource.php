@@ -28,7 +28,7 @@ class RoomResource extends JsonResource
             'type'=>$this->myType?:new \stdClass(),
             'is_hot'=>$this->hot?:0,
             'is_popular'=>$this->is_popular?:0,
-            'room_status'=>$this->room_status?:1,
+            'room_status'=>$this->room_status,
             'password_status'=>$this->room_pass ?true:false,
             'room_intro'=>$this->room_intro?:'',
             'is_recommended'=>$this->is_recommended?:0,

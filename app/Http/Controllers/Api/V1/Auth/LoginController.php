@@ -158,10 +158,6 @@ class LoginController extends Controller
         return Common::apiResponse (false,'invalid code',null,422);
     }
 
-    public function logout(Request $request){
-        $request->user ()->tokens()->delete();
-        return Common::apiResponse (1,'logged out');
-    }
 
 
     protected function userWithToken($user){

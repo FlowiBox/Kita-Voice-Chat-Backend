@@ -48,9 +48,13 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
+        $me = $request->user ();
         $user = User::query ()->find ($id);
+        if ($me->id != $user->id){
+            $user->profileVisits()->sync([$me->id]);
+        }
         if($user){
             return Common::apiResponse (true,'',new UserResource($user),200);
         }
@@ -127,5 +131,11 @@ class ProfileController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function myProfileVisitorsList(Request $request){
+        $user = $request->user();
+        $visitors = UserResource::collection ($user->profileVisits);
+        return Common::apiResponse (1,'',$visitors);
     }
 }

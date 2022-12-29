@@ -20,9 +20,11 @@ Route::prefix ('auth')->group (function (){
     Route::post ('register',[\App\Http\Controllers\Api\V1\Auth\RegisterController::class,'register']);
     Route::post ('login',[\App\Http\Controllers\Api\V1\Auth\LoginController::class,'login']);
     Route::post ('send-code',[\App\Http\Controllers\Api\V1\Auth\LoginController::class,'sendPhoneCode']);
+
 });
 
 Route::middleware('auth:sanctum')->group (function (){
+    Route::post ('auth/logout',[\App\Http\Controllers\Api\V1\UserController::class,'logout']);
     Route::get ('my-data',[\App\Http\Controllers\Api\V1\UserController::class,'my_data']);
     Route::get ('get_myfavorite',[\App\Http\Controllers\Api\V1\UserController::class,'get_myfavorite']);
     Route::prefix ('users')->group (function (){
@@ -31,6 +33,7 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::prefix ('profile')->group (function (){
         Route::get ('get/{id}',[\App\Http\Controllers\Api\V1\ProfileController::class,'show']);
         Route::post ('update',[\App\Http\Controllers\Api\V1\ProfileController::class,'update']);
+        Route::get ('visitors',[\App\Http\Controllers\Api\V1\ProfileController::class,'myProfileVisitorsList']);
     });
     Route::prefix ('relations')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\UserController::class,'userFriend']);
@@ -46,9 +49,6 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::prefix ('rooms')->group (function (){
 
 //        Route::post ('get_other_user',[\App\Http\Controllers\Api\V1\RoomController::class,'get_other_user']);
-
-
-
 
         Route::post('enter_room',[\App\Http\Controllers\Api\V1\RoomController::class,'enter_room']);
         Route::post('quit_room',[\App\Http\Controllers\Api\V1\RoomController::class,'quit_room']);

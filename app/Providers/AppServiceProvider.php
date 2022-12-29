@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Room;
 use App\Models\User;
+use App\Observers\Api\V1\RoomObserver;
 use App\Observers\Api\V1\UserObserver;
 use App\Repositories\Room\RoomRepo;
 use App\Repositories\Room\RoomRepoInterface;
@@ -31,5 +33,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         User::observe (UserObserver::class);
+        Room::observe(RoomObserver::class);
     }
 }

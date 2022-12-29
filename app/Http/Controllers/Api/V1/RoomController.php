@@ -65,7 +65,7 @@ class RoomController extends Controller
         try {
             $room = Room::query ()->where('uid',$request->user ()->id)->first ();
             if ($room){
-                $room->room_status = 1;
+                $room->room_status = 2;
                 $room->save ();
                 return Common::apiResponse (true,'you are already have a room',new RoomResource($room),201);
             }

@@ -18,8 +18,18 @@ class UserController extends Controller
         return Common::apiResponse (true,'',$data,200);
     }
 
+    public function logout(Request $request){
+        $request->user ()->tokens()->delete();
+        return Common::apiResponse (1,'logged out');
+    }
+
+
     public function show(Request $request,$id){
+        $me = $request->user ();
         $user = User::query ()->find ($id);
+        if ($me->id != $user->id){
+            $user->profileVisits()->sync([$me->id]);
+        }
         if (!$user) return Common::apiResponse (false,'not found',null,404);
         $data = new UserResource($user);
         return Common::apiResponse (true,'',$data,200);
@@ -34,6 +44,8 @@ class UserController extends Controller
                 return Common::apiResponse (true,'',UserResource::collection ($user->followeds()),200);
             case '3': // friends [i follow them & they follow me]
                 return Common::apiResponse (true,'',UserResource::collection ($user->friends()),200);
+            case '4':
+                return Common::apiResponse (true,'',UserResource::collection ($user->onRoomFolloweds()),200);
             default: // friends [i follow them & they follow me]
                 return Common::apiResponse (false,'please select type',null,200);
         }
@@ -249,6 +261,13 @@ class UserController extends Controller
     public function my_income(Request $request){
         $data = Common::user_income ($request->user ()->id);
         return Common::apiResponse (1,'',$data);
+    }
+
+
+    public function myProfileVisitorsList(Request $request){
+        $user = $request->user();
+        $visitors = UserResource::collection ($user->profileVisits);
+        return Common::apiResponse (1,'',$visitors);
     }
 
 }

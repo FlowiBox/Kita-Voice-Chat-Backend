@@ -88,5 +88,14 @@ class User extends Authenticatable
         return $val?:'';
     }
 
+    public function profileVisits(){
+        return $this->belongsToMany (User::class,'profile_visitors','user_id','visitor_id','id','id');
+    }
+
+    public function is_in_live(){
+        return $this->rooms ()->where ('room_status',1)->where ('room_visitor','!=','')->exists ();
+    }
+
+
 
 }
