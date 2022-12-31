@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Pack;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ class UserController extends Controller
 {
     public function my_data(Request $request){
         $user = $request->user ();
+        $this->unlock_dress($user->id);
         $data = new UserResource($user);
         return Common::apiResponse (true,'',$data,200);
     }
@@ -94,6 +96,7 @@ class UserController extends Controller
 
     public function my_pack(Request $request){
         $user_id = $request->user ()->id;
+        $this->unlock_dress($user_id);
         $type = $request->type;
         if(!in_array($type,[1,2,3,4,5,6,7]))    return Common::apiResponse (0,'type not found');
         $where['a.user_id']=$user_id;
@@ -110,12 +113,18 @@ class UserController extends Controller
                 ->get();
         }
         if(in_array($type,[4,5,6,7])){
-            $dress_id=Db::table('users')->where(['id'=>$user_id])->value("dress_".$type);
+            $user_dress_after_i_changed = [
+                4=>1,
+                5=>2,
+                6=>3,
+                7=>4
+            ];
+            $dress_id=DB::table('users')->where(['id'=>$user_id])->value("dress_".$user_dress_after_i_changed[$type]);
         }
         foreach ($data as $k => &$v) {
             $v->is_dress=0;
             if(in_array($type,[4,5,6,7])){
-                $v->title= empty($v->expire) ? "permanent" : date('Y-m-d H:i:s',$v->expire)."expire";
+                $v->title= empty($v->expire) ? "permanent" : date('Y-m-d H:i:s',$v->expire)." expire";
                 $v->is_dress= $dress_id == $v->target_id  ? 1 : 0;
                 $v->color= $v->color ? : '';
             }elseif($type == 2){
@@ -148,7 +157,7 @@ class UserController extends Controller
 
             //status changed to read
             if ($v->is_read == 1){
-                Db::table('pack')->where(array('id'=>$v['id']))->update(array('is_read'=>0));
+                DB::table('packs')->where(array('id'=>$v->id))->update(array('is_read'=>0));
             }
 
         }
@@ -268,6 +277,55 @@ class UserController extends Controller
         $user = $request->user();
         $visitors = UserResource::collection ($user->profileVisits);
         return Common::apiResponse (1,'',$visitors);
+    }
+
+
+
+    //Unlock and dress up premium items
+    public function unlock_dress($user_id){
+        $this->unlock_dress_hand($user_id); //Automatically unlock costumes according to the user's VIP level
+        $this->unlock_dress_up($user_id);   //Automatic dress up high level dress up
+    }
+
+    //Automatically unlock costumes according to the user's VIP level
+    protected function unlock_dress_hand($user_id){
+        $vip=Common::getLevel($user_id,3);
+        $where_pack['user_id']=$user_id;
+        $where_pack['type']=['in','4,5,6,7,8'];
+        $ids=DB::table('packs')->where($where_pack)->pluck('target_id');
+        $where['get_type']=1;
+        $where['enable']=1;
+        $where['level']=['elt',$vip];
+        $types=[4,5,6,7,8];
+        $wares=DB::table('wares')->where($where)->whereIn ('type',$types)->whereNotIn ('id',$ids)->selectRaw('id,type,expire')->get();
+        if(!$wares) return 0;
+        $i=0;
+        foreach ($wares as $k => &$v){
+            $pack=DB::table('packs')->where(['user_id'=>$user_id,'type'=>$v->type,'target_id'=>$v->id])->value('id');
+            if($pack)   continue;
+            $arr['user_id']=$user_id;
+            $arr['type']=$v->type;
+            $arr['target_id']=$v->id;
+            $arr['expire']= $v->expire ? time()+($v->expire*86400) : 0;
+            $arr['is_read']=1;
+            Pack::query ()->create($arr);
+        }
+    }
+    //Automatic dress up high level dress up
+    protected function unlock_dress_up($user_id){
+        $type=[4,5,6,7];
+        $user_dress_after_i_changed = [
+            4=>1,
+            5=>2,
+            6=>3,
+            7=>4
+        ];
+        foreach ($type as $k => &$v) {
+            $id=DB::table('packs')->where(['user_id'=>$user_id,'get_type'=>1,'type'=>$v])->orderByRaw('id desc')->limit(1)->value('target_id');
+            if($id){
+                DB::table('users')->where(['id'=>$user_id])->update(['dress_'.$user_dress_after_i_changed[$v]=>$id]);
+            }
+        }
     }
 
 }

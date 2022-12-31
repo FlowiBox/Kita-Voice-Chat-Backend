@@ -4,6 +4,7 @@
 namespace App\Traits\HelperTraits;
 
 
+use App\Helpers\Common;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -264,6 +265,40 @@ trait MoneyTrait
         self::addTranmoney($user_id, $get_nums, $get_type, $now_nums[$jb_type],'',$now_nums['union_id']);
         return $res;
     }
+
+
+    /**
+     * Get the commission ratio or patriarch id
+     * @param int                   user_id             user id
+     * @param int                   type                Return data 1: return the handling fee ratio, 2: return the patriarch id
+     */
+    public  static function getFeeRatio($user_id,$type = 1){
+        $family_id=Db::table('family_user')->where(['status'=>1,'user_id'=>$user_id])->value('family_id');
+        $f_user_id=Db::table('family_user')->where(['status'=>1,'user_type'=>2,'family_id'=>$family_id])->value('user_id');
+        if($type == 1){
+            //Not joined the family 10%, joined the family 20%
+            $no_family_ratio = static::getConfig('no_family_ratio');//not joined
+            $no_family_ratio = $no_family_ratio ? $no_family_ratio/100 : 0.1;
+            $is_family_ratio = static::getConfig('is_family_ratio');//joined
+            $is_family_ratio = $is_family_ratio ? $is_family_ratio/100 : 0.2;
+            return $f_user_id ? $is_family_ratio : $no_family_ratio;
+        }elseif($type == 2){
+            return $f_user_id ? : null ;
+        }
+    }
+
+    public static function getUnionFeeRatio($user_id,$type = 1){
+        $union_id = Db::table('user_union')->where(['check_status'=>1,'users_id'=>$user_id])->value('union_id');
+        $info=Db::table('union')->where(['status'=>1,'check_status'=>1,'id'=>$union_id])->selectRaw('id,users_id,share')->first();
+        if($type == 1){
+            //If you set the guild share ratio, take the user ratio value, otherwise take the default value
+            return $info['share'] ? $info['share'] : static::getConfig('union_share');
+        }elseif($type == 2){
+            return $info['id'] ? : null ;
+        }
+    }
+
+
 
 
 
