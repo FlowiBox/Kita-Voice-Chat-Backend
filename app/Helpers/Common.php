@@ -6,6 +6,7 @@ use App\Models\GiftLog;
 use App\Models\Room;
 use App\Models\Vip;
 use App\Traits\HelperTraits\AdminTrait;
+use App\Traits\HelperTraits\AttributesTrait;
 use App\Traits\HelperTraits\CalcsTrait;
 use App\Traits\HelperTraits\MoneyTrait;
 use App\Traits\HelperTraits\RoomTrait;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class Common{
 
-    use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait;
+    use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait , AttributesTrait;
 
     public static function apiResponse(bool $success,$message,$data = null,$statusCode = null,$paginates = null){
 

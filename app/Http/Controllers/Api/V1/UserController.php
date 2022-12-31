@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Pack;
 use App\Models\User;
+use App\Models\Ware;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -284,7 +285,7 @@ class UserController extends Controller
     //Unlock and dress up premium items
     public function unlock_dress($user_id){
         $this->unlock_dress_hand($user_id); //Automatically unlock costumes according to the user's VIP level
-        $this->unlock_dress_up($user_id);   //Automatic dress up high level dress up
+//        $this->unlock_dress_up($user_id);   //Automatic dress up high level dress up
     }
 
     //Automatically unlock costumes according to the user's VIP level
@@ -311,6 +312,46 @@ class UserController extends Controller
             Pack::query ()->create($arr);
         }
     }
+
+    public function buyWare(Request $request){
+        $user = $request->user ();
+        $ware_id = $request->ware_id;
+        $qty = $request->qty ?:1;
+        if (!$ware_id) return Common::apiResponse (0,'missing params');
+        $ware = Ware::query()->where('id',$ware_id)
+            ->where ('enable',1)
+            ->whereIn ('get_type',[4,6])
+            ->first ();
+        if(!$ware) return Common::apiResponse (0,'item not found or not for sale');
+        $pack = Pack::query ()->where ('user_id',$user->id)->where ('target_id',$ware_id)->first ();
+        if($pack){
+            if ($pack->expire == 0) return Common::apiResponse (0,'you have this item in your pack no need to buy it');
+            if ($pack->expire > now ()->timestamp) return Common::apiResponse (0,'you have this item in your pack not expired yet');
+        }
+        $total_price = $ware->price * $qty;
+        if($user->di < $total_price) return Common::apiResponse (0,'Insufficient balance, please go to recharge!');
+        DB::beginTransaction ();
+        try {
+            $arr['user_id']=$user->id;
+            $arr['type']=$ware->type;
+            $arr['get_type']=$ware->get_type;
+            $arr['target_id']=$ware->id;
+            $arr['num']=$qty;
+            $arr['expire']= $ware->expire ? time()+($ware->expire * 86400) : 0;
+            $arr['is_read']=1;
+            Pack::query ()->create ($arr);
+            $user->decrement('di',$total_price);
+            DB::commit ();
+            return Common::apiResponse (1,'success process');
+        }catch (\Exception $exception){
+            DB::rollBack ();
+            return Common::apiResponse (0,'an error occurred please try again later!');
+        }
+    }
+
+
+
+
     //Automatic dress up high level dress up
     protected function unlock_dress_up($user_id){
         $type=[4,5,6,7];
@@ -326,6 +367,31 @@ class UserController extends Controller
                 DB::table('users')->where(['id'=>$user_id])->update(['dress_'.$user_dress_after_i_changed[$v]=>$id]);
             }
         }
+    }
+
+    public function usePackItem(Request $request){
+        $user = $request->user ();
+        $item_id = $request->item_id;
+        if (!$item_id) return Common::apiResponse (0,'missing params');
+        $types=[4,5,6,7];
+        $user_dress_after_i_changed = [
+            4=>1,
+            5=>2,
+            6=>3,
+            7=>4
+        ];
+        $pack=DB::table('packs')
+            ->where(['user_id'=>$user->id])
+            ->where ('id',$item_id)
+            ->first ();
+        if($pack){
+            if (in_array ($pack->type,$types)){
+                $user->update(['dress_'.$user_dress_after_i_changed[$pack->type]=>$pack->target_id]);
+                return Common::apiResponse (1,'success',new UserResource($user));
+            }
+            return Common::apiResponse (0,'unusable item');
+        }
+        return Common::apiResponse (0,'item not found');
     }
 
 }

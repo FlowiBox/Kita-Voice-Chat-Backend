@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group (function (){
     });
     Route::prefix ('mall')->group (function (){
         Route::get ('wares',[\App\Http\Controllers\Api\V1\MallController::class,'index']);
+        Route::post ('buy',[\App\Http\Controllers\Api\V1\UserController::class,'buyWare']);
     });
     Route::prefix ('gifts')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\GiftController::class,'index']);
@@ -104,6 +105,7 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::prefix ('user_info')->group (function (){
         Route::get ('my_pack',[\App\Http\Controllers\Api\V1\UserController::class,'my_pack']);
+        Route::post ('use_pack_item',[\App\Http\Controllers\Api\V1\UserController::class,'usePackItem']);
         Route::get ('my_store',[\App\Http\Controllers\Api\V1\UserController::class,'my_store']);
         Route::get ('my_income',[\App\Http\Controllers\Api\V1\UserController::class,'my_income']);
         Route::post ('go_order_list',[\App\Http\Controllers\Api\V1\OrderController::class,'go_order_list']);

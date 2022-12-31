@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api\V1;
 
 use App\Helpers\Common;
+use App\Models\Ware;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -15,6 +16,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+
         $data = [
             'id'=>$this->id,
             'name'=>$this->name?:'',
@@ -38,7 +40,11 @@ class UserResource extends JsonResource
             'income'=>Common::user_income ($this->id),
             'my_store'=>$this->my_store,
             'lang'=>$this->lang,
-            'country'=>$this->country
+            'country'=>$this->country?:'',
+            'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img1'),
+            'bubble'=>Common::getUserDress($this->id,$this->dress_2,5,'img1'),
+            'intro'=>Common::getUserDress($this->id,$this->dress_3,6,'img2'),
+            'mic_halo'=>Common::getUserDress($this->id,$this->dress_4,7,'img1'),
         ];
 
 //        $additional = [
