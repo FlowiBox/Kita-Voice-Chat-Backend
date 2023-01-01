@@ -101,11 +101,11 @@ class CommunityController extends Controller
     }
 
 
-    //搜索用户
+    //search user
     public function user_search_hand($user_id = null, $keywords = null, $page = 1)
     {
         if (!$user_id || !$keywords) return [];
-        //用户
+        //user
         $whereOr = [
             'id' => $keywords,
         ];
@@ -115,7 +115,7 @@ class CommunityController extends Controller
             ->orWhere(function ($query) use ($whereOr) {
                 $query->where($whereOr);
             })
-            ->select ('nickname','id')
+            ->select ('nickname','name','id')
             ->forPage($page, 10)
             ->get();
 

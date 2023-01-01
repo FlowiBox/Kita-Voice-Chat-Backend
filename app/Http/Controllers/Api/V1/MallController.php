@@ -20,7 +20,11 @@ class MallController extends Controller
         if (!$request->type){
             return Common::apiResponse (false,'type is required',null,401);
         }
-        $wares = Ware::query ()->where ('enable','1')->where ('type',$request->type)->get ();
+        $wares = Ware::query ()
+            ->where ('enable','1')
+            ->whereIn ('get_type',[4,6])
+            ->where ('type',$request->type)
+            ->get ();
         return Common::apiResponse (true,'',WareResource::collection ($wares),200);
     }
 
