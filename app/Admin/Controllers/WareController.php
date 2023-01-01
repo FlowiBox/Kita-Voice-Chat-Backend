@@ -173,7 +173,7 @@ class WareController extends Controller
 //               7=>trans ('treasure box point exchange'),
 //               8=>trans ('cp level unlock'),
            ]
-        );
+        )->default (4);
         $form->select('type', trans('type'))->options (
             [
                 1=>trans ('Gemstone'),
