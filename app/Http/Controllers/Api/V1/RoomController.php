@@ -471,8 +471,8 @@ class RoomController extends Controller
             $visitor[$k]['is_admin'] = 0;
         }
         $res['room_id']=$uid;
-        $res['admin']=$admin;
-        $res['visitors']=$visitor;
+        $res['admin']= UserResource::collection ($admins);//$admin;
+        $res['visitors']=UserResource::collection ($visitors);//$visitor;
         return Common::apiResponse(1,'',$res);
     }
 
