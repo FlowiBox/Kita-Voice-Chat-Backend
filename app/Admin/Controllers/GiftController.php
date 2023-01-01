@@ -148,9 +148,9 @@ class GiftController extends Controller
         $form->number('hot', 'hot')->min (0);
         $form->switch('is_play', __ ('is_play'))->states (Common::getSwitchStates ());
         $form->currency('price', 'price')->symbol ('💎');
-        $form->image('img', 'img');
-        $form->image('show_img', 'show_img');
-        $form->image('show_img2', 'show_img2');
+        $form->file('img', 'img');
+        $form->file('show_img', 'show_img');
+        $form->file('show_img2', 'show_img2');
         $form->number('sort', 'sort');
         $form->switch('enable', 'enable')->states (Common::getSwitchStates ());
 

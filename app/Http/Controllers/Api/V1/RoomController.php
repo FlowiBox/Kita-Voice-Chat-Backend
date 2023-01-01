@@ -454,6 +454,7 @@ class RoomController extends Controller
             $admin[$k]['id'] = @$v->id;
             $admin[$k]['nickname'] = @$v->nickname;
             $admin[$k]['avatar'] = @$v->profile->avatar;
+            $admin[$k]['country'] = @$v->profile->country;
             $admin[$k]['is_admin'] = 1;
         }
 
@@ -466,6 +467,7 @@ class RoomController extends Controller
             $visitor[$k]['id'] = @$v->id;
             $visitor[$k]['nickname'] = @$v->nickname;
             $visitor[$k]['avatar'] = @$v->profile->avatar;
+            $visitor[$k]['country'] = @$v->profile->country;
             $visitor[$k]['is_admin'] = 0;
         }
         $res['room_id']=$uid;
