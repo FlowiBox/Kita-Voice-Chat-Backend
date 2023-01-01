@@ -65,8 +65,6 @@ class RoomController extends Controller
         try {
             $room = Room::query ()->where('uid',$request->user ()->id)->first ();
             if ($room){
-                $room->room_status = 2;
-                $room->save ();
                 return Common::apiResponse (true,'you are already have a room',new RoomResource($room),201);
             }
            $room = $this->repo->create (array_merge($request->all (),['uid'=>$request->user ()->id]));
@@ -245,7 +243,7 @@ class RoomController extends Controller
 
         if($room_info['room_status'] == 3) return Common::apiResponse(false,'The room has been banned, please contact customer service');
         //enter your room
-        if($owner_id== $user_id){
+        if($owner_id == $user_id){
             $res_afk=DB::table('rooms')->where('uid',$owner_id)->update(['is_afk'=>1]);
             if($res_afk)    $room_info['is_afk']=1;
         }
