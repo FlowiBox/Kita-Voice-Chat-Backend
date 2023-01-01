@@ -6,6 +6,7 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Profile\ProfileRequest;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Country;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -94,6 +95,12 @@ class ProfileController extends Controller
         }
         if ($request->nickname){
             $user->nickname = $request->nickname;
+        }
+        if ($request->country_phone_code){
+            $country = Country::query ()->where ('phone_code',$request->country_phone_code)->first ();
+            if ($country){
+                $user->country_id = $country->id;
+            }
         }
         $user->save();
         $profile = $user->profile;
