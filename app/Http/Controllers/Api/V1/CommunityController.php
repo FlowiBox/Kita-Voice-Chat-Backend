@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,7 +59,7 @@ class CommunityController extends Controller
             DB::table('search_histories')->insert($info);
         }
         //user
-        $user = array_slice($this->user_search_hand($user_id, $keywords), 0, 2);
+//        $user = array_slice($this->user_search_hand($user_id, $keywords), 0, 2);
         //Room
         $rooms = array_slice($this->room_search_hand($user_id, $keywords), 0, 2);
         //dynamic
@@ -67,7 +68,7 @@ class CommunityController extends Controller
 //        $gmskill = array_slice($this->gmskill_search_hand($user_id, $keywords), 0, 2);
 //        $arr['gmskill'] = $gmskill;
 
-        $arr['user'] = $user;
+        $arr['user'] = UserResource::collection ($this->user_search_hand($user_id, $keywords));//$user;
         $arr['rooms'] = $rooms;
 //        $arr['dynamics'] = $dynamics;
         return Common::apiResponse(1, '', $arr);
@@ -115,7 +116,6 @@ class CommunityController extends Controller
             ->orWhere(function ($query) use ($whereOr) {
                 $query->where($whereOr);
             })
-            ->select ('nickname','name','id')
             ->forPage($page, 10)
             ->get();
 
@@ -125,7 +125,7 @@ class CommunityController extends Controller
 
         unset($vu);
         //return json_decode($user,true);
-        return $user->toArray ();
+        return $user;
     }
 
     //搜索房间
@@ -142,7 +142,7 @@ class CommunityController extends Controller
 //             ->orWhere('rooms.numid',$keywords)
             ->join('users', 'rooms.uid','=','users.id', 'left')
             ->select(['rooms.room_name', 'rooms.uid', 'rooms.numid', 'rooms.hot', 'rooms.room_cover',
-                         'users.nickname'])
+                         'users.nickname','users.name'])
             ->orWhere(function ($query) use ($whereOr) {
                 $query->where($whereOr);
             })
