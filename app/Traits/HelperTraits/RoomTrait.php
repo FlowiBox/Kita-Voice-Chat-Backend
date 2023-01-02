@@ -525,4 +525,18 @@ trait RoomTrait
         Db::table('user_tasks')->where(['user_id'=>$user_id])->update($info);
         return 1;
     }
+
+
+    public static function can_kick($user_id){
+        $vip_level      = self ::getLevel ( $user_id , 3 );
+        $vip_auth = DB ::table ( 'vip_auth' ) -> where ( ['type' => 3 , 'enable' => 1] )->whereIn ('name',['ممنوع الطرد','not kicked']) ;
+        $vip_auth = $vip_auth-> get ();
+        $can_kick = true;
+        foreach ($vip_auth as $k => &$v) {
+            if ($vip_level >= $v->level){
+                $can_kick = false;
+            }
+        }
+        return $can_kick;
+    }
 }

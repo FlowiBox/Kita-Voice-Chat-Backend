@@ -240,7 +240,7 @@ Trait CalcsTrait
         }
         $vip_auth = $vip_auth-> get ();
         foreach ($vip_auth as $k => &$v) {
-            $v -> is_on = ($vip_level >= $v -> level) ? 1 : 0;
+            $v->is_on = ($vip_level >= $v->level) ? 1 : 0;
         }
         unset( $v );
         $arr['my_data']     = $data;

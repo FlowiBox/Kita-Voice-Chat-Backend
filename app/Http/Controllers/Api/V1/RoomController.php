@@ -423,6 +423,7 @@ class RoomController extends Controller
             $room_info['room_background'] = $bg->img;
         }
 
+
         $user = $request->user ();
         $user->now_room_uid = $room_info['owner_id'];
         $user->save();
@@ -756,6 +757,7 @@ class RoomController extends Controller
         $black_id = $request->user_id ? : 0;
         $duration = $request->minutes ? : 5;
         if(!$uid || !$black_id) return Common::apiResponse (0,'invalid data');
+        if (!Common::can_kick ($black_id)) return Common::apiResponse (0,'cant kick this user');
         $black_list = DB::table('rooms')->where('uid',$uid)->value('room_black');
         if($black_list == null){
             $black_list = $black_id.'#'.time().'#'.($duration * 60);
