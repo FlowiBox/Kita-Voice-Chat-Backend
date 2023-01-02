@@ -45,7 +45,8 @@ class UserResource extends JsonResource
             'bubble'=>Common::getUserDress($this->id,$this->dress_2,5,'img1'),
             'intro'=>Common::getUserDress($this->id,$this->dress_3,6,'img2'),
             'mic_halo'=>Common::getUserDress($this->id,$this->dress_4,7,'img1'),
-            'can_kicked_of_room'=>Common::can_kick ($this->id)
+            'can_kicked_of_room'=>Common::can_kick ($this->id),
+            'bio'=>$this->bio?:''
         ];
 
 //        $additional = [

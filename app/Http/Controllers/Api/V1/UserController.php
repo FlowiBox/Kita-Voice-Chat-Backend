@@ -185,7 +185,9 @@ class UserController extends Controller
 
         if ($class == 1) {
             $keywords = 'receiver_id';
-        } elseif ($class = 2) {
+        } elseif ($class == 2) {
+            $keywords = 'sender_id';
+        }else{
             $keywords = 'sender_id';
         }
         if ($type == 1) {
@@ -194,6 +196,11 @@ class UserController extends Controller
             $query = DB::table('gift_logs')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
         } elseif ($type == 3) {
             $query = DB::table('gift_logs')->whereMonth('created_at', Carbon::now()->month);
+        }else{
+            $query = DB::table('gift_logs');
+        }
+        if (!in_array ($class,[1,2])){
+            $query = $query->where ('receiver_id',$user->id);
         }
         $data=$query->selectRaw("sum(giftPrice) as exp ,". $keywords)->groupBy($keywords)->orderByRaw("exp desc")->limit($limit)->get();
         $i=$l=0;

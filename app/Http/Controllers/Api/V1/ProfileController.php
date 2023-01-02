@@ -102,6 +102,10 @@ class ProfileController extends Controller
                 $user->country_id = $country->id;
             }
         }
+        if ($request->bio){
+            $user->bio = $request->bio;
+        }
+
         $user->save();
         $profile = $user->profile;
         if ($request->gender){
