@@ -9,6 +9,7 @@ use App\Http\Resources\CountryResource;
 use App\Models\Background;
 use App\Models\Country;
 use App\Models\RoomCategory;
+use App\Models\User;
 use App\Models\Vip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -77,5 +78,14 @@ class HomeController extends Controller
         $count = Vip::query ()->where ('type',3)->count ();
         $vips =  Vip::query ()->where ('type',3)->select ('id','level','type','img')->get ();
         return Common::apiResponse (1,'',['vip_count'=>$count,'vips'=>$vips]);
+    }
+
+    public function check_if_friend(Request $request){
+        $me = $request->user ();
+        $user_id = $request->user_id;
+        if (in_array ($user_id,$me->friends_ids()->toArray())){
+            return Common::apiResponse (1,'exists',true);
+        }
+        return Common::apiResponse (0,'does not exist',false);
     }
 }

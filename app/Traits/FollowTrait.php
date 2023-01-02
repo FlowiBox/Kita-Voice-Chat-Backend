@@ -28,6 +28,10 @@ Trait FollowTrait{
         return self::query ()->whereIn('id',$this->followeds_ids ())->whereIn('id',$this->followers_ids ())->get ();
     }
 
+    public function friends_ids(){
+        return self::query ()->whereIn('id',$this->followeds_ids ())->whereIn('id',$this->followers_ids ())->pluck ('id');
+    }
+
     public function numberOfFans(){
         return self::query ()->whereIn('id',$this->followers_ids ())->count();
     }

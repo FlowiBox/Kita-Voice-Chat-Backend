@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\V1\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,7 +37,9 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\UserController::class,'userFriend']);
         Route::post ('follow',[\App\Http\Controllers\Api\V1\FollowController::class,'follow']);
         Route::post ('un-follow',[\App\Http\Controllers\Api\V1\FollowController::class,'unFollow']);
+        Route::post ('is_user_friend',[\App\Http\Controllers\Api\V1\HomeController::class,'check_if_friend']);
     });
+
     Route::prefix ('unions')->group (function (){
         Route::post ('add_union',[\App\Http\Controllers\Api\V1\UnionController::class,'addUnion']);
         Route::post ('add_user_to_union',[\App\Http\Controllers\Api\V1\UnionController::class,'addUserUnion']);
