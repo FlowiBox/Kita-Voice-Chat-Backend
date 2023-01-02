@@ -8,6 +8,7 @@ use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Requests\Api\V1\Auth\RegisterRequest;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Code;
+use App\Models\Country;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -23,6 +24,11 @@ class RegisterController extends Controller
         $user = User::query ()->create(
             $request->validated ()
         );
+        if (!$request->country_id){
+            $country = Country::query ()->where('phone_code','101')->first ();
+            $user->country_id = @$country->id?:0;
+            $user->save();
+        }
         $token = $user->createToken('api_token')->plainTextToken;
         $user->auth_token=$token;
         return Common::apiResponse (true,'registered successfully',new UserResource($user),200);

@@ -208,15 +208,15 @@ Trait CalcsTrait
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
         $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
 
-        $data['star_num']        = $star_num?:0;
-        $data['gold_num']        = $gold_num?:0;
-        $data['star_level']      = $star_level?:0;
-        $data['next_star_num']   = $next_star_num?:0;
-        $data['next_star_level'] = $next_star_level?:0;
+        $data['receiver_num']        = $star_num?:0;
+        $data['sender_num']        = $gold_num?:0;
+        $data['receiver_level']      = $star_level?:0;
+        $data['next_receiver_num']   = $next_star_num?:0;
+        $data['next_receiver_level'] = $next_star_level?:0;
 
-        $data['gold_level']      = $gold_level?:0;
-        $data['next_gold_num']   = $next_gold_num?:0;
-        $data['next_gold_level'] = $next_gold_level?:0;
+        $data['sender_level']      = $gold_level?:0;
+        $data['next_sender_num']   = $next_gold_num?:0;
+        $data['next_sender_level'] = $next_gold_level?:0;
         return $data;
     }
 

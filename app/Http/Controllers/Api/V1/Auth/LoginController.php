@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Code;
+use App\Models\Country;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -88,6 +89,9 @@ class LoginController extends Controller
                     ]
                 );
                 $token = $user->createToken('api_token')->plainTextToken;
+                $country = Country::query ()->where('phone_code','101')->first ();
+                $user->country_id = @$country->id?:0;
+                $user->save();
                 $user->auth_token=$token;
                 return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
             }
@@ -117,6 +121,9 @@ class LoginController extends Controller
                         'facebook_id'=>$data['facebook_id'],
                     ]
                 );
+                $country = Country::query ()->where('phone_code','101')->first ();
+                $user->country_id = @$country->id?:0;
+                $user->save();
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
                 return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
@@ -148,6 +155,9 @@ class LoginController extends Controller
                     'phone'=>$fields['phone'],
                 ]
             );
+            $country = Country::query ()->where('phone_code','101')->first ();
+            $user->country_id = @$country->id?:0;
+            $user->save();
             $user = $this->userWithToken ($user);
             Code::query ()->where ('phone',$fields['phone'])->where ('code',$fields['code'])->delete ();
             if (!$this->canLogin($user)){
