@@ -141,8 +141,16 @@ class CommunityController extends Controller
             ->where(['users.status' => 1])
 //             ->orWhere('rooms.numid',$keywords)
             ->join('users', 'rooms.uid','=','users.id', 'left')
-            ->select(['rooms.room_name', 'rooms.uid', 'rooms.numid', 'rooms.hot', 'rooms.room_cover',
-                         'users.nickname','users.name'])
+            ->select([
+                'rooms.room_name',
+                 'rooms.uid',
+                 'rooms.numid',
+                 'rooms.hot',
+                 'rooms.room_cover',
+                 'rooms.room_intro',
+                 'rooms.room_welcome',
+                 'users.nickname',
+                 'users.name'])
             ->orWhere(function ($query) use ($whereOr) {
                 $query->where($whereOr);
             })
