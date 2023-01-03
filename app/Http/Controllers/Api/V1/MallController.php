@@ -21,7 +21,7 @@ class MallController extends Controller
             return Common::apiResponse (false,'type is required',null,401);
         }
         $wares = Ware::query ()
-            ->where ('enable','1')
+            ->where ('enable',1)
             ->whereIn ('get_type',[4,6])
             ->where ('type',$request->type)
             ->get ();

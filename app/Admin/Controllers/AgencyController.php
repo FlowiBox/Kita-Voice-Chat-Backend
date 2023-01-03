@@ -2,20 +2,18 @@
 
 namespace App\Admin\Controllers;
 
-use App\Helpers\Common;
-use App\Models\Country;
+use App\Models\Agency;
 use App\Http\Controllers\Controller;
+use App\Traits\AdminTraits\AdminUserTrait;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class CountryController extends Controller
+class AgencyController extends Controller
 {
-    use HasResourceActions;
-
-
+    use HasResourceActions,AdminUserTrait;
 
     /**
      * Index interface.
@@ -82,20 +80,33 @@ class CountryController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Country);
+
+        $ops = [];
+        foreach ($this->getAdminUsers () as $user){
+            $ops[$user->id]=$user->name;
+        }
+
+
+
+        $grid = new Grid(new Agency);
+
+//        $user = auth ()->user ();
+//        if (!$user->isRole('admin') && !$user->isRole('developer')){
+//            $grid->model()->ofOwner($user->id);
+//        }
 
         $grid->id('ID');
-        $grid->name(trans('name'));
-        $grid->e_name(trans('english name'));
-        $grid->phone_code(trans('phone code'));
-        $grid->column('language',trans ('language'));
-        $grid->column ('flag',trans ('flag'))->image ('',30);
-        $grid->iso(trans('iso'));
-        $grid->iso3(trans('iso3'));
-        $grid->continent_name(trans('continent name'));
-        $grid->e_continent_name(trans('english continent name'));
-        $grid->column ('status',trans ('status'))->switch (Common::getSwitchStates ());
-
+        $grid->column('owner_id',trans ('owner id'))->select ($ops);
+        $grid->column('name',trans ('name'));
+        $grid->column('notice',trans ('notice'));
+        $grid->column('status',trans ('status'))->select (
+            [
+                0=>trans ('disabled'),
+                1=>trans ('enabled'),
+            ]
+        );
+        $grid->column('phone',trans ('phone'));
+        $grid->column('img',trans ('img'))->image ('',30);
 
         return $grid;
     }
@@ -108,18 +119,19 @@ class CountryController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Country::findOrFail($id));
+        $show = new Show(Agency::findOrFail($id));
 
         $show->id('ID');
-        $show->name(trans('name'));
-        $show->e_name(trans('english name'));
-        $show->phone_code(trans('phone code'));
-        $show->language(trans('language'));
-        $show->iso(trans('iso'));
-        $show->iso3(trans('iso3'));
-        $show->continent_name(trans('continent name'));
-        $show->e_continent_name(trans('english continent name'));
-
+        $show->owner_id('owner_id');
+        $show->name('name');
+        $show->notice('notice');
+        $show->status('status');
+        $show->phone('phone');
+        $show->url('url');
+        $show->img('img');
+        $show->contents('contents');
+        $show->created_at(trans('admin.created_at'));
+        $show->updated_at(trans('admin.updated_at'));
 
         return $show;
     }
@@ -131,20 +143,25 @@ class CountryController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new Country);
+
+        $ops = [];
+        foreach ($this->getAdminUsers () as $user){
+            $ops[$user->id]=$user->name;
+        }
+
+        $form = new Form(new Agency);
 
         $form->display('ID');
-        $form->text('name', trans('name'));
-        $form->text('e_name', trans('english name'));
-        $form->text('phone_code', trans('phone code'));
-        $form->text('language', trans('language'));
-        $form->image ('flag',trans ('flag'));
-        $form->text('iso', trans('iso'));
-        $form->text('iso3', trans('iso3'));
-        $form->text('continent_name', trans('continent name'));
-        $form->text('e_continent_name', trans('english continent name'));
-        $form->switch ('status',trans ('status'))->states (Common::getSwitchStates ());
-
+        $form->select('owner_id', 'owner_id')->options ($ops);
+        $form->text('name', 'name');
+        $form->text('notice', 'notice');
+        $form->text('status', 'status');
+        $form->text('phone', 'phone');
+        $form->text('url', 'url');
+        $form->text('img', 'img');
+        $form->text('contents', 'contents');
+        $form->display(trans('admin.created_at'));
+        $form->display(trans('admin.updated_at'));
 
         return $form;
     }

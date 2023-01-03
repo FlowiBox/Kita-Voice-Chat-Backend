@@ -96,6 +96,10 @@ class User extends Authenticatable
         return $this->rooms ()->where ('room_status',1)->where ('room_visitor','!=','')->exists ();
     }
 
+    public function agency(){
+        return $this->belongsTo (Agency::class);
+    }
+
 
 
 }

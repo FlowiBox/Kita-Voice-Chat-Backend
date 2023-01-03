@@ -8,6 +8,7 @@ use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -26,6 +27,16 @@ class UserController extends AdminController
     public function __construct ()
     {
         $this->title = __('User');
+    }
+
+    public function index ( Content $content )
+    {
+        return $content
+            ->title($this->title)
+            ->row(function($row) {
+                $row->column(10, $this->grid());
+                $row->column(2, view('admin.grid.users.actions'));
+            });
     }
 
 

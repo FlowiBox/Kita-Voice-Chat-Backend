@@ -4,11 +4,17 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Customization\Dashboard\CustomDashboard;
 use App\Http\Controllers\Controller;
+use App\Models\Gift;
+use App\Models\Room;
+use App\Models\User;
+use App\Models\Ware;
+use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Controllers\Dashboard;
 use Encore\Admin\Layout\Column;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
 use Encore\Admin\Widgets\Box;
+use Encore\Admin\Widgets\InfoBox;
 
 class HomeController extends Controller
 {
@@ -60,5 +66,20 @@ class HomeController extends Controller
                     $column->append(Dashboard::dependencies());
                 });
             });
+    }
+
+    public function infoBox(Content $content)
+    {
+        $content->title('Info box');
+        $content->description('Description...');
+
+        $content->row(function ($row) {
+            $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', '/admin/users', User::query ()->count ()));
+            $row->column(3, new InfoBox(__('Rooms'), 'wechat', 'green', '/admin/rooms', Room::query ()->count ()));
+            $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', '/admin/gifts', Gift::query ()->count ()));
+            $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', '/admin/wares', Ware::query ()->count ()));
+        });
+
+        return $content;
     }
 }

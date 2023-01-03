@@ -177,12 +177,12 @@ class WareController extends Controller
         $form->select('type', trans('type'))->options (
             [
                 1=>trans ('Gemstone'),
-                2=>trans ('Card Scroll'),
-                3=>trans ('Avatar Frame'),
-                4=>trans ('Bubble Frame'),
-                5=>trans ('Entering Special Effects'),
-                6=>trans ('Microphone Aperture'),
-                7=>trans ('Badge'),
+                3=>trans ('Card Scroll'),
+                4=>trans ('Avatar Frame'),
+                5=>trans ('Bubble Frame'),
+                6=>trans ('Entering Special Effects'),
+                7=>trans ('Microphone Aperture'),
+                8=>trans ('Badge'),
             ]
         )->rules ('required');
 //        ->rules (function ($form){

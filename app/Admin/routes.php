@@ -35,10 +35,11 @@ Route::group([
     $router->resource ('emojis','EmojiController');
     $router->resource ('home_carousels','HomeCarouselController');
     $router->resource ('vip_prev','VipAuthController');
+    $router->resource ('agencies','AgencyController');
 
 
     //--------------------
-    $router->get('/', 'HomeController@index')->name('home');
+    $router->get('/', 'HomeController@infoBox')->name('home');
     $router->get('/dev', 'HomeController@devindex')->name('dev-home');
 
 
