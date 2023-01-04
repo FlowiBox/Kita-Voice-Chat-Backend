@@ -34,7 +34,7 @@ class RoomResource extends JsonResource
             'room_intro'=>$this->room_intro?:'',
             'is_recommended'=>$this->is_recommended?:0,
             'lang'=>$this->lang?:'',
-            'country'=>new CountryResource($this->country)?:[
+            'country'=>$this->country?new CountryResource($this->country):[
                 'id'=>0,
                 'name'=> '',
                 'flag'=>'',
