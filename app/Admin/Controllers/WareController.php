@@ -112,7 +112,7 @@ class WareController extends Controller
         $grid->score('score');
         $grid->level('level');
         $grid->column('show_img')->image ('',30);
-        $grid->column('color');
+        $grid->column('color',__('color'));
         $grid->expire('expire');
         $grid->column('enable')->switch (Common::getSwitchStates ());
         $grid->sort('sort');

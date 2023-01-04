@@ -139,7 +139,8 @@ class CommunityController extends Controller
         $rooms = DB::table('rooms')
             ->where('rooms.room_intro', 'like', '%' . $keywords . '%')
             ->where(['users.status' => 1])
-//             ->orWhere('rooms.numid',$keywords)
+            ->where('rooms.is_afq',1)
+            ->orWhere ('rooms.room_visitor','!=','')
             ->join('users', 'rooms.uid','=','users.id', 'left')
             ->select([
                 'rooms.room_name',

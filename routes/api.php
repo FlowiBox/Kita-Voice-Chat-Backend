@@ -69,7 +69,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post('check_if_has_pass',[\App\Http\Controllers\Api\V1\RoomController::class,'is_pass']);
         Route::get('check_if_i_have_room',[\App\Http\Controllers\Api\V1\RoomController::class,'amIHaveRoom']);
 
-
+        Route::post ('remove_pass',[\App\Http\Controllers\Api\V1\RoomController::class,'removeRoomPass']);
 
 
         Route::get ('/',[\App\Http\Controllers\Api\V1\RoomController::class,'index']);

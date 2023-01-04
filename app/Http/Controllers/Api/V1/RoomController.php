@@ -1071,4 +1071,10 @@ class RoomController extends Controller
     }
 
 
+    public function removeRoomPass(Request $request){
+        $room = Room::query ()->where ('uid',$request->owner_id)->first ();
+        $room->pass = '';
+        return Common::apiResponse(1,'success');
+    }
+
 }
