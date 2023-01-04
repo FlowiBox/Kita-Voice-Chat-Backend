@@ -35,7 +35,8 @@ Trait ZegoTrait
         $q = "?Action=$Action&RoomId=$RoomId&FromUserId=$FromUserId&MessageContent=$MessageContent&AppId=$AppId&SignatureNonce=$SignatureNonce&Timestamp=$Timestamp&Signature=$signature&SignatureVersion=$SignatureVersion&IsTest=$IsTest";
         $res = Http::withHeaders (
             [
-                'Host'=>'<calculated when request is sent>'
+                'Host'=>'<calculated when request is sent>',
+                'Cache-Control'=>'no-cache'
             ]
         )->get ($url.$q);
         return $res;

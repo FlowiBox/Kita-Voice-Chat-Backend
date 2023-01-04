@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api\V1;
 
 use App\Helpers\Common;
+use App\Http\Resources\CountryResource;
 use App\Models\User;
 use App\Repositories\User\UserRepo;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -33,7 +34,7 @@ class RoomResource extends JsonResource
             'room_intro'=>$this->room_intro?:'',
             'is_recommended'=>$this->is_recommended?:0,
             'lang'=>$this->lang?:'',
-            'country'=>$this->country?:''
+            'country'=>new CountryResource($this->country)?:''
         ];
         if ($request['show']){
             $data['room_users'] = Common::get_room_users (@$this->owner ()->id,$request->user ()->id);
