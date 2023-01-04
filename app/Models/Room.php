@@ -30,13 +30,7 @@ class Room extends Model
 
     public function getCountryAttribute(){
         $country = @$this->owner->country;
-        if ($country){
-            return [
-                'id'=>$country->id,
-                'name' => app ()->getLocale () == 'ar' ? $country->name : $country->e_name,
-                'flag'=>$country->flag
-            ];
-        }
+        return $country;
 
     }
 
