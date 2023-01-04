@@ -165,6 +165,9 @@ class RoomController extends Controller
 
             $this->repo->save ($room);
             $request['owner_id'] = $room->uid;
+
+            $res = Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,'room updated','yes');
+            dd ($res);
             return $this->enter_room ($request);
 
         }catch (\Exception $exception){
@@ -1079,5 +1082,9 @@ class RoomController extends Controller
         }
         return Common::apiResponse(1,'success');
     }
+
+
+
+
 
 }

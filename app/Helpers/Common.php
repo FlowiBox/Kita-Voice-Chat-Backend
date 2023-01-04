@@ -10,11 +10,12 @@ use App\Traits\HelperTraits\AttributesTrait;
 use App\Traits\HelperTraits\CalcsTrait;
 use App\Traits\HelperTraits\MoneyTrait;
 use App\Traits\HelperTraits\RoomTrait;
+use App\Traits\HelperTraits\ZegoTrait;
 use Illuminate\Support\Facades\DB;
 
 class Common{
 
-    use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait , AttributesTrait;
+    use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait , AttributesTrait,ZegoTrait;
 
     public static function apiResponse(bool $success,$message,$data = null,$statusCode = null,$paginates = null){
 
