@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
+use App\Models\Agency;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -186,15 +187,28 @@ class GiftLogController extends Controller
         $info['receiver_obtain']=$income['toUid'];     //recipient
         $info['roomowner_obtain']=$income['uid']+$income['uid_yj'];//homeowner
         //get guild
-        $union=Db::table('user_unions')->where(['user_id' => $toUid,'check_status'=>1])->first ();
+        $union=DB::table('user_unions')->where(['user_id' => $toUid,'check_status'=>1])->first ();
         if ($union){
-            $info['union_id']= $union['union_id'];//guild
+            $info['union_id']= $union->union_id;//guild
+        }
+        $receiver_family=DB::table('family_user')->where(['user_id' => $toUid,'status'=>1])->first ();
+        if ($receiver_family){
+            $info['receiver_family_id']= $receiver_family->family_id;//family
+        }
+        $sender_family=DB::table('family_user')->where(['user_id' => $toUid,'status'=>1])->first ();
+        if ($sender_family){
+            $info['sender_family_id']= $sender_family->family_id;//family
+        }
+        $toUser = User::query ()->find ($toUid);
+        $agency = Agency::query ()->find($toUser->agency_id);
+        if ($agency){
+            $info['agency_id']= $agency->id;//family
         }
         $res=DB::table('gift_logs')->insertGetId($info);
         if($res){
             if($income['uid'] > 0) {
                 //Increase guild income and records
-                $union=Db::table('user_unions')->where(['user_id' => $uid,'check_status'=>1])->first();
+                $union=DB::table('user_unions')->where(['user_id' => $uid,'check_status'=>1])->first();
                 if ($union){
                     Common::userUnionStoreInc($uid,$income['uid'],31,'room_coins');
                 }else{
@@ -218,7 +232,6 @@ class GiftLogController extends Controller
                 }else{
                     Common::userStoreInc($toUid,$income['toUid'],21,'coins');//Receive a gift
                 }
-
             }
             if($income['platform'] > 0)  Common::userStoreInc(0,$income['platform'],99,'coins');  //platform income
             //increase room heat
@@ -239,7 +252,7 @@ class GiftLogController extends Controller
             throw new \Exception('room owner not found');
         }
         $room_scale = Common::getConfig('platform_share');
-        $room_scale = $room_scale ? $room_scale : 30;//Platform share
+        $room_scale = $room_scale ? $room_scale : 0;//Platform share
         if(!$room_user->is_sign){//non-contract homeowner
             $data['uid']=0;//Room running water
             $data['toUid']=$total * ((100 - $room_scale)/100) ;//recipient
