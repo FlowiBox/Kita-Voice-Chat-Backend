@@ -42,9 +42,9 @@ class UserResource extends JsonResource
             'lang'=>$this->lang,
             'country'=>$this->country?:'',
             'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img1')?:Common::getUserDress($this->id,$this->dress_1,4,'img2'),
-            'bubble'=>Common::getUserDress($this->id,$this->dress_2,5,'img1')?:Common::getUserDress($this->id,$this->dress_1,4,'img2'),
-            'intro'=>Common::getUserDress($this->id,$this->dress_3,6,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'),
-            'mic_halo'=>Common::getUserDress($this->id,$this->dress_4,7,'img1')?:Common::getUserDress($this->id,$this->dress_1,4,'img2'),
+            'bubble'=>Common::getUserDress($this->id,$this->dress_2,5,'img1')?:Common::getUserDress($this->id,$this->dress_2,5,'img2'),
+            'intro'=>Common::getUserDress($this->id,$this->dress_3,6,'img2')?:Common::getUserDress($this->id,$this->dress_3,6,'img1'),
+            'mic_halo'=>Common::getUserDress($this->id,$this->dress_4,7,'img1')?:Common::getUserDress($this->id,$this->dress_4,7,'img2'),
             'can_kicked_of_room'=>Common::can_kick ($this->id),
             'bio'=>$this->bio?:''
         ];
