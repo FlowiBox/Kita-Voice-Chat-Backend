@@ -128,11 +128,11 @@ class CommunityController extends Controller
         return $user;
     }
 
-    //搜索房间
+    //search room
     public function room_search_hand($user_id = null, $keywords = null, $page = 1)
     {
         if (!$user_id || !$keywords) return [];
-        //用户
+        //user
         $whereOr = [
             'rooms.uid' => $keywords,
         ];
