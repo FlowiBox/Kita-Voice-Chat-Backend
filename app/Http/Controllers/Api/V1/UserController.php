@@ -113,6 +113,7 @@ class UserController extends Controller
                 ->selectRaw("a.*,b.name,b.show_img,b.title,b.color")
                 ->get();
         }
+
         if(in_array($type,[4,5,6,7])){
             $user_dress_after_i_changed = [
                 4=>1,
@@ -134,6 +135,10 @@ class UserController extends Controller
             }else{
                 $v->title="have".$v->num."indivual ".$v->title;
                 $v->color= $v->color ? : '';
+            }
+
+            if ($v->expire != 0){
+                $v->expire = date("Y-m-d H:i:s", $v->expire);
             }
 
             $types = [
