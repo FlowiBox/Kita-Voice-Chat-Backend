@@ -34,7 +34,13 @@ class RoomResource extends JsonResource
             'room_intro'=>$this->room_intro?:'',
             'is_recommended'=>$this->is_recommended?:0,
             'lang'=>$this->lang?:'',
-            'country'=>new CountryResource($this->country)?:''
+            'country'=>new CountryResource($this->country)?:[
+                'id'=>0,
+                'name'=> '',
+                'flag'=>'',
+                'lang'=>'',
+                'phone_code'=>''
+            ]
         ];
         if ($request['show']){
             $data['room_users'] = Common::get_room_users (@$this->owner ()->id,$request->user ()->id);
