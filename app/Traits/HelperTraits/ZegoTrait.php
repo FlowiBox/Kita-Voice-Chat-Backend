@@ -32,13 +32,8 @@ Trait ZegoTrait
         $str = $AppId.$SignatureNonce.static::$serverSecret.$Timestamp;
         $signature = md5($str);
         $SignatureVersion = 2.0;
-        $q = "?Action=$Action&RoomId=$RoomId&FromUserId=$FromUserId&MessageContent=$MessageContent&AppId=$AppId&SignatureNonce=$SignatureNonce&Timestamp=$Timestamp&Signature=$signature&SignatureVersion=$SignatureVersion&IsTest=$IsTest";
-        $res = Http::withHeaders (
-            [
-                'Host'=>'<calculated when request is sent>',
-                'Cache-Control'=>'no-cache'
-            ]
-        )->get ($url.$q);
+        $q = "https://rtc-api.zego.im/?Action=$Action&RoomId=$RoomId&FromUserId=$FromUserId&MessageContent=$MessageContent&AppId=$AppId&SignatureNonce=$SignatureNonce&Timestamp=$Timestamp&Signature=$signature&SignatureVersion=$SignatureVersion&IsTest=$IsTest";
+        $res = Http::get ($q);
         return $res;
     }
 

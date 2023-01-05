@@ -132,7 +132,7 @@ class EmojiController extends Controller
             return $ops;
         });
         $form->text('name', __('name'));
-        $form->image('emoji', __('emoji'));
+        $form->file('emoji', __('emoji'));
         $form->number('t_length', __('t_length'));
         $form->switch('enable', __('enable'))->states (Common::getSwitchStates ());
         $form->number('sort', __('sort'));
