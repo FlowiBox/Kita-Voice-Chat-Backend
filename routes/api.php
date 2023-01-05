@@ -106,6 +106,7 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::prefix ('user_info')->group (function (){
         Route::get ('my_pack',[\App\Http\Controllers\Api\V1\UserController::class,'my_pack']);
         Route::post ('use_pack_item',[\App\Http\Controllers\Api\V1\UserController::class,'usePackItem']);
+        Route::post ('takeOff',[\App\Http\Controllers\Api\V1\UserController::class,'takeOff']);
         Route::get ('my_store',[\App\Http\Controllers\Api\V1\UserController::class,'my_store']);
         Route::get ('my_income',[\App\Http\Controllers\Api\V1\UserController::class,'my_income']);
         Route::post ('go_order_list',[\App\Http\Controllers\Api\V1\OrderController::class,'go_order_list']);

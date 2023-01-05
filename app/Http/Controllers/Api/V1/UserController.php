@@ -406,6 +406,15 @@ class UserController extends Controller
         return Common::apiResponse (0,'item not found');
     }
 
+    public function takeOff(Request $request){
+        $user = $request->user ();
+        $type = $request->type;
+        if (!$type) return Common::apiResponse (0,'missing params');
+        if (!in_array ($type,[1,2,3,4])) return Common::apiResponse (0,'type invalid');
+        $user->update(['dress_'.$type=>null]);
+        return Common::apiResponse (1,'success',new UserResource($user));
+    }
+
     public function sendPack(Request $request){
         $user = $request->user ();
         $pack = Pack::query ()->where ('id',$request->pack_id)->where ('user_id',$user->id)->where (function ($q){
