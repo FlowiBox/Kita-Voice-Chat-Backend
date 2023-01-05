@@ -31,7 +31,7 @@ Trait ZegoTrait
         $Timestamp = time ();
         $str = $AppId.$SignatureNonce.static::$serverSecret.$Timestamp;
         $signature = md5($str);
-        $SignatureVersion = 2.0;
+        $SignatureVersion = '2.0';
         $params = [
             'Action'=>$Action,
             'RoomId'=>$RoomId,
@@ -45,7 +45,7 @@ Trait ZegoTrait
             'IsTest'=>$IsTest
         ];
         $headers = [
-            'Host'=>'american-tech.tech'
+            'Host'=>'194.5.156.43'
         ];
 
         $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params);

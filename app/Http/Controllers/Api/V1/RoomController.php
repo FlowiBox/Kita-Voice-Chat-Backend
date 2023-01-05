@@ -166,7 +166,7 @@ class RoomController extends Controller
             $this->repo->save ($room);
             $request['owner_id'] = $room->uid;
 
-            $res = Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,'room updated');
+            $res = Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,'roomupdated');
             dd ($res);
             return $this->enter_room ($request);
 
