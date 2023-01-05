@@ -46,7 +46,7 @@ Trait ZegoTrait
         ];
         $headers = [
             'Accept'=>'application/json',
-            'Host'=>'127.0.0.1:8000'
+            'Host'=>'american-tech.tech'
         ];
 
         $res = Http::withHeaders ($headers)->get ($url,$params);
