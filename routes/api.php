@@ -112,6 +112,8 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('get_user_union',[\App\Http\Controllers\Api\V1\UnionController::class,'getUserUnion']);
     });
 
+    Route::post ('send_pack',[\App\Http\Controllers\Api\V1\UserController::class,'sendPack']);
+
     Route::prefix ('community')->group (function (){
         Route::get ('official_messages',[\App\Http\Controllers\Api\V1\CommunityController::class,'official_messages']);
     });

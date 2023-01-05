@@ -406,4 +406,16 @@ class UserController extends Controller
         return Common::apiResponse (0,'item not found');
     }
 
+    public function sendPack(Request $request){
+        $user = $request->user ();
+        $pack = Pack::query ()->where ('id',$request->pack_id)->where ('user_id',$user->id)->where (function ($q){
+            $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
+        })->first ();
+        if (!$pack) return Common::apiResponse (0,'item not found or expired');
+        $pack->user_id = $request->touid;
+        $pack->sender_id = $user->id;
+        $pack->save ();
+        return Common::apiResponse (1,'sent successfully');
+    }
+
 }
