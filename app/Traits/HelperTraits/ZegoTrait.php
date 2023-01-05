@@ -45,7 +45,7 @@ Trait ZegoTrait
 //            'IsTest'=>$IsTest
         ];
         $headers = [
-            'Host'=>'yai-chat.american-tech.tech'
+//            'Host'=>'yai-chat.american-tech.tech'
         ];
         $url = "https://jsonplaceholder.typicode.com/posts";
         $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params);
