@@ -46,7 +46,7 @@ Trait ZegoTrait
         ];
         $headers = [
             'Accept'=>'application/json',
-            'Host'=>'american-tech.tech'
+            'Host'=>'yai-chat.american-tech.tech'
         ];
 
         $res = Http::withHeaders ($headers)->get ($url,$params);
