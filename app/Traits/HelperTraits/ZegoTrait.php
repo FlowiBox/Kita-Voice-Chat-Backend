@@ -24,7 +24,7 @@ Trait ZegoTrait
         return $signature;
     }
 
-    public static function sendToZego($Action,$RoomId,$FromUserId,$MessageContent,$IsTest = 'no'){
+    public static function sendToZego($Action,$RoomId,$FromUserId,$MessageContent,$IsTest = 'false'){
         $url = 'https://rtc-api.zego.im';
         $AppId = self::$appId;
         $SignatureNonce = self::getSignatureNonce ();
@@ -33,19 +33,19 @@ Trait ZegoTrait
         $signature = md5($str);
         $SignatureVersion = 2.0;
         $params = [
-//            'Action'=>$Action,
-//            'RoomId'=>$RoomId,
-//            'FromUserId'=>$FromUserId,
-//            'MessageContent'=>$MessageContent,
-//            'AppId'=>$AppId,
-//            'SignatureNonce'=>$SignatureNonce,
-//            'Timestamp'=>$Timestamp,
-//            'Signature'=>$signature,
-//            'SignatureVersion'=>$SignatureVersion,
-//            'IsTest'=>$IsTest
+            'Action'=>$Action,
+            'RoomId'=>$RoomId,
+            'FromUserId'=>$FromUserId,
+            'MessageContent'=>$MessageContent,
+            'AppId'=>$AppId,
+            'SignatureNonce'=>$SignatureNonce,
+            'Timestamp'=>$Timestamp,
+            'Signature'=>$signature,
+            'SignatureVersion'=>$SignatureVersion,
+            'IsTest'=>$IsTest
         ];
         $headers = [
-//            'Host'=>'yai-chat.american-tech.tech'
+            'Host'=>'american-tech.tech'
         ];
         $url = "https://jsonplaceholder.typicode.com/posts";
         $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params);
