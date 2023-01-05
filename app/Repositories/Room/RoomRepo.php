@@ -32,7 +32,7 @@ class RoomRepo implements RoomRepoInterface {
             if ($req->type){
                 $q->where('room_type',$req->type);
             }
-        })->orderBy($req->ord?:'id',$req->sort?:'DESC');
+        })->orderBy('hot','desc');
 
         if ($pp = $req->pp){ // pp = perPage
             return $result->paginate($pp);

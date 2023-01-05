@@ -514,11 +514,11 @@ trait RoomTrait
         $task=Db::table('tasks')->where(['id'=>$task_id,'enable'=>1])->first();
         if(!$task)  return 0;
         $user_task=Db::table('user_tasks')->where(['user_id'=>$user_id])->first();
-        if($task['type'] == 1 && !substr_count($user_task['not_fin_1'],$task_id))   return 0;
-        $field='fin_'.$task['type'];
-        $str=$user_task[$field];
+        if($task->type == 1 && !substr_count($user_task->not_fin_1,$task_id))   return 0;
+        $field='fin_'.$task->type;
+        $str=$user_task->{$field};
         $num=substr_count($str,$task_id);
-        if($num == $task['num'])    return 0;
+        if($num == $task->num)    return 0;
         $str_arr=explode(',', $str);
         $str_arr[]=$task_id;
         $info[$field]=trim(implode(',', $str_arr),',');
