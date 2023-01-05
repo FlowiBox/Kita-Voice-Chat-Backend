@@ -45,7 +45,6 @@ Trait ZegoTrait
             'IsTest'=>$IsTest
         ];
         $headers = [
-            'Accept'=>'application/json',
             'Host'=>'yai-chat.american-tech.tech'
         ];
 
