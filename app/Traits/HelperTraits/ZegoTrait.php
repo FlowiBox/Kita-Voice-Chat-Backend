@@ -47,7 +47,7 @@ Trait ZegoTrait
         $headers = [
             'Host'=>'american-tech.tech'
         ];
-        $url = "https://jsonplaceholder.typicode.com/posts";
+
         $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params);
         return $res;
     }
