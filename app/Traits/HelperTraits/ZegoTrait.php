@@ -45,9 +45,8 @@ Trait ZegoTrait
             'IsTest'=>$IsTest
         ];
         $headers = [
-            'Host'=>'american-tech.tech'
+//            'Host'=>'american-tech.tech'
         ];
-
         $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params);
         return $res;
     }
