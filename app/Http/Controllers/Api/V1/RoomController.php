@@ -133,12 +133,6 @@ class RoomController extends Controller
             if ($request->hasFile ('room_cover')){
                 $room->room_cover = Common::upload ('rooms',$request->file ('room_cover'));
             }
-            if ($request->room_background){
-                if (!Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
-                    return Common::apiResponse (0,'background not found');
-                }
-                $room->room_background = $request->room_background;
-            }
 
             if ($request->free_mic){
                 $room->free_mic = $request->free_mic;
@@ -162,14 +156,29 @@ class RoomController extends Controller
                 $room->room_type = $request->room_type;
             }
 
+            if ($request->room_background){
+                if (!Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
+                    return Common::apiResponse (0,'background not found');
+                }
+                $room->room_background = $request->room_background;
+
+            }
+
 
             $this->repo->save ($room);
             $request['owner_id'] = $room->uid;
 
-            $res = Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,'roomupdated');
-//            if ($res['Code'] != 200 ){
-//                throw new \Exception($res['Message'].' . zego_response');
-//            }
+            $data = [
+                "messageContent"=>[
+                    "message"=>"changeBackground",
+                    "imgbackground"=>Background::query ()->where ('id',$room->room_background?:0)->where ('enable',1)->value ('img')?:"",
+                    "roomIntro"=>$room->room_intro?:"",
+                    "roomImg"=>$room->room_cover?:""
+                ]
+            ];
+            $json = json_encode ($data);
+            $res = Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
+
             return $this->enter_room ($request);
 
         }catch (\Exception $exception){

@@ -19,8 +19,22 @@ class EmojiController extends Controller
 
     }
 
-    public function show($id){
+    public function show(Request $request,$id){
+        if (!$request->user_id || !$request->room_id){
+            return Common::apiResponse (0,'user_id , room_id are required');
+        }
         $data = Emoji::query ()->select ('id','pid','name','emoji','t_length','sort')->find ($id);
+        $d = [
+            "messageContent"=>[
+                "message"=>"showEmojie",
+                "id"=>$data->id,
+                "emoji"=>$data->emoji,
+                "t_length"=>$data->t_length,
+                "id_user"=>$request->user_id
+            ]
+        ];
+        $json = json_encode ($d);
+        $res = Common::sendToZego ('SendCustomCommand',$request->room_id,$request->user_id,$json);
         return Common::apiResponse (1,'',$data);
     }
 }

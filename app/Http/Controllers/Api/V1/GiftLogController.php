@@ -164,6 +164,14 @@ class GiftLogController extends Controller
         }
         $return_arr['users']=$res;
         $return_arr['push']=$push;
+        $d = [
+            "messageContent"=>[
+                "message"=>"showGifts",
+                "showGift"=>$gift->img
+            ]
+        ];
+        $json = json_encode ($d);
+        $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
         return Common::apiResponse(1,'Gift sent successfully',$return_arr);
     }
 
