@@ -74,10 +74,10 @@ class HomeController extends Controller
         $content->description('Description...');
 
         $content->row(function ($row) {
-            $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', '/admin/users', User::query ()->count ()));
-            $row->column(3, new InfoBox(__('Rooms'), 'wechat', 'green', '/admin/rooms', Room::query ()->count ()));
-            $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', '/admin/gifts', Gift::query ()->count ()));
-            $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', '/admin/wares', Ware::query ()->count ()));
+            $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route ('admin.users'), User::query ()->count ()));
+            $row->column(3, new InfoBox(__('Rooms'), 'wechat', 'green', route ('admin.rooms'), Room::query ()->count ()));
+            $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route ('admin.gifts'), Gift::query ()->count ()));
+            $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
         });
 
         return $content;
