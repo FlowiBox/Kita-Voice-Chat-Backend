@@ -289,7 +289,8 @@ class GiftLogController extends Controller
             $data['uid_yj']=$uid_yj;//homeowner
         }
         $data=array_map(function($val){
-            $gvic = Common::getConf ('gift_value_in_coins')?:0.1;
+//            $gvic = Common::getConf ('gift_value_in_coins')?:0.1;
+            $gvic = 1;
             return round($val*$gvic,2);
         }, $data);
         return $data;
