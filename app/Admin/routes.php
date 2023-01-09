@@ -36,6 +36,7 @@ Route::group([
     $router->resource ('home_carousels','HomeCarouselController');
     $router->resource ('vip_prev','VipAuthController');
     $router->resource ('agencies','AgencyController');
+    $router->resource ('families','FamilyController');
     $router->resource ('targets','TargetController');
 
 
