@@ -168,7 +168,7 @@ class RoomController extends Controller
 //            $this->repo->save ($room);
             $room->save ();
             $request['owner_id'] = $room->uid;
-            return $room->room_background;
+            return Common::apiResponse (0,$room->room_background);
             $background = DB::table ('backgrounds')->where ('id',$room->room_background)->value ('img')?:"";
             $data = [
                 "messageContent"=>[
