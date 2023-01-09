@@ -168,7 +168,7 @@ class GiftLogController extends Controller
             $d = [
                 "messageContent"=>[
                     "message"=>"showGifts",
-                    "showGift"=>$gift->img
+                    "showGift"=>$gift->show_img?:$gift->show_img2
                 ]
             ];
             $json = json_encode ($d);
