@@ -4,14 +4,18 @@
 namespace App\Traits\AdminTraits;
 
 
+use App\Models\Admin;
+use Encore\Admin\Auth\Database\Administrator;
+
 trait AdminUserTrait
 {
 
-    public function getAdminUsers(){
-        $userModel = config('admin.database.users_model');
-        $model = new $userModel;
+    public function getAgencies(){
+        $model = new Admin();
 
-        return $model->all();
+        return $model->whereHas('roles',function ($q){
+            $q->where('slug','agency');
+        })->get();
     }
 
 }

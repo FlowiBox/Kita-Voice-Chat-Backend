@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Helpers\Common;
 use App\Models\Agency;
 use App\Http\Controllers\Controller;
 use App\Traits\AdminTraits\AdminUserTrait;
@@ -82,7 +83,7 @@ class AgencyController extends Controller
     {
 
         $ops = [];
-        foreach ($this->getAdminUsers () as $user){
+        foreach ($this->getAgencies () as $user){
             $ops[$user->id]=$user->name;
         }
 
@@ -99,12 +100,7 @@ class AgencyController extends Controller
         $grid->column('owner_id',trans ('owner id'))->select ($ops);
         $grid->column('name',trans ('name'));
         $grid->column('notice',trans ('notice'));
-        $grid->column('status',trans ('status'))->select (
-            [
-                0=>trans ('disabled'),
-                1=>trans ('enabled'),
-            ]
-        );
+        $grid->column('status',trans ('status'))->switch(Common::getSwitchStates ());
         $grid->column('phone',trans ('phone'));
         $grid->column('img',trans ('img'))->image ('',30);
 
@@ -145,24 +141,21 @@ class AgencyController extends Controller
     {
 
         $ops = [];
-        foreach ($this->getAdminUsers () as $user){
+        foreach ($this->getAgencies () as $user){
             $ops[$user->id]=$user->name;
         }
 
         $form = new Form(new Agency);
 
         $form->display('ID');
-        $form->select('owner_id', 'owner_id')->options ($ops);
-        $form->text('name', 'name');
-        $form->text('notice', 'notice');
-        $form->text('status', 'status');
-        $form->text('phone', 'phone');
-        $form->text('url', 'url');
-        $form->text('img', 'img');
-        $form->text('contents', 'contents');
-        $form->display(trans('admin.created_at'));
-        $form->display(trans('admin.updated_at'));
-
+        $form->select('owner_id', __('owner id'))->options ($ops);
+        $form->text('name', __('name'));
+        $form->text('notice', __('notice'));
+        $form->switch('status', __('status'));
+        $form->text('phone', __('phone'));
+        $form->url('url', __('url'));
+        $form->image('img', __('img'));
+        $form->textarea('contents', __('contents'));
         return $form;
     }
 }

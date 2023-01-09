@@ -93,5 +93,9 @@
     "Target": "التارجيت",
     "Agencies": "الوكالات",
     "owner id": "معرف المالك",
-    "list": "قائمة"
+    "list": "قائمة",
+    "country": "دولة",
+    "agency": "وكالة",
+    "Diamonds": "الماس",
+    "Password": "كلمة السر"
 }

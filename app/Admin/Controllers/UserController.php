@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Helpers\Common;
+use App\Models\Agency;
 use App\Models\Country;
 use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
@@ -52,7 +53,12 @@ class UserController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('email', __('Email'));
-        $grid->column('di', __('Diamonds'))->editable ();
+        $grid->column('charge', __('Charge'))->modal('charge',function ($modal){
+            $form = new Form(new User());
+            $form->text ('name');
+            $form->text ('email');
+            return $form;
+        });
         $grid->column('isOnline', __('isOnline'));
         return $grid;
     }
@@ -94,7 +100,15 @@ class UserController extends AdminController
             }
             return $ops;
         });
-        $form->currency ('di',__('Diamonds'));
+        $form->select ('agency_id',__('agency'))->options(function (){
+            $ops = [0=>'no agency'];
+            $agencies = Agency::query ()->where ('status',1)->get ();
+            foreach ($agencies as $agency){
+                $ops[$agency->id]=$agency->name;
+            }
+            return $ops;
+        });
+//        $form->currency ('di',__('Diamonds'));
         $form->email('email', __('Email'));
         $form->password('password', __('Password'));
 
