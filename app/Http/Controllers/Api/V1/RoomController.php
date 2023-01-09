@@ -168,11 +168,11 @@ class RoomController extends Controller
 //            $this->repo->save ($room);
             $room->save ();
             $request['owner_id'] = $room->uid;
-
+            $background = DB::table ('backgrounds')->where ('id',$room->room_background)->value ('img')?:"";
             $data = [
                 "messageContent"=>[
                     "message"=>"changeBackground",
-                    "imgbackground"=>Background::query ()->where ('id',$room->room_background)->where ('enable',1)->value ('img'),
+                    "imgbackground"=>$background,
                     "roomIntro"=>$room->room_intro?:"",
                     "roomImg"=>$room->room_cover?:""
                 ]
