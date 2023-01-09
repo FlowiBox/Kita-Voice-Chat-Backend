@@ -208,15 +208,15 @@ Trait CalcsTrait
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
         $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
 
-        $data['receiver_num']        = $star_num?:0;
-        $data['sender_num']        = $gold_num?:0;
-        $data['receiver_level']      = $star_level?:0;
-        $data['next_receiver_num']   = $next_star_num?:0;
-        $data['next_receiver_level'] = $next_star_level?:0;
+        $data['receiver_num']        = (integer)$star_num?:0;
+        $data['sender_num']        = (integer)$gold_num?:0;
+        $data['receiver_level']      = (integer)$star_level?:0;
+        $data['next_receiver_num']   = (integer)$next_star_num?:0;
+        $data['next_receiver_level'] = (integer)$next_star_level?:0;
 
-        $data['sender_level']      = $gold_level?:0;
-        $data['next_sender_num']   = $next_gold_num?:0;
-        $data['next_sender_level'] = $next_gold_level?:0;
+        $data['sender_level']      = (integer)$gold_level?:0;
+        $data['next_sender_num']   = (integer)$next_gold_num?:0;
+        $data['next_sender_level'] = (integer)$next_gold_level?:0;
         return $data;
     }
 
@@ -228,10 +228,10 @@ Trait CalcsTrait
         $next_vip_num   = self ::getNextLevel ( 3 , $vip_level , 'di' );
         $next_vip_level = self ::getNextLevel ( 3 , $vip_level , 'level' );
 
-        $data['vip_num']        = $vip_num?:0;
-        $data['vip_level']      = $vip_level?:0;
-        $data['next_vip_num']   = $next_vip_num?:0;
-        $data['next_vip_level'] = $next_vip_level?:0;
+        $data['vip_num']        = (integer)$vip_num?:0;
+        $data['vip_level']      = (integer)$vip_level?:0;
+        $data['next_vip_num']   = (integer)$next_vip_num?:0;
+        $data['next_vip_level'] = (integer)$next_vip_level?:0;
 
 
         $vip_auth = DB ::table ( 'vip_auth' ) -> where ( ['type' => 3 , 'enable' => 1] ) ;
@@ -261,8 +261,8 @@ Trait CalcsTrait
         }
         return [
             'id'=>$user->id,
-            'diamonds'=>$user->di,
-            'coins'=>$user->coins,
+            'coins'=>$user->di,
+            'diamonds'=>$user->coins,
             'room_coins'=>$user->room_coins,
             'gold'=>$user->gold,
             'withdrawal_coins' => (double)$coins ,
