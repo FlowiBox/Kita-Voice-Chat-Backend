@@ -80,11 +80,11 @@ class GiftLogController extends Controller
                 //Calculate required diamonds
                 $shengyu_num=$send_num - $pack_gift_num;
                 $sum_gift_price=$shengyu_num * $gift->price;
-                if($user->di < $sum_gift_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!');
+                if($user->di < $sum_gift_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,401);
             }
         }else{
             $total_price=$gift->price * $send_num;
-            if($user->di < $total_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!');
+            if($user->di < $total_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,401);
         }
 
         DB::beginTransaction();
@@ -99,14 +99,14 @@ class GiftLogController extends Controller
                     //Calculate required diamonds
                     $shengyu_num=$send_num - $pack_gift_num;
                     $sum_gift_price=$shengyu_num * $gift->price;
-                    if($user['di'] < $sum_gift_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!');
+                    if($user['di'] < $sum_gift_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,401);
                     //Delete all the gifts in the backpack, deduct the difference diamonds
                     Common::userPackStoreDec($data['user_id'],2,$data['id'],$pack_gift_num);
                     $shenngyu_price=$sum_gift_price;
                 }
             }else{
                 $total_price=$gift['price'] * $send_num;
-                if($user['di'] < $total_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!');
+                if($user['di'] < $total_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,401);
                 $shenngyu_price=$total_price;
             }
 
