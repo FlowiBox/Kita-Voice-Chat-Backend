@@ -10,6 +10,7 @@ use App\Http\Requests\EditRoomRequest;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Background;
+use App\Models\LiveTime;
 use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\User;
@@ -442,6 +443,19 @@ class RoomController extends Controller
         $user = $request->user ();
         $user->now_room_uid = $room_info['owner_id'];
         $user->save();
+        $timer_id = 0;
+        if($owner_id == $user_id){
+            $timer = LiveTime::query ()->create (
+                [
+                    'uid'=>$owner_id,
+                    'start_time'=>time ()
+                ]
+            );
+            $timer_id = $timer->id;
+        }
+
+        $room_info['timer_id'] = $timer_id;
+
         return Common::apiResponse (true,'',$room_info);
     }
 
@@ -455,7 +469,23 @@ class RoomController extends Controller
         $user = $request->user ();
         $user->now_room_uid = 0;
         $user->save();
+        if ($request->owner_id == $user_id){
+            $this->calcTime ($request->timer_id);
+        }
         return Common::apiResponse(true,'exited',['visitor_ids_list'=>$visitor_ids_list]);
+    }
+
+    public function calcTime($timer_id){
+        $timer = LiveTime::query ()->find ($timer_id);
+        if ($timer){
+            $hours = floor(time ()-$timer->start_time);
+            $timer->end_time = time ();
+            $timer->hours = $hours;
+            if ($hours >= 1){
+                $timer->days = 1;
+            }
+            $timer->save ();
+        }
     }
 
 

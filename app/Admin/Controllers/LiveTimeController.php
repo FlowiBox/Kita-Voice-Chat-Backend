@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Target;
+use App\Models\LiveTime;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -10,7 +10,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class TargetController extends Controller
+class LiveTimeController extends Controller
 {
     use HasResourceActions;
 
@@ -23,8 +23,8 @@ class TargetController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header(trans('target'))
-            ->description(trans('admin.index'))
+            ->header(trans('admin.index'))
+            ->description(trans('admin.description'))
             ->body($this->grid());
     }
 
@@ -79,19 +79,16 @@ class TargetController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new Target);
+        $grid = new Grid(new LiveTime);
 
         $grid->id('ID');
-        $grid->level(__('target no'));
-        $grid->diamonds(__('diamonds'));
-        $grid->usd(__('usd'));
-//        $grid->coin('coin');
-//        $grid->gold('gold');
-//        $grid->minuts('minuts');
-        $grid->hours(__('hours'));
-        $grid->days(__('days'));
-//        $grid->img('img');
-        $grid->agency_share(__('agency share').'(%)');
+        $grid->uid('uid');
+        $grid->start_time('start_time');
+        $grid->end_time('end_time');
+        $grid->hours('hours');
+        $grid->days('days');
+        $grid->created_at(trans('admin.created_at'));
+        $grid->updated_at(trans('admin.updated_at'));
 
         return $grid;
     }
@@ -104,20 +101,16 @@ class TargetController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(Target::findOrFail($id));
+        $show = new Show(LiveTime::findOrFail($id));
 
         $show->id('ID');
-        $show->level('target no');
-        $show->diamonds('diamonds');
-//        $show->minuts('minuts');
+        $show->uid('uid');
+        $show->start_time('start_time');
+        $show->end_time('end_time');
         $show->hours('hours');
         $show->days('days');
-//        $show->img('img');
-//        $show->usd('usd');
-//        $show->coin('coin');
-//        $show->gold('gold');
-//        $show->created_at(trans('admin.created_at'));
-//        $show->updated_at(trans('admin.updated_at'));
+        $show->created_at(trans('admin.created_at'));
+        $show->updated_at(trans('admin.updated_at'));
 
         return $show;
     }
@@ -129,20 +122,16 @@ class TargetController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new Target);
+        $form = new Form(new LiveTime);
 
         $form->display('ID');
-        $form->number('level', __('target no'));
-        $form->number('diamonds', __('diamonds'));
-        $form->decimal('usd', __('usd'));
-//        $form->text('coin', 'coin');
-//        $form->text('gold', 'gold');
-//        $form->text('minuts', 'minuts');
-        $form->number('hours', __('hours'));
-        $form->number('days', __('days'));
-//        $form->text('img', 'img');
-        $form->decimal('agency_share', __('agency share').'(%)');
-
+        $form->text('uid', 'uid');
+        $form->text('start_time', 'start_time');
+        $form->text('end_time', 'end_time');
+        $form->text('hours', 'hours');
+        $form->text('days', 'days');
+        $form->display(trans('admin.created_at'));
+        $form->display(trans('admin.updated_at'));
 
         return $form;
     }
