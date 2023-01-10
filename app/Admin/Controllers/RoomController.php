@@ -101,7 +101,8 @@ class RoomController extends Controller
         $grid->column('room_intro',trans ('room_intro'));
         $grid->column('microphone',trans ('microphone'));
 //        $grid->column('free_mic',trans ('free mic'))->switch (Common::getSwitchStates ());
-        $grid->column('room_visitor',trans ('room_visitor'))
+        $grid->column('room_visitor',trans ('room_visitor'))->editable ();
+        $grid->column('is_afk',trans ('owner in'))->switch (Common::getSwitchStates ());
 //            ->display(
 //                function ($val){
 //                    $el = '';
@@ -182,7 +183,7 @@ class RoomController extends Controller
         $form = new Form(new Room);
 
         $form->display('ID');
-        $form->text('numid', 'numid');
+        $form->text('numid', __('numid'));
         $form->select ('uid',trans ('owner'))->options (function (){
             $users = User::query ()->whereDoesntHave ('rooms')->get ();
             $arr = [];
@@ -194,7 +195,7 @@ class RoomController extends Controller
             }
             return $arr;
         });
-        $form->switch('room_status', 'room_status')->options (Common::getSwitchStates ());
+        $form->switch('room_status', __('room_status'))->options (Common::getSwitchStates ());
         $form->text('room_name', trans('room name'));
         $form->image('room_cover', trans('room cover'));
         $form->text('room_intro', trans('room intro'));
@@ -218,7 +219,7 @@ class RoomController extends Controller
         $form->text('room_welcome', trans('room welcome'));
 
 
-        $form->switch('is_recommended', trans('is recommended'))->states (Common::getSwitchStates ());
+//        $form->switch('is_recommended', trans('is recommended'))->states (Common::getSwitchStates ());
 
 //        $form->switch('free_mic', trans('free mic'))->states (Common::getSwitchStates ());
 

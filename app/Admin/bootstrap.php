@@ -22,3 +22,4 @@ use Encore\Admin\Facades\Admin;
 
 Encore\Admin\Form::forget( ['map', 'editor']);
 Admin::js('/packages/customization/js/main.js');
+Admin::css ('');
