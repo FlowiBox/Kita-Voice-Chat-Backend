@@ -95,19 +95,12 @@ class RoomController extends Controller
         });
 
 
-        $grid->column('room_status')->using (
-            [
-                1=>trans ('normal'),
-                2=>trans ('closed'),
-                3=>trans ('baned'),
-                4=>trans ('canceled')
-            ]
-        );
+        $grid->column('room_status')->switch (Common::getSwitchStates ());
         $grid->column('room_name',trans ('room name'));
         $grid->column('room_cover',trans ('room cover'))->image ('',30);
         $grid->column('room_intro',trans ('room_intro'));
         $grid->column('microphone',trans ('microphone'));
-        $grid->column('free_mic',trans ('free mic'))->switch (Common::getSwitchStates ());
+//        $grid->column('free_mic',trans ('free mic'))->switch (Common::getSwitchStates ());
         $grid->column('room_visitor',trans ('room_visitor'))
 //            ->display(
 //                function ($val){
@@ -201,14 +194,7 @@ class RoomController extends Controller
             }
             return $arr;
         });
-        $form->select('room_status', 'room_status')->options (
-            [
-                1=>trans ('normal'),
-                2=>trans ('closed'),
-                3=>trans ('baned'),
-                4=>trans ('canceled')
-            ]
-        );
+        $form->switch('room_status', 'room_status')->options (Common::getSwitchStates ());
         $form->text('room_name', trans('room name'));
         $form->image('room_cover', trans('room cover'));
         $form->text('room_intro', trans('room intro'));
@@ -234,7 +220,7 @@ class RoomController extends Controller
 
         $form->switch('is_recommended', trans('is recommended'))->states (Common::getSwitchStates ());
 
-        $form->switch('free_mic', trans('free mic'))->states (Common::getSwitchStates ());
+//        $form->switch('free_mic', trans('free mic'))->states (Common::getSwitchStates ());
 
 
         return $form;
