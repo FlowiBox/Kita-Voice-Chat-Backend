@@ -9,7 +9,7 @@
     </div>
     <div class="box-body no-padding">
         <ul class="nav nav-pills nav-stacked">
-            <li><a href="/demo/subway/cities"><i class="fa fa-map-o text-red"></i> Cities</a></li>
+            {!! (new \App\Admin\Actions\ChargeAction())->render () !!}
             <li><a href="/demo/subway/lines"><i class="fa fa-train text-yellow"></i> Lines</a></li>
             <li><a href="/demo/subway/stops"><i class="fa fa-instagram text-light-blue"></i> Stops</a></li>
         </ul>

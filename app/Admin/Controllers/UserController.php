@@ -2,8 +2,10 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\ChargeAction;
 use App\Helpers\Common;
 use App\Models\Agency;
+use App\Models\Charge;
 use App\Models\Country;
 use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
@@ -13,6 +15,7 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use function Doctrine\Common\Cache\Psr6\get;
 
@@ -37,6 +40,7 @@ class UserController extends AdminController
             ->row(function($row) {
                 $row->column(10, $this->grid());
                 $row->column(2, view('admin.grid.users.actions'));
+//                $row->column(2, new ChargeAction());
             });
     }
 
@@ -53,10 +57,15 @@ class UserController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('email', __('Email'));
-        $grid->column('charge', __('Charge'))->modal('charge',function ($modal){
-            $form = new Form(new User());
-            $form->text ('name');
-            $form->text ('email');
+        $grid->column('charge', __('Charge'))->modal('charge',function ($user){
+            $form = (new Form(new Charge))->setAction (route ('admin.charges.new'));
+            $form->hidden('charger_id', 'charger id')->value (Auth::id ());
+            $form->hidden('charger_type', 'charger_type')->value ('dashboard');
+            $form->hidden('user_id', 'user id')->value ($user->id);
+            $form->hidden('user_type', 'user type')->value ('app');
+            $form->number('amount', 'amount');
+            $form->hidden('amount_type', 'amount_type')->value (1);
+
             return $form;
         });
         $grid->column('isOnline', __('isOnline'));

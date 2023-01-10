@@ -54,6 +54,11 @@ Route::group([
     $router->resource ('agencies','AgencyController');
     $router->resource ('families','FamilyController');
     $router->resource ('targets','TargetController');
+    $router->resource ('charges','ChargeController',[
+        'names'=>[
+            'store'=>'charges.new'
+        ]
+    ]);
 
 
     //--------------------
