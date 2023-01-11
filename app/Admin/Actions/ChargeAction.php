@@ -63,9 +63,9 @@ class ChargeAction extends Action
     {
         $this->hidden('charger_id', 'charger id')->value (Auth::id ());
         $this->hidden('charger_type', 'charger_type')->value ('dash');
-        $this->text('user_id', 'user id');
-        $this->select('user_type', 'user type')->options (['app'=>__ ('app'),'dash'=>__ ('dash')])->default ('app');
-        $this->text('amount', 'amount');
+        $this->text('user_id', __('user id'));
+        $this->select('user_type', __('user type'))->options (['app'=>__ ('app'),'dash'=>__ ('dash')])->default ('app');
+        $this->text('amount', __('amount'));
         $this->hidden('amount_type', 'amount_type')->value (1);
     }
 
@@ -73,7 +73,7 @@ class ChargeAction extends Action
     {
         return <<<HTML
 
-    <li><a href="javascript:void(0);" class="charge_action "><i class="fa fa-map-o text-red"></i> add balance</a></li>
+    <li><a href="javascript:void(0);" class="charge_action "><i class="fa fa-dollar text-red"></i> add balance</a></li>
 
 HTML;
     }

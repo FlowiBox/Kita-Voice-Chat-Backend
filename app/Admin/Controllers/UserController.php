@@ -26,17 +26,17 @@ class UserController extends AdminController
      *
      * @var string
      */
-    protected $title = 'User';
+    protected $title;
 
     public function __construct ()
     {
-        $this->title = __('User');
+        $this->title ='Users';
     }
 
     public function index ( Content $content )
     {
         return $content
-            ->title($this->title)
+            ->title(__($this->title))
             ->row(function($row) {
                 $row->column(10, $this->grid());
                 $row->column(2, view('admin.grid.users.actions'));
@@ -56,19 +56,25 @@ class UserController extends AdminController
         $grid->quickSearch ();
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
+        $grid->column('nickname', __('NickName'));
         $grid->column('email', __('Email'));
-        $grid->column('charge', __('Charge'))->modal('charge',function ($user){
-            $form = (new Form(new Charge))->setAction (route ('admin.charges.new'));
-            $form->hidden('charger_id', 'charger id')->value (Auth::id ());
-            $form->hidden('charger_type', 'charger_type')->value ('dashboard');
-            $form->hidden('user_id', 'user id')->value ($user->id);
-            $form->hidden('user_type', 'user type')->value ('app');
-            $form->number('amount', 'amount');
-            $form->hidden('amount_type', 'amount_type')->value (1);
-
-            return $form;
-        });
-        $grid->column('isOnline', __('isOnline'));
+//        $grid->column('charge', __('Charge'))->modal('charge',function ($user){
+//            $form = (new Form(new Charge))->setAction (route ('admin.charges.new'));
+//            $form->hidden('charger_id', 'charger id')->value (Auth::id ());
+//            $form->hidden('charger_type', 'charger_type')->value ('dashboard');
+//            $form->hidden('user_id', 'user id')->value ($user->id);
+//            $form->hidden('user_type', 'user type')->value ('app');
+//            $form->number('amount', 'amount');
+//            $form->hidden('amount_type', 'amount_type')->value (1);
+//
+//            return $form;
+//        });
+//        $grid->column('isOnline', __('isOnline'));
+        $grid->column('di', __('coins'));
+        $grid->column('gold', __('game coins'));
+        $grid->column('coins', __('diamonds'));
+        $grid->column('is_host', __('is host'))->bool ();
+        $grid->column('status', __('is blocked'))->switch (Common::getSwitchStates2 () );
         return $grid;
     }
 
@@ -121,6 +127,7 @@ class UserController extends AdminController
         $form->email('email', __('Email'));
         $form->password('password', __('Password'));
 
+        $form->switch ('status',__('is blocked'))->options (Common::getSwitchStates2 ());
 
         return $form;
     }
