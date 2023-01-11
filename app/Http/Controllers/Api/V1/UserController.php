@@ -227,7 +227,7 @@ class UserController extends Controller
         //empty data
         $kong['exp']=0;
         $kong['user_id']=0;
-        $kong['sex']=0;
+        $kong['sex']="";
         $kong['avatar']='';
         $kong['nickname']='';
         $kong['stars_img']='';
@@ -252,7 +252,13 @@ class UserController extends Controller
         $exp=$q->where($keywords,$user_id)->sum('giftPrice');
         $user->exp = ceil($exp);
         $user->avatar = @$user->profile->avatar;
-        $user->sex = @$user->profile->gender == 1 ? 'male' : 'female';
+        if (@$user->profile->gender == 1){
+            $user->sex = 'male';
+        }elseif (@$user->profile->gender == 0){
+            $user->sex = 'female';
+        }else{
+            $user->sex = '';
+        }
         $arr['user'][0] = $user->only('id','exp','nickname','avatar','sex','sort','stars_img','gold_img','vip_img');
 
         $arr['top'] = array_slice($data->toArray (), 0, 3);
