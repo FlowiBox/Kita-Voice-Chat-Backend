@@ -455,6 +455,7 @@ class RoomController extends Controller
         }
 
         $room_info['timer_id'] = $timer_id;
+        $room_info['password_status']=$room_info['room_pass']==""?false:true;
 
         return Common::apiResponse (true,'',$room_info);
     }
@@ -478,7 +479,7 @@ class RoomController extends Controller
     public function calcTime($timer_id){
         $timer = LiveTime::query ()->find ($timer_id);
         if ($timer){
-            $hours = floor(time ()-$timer->start_time);
+            $hours = floor((time ()-$timer->start_time)/(60*60));
             $timer->end_time = time ();
             $timer->hours = $hours;
             if ($hours >= 1){
