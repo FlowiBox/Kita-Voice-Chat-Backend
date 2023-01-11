@@ -46,7 +46,7 @@ class GiftLogController extends Controller
         if(!$data['id'] || !$data['owner_id'] || !$data['user_id'] || !$data['toUid'] || !$data['num'] )
             return Common::apiResponse(0,'Missing parameters',$data->all ());
         if($data['num'] < 1)    return Common::apiResponse(0,'The number of gifts cannot be less than 1');
-        $gift=DB::table('gifts')->select(['id','name','type','price','vip_level','is_play','img'])->where(['id'=>$data['id']])->where('enable',1)->first();
+        $gift=DB::table('gifts')->select(['id','name','type','price','vip_level','is_play','img','show_img','show_img2'])->where(['id'=>$data['id']])->where('enable',1)->first();
 
         $user=DB::table('users')->select(['id','di'])->where(['id'=>$data['user_id']])->first();
 
