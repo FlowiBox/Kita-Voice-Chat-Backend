@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class ChargeAction extends Action
 {
-    public $name = 'Charge';
+    public $name;
 
     protected $selector = '.charge_action';
 
@@ -61,6 +61,7 @@ class ChargeAction extends Action
 
     public function form()
     {
+        $this->name = __ ('Charge');
         $this->hidden('charger_id', 'charger id')->value (Auth::id ());
         $this->hidden('charger_type', 'charger_type')->value ('dash');
         $this->text('user_id', __('user id'));
