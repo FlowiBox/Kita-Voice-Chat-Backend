@@ -178,15 +178,16 @@ class UserController extends Controller
     public function ranking(Request $request) {
         $class = $request->class  ? : 1; //1 star sharp 2 gold sharp
         $type = $request->type ? : 1; //1 day list 2 week list March list
-        if (!in_array($class, [1, 2]) || !in_array($type, [1, 2, 3])) return Common::apiResponse (0,'Parameter error');
+        if (!in_array($class, [1, 2, 3]) || !in_array($type, [1, 2, 3, 4])) return Common::apiResponse (0,'Parameter error');
         $is_home=$request->is_home;
         $limit = $is_home ? 3 : 30;
         $arr=$this->rankingHand($class,$type,$request->user (),$limit,$request->room_uid);
+
         return Common::apiResponse(1,'',$arr);
     }
     public function rankingHand($class,$type,$user,$limit=30,$room_uid=null) {
         $user_id = $user->id;
-        if (!in_array($class, [1, 2]) || !in_array($type, [1, 2, 3])) return Common::apiResponse (0,'Parameter error');
+        if (!in_array($class, [1, 2, 3]) || !in_array($type, [1, 2, 3, 4])) return Common::apiResponse (0,'Parameter error');
 
         if ($class == 1) {
             $keywords = 'receiver_id';
@@ -265,6 +266,10 @@ class UserController extends Controller
 
         $arr['top'] = array_slice($data->toArray (), 0, 3);
         $arr['other'] = array_slice($data->toArray (), 3);
+
+        if ($class == 3){
+            return $data->toArray ();
+        }
         return $arr;
     }
 
