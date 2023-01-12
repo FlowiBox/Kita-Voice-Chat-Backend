@@ -218,9 +218,9 @@ class UserController extends Controller
             $v->avatar = @$users->profile->avatar?:'';
             $v->nickname = $users->nickname?:'';
             $v->sex = @$users->profile->gender == 1?trans ('male'):trans ('female');
-            $v->stars_img = Common::getLevel($v->{$keywords}, 1 ,'img');
-            $v->gold_img = Common::getLevel($v->{$keywords}, 2 ,'img');
-            $v->vip_img = Common::getLevel($v->{$keywords}, 3 ,'img');
+            $v->stars_img = Common::getLevel($v->{$keywords}, 1 ,'img')?:"";
+            $v->gold_img = Common::getLevel($v->{$keywords}, 2 ,'img')?:"";
+            $v->vip_img = Common::getLevel($v->{$keywords}, 3 ,'img')?:"";
             if ($v->{$keywords} == $user_id) $l = $i;
             unset($v->{$keywords});
         }
@@ -240,6 +240,7 @@ class UserController extends Controller
         if($limit == 3) return $data;
         //user
         $user->sort = $l ? (string)$l : '99+';
+        $user->user_id = $user->id;
         $user->stars_img = Common::getLevel($user->id, 1 ,'img');
         $user->gold_img = Common::getLevel($user->id, 2 ,'img');
         $user->vip_img = Common::getLevel($user->id, 3 ,'img');
