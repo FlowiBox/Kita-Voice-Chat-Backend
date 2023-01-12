@@ -260,7 +260,7 @@ class UserController extends Controller
         }else{
             $user->sex = '';
         }
-        $arr['user'][0] = $user->only('id','exp','nickname','avatar','sex','sort','stars_img','gold_img','vip_img');
+        $arr['user'] = $user->only('user_id','exp','nickname','avatar','sex','sort','stars_img','gold_img','vip_img');
 
         $arr['top'] = array_slice($data->toArray (), 0, 3);
         $arr['other'] = array_slice($data->toArray (), 3);
