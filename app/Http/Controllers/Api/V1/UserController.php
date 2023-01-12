@@ -251,6 +251,8 @@ class UserController extends Controller
             $q = DB::table('gift_logs')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
         } elseif ($type == 3) {
             $q = DB::table('gift_logs')->whereMonth('created_at', Carbon::now()->month);
+        }else{
+            $q = DB::table('gift_logs');
         }
         $exp=$q->where($keywords,$user_id)->sum('giftPrice');
         $user->exp = ceil($exp);
