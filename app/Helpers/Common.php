@@ -33,7 +33,7 @@ class Common{
 
                 'message'   => __ ($message),
 
-                'data'      => $data == [] || $data == null ? null : $data,
+                'data'      => $data,
 
                 'extra_data'=> [
                     'storage_base_url'=>self::getConf ('storage_base_url') ?:asset ('storage')
