@@ -181,10 +181,10 @@ class UserController extends Controller
         if (!in_array($class, [1, 2]) || !in_array($type, [1, 2, 3])) return Common::apiResponse (0,'Parameter error');
         $is_home=$request->is_home;
         $limit = $is_home ? 3 : 30;
-        $arr=$this->rankingHand($class,$type,$request->user (),$limit);
+        $arr=$this->rankingHand($class,$type,$request->user (),$limit,$request->room_uid);
         return Common::apiResponse(1,'',$arr);
     }
-    public function rankingHand($class,$type,$user,$limit=30) {
+    public function rankingHand($class,$type,$user,$limit=30,$room_uid=null) {
         $user_id = $user->id;
         if (!in_array($class, [1, 2]) || !in_array($type, [1, 2, 3])) return Common::apiResponse (0,'Parameter error');
 
@@ -205,7 +205,8 @@ class UserController extends Controller
             $query = DB::table('gift_logs');
         }
         if (!in_array ($class,[1,2])){
-            $query = $query->where ('receiver_id',$user->id);
+            $query = $query->where ('receiver_id',$room_uid);
+            $limit = 1000;
         }
         $data=$query->selectRaw("sum(giftPrice) as exp ,". $keywords)->groupBy($keywords)->orderByRaw("exp desc")->limit($limit)->get();
         $i=$l=0;
