@@ -109,5 +109,18 @@
     "app": "مستخدم عادي",
     "dash": "وكالات",
     "user type": "نوع المستخدم",
-    "Charge": "شحن رصيد"
+    "Charge": "شحن رصيد",
+    "unActive": "غير نشط",
+    "Active": "نشط",
+    "agency id": "معرف الوكالة",
+    "target id": "معرف التارجيت",
+    "target diamonds": "الماس المطلوب",
+    "month": "الشهر",
+    "year": "السنة",
+    "target hours": "الساعات المطلوبة",
+    "target days": "الايام المطلوبة",
+    "user diamonds": "الماس المحقق",
+    "user hours": "الساعات المحققة",
+    "user days": "الايام المحققة",
+    "deserved": "مستحق"
 }

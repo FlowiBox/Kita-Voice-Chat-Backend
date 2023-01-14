@@ -4,18 +4,21 @@ use App\Models\Config;
 use App\Models\Follow;
 use App\Models\GiftLog;
 use App\Models\Room;
+use App\Models\User;
 use App\Models\Vip;
 use App\Traits\HelperTraits\AdminTrait;
 use App\Traits\HelperTraits\AttributesTrait;
 use App\Traits\HelperTraits\CalcsTrait;
+use App\Traits\HelperTraits\InfoTrait;
 use App\Traits\HelperTraits\MoneyTrait;
 use App\Traits\HelperTraits\RoomTrait;
 use App\Traits\HelperTraits\ZegoTrait;
+use Encore\Admin\Show;
 use Illuminate\Support\Facades\DB;
 
 class Common{
 
-    use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait , AttributesTrait,ZegoTrait;
+    use CalcsTrait , AdminTrait , MoneyTrait ,RoomTrait , AttributesTrait,ZegoTrait ,InfoTrait;
 
     public static function apiResponse(bool $success,$message,$data = null,$statusCode = null,$paginates = null){
 
@@ -44,6 +47,10 @@ class Common{
             $statusCode
         );
     }
+
+
+
+
 
     public static function getConf($key){
         if ($conf = Config::query ()->where('name',$key)->first ()){

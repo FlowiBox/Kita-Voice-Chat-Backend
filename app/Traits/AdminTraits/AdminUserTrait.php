@@ -18,4 +18,5 @@ trait AdminUserTrait
         })->get();
     }
 
+
 }

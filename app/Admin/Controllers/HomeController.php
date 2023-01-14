@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Gift;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\UserTarget;
 use App\Models\Ware;
 use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Controllers\Dashboard;
@@ -15,11 +16,14 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Layout\Row;
 use Encore\Admin\Widgets\Box;
 use Encore\Admin\Widgets\InfoBox;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index(Content $content)
     {
+
+
         return $content
             ->title('Dashboard')
             ->description('Description...')
@@ -70,16 +74,32 @@ class HomeController extends Controller
 
     public function infoBox(Content $content)
     {
-        $content->title('Info box');
-        $content->description('Description...');
+        if (in_array ('admin',Auth::user ()->roles()->pluck('name')->toArray())){
+            $content->title('Info box');
+            $content->description('Description...');
 
-        $content->row(function ($row) {
-            $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route ('admin.users'), User::query ()->count ()));
-            $row->column(3, new InfoBox(__('Rooms'), 'wechat', 'green', route ('admin.rooms'), Room::query ()->count ()));
-            $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route ('admin.gifts'), Gift::query ()->count ()));
-            $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
-        });
+            $content->row(function ($row) {
+                $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route ('admin.users'), User::query ()->count ()));
+                $row->column(3, new InfoBox(__('Rooms'), 'wechat', 'green', route ('admin.rooms'), Room::query ()->count ()));
+                $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route ('admin.gifts'), Gift::query ()->count ()));
+                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
+            });
+
+        }else{
+            $content->title('Info box');
+            $content->description('Description...');
+            $content->row(function ($row) {
+                $users = User::query ()->whereNotNull ('agency_id')->where ('agency_id',@Auth::user ()->agency_id)->count ();
+                $targets = UserTarget::query ()->whereNotNull ('agency_id')->where ('agency_id',@Auth::user ()->agency_id)->count ();
+
+                $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route ('admin.users'), $users));
+                $row->column(3, new InfoBox(__('Targets'), 'wechat', 'green', route ('admin.user_targets'), $targets));
+                $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route ('admin.gifts'), Gift::query ()->count ()));
+                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
+            });
+        }
 
         return $content;
     }
+
 }

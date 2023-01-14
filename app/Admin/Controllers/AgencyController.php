@@ -6,6 +6,7 @@ use App\Helpers\Common;
 use App\Models\Agency;
 use App\Http\Controllers\Controller;
 use App\Traits\AdminTraits\AdminUserTrait;
+use Encore\Admin\Admin;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -82,22 +83,18 @@ class AgencyController extends Controller
     protected function grid()
     {
 
-        $ops = [];
-        foreach ($this->getAgencies () as $user){
-            $ops[$user->id]=$user->name;
-        }
+
 
 
 
         $grid = new Grid(new Agency);
 
-//        $user = auth ()->user ();
-//        if (!$user->isRole('admin') && !$user->isRole('developer')){
-//            $grid->model()->ofOwner($user->id);
-//        }
+
 
         $grid->id('ID');
-        $grid->column('owner_id',trans ('owner id'))->select ($ops);
+        $grid->column('owner_id',trans ('owner id'))->modal ('owner info',function ($model){
+            return Common::getAdminShow ($model->owner_id);
+        });
         $grid->column('name',trans ('name'));
         $grid->column('notice',trans ('notice'));
         $grid->column('status',trans ('status'))->switch(Common::getSwitchStates ());
@@ -118,16 +115,15 @@ class AgencyController extends Controller
         $show = new Show(Agency::findOrFail($id));
 
         $show->id('ID');
-        $show->owner_id('owner_id');
-        $show->name('name');
-        $show->notice('notice');
-        $show->status('status');
-        $show->phone('phone');
-        $show->url('url');
-        $show->img('img');
-        $show->contents('contents');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
+        $show->field('owner_id',__('owner_id'));
+        $show->field('name',__ ('name'));
+        $show->field('notice',__ ('notice'));
+        $show->field('status',__('status'));
+        $show->field('phone',__ ('phone'));
+        $show->field('url',__ ('url'));
+        $show->field('img',__ ('image'))->image ('',200);
+        $show->field('contents',__ ('contents'));
+
 
         return $show;
     }

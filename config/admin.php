@@ -62,7 +62,14 @@ return [
 
         'namespace' => 'App\\Admin\\Controllers',
 
-        'middleware' => ['web', 'admin','multiLanguage'],
+        'middleware' => [
+            'web',
+            'admin',
+            'multiLanguage',
+            'admin.permission:deny,agency',
+
+        ],
+
     ],
 
     /*
@@ -124,7 +131,8 @@ return [
         'providers' => [
             'admin' => [
                 'driver' => 'eloquent',
-                'model'  => Encore\Admin\Auth\Database\Administrator::class,
+                'model'  => \App\Models\Admin::class,
+//                'model'  => Encore\Admin\Auth\Database\Administrator::class,
             ],
         ],
 

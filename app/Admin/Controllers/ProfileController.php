@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Profile;
 use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -30,9 +31,10 @@ class ProfileController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new User());
+        $grid = new Grid(new Profile());
         $grid->quickSearch ();
         $grid->column('id', __('Id'));
+        $grid->column('user_id', __('user id'));
         $grid->column('avatar', __('Avatar'))->image ('',30);
         $grid->column('gender', __('Gender'))->using (
         [
@@ -52,9 +54,10 @@ class ProfileController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(User::findOrFail($id));
+        $show = new Show(Profile::findOrFail($id));
 
         $show->field('id', __('Id'));
+        $show->field('user_id', __('user id'));
         $show->field('avatar', __('Avatar'))->image ('',30);
         $show->field('gender', __('Gender'))->using (
             [
@@ -75,9 +78,10 @@ class ProfileController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new User());
+        $form = new Form(new Profile());
 
         $form->display('id', __('Id'));
+        $form->text('user_id', __('user id'));
         $form->image('avatar', __('Avatar'));
         $form->display('gender', __('Gender'));
         $form->display('country', __('Country'));

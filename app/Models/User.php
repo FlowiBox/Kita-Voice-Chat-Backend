@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -42,7 +43,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['my_store','lang','avatar','gender'];
+    protected $appends = ['my_store','lang','avatar','gender','flag'];
 
 
     public function profile(){
@@ -76,6 +77,10 @@ class User extends Authenticatable
         return $this->belongsTo (Country::class)->select ('id','name','flag');
     }
 
+    public function getFlagAttribute(){
+        return @$this->country()->first ()->flag?:'';
+    }
+
     public function getLangAttribute(){
         return @$this->country()->first ()->language?:'en';
     }
@@ -99,6 +104,29 @@ class User extends Authenticatable
     public function agency(){
         return $this->belongsTo (Agency::class);
     }
+
+
+    public function scopeOfAgency($q){
+        $user = Auth::user ();
+        if (Auth::user ()->isRole('agency')){
+            $q->whereNotNull('agency_id')->where('agency_id', '=', @$user->agency_id);
+        }
+
+    }
+
+
+
+//    protected static function booted()
+//    {
+//        if (Auth::user ()->isRole('agency')){
+//            static::addGlobalScope('of_agency', function (Builder $builder){
+//                $builder->where('agency_id', '=', Auth::id ());
+//            });
+//        }
+//
+//    }
+
+
 
 
 

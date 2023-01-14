@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Helpers\Common;
+use App\Models\Admin;
 use App\Models\Country;
 use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
@@ -22,7 +23,7 @@ class AdminUserController extends \Encore\Admin\Controllers\UserController
 
     public function __construct ()
     {
-        $userModel = config('admin.database.users_model');
+        $userModel = Admin::class;
         $this->model = new $userModel;
     }
 
@@ -38,6 +39,7 @@ class AdminUserController extends \Encore\Admin\Controllers\UserController
         return parent ::destroy ($id);
 
     }
+
 
 
 }

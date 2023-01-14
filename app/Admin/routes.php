@@ -7,20 +7,26 @@ use Illuminate\Support\Facades\Route;
 
 Admin::routes();
 
-Route::group([
+Route::group(
+    [
     'prefix'        => config('admin.route.prefix'),
     'namespace'     => config('admin.route.namespace'),
-    'middleware'    => config('admin.route.middleware'),
+    'middleware'    => [
+        'web',
+        'admin',
+        'multiLanguage',
+    ],
     'as'            => config('admin.route.prefix') . '.',
-], function (Router $router) {
+],
+    function (Router $router) {
+
 
     $router->resource ('auth/users','AdminUserController');
-
-
     //resources
     $router->resource('users', 'UserController',[
         'names'=>[
-            'index'=>'users'
+            'index'=>'users',
+            'show'=>'users.show'
         ]
     ]);
     $router->resource('profiles', 'ProfileController');
@@ -59,14 +65,30 @@ Route::group([
             'store'=>'charges.new'
         ]
     ]);
+    $router->resource ('userTarget','UserTargetController',[
+        'names'=>[
+            'index'=>'user_targets'
+        ]
+    ]);
 
 
     //--------------------
     $router->get('/', 'HomeController@infoBox')->name('home');
     $router->get('/dev', 'HomeController@devindex')->name('dev-home');
+    $router->get('/agency_home', 'HomeController@agencyInfoBox')->name('agency.home');
 
 
-});
+
+
+}
+);
+
+
+
+
+
+
+
 
 
 

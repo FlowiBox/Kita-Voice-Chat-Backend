@@ -8,25 +8,32 @@ use App\Models\Agency;
 use App\Models\Charge;
 use App\Models\Country;
 use App\Models\User;
+use App\Traits\AdminTraits\AdminControllersTrait;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use function Doctrine\Common\Cache\Psr6\get;
+
 
 class UserController extends AdminController
 {
+    use AdminControllersTrait;
     /**
      * Title for current resource.
      *
      * @var string
      */
     protected $title;
+
+    public $permission_name = 'users';
+    public $hiddenColumns = [
+        'is_host',
+        'status'
+    ];
 
     public function __construct ()
     {
@@ -35,6 +42,7 @@ class UserController extends AdminController
 
     public function index ( Content $content )
     {
+        Permission::check('browse-users');
         return $content
             ->title(__($this->title))
             ->row(function($row) {
@@ -45,6 +53,7 @@ class UserController extends AdminController
     }
 
 
+
     /**
      * Make a grid builder.
      *
@@ -52,7 +61,9 @@ class UserController extends AdminController
      */
     protected function grid()
     {
+
         $grid = new Grid(new User());
+        $grid->model ()->ofAgency();
         $grid->quickSearch ();
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
@@ -73,8 +84,23 @@ class UserController extends AdminController
         $grid->column('di', __('coins'));
         $grid->column('gold', __('game coins'));
         $grid->column('coins', __('diamonds'));
-        $grid->column('is_host', __('is host'))->bool ();
+        $grid->column('is_host', __('is host'))->switch (Common::getSwitchStates ());
         $grid->column('status', __('is blocked'))->switch (Common::getSwitchStates2 () );
+        $grid->column ('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
+            if ($model->agency_id){
+                return Common::getAgencyShow ($model->agency_id);
+            }
+            return null;
+        });
+
+
+
+
+
+
+        $this->extendGrid ($grid);
+
+
         return $grid;
     }
 
@@ -89,10 +115,23 @@ class UserController extends AdminController
         $show = new Show(User::findOrFail($id));
 
         $show->field('id', __('Id'));
+        $show->field ('avatar',__('avatar'))->image ('',200);
         $show->field('name', __('Name'));
+        $show->field('nickname', __('NickName'));
+        $show->field('flag', __('country'))->image ('',50);
         $show->field('email', __('Email'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('di', __('coins'));
+        $show->field('gold', __('game coins'));
+        $show->field('coins', __('diamonds'));
+        $show->field('is_host', __('is host'))->using (
+            [
+                0=>__ ('not host'),
+                1=>__('host')
+            ]
+        );
+
+        $this->extendShow ($show);
+
 
         return $show;
     }
@@ -127,6 +166,7 @@ class UserController extends AdminController
         $form->email('email', __('Email'));
         $form->password('password', __('Password'));
 
+        $form->switch ('is_host',__('is host'))->options (Common::getSwitchStates ());
         $form->switch ('status',__('is blocked'))->options (Common::getSwitchStates2 ());
 
         return $form;
