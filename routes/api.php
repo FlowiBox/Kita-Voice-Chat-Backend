@@ -163,6 +163,10 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::get ('vip_count',[\App\Http\Controllers\Api\V1\HomeController::class,'countVips']);
 
 
+    Route::prefix ('account')->group (function (){
+        Route::post ('bind',[\App\Http\Controllers\Api\V1\UserController::class,'joinAccount']);
+        Route::post ('delete',[\App\Http\Controllers\Api\V1\UserController::class,'delete']);
+    });
 
 
 });

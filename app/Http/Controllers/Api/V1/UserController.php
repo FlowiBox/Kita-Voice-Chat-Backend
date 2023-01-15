@@ -444,4 +444,35 @@ class UserController extends Controller
         return Common::apiResponse (1,'sent successfully');
     }
 
+
+
+    public function joinAccount(Request $request){
+        $user = $request->user ();
+        if ($request->google_id && !$user->google_id){
+            $ex = User::query ()->where ('google_id',$request->google_id)->where ('id','!=',$user->id)->exists ();
+            if ($ex) return Common::apiResponse (0,'this google_account is restricted with another account');
+            $user->google_id = $request->google_id ;
+        }
+        if ($request->facebook_id && !$user->facebook_id){
+            $ex = User::query ()->where ('facebook_id',$request->facebook_id)->where ('id','!=',$user->id)->exists ();
+            if ($ex) return Common::apiResponse (0,'this facebook_account is restricted with another account');
+            $user->facebook_id = $request->facebook_id ;
+        }
+        if ($request->phone && !$user->phone){
+            $ex = User::query ()->where ('phone',$request->phone)->where ('id','!=',$user->id)->exists ();
+            if ($ex) return Common::apiResponse (0,'this phone is restricted with another account');
+            $user->phone = $request->phone ;
+        }
+        $user->save();
+        return Common::apiResponse (1,'bind successful',new UserResource($user));
+
+    }
+
+    public function delete(Request $request){
+        $user = $request->user();
+        $user->tokens()->delete();
+        $user->delete();
+        return Common::apiResponse (1,'account deleted successfully');
+    }
+
 }
