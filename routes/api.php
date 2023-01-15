@@ -18,6 +18,7 @@ Route::prefix ('auth')->group (function (){
     Route::post ('register',[\App\Http\Controllers\Api\V1\Auth\RegisterController::class,'register']);
     Route::post ('login',[\App\Http\Controllers\Api\V1\Auth\LoginController::class,'login']);
     Route::post ('send-code',[\App\Http\Controllers\Api\V1\Auth\LoginController::class,'sendPhoneCode']);
+    Route::post ('forget_password',[\App\Http\Controllers\Api\V1\Auth\ForgotPasswordController::class,'reset']);
 
 });
 
@@ -166,6 +167,8 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::prefix ('account')->group (function (){
         Route::post ('bind',[\App\Http\Controllers\Api\V1\UserController::class,'joinAccount']);
         Route::get ('delete',[\App\Http\Controllers\Api\V1\UserController::class,'delete']);
+        Route::post ('change_phone',[\App\Http\Controllers\Api\V1\UserController::class,'changePhone']);
+        Route::post ('reset_password',[\App\Http\Controllers\Api\V1\Auth\ResetPasswordController::class,'reset']);
     });
 
 

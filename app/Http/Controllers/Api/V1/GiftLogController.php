@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Models\Agency;
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -172,7 +173,18 @@ class GiftLogController extends Controller
                 ]
             ];
             $json = json_encode ($d);
-            $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+
+
+            if (($send_num * $gift->price) >= 2000){
+                $rooms = Room::where('room_status',1)->where(function ($q){
+                    $q->where('is_afk',1)->orWhere('room_visitor','!=','');
+                })->get();
+                foreach ($rooms as $r){
+                    $res = Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json);
+                }
+            }else{
+                $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+            }
         }
         return Common::apiResponse(1,'Gift sent successfully',$return_arr);
     }
@@ -248,6 +260,7 @@ class GiftLogController extends Controller
             $this->addRoomHot($uid,$info['giftPrice']);
             //The total amount received by the user
             Common::update_user_total($toUid,3,$info['giftPrice']);
+
             return 1;
         }
         else{

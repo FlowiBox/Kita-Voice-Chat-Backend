@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Code;
 use App\Models\Pack;
 use App\Models\User;
 use App\Models\Ware;
@@ -461,11 +462,28 @@ class UserController extends Controller
         if ($request->phone && !$user->phone){
             $ex = User::query ()->where ('phone',$request->phone)->where ('id','!=',$user->id)->exists ();
             if ($ex) return Common::apiResponse (0,'this phone is restricted with another account');
+            if (!$request->vr_code || !$request->password ) return Common::apiResponse (0,'missing params');
+            $code = Code::query ()->where ('phone',$request->phone)->where('code',$request->vr_code)->first ();
+            if (!$code) return Common::apiResponse (0,'this phone not verified');
             $user->phone = $request->phone ;
+            $user->password = $request->password;
+            $code->delete ();
         }
         $user->save();
         return Common::apiResponse (1,'bind successful',new UserResource($user));
 
+    }
+
+    public function changePhone(Request $request){
+        if(!$request->phone || !$request->vr_code) return Common::apiResponse (0,'missing params');
+        $user = $request->user ();
+        $code = Code::query ()->where ('phone',$request->phone)->where('code',$request->vr_code)->first ();
+        if (!$code) return Common::apiResponse (0,'this phone not verified');
+        $user->phone = $request->phone;
+        $code->delete ();
+
+        $user->save();
+        return Common::apiResponse (1,'reset successful',new UserResource($user));
     }
 
     public function delete(Request $request){
