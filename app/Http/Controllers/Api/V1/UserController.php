@@ -475,7 +475,7 @@ class UserController extends Controller
     }
 
     public function changePhone(Request $request){
-        if(!$request->phone || !$request->vr_code || $request->current_phone) return Common::apiResponse (0,'missing params');
+        if(!$request->phone || !$request->vr_code || !$request->current_phone) return Common::apiResponse (0,'missing params');
         $user = $request->user ();
         $code = Code::query ()->where ('phone',$request->current_phone)->where('code',$request->vr_code)->first ();
         if (!$code) return Common::apiResponse (0,'current phone not verified');
