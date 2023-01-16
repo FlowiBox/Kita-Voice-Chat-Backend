@@ -58,6 +58,69 @@ class PermissionSeeder extends Seeder
                 ['name'=>'Edit Charge','slug'=>'edit-charge'],
                 ['name'=>'show Charge','slug'=>'show-charge'],
                 ['name'=>'delete Charge','slug'=>'delete-charge'],
+
+                //code
+                ['name'=>'Browse Phone Code','slug'=>'browse-code'],
+                ['name'=>'Create Phone Code','slug'=>'create-code'],
+                ['name'=>'Edit Phone Code','slug'=>'edit-code'],
+                ['name'=>'show Phone Code','slug'=>'show-code'],
+                ['name'=>'delete Phone Code','slug'=>'delete-code'],
+
+                //Config
+                ['name'=>'Browse Config','slug'=>'browse-config'],
+                ['name'=>'Create Config','slug'=>'create-config'],
+                ['name'=>'Edit Config','slug'=>'edit-config'],
+                ['name'=>'show Config','slug'=>'show-config'],
+                ['name'=>'delete Config','slug'=>'delete-config'],
+
+                //country
+                ['name'=>'Browse Country','slug'=>'browse-country'],
+                ['name'=>'Create Country','slug'=>'create-country'],
+                ['name'=>'Edit Country','slug'=>'edit-country'],
+                ['name'=>'show Country','slug'=>'show-country'],
+                ['name'=>'delete Country','slug'=>'delete-country'],
+
+                //cp
+                ['name'=>'Browse CP','slug'=>'browse-cp'],
+                ['name'=>'Create CP','slug'=>'create-cp'],
+                ['name'=>'Edit CP','slug'=>'edit-cp'],
+                ['name'=>'show CP','slug'=>'show-cp'],
+                ['name'=>'delete CP','slug'=>'delete-cp'],
+
+                //emoji
+                ['name'=>'Browse Emoji','slug'=>'browse-emoji'],
+                ['name'=>'Create Emoji','slug'=>'create-emoji'],
+                ['name'=>'Edit Emoji','slug'=>'edit-emoji'],
+                ['name'=>'show Emoji','slug'=>'show-emoji'],
+                ['name'=>'delete Emoji','slug'=>'delete-emoji'],
+
+                //family
+                ['name'=>'Browse Family','slug'=>'browse-family'],
+                ['name'=>'Create Family','slug'=>'create-family'],
+                ['name'=>'Edit Family','slug'=>'edit-family'],
+                ['name'=>'show Family','slug'=>'show-family'],
+                ['name'=>'delete Family','slug'=>'delete-family'],
+
+                //GIFT
+                ['name'=>'Browse Gift','slug'=>'browse-gift'],
+                ['name'=>'Create Gift','slug'=>'create-gift'],
+                ['name'=>'Edit Gift','slug'=>'edit-gift'],
+                ['name'=>'show Gift','slug'=>'show-gift'],
+                ['name'=>'delete Gift','slug'=>'delete-gift'],
+
+                //GIFT log
+                ['name'=>'Browse GiftLog','slug'=>'browse-giftlog'],
+                ['name'=>'Create GiftLog','slug'=>'create-giftlog'],
+                ['name'=>'Edit GiftLog','slug'=>'edit-giftlog'],
+                ['name'=>'show GiftLog','slug'=>'show-giftlog'],
+                ['name'=>'delete GiftLog','slug'=>'delete-giftlog'],
+
+                //Carousel
+                ['name'=>'Browse Carousel','slug'=>'browse-carousel'],
+                ['name'=>'Create Carousel','slug'=>'create-carousel'],
+                ['name'=>'Edit Carousel','slug'=>'edit-carousel'],
+                ['name'=>'show Carousel','slug'=>'show-carousel'],
+                ['name'=>'delete Carousel','slug'=>'delete-carousel'],
             ]
         );
     }
