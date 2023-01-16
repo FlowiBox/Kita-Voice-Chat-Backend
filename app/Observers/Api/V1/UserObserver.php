@@ -74,7 +74,7 @@ class UserObserver
                     ]
                 );
             }else{
-                UserTarget::query ()->where (['user_id'=>$user->id,'month'=>Carbon::now ()->month,'year'=>Carbon::now ()->year])->delete ();
+                UserTarget::query ()->where (['user_id'=>$user->id,'add_month'=>Carbon::now ()->month,'add_year'=>Carbon::now ()->year])->delete ();
             }
         }
 
