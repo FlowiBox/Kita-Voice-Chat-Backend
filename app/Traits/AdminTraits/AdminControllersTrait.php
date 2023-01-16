@@ -13,7 +13,7 @@ trait AdminControllersTrait
 
     public function create ( Content $content )
     {
-        if (Admin::user()->cannot('*')){
+        if (!Admin::user()->can('*')){
             Permission::check('create-'.$this->permission_name);
         }
 
@@ -22,7 +22,7 @@ trait AdminControllersTrait
 
     public function show ( $id , Content $content )
     {
-        if (Admin::user()->cannot('*')){
+        if (!Admin::user()->can('*')){
             Permission::check('show-'.$this->permission_name);
         }
 
@@ -31,7 +31,7 @@ trait AdminControllersTrait
 
     public function edit ( $id , Content $content )
     {
-        if (Admin::user()->cannot('*')){
+        if (!Admin::user()->can('*')){
             Permission::check('edit-'.$this->permission_name);
         }
 
@@ -40,7 +40,7 @@ trait AdminControllersTrait
 
     public function destroy ( $id )
     {
-        if (Admin::user()->cannot('*')){
+        if (!Admin::user()->can('*')){
             Permission::check('delete-'.$this->permission_name);
         }
 
@@ -50,7 +50,7 @@ trait AdminControllersTrait
     public function extendGrid($grid){
         $permission_name = $this->permission_name;
 
-        if (Admin::user()->cannot('*')) {
+        if (!Admin::user()->can('*')) {
             if ( ! Admin ::user () -> can ( 'edit-' . $permission_name ) ) {
                 $grid -> hiddenColumns = $this -> hiddenColumns;
             }
@@ -81,7 +81,7 @@ trait AdminControllersTrait
 
 
     public function extendShow($show){
-        if (Admin::user()->cannot('*')) {
+        if (!Admin::user()->can('*')) {
             $show -> panel ()
                 -> tools (
                     function ( $tools ) {

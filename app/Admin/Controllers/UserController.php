@@ -42,7 +42,10 @@ class UserController extends AdminController
 
     public function index ( Content $content )
     {
-        Permission::check('browse-users');
+        if (!Admin::user()->can('*')){
+            Permission::check('browse-users');
+        }
+
         return $content
             ->title(__($this->title))
             ->row(function($row) {
