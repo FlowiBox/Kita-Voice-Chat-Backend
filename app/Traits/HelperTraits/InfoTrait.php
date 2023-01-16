@@ -49,7 +49,7 @@ trait InfoTrait
         $show->setResource ('/admin/agencies');
 
         $show->id('ID');
-        $show->field('owner_id',__('owner_id'))->link ('/admin/auth/users/'.$show->getModel ()->owner_id);
+        $show->field('owner_id',__('owner id'))->link ('/admin/auth/users/'.$show->getModel ()->owner_id);
         $show->field('name',__ ('name'));
         $show->field('notice',__ ('notice'));
         $show->field('status',__('status'))->using (
