@@ -116,9 +116,9 @@ trait MoneyTrait
     public static function userStoreDec($user_id, $get_nums, $get_type, $jb_type) {
         $get_nums=abs($get_nums);
         if($get_nums == 0) return false;
-        $res = User::query()->findOrFail ($user_id)->setDec($jb_type, $get_nums);
+        $res = User::query()->findOrFail ($user_id)->decrement($jb_type, $get_nums);
         if (!$res) return false;
-        $now_nums = Db::table('users')->where(['id' => $user_id])->value($jb_type);
+        $now_nums = DB::table('users')->where(['id' => $user_id])->value($jb_type);
         self::addTranmoney($user_id, $get_nums, $get_type, $now_nums,'-');
         return $res;
     }

@@ -144,7 +144,7 @@ class GiftLogController extends Controller
                 $res[]=$res_arr;
             }
             unset($v);
-            if($shenngyu_price >0)     Common::userStoreDec($data['user_id'],$shenngyu_price,13,'di');      //Send a Gift
+            if($shenngyu_price > 0)     Common::userStoreDec($data['user_id'],$shenngyu_price,13,'di');      //Send a Gift
             if($i == count($to_arr)){
                 //Unlock vip, cp level items, and dress up the latest items
                 Common::unlock_wares($data['user_id']);
