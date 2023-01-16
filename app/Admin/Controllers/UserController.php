@@ -19,9 +19,8 @@ use Encore\Admin\Show;
 use Illuminate\Support\Facades\App;
 
 
-class UserController extends AdminController
+class UserController extends MainController
 {
-    use AdminControllersTrait;
     /**
      * Title for current resource.
      *
@@ -51,7 +50,6 @@ class UserController extends AdminController
             ->row(function($row) {
                 $row->column(10, $this->grid());
                 $row->column(2, view('admin.grid.users.actions'));
-//                $row->column(2, new ChargeAction());
             });
     }
 

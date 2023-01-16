@@ -12,67 +12,16 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class UserTargetController extends Controller
+class UserTargetController extends MainController
 {
     use HasResourceActions;
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('admin.index'))
-            ->description(trans('admin.description'))
-            ->body($this->grid());
-    }
+    public $permission_name = 'usertarget';
+    public $hiddenColumns = [
 
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
+    ];
 
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
 
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
 
     /**
      * Make a grid builder.

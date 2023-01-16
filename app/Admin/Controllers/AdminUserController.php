@@ -19,6 +19,7 @@ use function Doctrine\Common\Cache\Psr6\get;
 class AdminUserController extends \Encore\Admin\Controllers\UserController
 {
 
+
     protected $model;
 
     public function __construct ()

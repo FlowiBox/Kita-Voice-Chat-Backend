@@ -13,7 +13,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class RoomController extends Controller
+class RoomController extends MainController
 {
     use HasResourceActions;
 
