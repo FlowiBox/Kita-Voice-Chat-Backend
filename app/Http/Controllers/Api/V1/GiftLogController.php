@@ -179,6 +179,16 @@ class GiftLogController extends Controller
                 $rooms = Room::where('room_status',1)->where(function ($q){
                     $q->where('is_afk',1)->orWhere('room_visitor','!=','');
                 })->get();
+                $d2 = [
+                    "messageContent"=>[
+                        "message"=>"showBanner",
+                        'send_id'=>$data['user_id'],
+                        'receiver_id'=>$data['toUid'],
+                        'room_uid'=>$data['owner_id'],
+                        "giftImg"=>$gift->show_img?:$gift->show_img2
+                    ]
+                ];
+                $json2 = json_encode ($d2);
                 foreach ($rooms as $r){
                     $res = Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json);
                 }
