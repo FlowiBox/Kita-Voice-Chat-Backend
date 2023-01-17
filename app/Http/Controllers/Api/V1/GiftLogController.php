@@ -182,9 +182,9 @@ class GiftLogController extends Controller
                 $d2 = [
                     "messageContent"=>[
                         "message"=>"showBanner",
-                        'send_id'=>$data['user_id'],
-                        'receiver_id'=>$data['toUid'],
-                        'owner_id'=>$data['owner_id'],
+                        'send_id'=>(integer)$data['user_id'],
+                        'receiver_id'=>(integer)$data['toUid'],
+                        'owner_id'=>(integer)$data['owner_id'],
                         "giftImg"=>$gift->img
                     ]
                 ];
