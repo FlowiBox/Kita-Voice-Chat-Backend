@@ -77,7 +77,7 @@ Route::group(
     $router->get('/dev', 'HomeController@devindex')->name('dev-home');
     $router->get('/agency_home', 'HomeController@agencyInfoBox')->name('agency.home');
 
-
+    $router->resource ('agency_join_requests','AgencyJoinRequestController');
 
 
 }

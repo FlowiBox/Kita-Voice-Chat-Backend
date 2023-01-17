@@ -66,6 +66,16 @@ class UserController extends MainController
         $grid = new Grid(new User());
         $grid->model ()->ofAgency();
         $grid->quickSearch ();
+        $grid->filter (function (Grid\Filter $filter){
+            $filter->expand ();
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('is_host',__('is host'))->select([0=>'normal',1=>'host']);
+            });
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('agency_id',__('agency'))->select(Common::by_agency_filter ());
+                $filter->equal('family_id',__('Family'))->select(Common::by_family_filter ());
+            });
+        });
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('nickname', __('NickName'));

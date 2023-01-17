@@ -171,5 +171,9 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('reset_password',[\App\Http\Controllers\Api\V1\Auth\ResetPasswordController::class,'reset']);
     });
 
+    Route::prefix ('agencies')->group (function (){
+        Route::post ('join_request',[\App\Http\Controllers\Api\V1\AgencyController::class,'joinRequest']);
+    });
+
 
 });

@@ -23,7 +23,7 @@ trait InfoTrait
         $show->field('flag', __('country'))->image ('',50);
         $show->field('email', __('Email'));
         $show->field('di', __('coins'));
-        $show->field('gold', __('game coins'));
+        $show->field('gold', __('silver coins'));
         $show->field('coins', __('diamonds'));
         $show->field('is_host', __('is host'))->using (
             [
@@ -49,7 +49,7 @@ trait InfoTrait
         $show->setResource ('/admin/agencies');
 
         $show->id('ID');
-        $show->field('owner_id',__('owner id'))->link ('/admin/auth/users/'.$show->getModel ()->owner_id);
+        $show->field('owner_id',__('owner id'))->link ('/public/admin/auth/users/'.$show->getModel ()->owner_id);
         $show->field('name',__ ('name'));
         $show->field('notice',__ ('notice'));
         $show->field('status',__('status'))->using (

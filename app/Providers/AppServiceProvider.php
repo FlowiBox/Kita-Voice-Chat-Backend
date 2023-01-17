@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\AgencyJoinRequest;
 use App\Models\Room;
 use App\Models\User;
+use App\Observers\Api\V1\AgencyJoinRequestObserver;
 use App\Observers\Api\V1\RoomObserver;
 use App\Observers\Api\V1\UserObserver;
 use App\Repositories\Room\RoomRepo;
@@ -33,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         User::observe (UserObserver::class);
+        AgencyJoinRequest::observe (AgencyJoinRequestObserver::class);
         Room::observe(RoomObserver::class);
     }
 }

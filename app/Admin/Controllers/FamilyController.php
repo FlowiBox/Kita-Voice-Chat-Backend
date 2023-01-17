@@ -139,7 +139,7 @@ class FamilyController extends Controller
         $form = new Form(new Family);
 
         $form->display('ID');
-//        $form->text('is_success', 'is_success');
+        $form->hidden('is_success', 'is_success')->default (1);
         $form->text('image', __('image'));
         $form->text('name', __('name'));
         $form->text('introduce', __('introduce'));
