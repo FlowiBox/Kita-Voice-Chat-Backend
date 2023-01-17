@@ -66,7 +66,7 @@ class GiftLogController extends Controller
         $to_arr=explode(',', $data['toUid']);
         foreach ($to_arr as $k1 => &$v1) {
             if(!in_array($v1,$vis_arr))    return Common::apiResponse(0,'User is not in this room');
-            if($data['user_id'] == $v1)    return Common::apiResponse(0,'Can\'t give yourself a gift');
+//            if($data['user_id'] == $v1)    return Common::apiResponse(0,'Can\'t give yourself a gift');
         }
         unset($v1);
 
