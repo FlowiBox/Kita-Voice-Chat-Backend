@@ -184,7 +184,7 @@ class GiftLogController extends Controller
                         "message"=>"showBanner",
                         'send_id'=>$data['user_id'],
                         'receiver_id'=>$data['toUid'],
-                        'room_uid'=>$data['owner_id'],
+                        'owner_id'=>$data['owner_id'],
                         "giftImg"=>$gift->show_img?:$gift->show_img2
                     ]
                 ];
