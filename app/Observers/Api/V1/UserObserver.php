@@ -135,6 +135,9 @@ class UserObserver
         if (!$user->agency_id){
             $user->is_host = 0;
         }
+        if ($user->status == 0){
+            $user->tokens()->delete ();
+        }
     }
 
     /**
