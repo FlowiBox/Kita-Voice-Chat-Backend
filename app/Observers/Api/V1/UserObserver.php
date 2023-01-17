@@ -31,8 +31,11 @@ class UserObserver
      * @param  \App\Models\User  $user
      * @return void
      */
+
+
     public function updated(User $user)
     {
+
 
         if ($user->is_host == 1){
             $target = Target::query ()->where ('diamonds','<=',$user->coins)->orderBy ('diamonds','desc')->first ();
@@ -126,7 +129,12 @@ class UserObserver
      * @return void
      */
     public function updating (User $user){
-
+        if ($user->agency_id){
+            $user->is_host = 1;
+        }
+        if (!$user->agency_id){
+            $user->is_host = 0;
+        }
     }
 
     /**

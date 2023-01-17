@@ -83,10 +83,10 @@ class UserController extends MainController
 //        });
 //        $grid->column('isOnline', __('isOnline'));
         $grid->column('di', __('coins'));
-        $grid->column('gold', __('game coins'));
+        $grid->column('gold', __('silver coins'));
         $grid->column('coins', __('diamonds'));
-        $grid->column('is_host', __('is host'))->switch (Common::getSwitchStates ());
-        $grid->column('status', __('is blocked'))->switch (Common::getSwitchStates2 () );
+//        $grid->column('is_host', __('is host'))->switch (Common::getSwitchStates ());
+        $grid->column('status', __('block status'))->switch (Common::getSwitchStates2 () );
         $grid->column ('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
             if ($model->agency_id){
                 return Common::getAgencyShow ($model->agency_id);
@@ -122,7 +122,7 @@ class UserController extends MainController
         $show->field('flag', __('country'))->image ('',50);
         $show->field('email', __('Email'));
         $show->field('di', __('coins'));
-        $show->field('gold', __('game coins'));
+        $show->field('gold', __('silver coins'));
         $show->field('coins', __('diamonds'));
         $show->field('is_host', __('is host'))->using (
             [
@@ -163,12 +163,12 @@ class UserController extends MainController
             }
             return $ops;
         });
-//        $form->currency ('di',__('Diamonds'));
+        $form->number ('di',__('coins'));
         $form->email('email', __('Email'));
         $form->password('password', __('Password'));
 
-        $form->switch ('is_host',__('is host'))->options (Common::getSwitchStates ());
-        $form->switch ('status',__('is blocked'))->options (Common::getSwitchStates2 ());
+//        $form->switch ('is_host',__('is host'))->options (Common::getSwitchStates ());
+        $form->switch ('status',__('block status'))->options (Common::getSwitchStates2 ());
 
         return $form;
     }
