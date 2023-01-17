@@ -164,6 +164,7 @@ class UserController extends MainController
             return $ops;
         });
         $form->number ('di',__('coins'));
+        $form->number ('gold',__('silver coins'));
         $form->email('email', __('Email'));
         $form->password('password', __('Password'));
 
