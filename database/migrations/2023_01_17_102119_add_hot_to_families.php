@@ -30,4 +30,4 @@ class AddHotToFamilies extends Migration
         });
     }
 }
-//SELECT *,(SELECT SUM(giftPrice) FROM gift_logs WHERE roomowner_id = r.uid) AS gprice FROM rooms as r;
+
