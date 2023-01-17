@@ -458,7 +458,7 @@ class RoomController extends Controller
             $d = [
                 "messageContent"=>[
                     "message"=>"userEntro",
-                    "entroImg"=>$user->dress_3
+                    "entroImg"=>Common::getUserDress($user->id,$user->dress_3,6,'img2')?:Common::getUserDress($user->id,$user->dress_3,6,'img1'),
                 ]
             ];
             $json = json_encode ($d);
