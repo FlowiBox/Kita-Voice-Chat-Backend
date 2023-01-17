@@ -185,12 +185,12 @@ class GiftLogController extends Controller
                         'send_id'=>$data['user_id'],
                         'receiver_id'=>$data['toUid'],
                         'owner_id'=>$data['owner_id'],
-                        "giftImg"=>$gift->show_img?:$gift->show_img2
+                        "giftImg"=>$gift->img
                     ]
                 ];
                 $json2 = json_encode ($d2);
                 foreach ($rooms as $r){
-                    $res = Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json);
+                    $res = Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json2);
                 }
             }else{
                 $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
