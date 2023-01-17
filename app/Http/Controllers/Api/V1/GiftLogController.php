@@ -173,12 +173,11 @@ class GiftLogController extends Controller
                 ]
             ];
             $json = json_encode ($d);
-
-
+            $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
             if (($send_num * $gift->price) >= 2000){
                 $rooms = Room::where('room_status',1)->where(function ($q){
                     $q->where('is_afk',1)->orWhere('room_visitor','!=','');
-                })->get();
+                })->where('uid','!=',$data['owner_id'])->get();
                 $d2 = [
                     "messageContent"=>[
                         "message"=>"showBanner",
