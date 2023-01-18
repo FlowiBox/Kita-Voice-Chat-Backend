@@ -96,7 +96,7 @@ class CommunityController extends Controller
         if ($res) {
             return Common::apiResponse(1, 'Empty successfully');
         } else {
-            return Common::apiResponse(0, 'Empty failed');
+            return Common::apiResponse(0, 'Empty failed',500);
         }
 
     }

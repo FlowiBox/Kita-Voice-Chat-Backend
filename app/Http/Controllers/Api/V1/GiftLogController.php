@@ -177,13 +177,14 @@ class GiftLogController extends Controller
             if (($send_num * $gift->price) >= 2000){
                 $rooms = Room::where('room_status',1)->where(function ($q){
                     $q->where('is_afk',1)->orWhere('room_visitor','!=','');
-                })->where('uid','!=',$data['owner_id'])->get();
+                })->get();
                 $d2 = [
                     "messageContent"=>[
                         "message"=>"showBanner",
                         'send_id'=>(integer)$data['user_id'],
                         'receiver_id'=>(integer)$data['toUid'],
                         'owner_id'=>(integer)$data['owner_id'],
+                        'is_password'=>$room->room_pass?true:false,
                         "giftImg"=>$gift->img
                     ]
                 ];

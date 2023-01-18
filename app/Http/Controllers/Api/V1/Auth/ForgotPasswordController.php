@@ -15,10 +15,9 @@ class ForgotPasswordController extends Controller
         if (!$request->phone || !$request->password || !$request->vr_code) return Common::apiResponse (0,'missing params');
         $user = User::query ()->where ('phone',$request->phone)->first ();
         $code = Code::query ()->where ('phone',$request->phone)->where('code',$request->vr_code)->first ();
-        if (!$code) return Common::apiResponse (0,'this phone not verified');
+        if (!$code) return Common::apiResponse (0,'this phone not verified',null,310);
         $user->password = $request->password;
         $code->delete ();
-
         $user->save();
         return Common::apiResponse (1,'reset successful',null);
     }

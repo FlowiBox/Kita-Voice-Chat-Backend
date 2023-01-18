@@ -32,7 +32,7 @@ class LoginController extends Controller
                 $fields = ['phone' => $request->phone,'code'=>$request->code];
                 return $this->loginWithPhoneCode ($fields);
             default :
-                return Common::apiResponse (false,'invalid login method',null,422);
+                return Common::apiResponse (false,'invalid login method',null,400);
         }
     }
 
@@ -59,7 +59,7 @@ class LoginController extends Controller
             $token = $user->createToken('api_token')->plainTextToken;
             $user->auth_token=$token;
             if (!$this->canLogin($user)){
-                return Common::apiResponse (false,'you are blocked',[],401);
+                return Common::apiResponse (false,'you are blocked',[],400);
             }
             return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
         }else{
@@ -74,7 +74,7 @@ class LoginController extends Controller
             $token = $user->createToken('api_token')->plainTextToken;
             $user->auth_token=$token;
             if (!$this->canLogin($user)){
-                return Common::apiResponse (false,'you are blocked',[],401);
+                return Common::apiResponse (false,'you are blocked',[],400);
             }
             return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
         }else{
@@ -106,7 +106,7 @@ class LoginController extends Controller
             $user->auth_token=$token;
 
             if (!$this->canLogin($user)){dd ($this->canLogin($user));
-                return Common::apiResponse (false,'you are blocked',[],401);
+                return Common::apiResponse (false,'you are blocked',[],400);
             }
 
             return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
@@ -161,7 +161,7 @@ class LoginController extends Controller
             $user = $this->userWithToken ($user);
             Code::query ()->where ('phone',$fields['phone'])->where ('code',$fields['code'])->delete ();
             if (!$this->canLogin($user)){
-                return Common::apiResponse (false,'you are blocked',[],401);
+                return Common::apiResponse (false,'you are blocked',[],400);
             }
             return Common::apiResponse (true,'',new UserResource($user),200);
         }
