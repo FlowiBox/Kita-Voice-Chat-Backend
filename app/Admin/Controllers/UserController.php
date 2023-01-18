@@ -67,7 +67,7 @@ class UserController extends MainController
         $grid->model ()->ofAgency();
         $grid->quickSearch ();
         $grid->filter (function (Grid\Filter $filter){
-            $filter->expand ();
+//            $filter->expand ();
             $filter->column(1/2, function ($filter) {
                 $filter->equal('is_host',__('is host'))->select([0=>'normal',1=>'host']);
             });

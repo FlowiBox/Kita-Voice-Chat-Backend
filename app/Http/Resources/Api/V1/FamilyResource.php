@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\V1;
 
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FamilyResource extends JsonResource
@@ -14,6 +15,18 @@ class FamilyResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $owner = new UserResource(User::find(@$this->user_id?:0));
+        if (!@$this->user_id){
+            $owner = new \stdClass();
+        }
+        return [
+            'name'=>@$this->name?:'',
+            'introduce'=>@$this->introduce?:'',
+            'image'=>@$this->image?:'',
+            'notice'=>@$this->notice?:'',
+            'max_num_of_members'=>@$this->num?:'',
+            'rank'=>@$this->rank?:0,
+            'owner'=>$owner,
+        ];
     }
 }

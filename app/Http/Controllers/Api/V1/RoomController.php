@@ -40,30 +40,7 @@ class RoomController extends Controller
      */
     public function index(Request $request)
     {
-        $result = RoomView::where('room_status',1)->where(function ($q){
-            $q->where('is_afk',1)->orWhere('room_visitor','!=','');
-        })->where(function ($q) use ($request){
-            if ($search = $request->search){
-                $q->where('room_name',$search)->orWhere('numid',$search)->orWhere('uid',$search);
-            }
-            if ($request->country_id){
-                $q->whereHas('owner',function ($q) use ($request){
-                    $q->where('country_id',$request->country_id);
-                });
-            }
-            if ($request->class){
-                $q->where('room_class',$request->class);
-            }
-            if ($request->type){
-                $q->where('room_type',$request->type);
-            }
-        })->orderBy('today_rank','desc');
-
-        if ($pp = $request->pp){ // pp = perPage
-            return $result->paginate($pp);
-        }
-        $result = $result->get();
-
+        $result = $this->repo->all ($request);
         return Common::apiResponse (true,'',RoomResource::collection ($result),200);
     }
 

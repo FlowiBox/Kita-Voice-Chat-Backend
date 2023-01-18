@@ -112,6 +112,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('my_income',[\App\Http\Controllers\Api\V1\UserController::class,'my_income']);
         Route::post ('go_order_list',[\App\Http\Controllers\Api\V1\OrderController::class,'go_order_list']);
         Route::get ('get_user_union',[\App\Http\Controllers\Api\V1\UnionController::class,'getUserUnion']);
+        Route::get ('agency_join_requests',[\App\Http\Controllers\Api\V1\AgencyController::class,'joinRequests']);
     });
 
     Route::post ('send_pack',[\App\Http\Controllers\Api\V1\UserController::class,'sendPack']);
@@ -173,6 +174,15 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::prefix ('agencies')->group (function (){
         Route::post ('join_request',[\App\Http\Controllers\Api\V1\AgencyController::class,'joinRequest']);
+    });
+
+
+    Route::prefix ('families')->group (function (){
+        Route::get ('all',[\App\Http\Controllers\Api\V1\FamilyController::class,'index']);
+        Route::post ('ranking',[\App\Http\Controllers\Api\V1\FamilyController::class,'ranking']);
+        Route::post ('edit/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'update']);
+        Route::post ('join/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'join']);
+        Route::get ('delete/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'destroy']);
     });
 
 

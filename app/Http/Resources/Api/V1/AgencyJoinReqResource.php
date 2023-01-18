@@ -20,7 +20,6 @@ class AgencyJoinReqResource extends JsonResource
             2=>'denied',
         ];
         return [
-            'user'=>$this->user,
             'agency'=>$this->agency,
             'status'=>$statuses[$this->status?:0],
         ];

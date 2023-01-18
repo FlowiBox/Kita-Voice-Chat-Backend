@@ -27,6 +27,6 @@ class CreateRoomsView extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rooms_view');
+        DB::statement("DROP VIEW IF EXISTS rooms_view_with_today_rank");
     }
 }

@@ -102,6 +102,8 @@ class AgencyController extends Controller
         $user_id = $request->user ()->id;
         $agency_id = $request->agency_id;
         if (!$request->agency_id) return Common::apiResponse (0,'missing params');
+        $joind = $request->user ()->agency_id;
+        if ($joind) return Common::apiResponse (0,'you are already under agency');
         $reqs_count = AgencyJoinRequest::query ()->where ('user_id',$user_id)->count ();
         if ($reqs_count >= 5){
             return Common::apiResponse (0,'you have +5 requests ,not allowed to request other more');
@@ -119,7 +121,7 @@ class AgencyController extends Controller
 
     public function joinRequests(Request $request){
         $reqs = AgencyJoinRequest::query ()->where ('user_id',$request->user ()->id)->get ();
-        return Common::apiResponse (1,'request sent',AgencyJoinReqResource::collection ($reqs));
+        return Common::apiResponse (1,'',AgencyJoinReqResource::collection ($reqs));
     }
 
 }
