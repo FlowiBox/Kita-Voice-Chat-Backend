@@ -97,6 +97,7 @@ class MainController extends AdminController
                     if ( ! Admin ::user () -> can ( 'show-' . $permission_name ) ) {
                         $actions -> disableView ();
                     }
+
                 }
             );
         }

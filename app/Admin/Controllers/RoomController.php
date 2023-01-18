@@ -10,8 +10,10 @@ use App\Models\User;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 
 class RoomController extends MainController
 {
@@ -84,6 +86,8 @@ class RoomController extends MainController
     {
         $grid = new Grid(new Room);
 
+
+
         $grid->id('ID');
         $grid->column('numid',trans ('custom id'));
         $grid->column('uid',trans ('room owner'))->display (function ($uid){
@@ -100,22 +104,12 @@ class RoomController extends MainController
         $grid->column('room_cover',trans ('room cover'))->image ('',30);
         $grid->column('room_intro',trans ('room_intro'));
         $grid->column('microphone',trans ('microphone'));
-//        $grid->column('free_mic',trans ('free mic'))->switch (Common::getSwitchStates ());
-        $grid->column('room_visitor',trans ('room_visitor'))->editable ();
+        $grid->column('room_visitor',trans ('room_visitor'));
         $grid->column('is_afk',trans ('owner in'))->switch (Common::getSwitchStates ());
-//            ->display(
-//                function ($val){
-//                    $el = '';
-//                    $ids = explode (',',$val);
-//                    foreach ($ids as $id){
-//                        $user = User::find($id);
-//                        $el.="<span class='badge bg-blue-active'><a>".__('out').' '.(@$user->nickname?:$id)."</a></span>";
-//                    }
-//                    return $el;
-//                }
-//            )
-        ;
 
+        $grid->actions (function ($action){
+            $action->disableView ();
+        });
 
         return $grid;
     }
@@ -217,11 +211,6 @@ class RoomController extends MainController
             return $options;
         });
         $form->text('room_welcome', trans('room welcome'));
-
-
-//        $form->switch('is_recommended', trans('is recommended'))->states (Common::getSwitchStates ());
-
-//        $form->switch('free_mic', trans('free mic'))->states (Common::getSwitchStates ());
 
 
         return $form;
