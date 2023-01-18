@@ -456,16 +456,16 @@ class RoomController extends Controller
             $timer_id = $timer->id;
         }
 
-        if ($user->dress_3){
-            $d = [
-                "messageContent"=>[
-                    "message"=>"userEntro",
-                    "entroImg"=>Common::getUserDress($user->id,$user->dress_3,6,'img2')?:Common::getUserDress($user->id,$user->dress_3,6,'img1'),
-                ]
-            ];
-            $json = json_encode ($d);
-            Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
-        }
+        $d = [
+            "messageContent"=>[
+                "message"=>"userEntro",
+                "entroImg"=>Common::getUserDress($user->id,$user->dress_3,6,'img2')?:Common::getUserDress($user->id,$user->dress_3,6,'img1'),
+                'userName'=>$user->name?:$user->nickname,
+                'userImge'=>$user->avatar
+            ]
+        ];
+        $json = json_encode ($d);
+        Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
 
         $room_info['timer_id'] = $timer_id;
         $room_info['password_status']=$room_info['room_pass']==""?false:true;

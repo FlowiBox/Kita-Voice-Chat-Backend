@@ -80,22 +80,10 @@ class UserController extends MainController
         $grid->column('name', __('Name'));
         $grid->column('nickname', __('NickName'));
         $grid->column('email', __('Email'));
-//        $grid->column('charge', __('Charge'))->modal('charge',function ($user){
-//            $form = (new Form(new Charge))->setAction (route ('admin.charges.new'));
-//            $form->hidden('charger_id', 'charger id')->value (Auth::id ());
-//            $form->hidden('charger_type', 'charger_type')->value ('dashboard');
-//            $form->hidden('user_id', 'user id')->value ($user->id);
-//            $form->hidden('user_type', 'user type')->value ('app');
-//            $form->number('amount', 'amount');
-//            $form->hidden('amount_type', 'amount_type')->value (1);
-//
-//            return $form;
-//        });
-//        $grid->column('isOnline', __('isOnline'));
+        $grid->column('phone', __('Phone'));
         $grid->column('di', __('coins'));
         $grid->column('gold', __('silver coins'));
         $grid->column('coins', __('diamonds'));
-//        $grid->column('is_host', __('is host'))->switch (Common::getSwitchStates ());
         $grid->column('status', __('block status'))->switch (Common::getSwitchStates2 () );
         $grid->column ('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
             if ($model->agency_id){
@@ -158,7 +146,7 @@ class UserController extends MainController
 
         $form->text('name', __('Name'));
         $form->select ('country_id',trans ('country'))->options (function (){
-            $ops = [];
+            $ops = [0=>'no country'];
             $countries = Country::all ();
             foreach ($countries as $country){
                 $ops[$country->id] = App::isLocale('en') ? $country->e_name : $country->name;
@@ -175,9 +163,11 @@ class UserController extends MainController
         });
         $form->number ('di',__('coins'));
         $form->number ('gold',__('silver coins'));
-        $form->email('email', __('Email'));
-        $form->password('password', __('Password'));
-
+        $form->email('email', __('Eml'));
+        $form->password('password', __('Pass'));
+        $form->text('phone', __('phone'));
+        $form->text('facebook_id', __('facebook id'));
+        $form->text('google_id', __('google id'));
 //        $form->switch ('is_host',__('is host'))->options (Common::getSwitchStates ());
         $form->switch ('status',__('block status'))->options (Common::getSwitchStates2 ());
 
