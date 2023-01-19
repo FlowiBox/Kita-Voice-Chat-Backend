@@ -163,18 +163,29 @@ class GiftLogController extends Controller
             DB::rollback();
             return Common::apiResponse(0,'Gift delivery failed');
         }
+        if(is_array($to_arr) && count ($to_arr) > 0){
+            $to_id = $to_arr[0];
+        }else{
+            $to_id = $data['toUid'];
+        }
         $return_arr['users']=$res;
         $return_arr['push']=$push;
         if ($request->to_zego == 1){
             $d = [
                 "messageContent"=>[
                     "message"=>"showGifts",
-                    "showGift"=>$gift->show_img?:$gift->show_img2
+                    "showGift"=>$gift->show_img?:$gift->show_img2,
+                    'giftImg'=>$gift->img,
+                    'send_id' => (integer)$data['user_id'],
+                    'receiver_id'=>(integer)$to_id,
+                    'isExpensive'=>($gift->price >= 2000)?true:false,
+                    'num_gift'=>$send_num,
+                    "plural"=>(is_array($to_arr) && count ($to_arr) > 0)?true:false
                 ]
             ];
             $json = json_encode ($d);
             $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
-            if (($send_num * $gift->price) >= 2000){
+            if ($gift->price >= 2000){
                 $rooms = Room::where('room_status',1)->where(function ($q){
                     $q->where('is_afk',1)->orWhere('room_visitor','!=','');
                 })->get();
@@ -182,7 +193,7 @@ class GiftLogController extends Controller
                     "messageContent"=>[
                         "message"=>"showBanner",
                         'send_id'=>(integer)$data['user_id'],
-                        'receiver_id'=>(integer)$data['toUid'],
+                        'receiver_id'=>(integer)$to_id,
                         'owner_id'=>(integer)$data['owner_id'],
                         'is_password'=>$room->room_pass?true:false,
                         "giftImg"=>$gift->img
