@@ -161,7 +161,7 @@ class GiftLogController extends Controller
         } catch (\Exception $e) {dd ($e);
             //rollback transaction
             DB::rollback();
-            return Common::apiResponse(0,'Gift delivery failed');
+            return Common::apiResponse(0,'Gift delivery failed',null,400);
         }
         if(is_array($to_arr) && count ($to_arr) > 0){
             $to_id = $to_arr[0];
@@ -180,7 +180,7 @@ class GiftLogController extends Controller
                     'receiver_id'=>(integer)$to_id,
                     'isExpensive'=>($gift->price >= 2000)?true:false,
                     'num_gift'=>$send_num,
-                    "plural"=>(is_array($to_arr) && count ($to_arr) > 0)?true:false
+                    "plural"=>(is_array($to_arr) && count ($to_arr) > 1)?true:false
                 ]
             ];
             $json = json_encode ($d);
