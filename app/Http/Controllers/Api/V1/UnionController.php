@@ -18,7 +18,7 @@ class UnionController extends Controller
             $res_user_union->img = array_filter(explode(',',$res_user_union->img));
             return Common::apiResponse(1,'',$res_user_union);
         }else{
-            return Common::apiResponse(0,'No data');
+            return Common::apiResponse(0,'No data',null,404);
         }
     }
 
@@ -48,18 +48,18 @@ class UnionController extends Controller
             'users_id' => $data['users_id'],
         ];
         if (empty($arr)) {
-            return Common::apiResponse(0,'Parameter exception!');
+            return Common::apiResponse(0,'Parameter exception!',null,422);
         }
         $res_find = DB::table('unions')->where(['users_id'=> intval($data['users_id'])])->first();
         if ($res_find){
-            return Common::apiResponse(0,'Already applied',$res_find);
+            return Common::apiResponse(0,'Already applied',$res_find,null,405);
         }
 
         $res = DB::table('unions')->insert($arr);
         if ($res){
             return Common::apiResponse(1,'Added successfully',$res);
         }else{
-            return Common::apiResponse(0,'add failed');
+            return Common::apiResponse(0,'add failed',null,400);
         }
     }
 
@@ -90,7 +90,7 @@ class UnionController extends Controller
             'users_id' => intval($data['users_id']),
         ];
         if (empty($arr)) {
-            return Common::apiResponse(0,'Parameter exception!');
+            return Common::apiResponse(0,'Parameter exception!',null,422);
         }
         $res_find = DB::table('user_union')->selectRaw('id,check_status')->where(['users_id'=> intval($data['users_id'])])->first();
         if ($res_find){
@@ -104,7 +104,7 @@ class UnionController extends Controller
         if ($res){
             return Common::apiResponse(1,'Added successfully',$res);
         }else{
-            return Common::apiResponse(0,'Failed to add, please try again');
+            return Common::apiResponse(0,'Failed to add, please try again',null,400);
         }
     }
 

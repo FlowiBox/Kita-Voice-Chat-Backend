@@ -68,7 +68,7 @@ class RoomController extends Controller
         try {
             $room = Room::query ()->where('uid',$request->user ()->id)->first ();
             if ($room){
-                return Common::apiResponse (true,'you are already have a room',new RoomResource($room),201);
+                return Common::apiResponse (true,'you are already have a room',new RoomResource($room),200);
             }
            $room = $this->repo->create (array_merge($request->all (),['uid'=>$request->user ()->id]));
             if ($request->hasFile ('room_cover')){
@@ -77,7 +77,7 @@ class RoomController extends Controller
             }
             return Common::apiResponse (true,'created',new RoomResource($room),200);
         }catch (\Exception $exception){
-            return Common::apiResponse (false,$exception->getMessage (),null,$exception->getCode ());
+            return Common::apiResponse (false,'failed',null,400);
         }
 
     }
@@ -93,7 +93,7 @@ class RoomController extends Controller
         $request['show'] = true;
         $room = Room::find($id);
         if (!$room){
-           return Common::apiResponse(0,'not found');
+           return Common::apiResponse(0,'not found',null,404);
         }
         return Common::apiResponse (true,'',new RoomResource($room),200);
     }
@@ -127,7 +127,7 @@ class RoomController extends Controller
                 return Common::apiResponse (false,'not found',null,404);
             }
             if ($room->uid != $request->user ()->id && !in_array ($request->user ()->id,explode (',',$room->room_admin))){
-                return Common::apiResponse (false,'not allowed',null,401);
+                return Common::apiResponse (false,'not allowed',null,403);
             }
             if ($request->room_name){
                 $room->room_name = $request->room_name;
@@ -161,7 +161,7 @@ class RoomController extends Controller
 
             if ($request->room_background){
                 if (!Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
-                    return Common::apiResponse (0,'background not found');
+                    return Common::apiResponse (0,'background not found',null,404);
                 }
                 $room->room_background = $request->room_background;
 
@@ -186,7 +186,7 @@ class RoomController extends Controller
             return $this->enter_room ($request);
 
         }catch (\Exception $exception){
-            return Common::apiResponse (false,$exception->getMessage (),null,500);
+            return Common::apiResponse (false,'failed',null,400);
         }
     }
 
@@ -210,7 +210,7 @@ class RoomController extends Controller
         $request['show'] = true;
         $room = Room::where('uid',$request->owner_id)->first();
         if (!$room){
-            return Common::apiResponse(0,'not found');
+            return Common::apiResponse(0,'not found',null,404);
         }
         return Common::apiResponse (true,'',new RoomResource($room),200);
     }
@@ -218,7 +218,7 @@ class RoomController extends Controller
     public function amIHaveRoom(Request $request){
         $room = Room::query ()->where ('uid',$request->user ()->id)->exists ();
         if ($room){
-            return Common::apiResponse (1,'have a room',null,200);
+            return Common::apiResponse (1,'have a room',null,201);
         }
         return Common::apiResponse(0,'does not have a room',null,404);
     }
@@ -249,7 +249,7 @@ class RoomController extends Controller
                         'users.nickname','rooms.room_visitor','rooms.play_num','rooms.free_mic','rooms.room_welcome'])
             ->first ();
 
-        if(!$room_info) return Common::apiResponse (false,'No room yet, please create first');
+        if(!$room_info) return Common::apiResponse (false,'No room yet, please create first',null,404);
 
 
 
@@ -259,7 +259,7 @@ class RoomController extends Controller
             Common::quit_hand($room_id,$user_id);
         }
 
-        if($room_info['room_status'] == 3) return Common::apiResponse(false,'The room has been banned, please contact customer service');
+        if($room_info['room_status'] == 3) return Common::apiResponse(false,'The room has been banned, please contact customer service',null,408);
         //enter your room
         if($owner_id == $user_id){
             $res_afk=DB::table('rooms')->where('uid',$owner_id)->update(['is_afk'=>1]);
@@ -279,7 +279,7 @@ class RoomController extends Controller
                 $m = floor($r/60);
                 $s = $r%60;
                 if($sjc < $arr[2] && $arr[0] == $user_id ){
-                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"]);
+                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"],null,408);
                 }
 
                 if($sjc >= $arr[2]){
@@ -303,8 +303,8 @@ class RoomController extends Controller
 
 
         if($room_info['room_pass'] &&  $owner_id != $user_id){
-            if(!$room_pass) return Common::apiResponse(false,__('The room is locked, please enter the password'));
-            if($room_info['room_pass'] != $room_pass )  return Common::apiResponse(false,__('Password is incorrect, please re-enter'));
+            if(!$room_pass) return Common::apiResponse(false,__('The room is locked, please enter the password'),null,409);
+            if($room_info['room_pass'] != $room_pass )  return Common::apiResponse(false,__('Password is incorrect, please re-enter'),null,410);
         }
         //General users
         $room_info['user_type'] = 5; //General users
@@ -387,7 +387,7 @@ class RoomController extends Controller
         //homeowner information
         $user=(array)DB::table('users')->select('id','dress_1','dress_4')->find($owner_id);
         if (!$user){
-            return Common::apiResponse (false,'room owner may be deleted');
+            return Common::apiResponse (false,'room owner may be deleted',null,404);
         }
         $txk=DB::table('wares')->where(['id'=>$user['dress_1']])->value('img1');
         $room_info['txk']=$txk;
@@ -476,7 +476,7 @@ class RoomController extends Controller
 
     //exit the room
     public function quit_room(Request $request){
-        if(!$request->owner_id)   Common::apiResponse(false,__('missing owner_id'));
+        if(!$request->owner_id)   Common::apiResponse(false,__('missing owner_id'),null,422);
         $user_id=$request->user ()->id;
         $res=Common::quit_hand($request->owner_id,$user_id);
         $visitor_ids_list = explode (',',$res);
@@ -540,9 +540,9 @@ class RoomController extends Controller
     // mic sequence list
     public function microphone_status(Request $request){
         $uid = $request->owner_id;
-        if(!$uid)   return Common::apiResponse(0,__('missing owner_id'));
+        if(!$uid)   return Common::apiResponse(0,__('missing owner_id'),null,422);
         $room=(array)DB::table('rooms')->selectRaw("uid,microphone,is_prohibit_sound,room_sound,play_num")->where('uid',$uid)->first ();
-        if(!$room)    return Common::apiResponse(0,__('room not found'));
+        if(!$room)    return Common::apiResponse(0,__('room not found'),null,404);
         $microphone = explode(',', $room['microphone']);
         $is_prohibit_sound = explode(',', $room['is_prohibit_sound']);
         $roomSound_arr=explode(",", $room['room_sound']);
@@ -621,26 +621,26 @@ class RoomController extends Controller
         $data = $request;
         $user_id= $request->user_id;
         $phase=$request->phase;
-        if(!$data['owner_id'] || !$user_id) return Common::apiResponse(0,__('Missing data'));
+        if(!$data['owner_id'] || !$user_id) return Common::apiResponse(0,__('Missing data'),null,422);
         $room=(array)DB::table('rooms')->where(['uid'=>$data['owner_id']])->whereIn('room_status',['neq',4])->selectRaw('id,room_visitor,room_admin,microphone,free_mic')->first();
         if(!$room)  return Common::apiResponse(0,__('room does not exist'));
         $vis_arr= !$room['room_visitor'] ? [] : explode(",", $room['room_visitor']);
-        if(!in_array($user_id, $vis_arr) && $data['uid'] != $user_id)   return Common::apiResponse(0,__('The user is not in this room'));
+        if(!in_array($user_id, $vis_arr) && $data['uid'] != $user_id)   return Common::apiResponse(0,__('The user is not in this room'),null,403);
 
         $position = $data['position'];//Wheat sequence 0-8
-        if($position <0 || $position >9) return Common::apiResponse(0,__('position error'));
+        if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
 
         $mic_arr=explode(',', $room['microphone']);
-        if($mic_arr[$position] == -1)   return Common::apiResponse(0,__('This slot has been locked'));
-        if($mic_arr[$position] != 0)   return Common::apiResponse(0,__('There is a user on the mic'));
+        if($mic_arr[$position] == -1)   return Common::apiResponse(0,__('This slot has been locked'),null,408);
+        if($mic_arr[$position] != 0)   return Common::apiResponse(0,__('There is a user on the mic'),null,405);
 
 
         //How to play free mic
         $adm_id=$request->user ()->id;
         if($room['free_mic'] == 0 && $adm_id != $data['owner_id']){
             $adm_arr= $room['room_admin'] ? explode(",", $room['room_admin']) : [$data['owner_id']];
-            if(!in_array($adm_id, $vis_arr))    return Common::apiResponse(0,__('Please enter this room first'));
-            if(!in_array($adm_id, $adm_arr))    return Common::apiResponse(0,__('You do not have this permission yet'));
+            if(!in_array($adm_id, $vis_arr))    return Common::apiResponse(0,__('Please enter this room first'),null,403);
+            if(!in_array($adm_id, $adm_arr))    return Common::apiResponse(0,__('You do not have this permission yet'),null,408);
         }
 
 
@@ -698,7 +698,7 @@ class RoomController extends Controller
             Common::delMicHand($user_id);
             return Common::apiResponse(1,__('Success on the mic'),$res_arr);
         }else{
-            return Common::apiResponse(0,__('Failed to mic'));
+            return Common::apiResponse(0,__('Failed to mic'),null,400);
         }
     }
 
@@ -709,7 +709,7 @@ class RoomController extends Controller
         if($result){
             return Common::apiResponse(1,__('Success'));
         }else{
-            return Common::apiResponse(0,__('Failed'));
+            return Common::apiResponse(0,__('Failed'),null,400);
         }
     }
 
@@ -719,11 +719,11 @@ class RoomController extends Controller
     {
         $data = $request;
         $position = $data['position'];
-        if($position <0 || $position >9) return Common::apiResponse(0,__('position error'));
+        if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
         $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] || !in_array ($request->user ()->id,$admins) ) {
-            return Common::apiResponse(0,__('you dont have permission'));
+            return Common::apiResponse(0,__('you dont have permission'),null,408);
         }
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
@@ -733,7 +733,7 @@ class RoomController extends Controller
         if($res){
            return Common::apiResponse(1,__('Successfully locked the microphone position'));
         }else{
-           return Common::apiResponse(0,__('Failed to lock microphone'));
+           return Common::apiResponse(0,__('Failed to lock microphone'),null,400);
         }
     }
 
@@ -747,7 +747,7 @@ class RoomController extends Controller
         $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] || !in_array ($request->user ()->id,$admins) ) {
-            return Common::apiResponse(0,__('you dont have permission'));
+            return Common::apiResponse(0,__('you dont have permission'),null,408);
         }
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
@@ -757,7 +757,7 @@ class RoomController extends Controller
         if($res){
             return Common::apiResponse(1,__('Successfully unlocked the microphone'));
         }else{
-            return Common::apiResponse(0,__('Failed to unlock microphone'));
+            return Common::apiResponse(0,__('Failed to unlock microphone'),null,400);
         }
     }
 
@@ -766,15 +766,15 @@ class RoomController extends Controller
     public function is_sound(Request $request){
         $user_id = $request->user_id ? : 0;
         $uid = $request->owner_id ? : 0;
-        if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'));
+        if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'),null,422);
         $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $uid || !in_array ($request->user ()->id,$admins) ) {
-            return Common::apiResponse(0,__('you dont have permission'));
+            return Common::apiResponse(0,__('you dont have permission'),null,408);
         }
         $sound = DB::table('rooms')->where('uid',$uid)->value('room_sound');
         $sound_arr=explode(',', $sound);
-        if(in_array($user_id , $sound_arr)) return Common::apiResponse (0,__ ('The user is already muted, please do not repeat the settings'));
+        if(in_array($user_id , $sound_arr)) return Common::apiResponse (0,__ ('The user is already muted, please do not repeat the settings'),null,444);
 
         array_push($sound_arr,$user_id);
         $str=implode(',', $sound_arr);
@@ -782,7 +782,7 @@ class RoomController extends Controller
         if($res){
            return Common::apiResponse(1,__('Successfully muted'));
         }else{
-            return Common::apiResponse(0,__('Failed to mute'));
+            return Common::apiResponse(0,__('Failed to mute'),null,400);
         }
     }
 
@@ -790,7 +790,7 @@ class RoomController extends Controller
     public function remove_sound(Request $request){
         $user_id = $request->user_id ? : 0;
         $uid = $request->owner_id ? : 0;
-        if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'));
+        if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'),null,422);
         $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $uid || !in_array ($request->user ()->id,$admins) ) {
@@ -798,7 +798,7 @@ class RoomController extends Controller
         }
         $sound = DB::table('rooms')->where('uid',$uid)->value('room_sound');
         $sound_arr=explode(',', $sound);
-        if(!in_array($user_id , $sound_arr))  return Common::apiResponse(0,__('The user is no longer in the ban list, please do not repeat the settings'));
+        if(!in_array($user_id , $sound_arr))  return Common::apiResponse(0,__('The user is no longer in the ban list, please do not repeat the settings'),null,444);
         $key = array_search($user_id,$sound_arr);
         unset($sound_arr[$key]);
         $sound = implode(',', $sound_arr);
@@ -806,7 +806,7 @@ class RoomController extends Controller
         if($res){
             return Common::apiResponse(1,__('Successfully unmuted'));
         }else{
-            return Common::apiResponse(0,__('Unmute failed'));
+            return Common::apiResponse(0,__('Unmute failed'),null,400);
         }
     }
 
@@ -815,8 +815,8 @@ class RoomController extends Controller
         $uid = $request->owner_id ? : 0;
         $black_id = $request->user_id ? : 0;
         $duration = $request->minutes ? : 5;
-        if(!$uid || !$black_id) return Common::apiResponse (0,'invalid data');
-        if (!Common::can_kick ($black_id)) return Common::apiResponse (0,'cant kick this user');
+        if(!$uid || !$black_id) return Common::apiResponse (0,'invalid data',null,422);
+        if (!Common::can_kick ($black_id)) return Common::apiResponse (0,'cant kick this user',null,403);
         $black_list = DB::table('rooms')->where('uid',$uid)->value('room_black');
         if($black_list == null){
             $black_list = $black_id.'#'.time().'#'.($duration * 60);
@@ -849,7 +849,7 @@ class RoomController extends Controller
             }
             return Common::apiResponse(1,'success');
         }else{
-            return Common::apiResponse(0,'fail');
+            return Common::apiResponse(0,'fail',null,400);
         }
     }
 
@@ -860,7 +860,7 @@ class RoomController extends Controller
         $user_id = $request->user ()->id;
         $mykeep_list = DB::table('users')->where('id',$user_id)->value('mykeep');
         $mykeep_arr=explode(",", $mykeep_list);
-        if(in_array($uid, $mykeep_arr)) return Common::apiResponse(0,'Do not repeat favorites');
+        if(in_array($uid, $mykeep_arr)) return Common::apiResponse(0,'Do not repeat favorites',null,444);
 
         array_unshift($mykeep_arr,$uid);
         $str=trim(implode(",", $mykeep_arr),",");
@@ -868,7 +868,7 @@ class RoomController extends Controller
         if($res){
             return Common::apiResponse(1,'success');
         }else{
-            return Common::apiResponse(0,'failed');
+            return Common::apiResponse(0,'failed',null,400);
         }
     }
 
@@ -880,7 +880,7 @@ class RoomController extends Controller
         $user_id = $request->user ()->id;
         $mykeep_list = DB::table('users')->where('id',$user_id)->value('mykeep');
         $mykeep_arr=explode(",", $mykeep_list);
-        if(!in_array($uid, $mykeep_arr)) return Common::apiResponse(0,'This room has not been favorited');
+        if(!in_array($uid, $mykeep_arr)) return Common::apiResponse(0,'This room has not been favorited',null,404);
         $key=array_search($uid,$mykeep_arr);
         unset($mykeep_arr[$key]);
         $str=trim(implode(",", $mykeep_arr),",");
@@ -888,7 +888,7 @@ class RoomController extends Controller
         if($res){
             return Common::apiResponse(1,'success');
         }else{
-            return Common::apiResponse(0,'failed');
+            return Common::apiResponse(0,'failed',null,400);
         }
     }
 
@@ -996,7 +996,7 @@ class RoomController extends Controller
         if($result){
             return Common::apiResponse(1,'success',$result);
         }else{
-            return Common::apiResponse(0,'failed');
+            return Common::apiResponse(0,'failed',null,400);
         }
 
     }
@@ -1050,19 +1050,19 @@ class RoomController extends Controller
         $uid=$request->owner_id;
         $admin_id=$request->user_id;
         if ($request->user ()->id != $uid){
-            return Common::apiResponse(0,'not allowed');
+            return Common::apiResponse(0,'not allowed',null,403);
         }
-        if(!$uid || !$admin_id) return Common::apiResponse(0,'invalid data');
-        if($uid == $admin_id)    return Common::apiResponse(0,'invalid data');
+        if(!$uid || !$admin_id) return Common::apiResponse(0,'invalid data',null,422);
+        if($uid == $admin_id)    return Common::apiResponse(0,'invalid data',null,422);
         $roomVisitor=DB::table('rooms')->where('uid',$uid)->value('room_visitor');
         $vis_arr= !$roomVisitor ? [] : explode(",", $roomVisitor);
-        if(!in_array($admin_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room');
+        if(!in_array($admin_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room',null,404);
 
 
         $roomAdmin=DB::table('rooms')->where('uid',$uid)->value('room_admin');
         $adm_arr= !$roomAdmin ? [] : explode(",", $roomAdmin);
-        if(in_array($admin_id, $adm_arr))   return Common::apiResponse(0,'This user is already an administrator, please do not repeat the settings');
-        if(count($adm_arr) >= 15)    return Common::apiResponse(0,'room manager is full');
+        if(in_array($admin_id, $adm_arr))   return Common::apiResponse(0,'This user is already an administrator, please do not repeat the settings',null,444);
+        if(count($adm_arr) >= 15)    return Common::apiResponse(0,'room manager is full',null,403);
 
         $adm_arr=array_merge($adm_arr,[$admin_id]);
         $str=implode(",",$adm_arr);
@@ -1071,7 +1071,7 @@ class RoomController extends Controller
         if($res){
             return Common::apiResponse(1,'Set administrator successfully');
         }else{
-            return Common::apiResponse(0,'Failed to set administrator');
+            return Common::apiResponse(0,'Failed to set administrator',null,400);
         }
     }
 
@@ -1080,12 +1080,12 @@ class RoomController extends Controller
         $uid=$request->owner_id;
         $admin_id=$request->user_id;
         if ($request->user ()->id != $uid){
-            return Common::apiResponse(0,'not allowed');
+            return Common::apiResponse(0,'not allowed',null,403);
         }
-        if(!$uid || !$admin_id)  return Common::apiResponse(0,'invalid data');
+        if(!$uid || !$admin_id)  return Common::apiResponse(0,'invalid data',null,422);
         $roomAdmin=DB::table('rooms')->where('uid',$uid)->value('room_admin');
         $adm_arr= !$roomAdmin ? [] : explode(",", $roomAdmin);
-        if(!in_array($admin_id, $adm_arr))   return Common::apiResponse(0,'This user is not an administrator of this room');
+        if(!in_array($admin_id, $adm_arr))   return Common::apiResponse(0,'This user is not an administrator of this room',null,404);
         $key=array_search($admin_id,$adm_arr);
         unset($adm_arr[$key]);
         $str=implode(",", $adm_arr);
@@ -1093,7 +1093,7 @@ class RoomController extends Controller
         if($res){
             return Common::apiResponse(1,'Cancel administrator successfully');
         }else{
-            return Common::apiResponse(0,'Failed to cancel administrator');
+            return Common::apiResponse(0,'Failed to cancel administrator',null,400);
         }
     }
 
@@ -1101,21 +1101,21 @@ class RoomController extends Controller
     public function is_black(Request $request){
         $uid=$request->owner_id;
         $user_id=$request->user_id;
-        if(!$uid || !$user_id) return Common::apiResponse(0,'invalid data');
-        if($uid == $user_id)    return Common::apiResponse(0,'Illegal operation');
+        if(!$uid || !$user_id) return Common::apiResponse(0,'invalid data',null,422);
+        if($uid == $user_id)    return Common::apiResponse(0,'Illegal operation',null,403);
 //        if ($request->user ()->id != $uid){
 //            return Common::apiResponse(0,'not allowed');
 //        }
         $roomVisitor=DB::table('rooms')->where('uid',$uid)->value('room_visitor');
         $vis_arr= !$roomVisitor ? [] : explode(",", $roomVisitor);
-        if(!in_array($user_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room');
+        if(!in_array($user_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room',null,404);
 
 
         $roomSpeak=DB::table('rooms')->where('uid',$uid)->value('room_speak');
         $spe_arr= !$roomSpeak ? [] : explode(",", $roomSpeak);
         foreach ($spe_arr as $k => &$v) {
             $arr=explode("#",$v);
-            if($arr[0] == $user_id) return Common::apiResponse(0,'This user is already on the ban list');
+            if($arr[0] == $user_id) return Common::apiResponse(0,'This user is already on the ban list',null,444);
         }
         $shic=time() + 180;
         $jinyan=$user_id."#".$shic;
@@ -1125,7 +1125,7 @@ class RoomController extends Controller
         if($res){
             return Common::apiResponse(1,'Succeeded adding writing ban for 3 minutes');
         }else{
-            return Common::apiResponse(0,'Failed to add writing ban');
+            return Common::apiResponse(0,'Failed to add writing ban',null,400);
         }
     }
 

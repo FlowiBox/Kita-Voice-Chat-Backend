@@ -18,7 +18,7 @@ class MallController extends Controller
     public function index(Request $request)
     {
         if (!$request->type){
-            return Common::apiResponse (false,'type is required',null,401);
+            return Common::apiResponse (false,'type is required',null,422);
         }
         $wares = Ware::query ()
             ->where ('enable',1)

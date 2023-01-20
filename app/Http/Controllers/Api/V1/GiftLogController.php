@@ -16,7 +16,7 @@ class GiftLogController extends Controller
     //push notification
     public  function push_gifts(){
         $data=DB::table('gift_logs')->where('is_play',2)->limit(1)->orderByDesc("id")->select(['id','uid','giftId','giftName','user_id','fromUid','giftNum'])->find();
-        if(!$data)  $this->ApiReturn(0,'لا يوجد حاليا أي بث متاح');
+        if(!$data)  $this->ApiReturn(0,'لا يوجد حاليا أي بث متاح',null,404);
         $info['uid']=$data['uid'];
         $info['user_name']=DB::table('users')->where('id',$data['user_id'])->value('nickname');
         $info['from_name']=DB::table('users')->where('id',$data['fromUid'])->value('nickname');
@@ -46,26 +46,26 @@ class GiftLogController extends Controller
         $data['user_id'] = $request->user ()->id;
         if(!$data['id'] || !$data['owner_id'] || !$data['user_id'] || !$data['toUid'] || !$data['num'] )
             return Common::apiResponse(0,'Missing parameters',$data->all ());
-        if($data['num'] < 1)    return Common::apiResponse(0,'The number of gifts cannot be less than 1');
+        if($data['num'] < 1)    return Common::apiResponse(0,'The number of gifts cannot be less than 1',null,422);
         $gift=DB::table('gifts')->select(['id','name','type','price','vip_level','is_play','img','show_img','show_img2'])->where(['id'=>$data['id']])->where('enable',1)->first();
 
         $user=DB::table('users')->select(['id','di'])->where(['id'=>$data['user_id']])->first();
 
-        if(!$gift) return Common::apiResponse(0,'Gift does not exist or has been removed');
+        if(!$gift) return Common::apiResponse(0,'Gift does not exist or has been removed',null,404);
         $room=DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,uid,room_visitor,play_num')->first();
 
-        if(!$room)  return Common::apiResponse(0,'room does not exist');
+        if(!$room)  return Common::apiResponse(0,'room does not exist',null,404);
         $vis_arr=explode(",",$room->room_visitor);
         $vis_arr[]=$data['owner_id'];
 
-        if(!in_array($data['user_id'],$vis_arr))    return Common::apiResponse(0,'you are not in this room');
+        if(!in_array($data['user_id'],$vis_arr))    return Common::apiResponse(0,'you are not in this room',null,403);
 
         //Determine whether to send
         $vip_level=Common::getLevel($data['user_id'],3);
         if($vip_level < $gift->vip_level)   return Common::apiResponse(0,'vip '.$gift->vip_level.' to send this gift');
         $to_arr=explode(',', $data['toUid']);
         foreach ($to_arr as $k1 => &$v1) {
-            if(!in_array($v1,$vis_arr))    return Common::apiResponse(0,'User is not in this room');
+            if(!in_array($v1,$vis_arr))    return Common::apiResponse(0,'User is not in this room',null,403);
 //            if($data['user_id'] == $v1)    return Common::apiResponse(0,'Can\'t give yourself a gift');
         }
         unset($v1);
@@ -81,11 +81,11 @@ class GiftLogController extends Controller
                 //Calculate required diamonds
                 $shengyu_num=$send_num - $pack_gift_num;
                 $sum_gift_price=$shengyu_num * $gift->price;
-                if($user->di < $sum_gift_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,401);
+                if($user->di < $sum_gift_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
             }
         }else{
             $total_price=$gift->price * $send_num;
-            if($user->di < $total_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,401);
+            if($user->di < $total_price)   return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
         }
 
         DB::beginTransaction();
@@ -100,14 +100,14 @@ class GiftLogController extends Controller
                     //Calculate required diamonds
                     $shengyu_num=$send_num - $pack_gift_num;
                     $sum_gift_price=$shengyu_num * $gift->price;
-                    if($user->di < $sum_gift_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,401);
+                    if($user->di < $sum_gift_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
                     //Delete all the gifts in the backpack, deduct the difference diamonds
                     Common::userPackStoreDec($data['user_id'],2,$data['id'],$pack_gift_num);
                     $shenngyu_price=$sum_gift_price;
                 }
             }else{
                 $total_price=$gift->price * $send_num;
-                if($user->di < $total_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,401);
+                if($user->di < $total_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
                 $shenngyu_price=$total_price;
             }
 

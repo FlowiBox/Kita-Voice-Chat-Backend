@@ -20,7 +20,7 @@ class OrderController extends Controller
         $keywords = $request->keywords;
         $type = $request->type;
         $page = $request->page;
-        if(!in_array($type,[1,2])) return Common::apiResponse(0, 'Parameter error');
+        if(!in_array($type,[1,2])) return Common::apiResponse(0, 'Parameter error',null,422);
         if($type == 1){
             $field='user_id';
         }elseif($type == 2){
@@ -55,9 +55,9 @@ class OrderController extends Controller
         $remarks=$request->remarks?:'';
         $coupon_id=$request->coupon_id?:0;
         $t=time();
-        if(!$start_time || $start_time < $t) return Common::apiResponse (0,'The service time cannot be empty or less than the current time');
+        if(!$start_time || $start_time < $t) return Common::apiResponse (0,'The service time cannot be empty or less than the current time',null,422);
 
-        if($num  <= 0 )	return Common::apiResponse (0,'Serving Quantity Wrong');
+        if($num  <= 0 )	return Common::apiResponse (0,'Serving Quantity Wrong',null,400);
 
         $apply_data=Db::table('skill_apply')->where(['id'=>$id,'status'=>1])->selectRaw('id,skill_id,user_id,gm_price_id,is_open')->first();
         if(!$apply_data)	return Common::apiResponse(0,'Great master skill information is wrong');
@@ -128,7 +128,7 @@ class OrderController extends Controller
             Db::commit();
         } catch (\Exception $e) {
             Db::rollback();
-            return Common::apiResponse(0,'Failed to place an order, please refresh and try again');
+            return Common::apiResponse(0,'Failed to place an order, please refresh and try again',null,400);
         }
         return Common::apiResponse(1,$note,['order_id'=>$res]);
     }

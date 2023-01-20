@@ -77,7 +77,7 @@ class FamilyController extends Controller
     {
         $user = $request->user ();
         $ex = Family::query ()->where ('user_id',$user->id)->exists ();
-        if ($ex) return Common::apiResponse (0,'already have family');
+        if ($ex) return Common::apiResponse (0,'already have family',null,405);
         $data = [
             'name'=>$request->name,
             'introduce'=>$request->introduce,
@@ -108,7 +108,7 @@ class FamilyController extends Controller
         }catch (\Exception $exception){
             DB::rollBack ();
             dd ($exception);
-            return Common::apiResponse (0,'failed');
+            return Common::apiResponse (0,'failed',null,400);
         }
 
 
@@ -124,7 +124,7 @@ class FamilyController extends Controller
     public function show($id)
     {
         $family = Family::query ()->find ($id);
-        if (!$family) return Common::apiResponse (0,'not found');
+        if (!$family) return Common::apiResponse (0,'not found',null,404);
         return Common::apiResponse (1,'',new FamilyResource($family));
     }
 
@@ -150,8 +150,8 @@ class FamilyController extends Controller
     {
         $user = $request->user ();
         $family = Family::find($id);
-        if ($user->id != $family->user_id) return Common::apiResponse (0,'not allowed');
-        if (!$family) return Common::apiResponse (0,'not found');
+        if ($user->id != $family->user_id) return Common::apiResponse (0,'not allowed',null,403);
+        if (!$family) return Common::apiResponse (0,'not found',null,404);
         if ($request->name){$family->name = $request->name ;}
         if ($request->introduce){$family->introduce = $request->introduce ;}
         if ($request->notice){$family->notice = $request->notice ;}
@@ -183,16 +183,16 @@ class FamilyController extends Controller
         $user = $request->user ();
         $family = Family::query ()->find ($request->family_id);
         if(!$family){
-            return Common::apiResponse (0,'family not found');
+            return Common::apiResponse (0,'family not found',null,404);
         }
         if ($family->id == $user->family_id){
-            return Common::apiResponse (0,'already joined');
+            return Common::apiResponse (0,'already joined',null,405);
         }
         $fu = FamilyUser::query ()->where ('user_id',$user->id)->where ('family_id',$family->id)->where ('status',1)->exists ();
         if ($fu){
             $user->family_id = $family->id;
             $user->save();
-            return Common::apiResponse (0,'already joined');
+            return Common::apiResponse (0,'already joined',null,405);
         }
 
         try {
@@ -210,7 +210,7 @@ class FamilyController extends Controller
         }catch (\Exception $exception){
             DB::rollBack ();
             dd ($exception);
-            return Common::apiResponse (0,'failed');
+            return Common::apiResponse (0,'failed',null,400);
         }
 
 

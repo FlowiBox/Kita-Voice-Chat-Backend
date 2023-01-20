@@ -51,7 +51,7 @@ class UserController extends Controller
             case '4':
                 return Common::apiResponse (true,'',UserResource::collection ($user->onRoomFolloweds()),200);
             default: // friends [i follow them & they follow me]
-                return Common::apiResponse (false,'please select type',null,200);
+                return Common::apiResponse (false,'please select type',null,422);
         }
     }
 
@@ -100,7 +100,7 @@ class UserController extends Controller
         $user_id = $request->user ()->id;
         $this->unlock_dress($user_id);
         $type = $request->type;
-        if(!in_array($type,[1,2,3,4,5,6,7]))    return Common::apiResponse (0,'type not found');
+        if(!in_array($type,[1,2,3,4,5,6,7]))    return Common::apiResponse (0,'type not found',null,404);
         $where['a.user_id']=$user_id;
         $where['a.type']=$type;
         if($type == 2){
@@ -179,7 +179,7 @@ class UserController extends Controller
     public function ranking(Request $request) {
         $class = $request->class  ? : 1; //1 star sharp 2 gold sharp
         $type = $request->type ? : 1; //1 day list 2 week list March list
-        if (!in_array($class, [1, 2, 3]) || !in_array($type, [1, 2, 3, 4])) return Common::apiResponse (0,'Parameter error');
+        if (!in_array($class, [1, 2, 3]) || !in_array($type, [1, 2, 3, 4])) return Common::apiResponse (0,'Parameter error',null,422);
         $is_home=$request->is_home;
         $limit = $is_home ? 3 : 30;
         $arr=$this->rankingHand($class,$type,$request->user (),$limit,$request->room_uid);
@@ -188,7 +188,7 @@ class UserController extends Controller
     }
     public function rankingHand($class,$type,$user,$limit=30,$room_uid=null) {
         $user_id = $user->id;
-        if (!in_array($class, [1, 2, 3]) || !in_array($type, [1, 2, 3, 4])) return Common::apiResponse (0,'Parameter error');
+        if (!in_array($class, [1, 2, 3]) || !in_array($type, [1, 2, 3, 4])) return Common::apiResponse (0,'Parameter error',null,422);
 
         if ($class == 1) {
             $keywords = 'receiver_id';
@@ -347,19 +347,19 @@ class UserController extends Controller
         $user = $request->user ();
         $ware_id = $request->ware_id;
         $qty = $request->qty ?:1;
-        if (!$ware_id) return Common::apiResponse (0,'missing params');
+        if (!$ware_id) return Common::apiResponse (0,'missing params',null,422);
         $ware = Ware::query()->where('id',$ware_id)
             ->where ('enable',1)
             ->whereIn ('get_type',[4,6])
             ->first ();
-        if(!$ware) return Common::apiResponse (0,'item not found or not for sale');
+        if(!$ware) return Common::apiResponse (0,'item not found or not for sale',null,404);
         $pack = Pack::query ()->where ('user_id',$user->id)->where ('target_id',$ware_id)->first ();
         if($pack){
-            if ($pack->expire == 0) return Common::apiResponse (0,'you have this item in your pack no need to buy it');
-            if ($pack->expire > now ()->timestamp) return Common::apiResponse (0,'you have this item in your pack not expired yet');
+            if ($pack->expire == 0) return Common::apiResponse (0,'you have this item in your pack no need to buy it',null,405);
+            if ($pack->expire > now ()->timestamp) return Common::apiResponse (0,'you have this item in your pack not expired yet',null,405);
         }
         $total_price = $ware->price * $qty;
-        if($user->di < $total_price) return Common::apiResponse (0,'Insufficient balance, please go to recharge!');
+        if($user->di < $total_price) return Common::apiResponse (0,'Insufficient balance, please go to recharge!',null,407);
         DB::beginTransaction ();
         try {
             $arr['user_id']=$user->id;
@@ -375,7 +375,7 @@ class UserController extends Controller
             return Common::apiResponse (1,'success process');
         }catch (\Exception $exception){
             DB::rollBack ();
-            return Common::apiResponse (0,'an error occurred please try again later!');
+            return Common::apiResponse (0,'an error occurred please try again later!',null,400);
         }
     }
 
@@ -419,16 +419,16 @@ class UserController extends Controller
                 $user->update(['dress_'.$user_dress_after_i_changed[$pack->type]=>$pack->target_id]);
                 return Common::apiResponse (1,'success',new UserResource($user));
             }
-            return Common::apiResponse (0,'unusable item');
+            return Common::apiResponse (0,'unusable item',null,403);
         }
-        return Common::apiResponse (0,'item not found');
+        return Common::apiResponse (0,'item not found',null,404);
     }
 
     public function takeOff(Request $request){
         $user = $request->user ();
         $type = $request->type;
-        if (!$type) return Common::apiResponse (0,'missing params');
-        if (!in_array ($type,[1,2,3,4])) return Common::apiResponse (0,'type invalid');
+        if (!$type) return Common::apiResponse (0,'missing params',null,422);
+        if (!in_array ($type,[1,2,3,4])) return Common::apiResponse (0,'type invalid',null,403);
         $user->update(['dress_'.$type=>null]);
         return Common::apiResponse (1,'success',new UserResource($user));
     }
@@ -438,7 +438,7 @@ class UserController extends Controller
         $pack = Pack::query ()->where ('id',$request->pack_id)->where ('user_id',$user->id)->where (function ($q){
             $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
         })->first ();
-        if (!$pack) return Common::apiResponse (0,'item not found or expired');
+        if (!$pack) return Common::apiResponse (0,'item not found or expired',null,404);
         $pack->user_id = $request->touid;
         $pack->sender_id = $user->id;
         $pack->save ();
@@ -451,20 +451,20 @@ class UserController extends Controller
         $user = $request->user ();
         if ($request->google_id && !$user->google_id){
             $ex = User::query ()->where ('google_id',$request->google_id)->where ('id','!=',$user->id)->exists ();
-            if ($ex) return Common::apiResponse (0,'this google_account is restricted with another account');
+            if ($ex) return Common::apiResponse (0,'this google_account is restricted with another account',null,405);
             $user->google_id = $request->google_id ;
         }
         if ($request->facebook_id && !$user->facebook_id){
             $ex = User::query ()->where ('facebook_id',$request->facebook_id)->where ('id','!=',$user->id)->exists ();
-            if ($ex) return Common::apiResponse (0,'this facebook_account is restricted with another account');
+            if ($ex) return Common::apiResponse (0,'this facebook_account is restricted with another account',null,405);
             $user->facebook_id = $request->facebook_id ;
         }
         if ($request->phone && !$user->phone){
             $ex = User::query ()->where ('phone',$request->phone)->where ('id','!=',$user->id)->exists ();
-            if ($ex) return Common::apiResponse (0,'this phone is restricted with another account');
+            if ($ex) return Common::apiResponse (0,'this phone is restricted with another account',null,405);
             if (!$request->vr_code || !$request->password ) return Common::apiResponse (0,'missing params');
             $code = Code::query ()->where ('phone',$request->phone)->where('code',$request->vr_code)->first ();
-            if (!$code) return Common::apiResponse (0,'this phone not verified');
+            if (!$code) return Common::apiResponse (0,'this phone not verified',null,310);
             $user->phone = $request->phone ;
             $user->password = $request->password;
             $code->delete ();
@@ -475,10 +475,10 @@ class UserController extends Controller
     }
 
     public function changePhone(Request $request){
-        if(!$request->phone || !$request->vr_code || !$request->current_phone) return Common::apiResponse (0,'missing params');
+        if(!$request->phone || !$request->vr_code || !$request->current_phone) return Common::apiResponse (0,'missing params',null,422);
         $user = $request->user ();
         $code = Code::query ()->where ('phone',$request->current_phone)->where('code',$request->vr_code)->first ();
-        if (!$code) return Common::apiResponse (0,'current phone not verified');
+        if (!$code) return Common::apiResponse (0,'current phone not verified',null,310);
         $user->phone = $request->phone;
         $code->delete ();
 

@@ -26,7 +26,7 @@ class HomeController extends Controller
         if ($country){
             return Common::apiResponse (1,'',new CountryResource($country));
         }
-        return Common::apiResponse (0,__ ('not found'));
+        return Common::apiResponse (0,__ ('not found'),null,404);
     }
 
     public function allClasses(){
@@ -38,7 +38,7 @@ class HomeController extends Controller
         if ($class){
             return Common::apiResponse (1,'',$class->children);
         }
-        return Common::apiResponse (0,'not found');
+        return Common::apiResponse (0,'not found',null,404);
     }
 
     public function getTypes(){
@@ -69,7 +69,7 @@ class HomeController extends Controller
 
     public function one_page(Request $request){
         $type = $request->type;
-        if(!$type)  return Common::apiResponse(0,'Missing parameters');
+        if(!$type)  return Common::apiResponse(0,'Missing parameters',null,422);
         $data=DB::table('pages')->where(['type'=>$type])->get();
         return Common::apiResponse(1,'',$data);
     }
@@ -86,7 +86,7 @@ class HomeController extends Controller
         if (in_array ($user_id,$me->friends_ids()->toArray())){
             return Common::apiResponse (1,'exists',true);
         }
-        return Common::apiResponse (0,'does not exist',false);
+        return Common::apiResponse (0,'does not exist',false,404);
     }
 
 
