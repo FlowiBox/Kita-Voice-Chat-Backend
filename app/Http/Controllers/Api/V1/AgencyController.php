@@ -104,8 +104,8 @@ class AgencyController extends Controller
         if (!$request->agency_id) return Common::apiResponse (0,'missing params',null,422);
         $joind = $request->user ()->agency_id;
         if ($joind) return Common::apiResponse (0,'you are already under agency',null,405);
-        $reqs_count = AgencyJoinRequest::query ()->where ('user_id',$user_id)->count ();
-        if ($reqs_count >= 5){
+        $reqs_count = AgencyJoinRequest::query ()->where ('user_id',$user_id)->where ('status','!=',2)->count ();
+        if ($reqs_count >= 1){
             return Common::apiResponse (0,'you have +5 requests ,not allowed to request other more',null,444);
         }
 
