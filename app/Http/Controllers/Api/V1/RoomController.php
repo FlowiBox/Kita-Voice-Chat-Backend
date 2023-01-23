@@ -150,12 +150,12 @@ class RoomController extends Controller
             }
 
             if ($request->room_type){
-                if (!RoomCategory::query ()->where ('id',$request->room_type)->where ('enable',1)->exists ()) return Common::apiResponse (0,'type not found');
+                if (!RoomCategory::query ()->where ('id',$request->room_type)->where ('enable',1)->exists ()) return Common::apiResponse (0,'type not found',null,404);
                 $room->room_type = $request->room_type;
             }
 
             if ($request->room_class){
-                if (!RoomCategory::query ()->where ('id',$request->room_class)->where ('enable',1)->exists ()) return Common::apiResponse (0,'class not found');
+                if (!RoomCategory::query ()->where ('id',$request->room_class)->where ('enable',1)->exists ()) return Common::apiResponse (0,'class not found',null,404);
                 $room->room_type = $request->room_type;
             }
 
@@ -182,7 +182,7 @@ class RoomController extends Controller
             ];
             $json = json_encode ($data);
             $res = Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
-
+            $request->is_update = true;
             return $this->enter_room ($request);
 
         }catch (\Exception $exception){
@@ -279,7 +279,7 @@ class RoomController extends Controller
                 $m = floor($r/60);
                 $s = $r%60;
                 if($sjc < $arr[2] && $arr[0] == $user_id ){
-                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"],null,408);
+                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"],null,411);
                 }
 
                 if($sjc >= $arr[2]){
@@ -465,9 +465,10 @@ class RoomController extends Controller
             ]
         ];
         $json = json_encode ($d);
-        Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
-        Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,$user->name.' inter room');
-
+        if (!$request->is_update){
+            Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
+            Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,$user->name.' inter room');
+        }
         $room_info['timer_id'] = $timer_id;
         $room_info['password_status']=$room_info['room_pass']==""?false:true;
 

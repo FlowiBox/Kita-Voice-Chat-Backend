@@ -165,10 +165,13 @@ class GiftLogController extends Controller
         }
         if(is_array($to_arr) && count ($to_arr) > 0){
             $to_id = $to_arr[0];
+            $to = 'room';
         }else{
             $to_id = $data['toUid'];
+            $to = @User::query ()->find ($data['toUid'])->name?:'empty name';
         }
-        Common::sendToZego_2 ('SendBroadcastMessage',$data['owner_id'],$user->id,$user->name,$user->name.' send gift');
+
+        Common::sendToZego_2 ('SendBroadcastMessage',$data['owner_id'],$user->id,$user->name,($user->name?:' empty name'.' send gift ') . $gift->price . ' to ' . $to );
         $return_arr['users']=$res;
         $return_arr['push']=$push;
         if ($request->to_zego == 1){
