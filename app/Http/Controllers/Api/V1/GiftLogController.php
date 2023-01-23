@@ -52,7 +52,7 @@ class GiftLogController extends Controller
         $user=DB::table('users')->select(['id','di','name'])->where(['id'=>$data['user_id']])->first();
 
         if(!$gift) return Common::apiResponse(0,'Gift does not exist or has been removed',null,404);
-        $room=DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,uid,room_visitor,play_num')->first();
+        $room=DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,uid,room_visitor,play_num,hot')->first();
 
         if(!$room)  return Common::apiResponse(0,'room does not exist',null,404);
         $vis_arr=explode(",",$room->room_visitor);
@@ -175,6 +175,7 @@ class GiftLogController extends Controller
         $return_arr['users']=$res;
         $return_arr['push']=$push;
         if ($request->to_zego == 1){
+            $ro = Room::query ()->find ($room->id);
             $d = [
                 "messageContent"=>[
                     "message"=>"showGifts",
@@ -184,7 +185,8 @@ class GiftLogController extends Controller
                     'receiver_id'=>(integer)$to_id,
                     'isExpensive'=>($gift->price >= 2000)?true:false,
                     'num_gift'=>$send_num,
-                    "plural"=>(is_array($to_arr) && count ($to_arr) > 1)?true:false
+                    "plural"=>(is_array($to_arr) && count ($to_arr) > 1)?true:false,
+                    'gift_price'=>$ro->hot
                 ]
             ];
             $json = json_encode ($d);
