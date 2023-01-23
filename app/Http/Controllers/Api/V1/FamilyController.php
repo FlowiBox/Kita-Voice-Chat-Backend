@@ -96,14 +96,12 @@ class FamilyController extends Controller
         try {
             DB::beginTransaction ();
             $family = Family::query ()->create ($data);
-            FamilyUser::query ()->create (
-                [
-                    'user_id '=>$user->id,
-                    'family_id'=>$family->id,
-                    'user_type'=>2,
-                    'status'=>1,
-                ]
-            );
+            $family_user = new FamilyUser();
+            $family_user->user_id = $user->id;
+            $family_user->family_id = $family->id;
+            $family_user->user_type = 2;
+            $family_user->status = 1;
+            $family_user->save ();
             $user->family_id = $family->id;
             $user->save();
             DB::commit ();
