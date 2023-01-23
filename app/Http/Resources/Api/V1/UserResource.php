@@ -43,7 +43,7 @@ class UserResource extends JsonResource
                 'uid'=>$this->now_room_uid,
                 'is_mine'=>$this->id == $this->now_room_uid
             ],
-            'agency_joined'=>$agency_joined?:null,
+            'agency'=>$agency_joined?:null,
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,
