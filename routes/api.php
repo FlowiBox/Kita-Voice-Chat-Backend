@@ -179,6 +179,7 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::prefix ('families')->group (function (){
         Route::get ('all',[\App\Http\Controllers\Api\V1\FamilyController::class,'index']);
+        Route::post('create',[\App\Http\Controllers\Api\V1\FamilyController::class,'store']);
         Route::post ('ranking',[\App\Http\Controllers\Api\V1\FamilyController::class,'ranking']);
         Route::post ('edit/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'update']);
         Route::post ('join/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'join']);
