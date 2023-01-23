@@ -15,12 +15,12 @@ class CreateFamiliesTable extends Migration
     {
         Schema::create('families', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedTinyInteger('is_success');
-            $table->string('image')->comment('avatar');
+            $table->unsignedTinyInteger('is_success')->nullable ()->default (1);
+            $table->string('image')->nullable ()->comment('avatar');
             $table->string('name');
             $table->string('introduce')->nullable();
             $table->string('notice')->comment('announcement')->nullable();
-            $table->unsignedInteger('num')->comment('number of people')->nullable();
+            $table->unsignedInteger('num')->comment('number of people')->nullable()->default (20);
             $table->unsignedInteger('user_id')->index()->comment('owner');
             $table->unsignedTinyInteger('speakswitch')->comment('Whether members are banned')->nullable();
             $table->unsignedTinyInteger('status')->default('1')->nullable();

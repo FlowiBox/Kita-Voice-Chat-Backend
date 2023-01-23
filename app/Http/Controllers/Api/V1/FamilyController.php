@@ -87,15 +87,23 @@ class FamilyController extends Controller
             'is_success'=>1,
         ];
 
-        $data['image']= ' ';
 
+        $img = null;
         if ($request->hasFile ('image')){
-            $data['image'] = Common::upload ('families',$request->file ('image'))?:' ';
+            $img = Common::upload ('families',$request->file ('image'));
         }
 
         try {
             DB::beginTransaction ();
-            $family = Family::query ()->create ($data);
+            $family = new Family();
+            $family->name = $request->name;
+            $family->introduce = $request->introduce;
+            $family->notice = $request->notice;
+            $family->user_id = $user->id;
+            $family->num = 20;
+            $family->image = $img?:'';
+            $family->is_success = 1;
+            $family->save ();
             $family_user = new FamilyUser();
             $family_user->user_id = $user->id;
             $family_user->family_id = $family->id;
