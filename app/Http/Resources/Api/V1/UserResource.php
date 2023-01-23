@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api\V1;
 
 use App\Helpers\Common;
+use App\Models\Agency;
 use App\Models\Ware;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,15 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        if($this->agency_id){
+            $agency_joined = Agency::query ()->find ($this->agency_id);
+            $agency_joined = new AgencyResource($agency_joined);
+            $agency_joined->am_i_owner = false;
+            if ($agency_joined->owner_id == $this->id){
+                $agency_joined->am_i_owner = true;
+            }
+        }
 
         $data = [
             'id'=>$this->id,
@@ -33,6 +43,7 @@ class UserResource extends JsonResource
                 'uid'=>$this->now_room_uid,
                 'is_mine'=>$this->id == $this->now_room_uid
             ],
+            'agency_joined'=>$agency_joined?:null,
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,
