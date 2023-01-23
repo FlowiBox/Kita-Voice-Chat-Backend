@@ -11,6 +11,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Auth;
 
 class AgencyJoinRequestController extends Controller
 {
@@ -60,6 +61,17 @@ class AgencyJoinRequestController extends Controller
             ->body($this->form()->edit($id));
     }
 
+    public function update ( $id )
+    {
+
+        if (request ('_edit_inline') == "true"){
+            if (request ('status')){
+                request ()->request->add(['change_status_admin_id'=>Auth::id ()]);
+            }
+        }
+        return $this->form()->update($id);
+    }
+
     /**
      * Create interface.
      *
@@ -104,6 +116,7 @@ class AgencyJoinRequestController extends Controller
             }
             return null;
         });
+        $grid->column ('whatsapp',__ ('whatsapp'));
         $grid->column('status',__('status'))->select (
             [
                 0=>__('pending'),
@@ -156,7 +169,7 @@ class AgencyJoinRequestController extends Controller
         $form->text('user_id', 'user_id');
         $form->text('agency_id', 'agency_id');
         $form->text('status', 'status');
-        $form->text('change_status_admin_id', 'change_status_admin_id');
+        $form->hidden('change_status_admin_id', 'change_status_admin_id');
         $form->display(trans('admin.created_at'));
         $form->display(trans('admin.updated_at'));
 

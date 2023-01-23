@@ -101,6 +101,7 @@ class AgencyController extends Controller
     public function joinRequest(Request $request){
         $user_id = $request->user ()->id;
         $agency_id = $request->agency_id;
+        $whatsapp = $request->whatsapp;
         if (!$request->agency_id) return Common::apiResponse (0,'missing params',null,422);
         $joind = $request->user ()->agency_id;
         if ($joind) return Common::apiResponse (0,'you are already under agency',null,405);
@@ -112,7 +113,8 @@ class AgencyController extends Controller
         AgencyJoinRequest::query ()->create (
             [
                 'user_id'=>$user_id,
-                'agency_id'=>$agency_id
+                'agency_id'=>$agency_id,
+                'whatsapp'=>$whatsapp
             ]
         );
         $reqs = AgencyJoinRequest::query ()->where ('user_id',$user_id)->get ();
