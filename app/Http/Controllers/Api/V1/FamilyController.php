@@ -87,6 +87,8 @@ class FamilyController extends Controller
             'is_success'=>1,
         ];
 
+        $data['image']= ' ';
+
         if ($request->hasFile ('image')){
             $data['image'] = Common::upload ('families',$request->file ('image'))?:' ';
         }
