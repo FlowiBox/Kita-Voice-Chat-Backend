@@ -466,6 +466,7 @@ class RoomController extends Controller
         ];
         $json = json_encode ($d);
         Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
+        Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,$user->name.' inter room');
 
         $room_info['timer_id'] = $timer_id;
         $room_info['password_status']=$room_info['room_pass']==""?false:true;

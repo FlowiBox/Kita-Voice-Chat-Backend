@@ -49,7 +49,7 @@ class GiftLogController extends Controller
         if($data['num'] < 1)    return Common::apiResponse(0,'The number of gifts cannot be less than 1',null,422);
         $gift=DB::table('gifts')->select(['id','name','type','price','vip_level','is_play','img','show_img','show_img2'])->where(['id'=>$data['id']])->where('enable',1)->first();
 
-        $user=DB::table('users')->select(['id','di'])->where(['id'=>$data['user_id']])->first();
+        $user=DB::table('users')->select(['id','di','name'])->where(['id'=>$data['user_id']])->first();
 
         if(!$gift) return Common::apiResponse(0,'Gift does not exist or has been removed',null,404);
         $room=DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,uid,room_visitor,play_num')->first();
@@ -168,6 +168,7 @@ class GiftLogController extends Controller
         }else{
             $to_id = $data['toUid'];
         }
+        Common::sendToZego_2 ('SendBroadcastMessage',$data['owner_id'],$user->id,$user->name,$user->name.' send gift');
         $return_arr['users']=$res;
         $return_arr['push']=$push;
         if ($request->to_zego == 1){
