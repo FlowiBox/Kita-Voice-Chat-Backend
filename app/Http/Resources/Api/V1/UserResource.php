@@ -18,6 +18,7 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
 
+        $agency_joined = null;
         if($this->agency_id){
             $agency_joined = Agency::query ()->find ($this->agency_id);
             $agency_joined = new AgencyResource($agency_joined);
@@ -43,7 +44,7 @@ class UserResource extends JsonResource
                 'uid'=>$this->now_room_uid,
                 'is_mine'=>$this->id == $this->now_room_uid
             ],
-            'agency'=>$agency_joined?:null,
+            'agency'=>$agency_joined,
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,
