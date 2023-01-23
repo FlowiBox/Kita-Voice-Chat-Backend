@@ -79,4 +79,30 @@ Trait ZegoTrait
         $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params)->json ();
         return $res;
     }
+
+    public static function sendToZego_3($Action,$RoomId,$UserId,$IsTest = 'false'){
+        $url = 'https://rtc-api.zego.im';
+        $AppId = self::$appId;
+        $SignatureNonce = self::getSignatureNonce ();
+        $Timestamp = time ();
+        $str = $AppId.$SignatureNonce.static::$serverSecret.$Timestamp;
+        $signature = md5($str);
+        $SignatureVersion = '2.0';
+        $params = [
+            'Action'=>$Action,
+            'RoomId'=>$RoomId,
+            'UserId[]'=>$UserId,
+            'AppId'=>$AppId,
+            'SignatureNonce'=>$SignatureNonce,
+            'Timestamp'=>$Timestamp,
+            'Signature'=>$signature,
+            'SignatureVersion'=>$SignatureVersion,
+            'IsTest'=>$IsTest
+        ];
+        $headers = [
+
+        ];
+        $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params)->json ();
+        return $res;
+    }
 }
