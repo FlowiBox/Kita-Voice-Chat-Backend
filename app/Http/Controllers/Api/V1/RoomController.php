@@ -279,7 +279,7 @@ class RoomController extends Controller
                 $m = floor($r/60);
                 $s = $r%60;
                 if($sjc < $arr[2] && $arr[0] == $user_id ){
-                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"],null,411);
+                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"],411);
                 }
 
                 if($sjc >= $arr[2]){
