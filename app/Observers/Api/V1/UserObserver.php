@@ -2,6 +2,7 @@
 
 namespace App\Observers\Api\V1;
 
+use App\Models\AgencyJoinRequest;
 use App\Models\LiveTime;
 use App\Models\Target;
 use App\Models\User;
@@ -38,6 +39,9 @@ class UserObserver
 
 
         if ($user->is_host == 1){
+            if (!$user->agency_id){
+                AgencyJoinRequest::query ()->where ('user_id',$user->id)->delete ();
+            }
             $target = Target::query ()->where ('diamonds','<=',$user->coins)->orderBy ('diamonds','desc')->first ();
             if ($target){
                 $hours = 0;
