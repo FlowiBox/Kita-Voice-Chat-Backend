@@ -354,20 +354,37 @@ class UserController extends Controller
             ->first ();
         if(!$ware) return Common::apiResponse (0,'item not found or not for sale',null,404);
         $pack = Pack::query ()->where ('user_id',$user->id)->where ('target_id',$ware_id)->first ();
-        if($pack){
-            if ($pack->expire == 0) return Common::apiResponse (0,'you have this item in your pack no need to buy it',null,405);
-            if ($pack->expire > now ()->timestamp) return Common::apiResponse (0,'you have this item in your pack not expired yet',null,405);
-        }
         $total_price = $ware->price * $qty;
         if($user->di < $total_price) return Common::apiResponse (0,'Insufficient balance, please go to recharge!',null,407);
+        if($pack){
+            if ($pack->expire == 0) return Common::apiResponse (0,'you have this item in your pack no need to buy it',null,405);
+            if ($pack->expire > now ()->timestamp) {
+                if ($ware->expire != 0){
+                    DB::beginTransaction ();
+                    try {
+                        $pack->expire += ($qty * $ware->expire * 86400);
+                        $user->decrement('di',$total_price);
+                        DB::commit ();
+                        return Common::apiResponse (1,'success process');
+                    }catch (\Exception $exception){
+                        DB::rollBack ();
+                        return Common::apiResponse (0,'fail',null,400);
+                    }
+
+                }else{
+                    return Common::apiResponse (0,'you have this item in your pack no need to buy it',null,405);
+                }
+            }
+        }
+
         DB::beginTransaction ();
         try {
             $arr['user_id']=$user->id;
             $arr['type']=$ware->type;
             $arr['get_type']=$ware->get_type;
             $arr['target_id']=$ware->id;
-            $arr['num']=$qty;
-            $arr['expire']= $ware->expire ? time()+($ware->expire * 86400) : 0;
+            $arr['num']=1;//$qty;
+            $arr['expire']= $ware->expire ? time()+($qty * $ware->expire * 86400) : 0;
             $arr['is_read']=1;
             Pack::query ()->create ($arr);
             $user->decrement('di',$total_price);
