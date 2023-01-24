@@ -163,8 +163,8 @@ class UserController extends MainController
         });
         $form->number ('di',__('coins'));
         $form->number ('gold',__('silver coins'));
-        $form->email('email', __('Eml'));
-        $form->password('password', __('Pass'));
+        $form->email('email', __('Email'))->attribute ('onfocus',"this.removeAttribute('readonly');")->attribute ('readonly');
+        $form->password('password', __('Password'))->attribute ('onfocus',"this.removeAttribute('readonly');")->attribute ('readonly');
         $form->text('phone', __('phone'));
         $form->text('facebook_id', __('facebook id'));
         $form->text('google_id', __('google id'));
