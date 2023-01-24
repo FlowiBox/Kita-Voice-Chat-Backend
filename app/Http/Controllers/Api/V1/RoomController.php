@@ -860,7 +860,15 @@ class RoomController extends Controller
                 $user->now_room_uid = 0;
                 $user->save();
             }
+            $mc = [
+                'MessageContent'=>[
+                    'message'=>'kickout',
+                    'duration'=>$duration
+                ]
+            ];
+            $json = json_encode ($mc);
             Common::sendToZego_3 ('KickoutUser',$room_id,$black_id);
+            Common::sendToZego_4 ('KickoutUser',$room_id,$uid,$black_id,$json);
             return Common::apiResponse(1,'success');
         }else{
             return Common::apiResponse(0,'fail',null,400);

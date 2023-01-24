@@ -106,7 +106,7 @@ Trait ZegoTrait
         return $res;
     }
 
-    public static function sendToZego_4($Action,$RoomId,$UserId,$IsTest = 'false'){
+    public static function sendToZego_4($Action,$RoomId,$fromUserId,$toUserId,$MessageContent,$IsTest = 'false'){
         $url = 'https://rtc-api.zego.im';
         $AppId = self::$appId;
         $SignatureNonce = self::getSignatureNonce ();
@@ -119,6 +119,7 @@ Trait ZegoTrait
             'RoomId'=>$RoomId,
             'FromUserId'=>$fromUserId,
             'ToUserId[]'=>$toUserId,
+            'MessageContent'=>$MessageContent,
             'AppId'=>$AppId,
             'SignatureNonce'=>$SignatureNonce,
             'Timestamp'=>$Timestamp,
@@ -133,5 +134,3 @@ Trait ZegoTrait
         return $res;
     }
 }
-https://rtc-api.zego.im/?Action=SendCustomCommand&AppId=1381228&Timestamp=1672910944&Signature=c9ea8a5e1d5d75281e5904c40efc755b&SignatureVersion=2.0&SignatureNonce=e03330b2b68e7505&IsTest=no&RoomId=156&FromUserId=246&ToUserId[]=221&MessageContent={ 'messageContent': 'showEmojie',
-'id':   8    }
