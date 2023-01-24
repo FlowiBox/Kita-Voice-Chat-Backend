@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api\V1;
 
 use App\Helpers\Common;
 use App\Models\Agency;
+use App\Models\AgencyJoinRequest;
 use App\Models\Ware;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,6 +18,8 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        $reqs_count = AgencyJoinRequest::query ()->where ('user_id',$this->id)->where ('status','!=',2)->count ();
 
         $agency_joined = null;
         if($this->agency_id){
@@ -45,6 +48,7 @@ class UserResource extends JsonResource
                 'is_mine'=>$this->id == $this->now_room_uid
             ],
             'agency'=>$agency_joined,
+            'is_agency_request'=>($reqs_count >= 1)?true:false,
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,
