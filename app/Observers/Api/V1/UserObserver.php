@@ -37,7 +37,6 @@ class UserObserver
     public function updated(User $user)
     {
 
-
         if ($user->is_host == 1){
             if (!$user->agency_id){
                 AgencyJoinRequest::query ()->where ('user_id',$user->id)->delete ();
