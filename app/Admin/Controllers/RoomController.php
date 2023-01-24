@@ -194,6 +194,7 @@ class RoomController extends MainController
         $form->image('room_cover', trans('room cover'));
         $form->text('room_intro', trans('room intro'));
         $form->text('room_pass', trans('room pass'));
+        $form->hidden('is_afk', trans('owner in'));
         $form->select ('room_class')->options (function (){
             $options = [];
             $cats = RoomCategory::query ()->where ('enable',1)->where ('parent_id',0)->get ();
