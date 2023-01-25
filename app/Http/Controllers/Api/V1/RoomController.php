@@ -861,7 +861,7 @@ class RoomController extends Controller
                 $user->save();
             }
             $mc = [
-                'MessageContent'=>[
+                'messageContent'=>[
                     'message'=>'kickout',
                     'duration'=>$duration
                 ]
