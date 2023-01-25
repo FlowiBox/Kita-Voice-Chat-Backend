@@ -123,5 +123,8 @@
     "user hours": "الساعات المحققة",
     "user days": "الايام المحققة",
     "deserved": "مستحق",
-    "change status admin id": "المسئول الذي غير الحالة"
+    "change status admin id": "المسئول الذي غير الحالة",
+    "charger id": "معرف الشاحن",
+    "charger type": "نوع الشاحن"
+
 }

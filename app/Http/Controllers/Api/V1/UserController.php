@@ -397,6 +397,11 @@ class UserController extends Controller
     }
 
 
+    public function buyVIP(Request $request){
+
+    }
+
+
 
 
     //Automatic dress up high level dress up

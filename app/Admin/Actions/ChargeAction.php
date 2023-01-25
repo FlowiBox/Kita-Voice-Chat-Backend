@@ -22,20 +22,22 @@ class ChargeAction extends Action
         if ($request->user_type == 'app'){
             $user = User::query ()->find ($request->user_id);
             if (!$user){
-                return $this->response()->error('user not found')->refresh();
+                return $this->response()->error(__('user not found'))->refresh();
             }
         }elseif ($request->user_type == 'dash'){
             $user = Admin::query ()->find ($request->user_id);
             if (!$user){
-                return $this->response()->error('user not found')->refresh();
+                return $this->response()->error(__('user not found'))->refresh();
             }
         }else{
-            return $this->response()->error('system need to know what type of user you want add balance to')->refresh();
+            return $this->response()->error(__('system need to know what type of user you want add balance to'))->refresh();
         }
 
         if ($request->amount < 10){
-            return $this->response()->error('amount must be more than 10')->refresh();
+            return $this->response()->error(__('amount must be more than 10'))->refresh();
         }
+
+        $charger = Auth::user ();
 
         DB::beginTransaction ();
         try {
@@ -50,6 +52,13 @@ class ChargeAction extends Action
             $user->di += $request->amount;
             $charge->save ();
             $user->save ();
+            if (!$charger->isRole('admin') || !$charger->isRole('developer')){
+                if ($charger->di < $request->amount){
+                    return $this->response()->error(__ ('balance not enough'))->refresh();
+                }
+                $charger->di -= $request->amount;
+                $charger->save();
+            }
             DB::commit ();
             return $this->response()->success('success')->refresh();
         }catch (\Exception $exception){
