@@ -279,7 +279,7 @@ class RoomController extends Controller
                 $m = floor($r/60);
                 $s = $r%60;
                 if($sjc < $arr[2] && $arr[0] == $user_id ){
-                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"],411);
+                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"],200);
                 }
 
                 if($sjc >= $arr[2]){
@@ -867,8 +867,8 @@ class RoomController extends Controller
                 ]
             ];
             $json = json_encode ($mc);
-            Common::sendToZego_3 ('KickoutUser',$room_id,$black_id);
-            Common::sendToZego_4 ('KickoutUser',$room_id,$uid,$black_id,$json);
+//            Common::sendToZego_3 ('KickoutUser',$room_id,$black_id);
+            Common::sendToZego_4 ('SendCustomCommand',$room_id,$uid,$black_id,$json);
             return Common::apiResponse(1,'success');
         }else{
             return Common::apiResponse(0,'fail',null,400);
