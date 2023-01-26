@@ -51,6 +51,8 @@ class UserResource extends JsonResource
             'agency'=>$agency_joined,
             'is_agency_request'=>($reqs_count >= 1)?true:false,
             'is_family_admin'=>$this->is_family_admin,
+            'is_family_member'=>FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->exists (),
+            'family_id'=>FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->value ('family_id'),
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,

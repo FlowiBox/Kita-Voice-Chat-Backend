@@ -186,6 +186,9 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('join/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'join']);
         Route::get ('delete/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'destroy']);
         Route::post ('remove_user',[\App\Http\Controllers\Api\V1\FamilyController::class,'removeUser']);
+        Route::post ('req_list',[\App\Http\Controllers\Api\V1\FamilyController::class,'req_list']);
+        Route::post ('take_action',[\App\Http\Controllers\Api\V1\FamilyController::class,'accdie']);
+        Route::post ('change_user_type',[\App\Http\Controllers\Api\V1\FamilyController::class,'changeReqType']);
     });
 
     Route::post ('charge_to',[\App\Http\Controllers\Api\V1\UserController::class,'chargeTo']);

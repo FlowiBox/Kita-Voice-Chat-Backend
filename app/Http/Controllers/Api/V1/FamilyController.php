@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\FamilyResource;
+use App\Http\Resources\Api\V1\FamilyUserResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Family;
 use App\Models\FamilyUser;
@@ -224,7 +225,7 @@ class FamilyController extends Controller
             $fu1->user_id = $user->id;
             $fu1->family_id = $family->id;
             $fu1->user_type = 0;
-            $fu1->status = 1;
+            $fu1->status = 0;
             $user->family_id = $family->id;
             $fu1->save ();
             $user->save();
@@ -239,14 +240,64 @@ class FamilyController extends Controller
 
     }
 
+    public function req_list(Request $request){
+        $family = Family::query ()->where ('user_id',$request->user ()->id)->first ();
+        if (!$family) return Common::apiResponse (0,'not found',null,404);
+        $req = FamilyUserResource::collection (FamilyUser::query ()->where ('family_id',$family->id)->where ('user_id','!=',$request->user ()->id)->get ());
+        return Common::apiResponse (1,'',$req,200);
+    }
+
+    public function accdie(Request $request){
+
+        if (!$request->status || !$request->req_id) return Common::apiResponse (0,'missing params',null,422);
+        $req = FamilyUser::query ()->find ($request->req_id);
+        if (!$req) return Common::apiResponse (0,'not found',null,404);
+        DB::beginTransaction ();
+        try {
+            $req->status = $request->status;
+            $req->save ();
+            $user = User::find($req->user_id);
+            if ($user){
+                $user->family_id = $req->family_id;
+                $user->save();
+            }
+            DB::commit ();
+            $reqs = FamilyUserResource::collection (FamilyUser::query ()->where ('family_id',$req->family_id)->where ('user_id','!=',$request->user ()->id)->get ());
+            return Common::apiResponse (1,'',$reqs,200);
+        }catch (\Exception $exception){
+            DB::rollBack ();
+            return Common::apiResponse (0,'failed',null,400);
+        }
+
+    }
+
+    public function changeReqType(Request $request){
+        if (!$request->type || !$request->req_id || !in_array ($request->type,[0,1])){
+            return Common::apiResponse (0,'invalid data',null,422);
+        }
+        $req = FamilyUser::query ()->find ($request->req_id);
+        if (!$req) return Common::apiResponse (0,'not found',null,404);
+        $req->user_type = $request->type;
+        $req->save ();
+        $reqs = FamilyUserResource::collection (FamilyUser::query ()->where ('family_id',$req->family_id)->where ('user_id','!=',$request->user ()->id)->get ());
+        return Common::apiResponse (1,'',$reqs,200);
+    }
+
     public function removeUser(Request $request){
         $me = $request->user ();
+        $is_admin = FamilyUser::query ()
+            ->where ('user_type',1)
+            ->where ('user_id',$me->id)
+            ->where ('family_id',$request->family_id )
+            ->where ('status',1)
+            ->exists ();
         if (!$request->family_id || !$request->user_id) return Common::apiResponse (0,'missing params',null,422);
         $family = Family::query ()->find ($request->family_id);
         $user = User::query ()->find ($request->user_id);
         if (!$family || !$user){
             return Common::apiResponse (0,'family not found',null,404);
         }
+        if (!$is_admin || ($family->user_id != $me->id)) return Common::apiResponse (0,'not allowed',null,403);
         DB::beginTransaction ();
         try {
             $user->family_id;
