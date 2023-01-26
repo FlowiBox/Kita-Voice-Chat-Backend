@@ -56,7 +56,7 @@ class LoginController extends Controller
         $user = User::where('phone', $fields['phone'])->first();
 
         if (!$user || !Hash::check($fields['password'], $user->password)) {
-            return response('credentials does\'t match', 503);
+            return Common::apiResponse(0,'credentials does\'t match',null, 503);
         }
         $this->logoutAsConfiguration($user);
         $token = $user->createToken('api_token')->plainTextToken;
