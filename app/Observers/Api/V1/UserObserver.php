@@ -106,6 +106,10 @@ class UserObserver
             $user->tokens()->delete ();
         }
 
+        if (!$user->uuid){
+            $user->uuid = rand (1000000,9999999);
+        }
+
         if ($user->is_host == 1){
             $target = Target::query ()->where ('diamonds','<=',$user->coins)->orderBy ('diamonds','desc')->first ();
             if ($target){

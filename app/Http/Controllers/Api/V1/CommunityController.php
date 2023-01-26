@@ -108,7 +108,7 @@ class CommunityController extends Controller
         if (!$user_id || !$keywords) return [];
         //user
         $whereOr = [
-            'id' => $keywords,
+            'uuid' => $keywords,
         ];
         $user = User::query ()
             ->where('nickname', 'like', '%' . $keywords . '%')

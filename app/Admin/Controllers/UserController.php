@@ -77,6 +77,7 @@ class UserController extends MainController
             });
         });
         $grid->column('id', __('Id'));
+        $grid->column ('uuid','uuid')->editable ();
         $grid->column('name', __('Name'));
         $grid->column('nickname', __('NickName'));
         $grid->column('email', __('Email'));
