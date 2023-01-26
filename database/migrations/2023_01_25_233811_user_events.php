@@ -14,7 +14,7 @@ class UserEvents extends Migration
      */
     public function up()
     {
-        DB::unprepared ("DROP EVENT IF EXISTS `update_users_every_month`; CREATE DEFINER=`` EVENT `update_users_every_month` ON SCHEDULE EVERY 1 YEAR_MONTH STARTS '2023-01-01 00:00:00' ON COMPLETION PRESERVE ENABLE DO UPDATE users SET old_usd = old_usd + target_usd - target_token_usd , target_usd = 0 , target_token_usd = 0");
+//        DB::unprepared ("DROP EVENT IF EXISTS `update_users_every_month`; CREATE DEFINER=`` EVENT `update_users_every_month` ON SCHEDULE EVERY 1 YEAR_MONTH STARTS '2023-01-01 00:00:00' ON COMPLETION PRESERVE ENABLE DO UPDATE users SET old_usd = old_usd + target_usd - target_token_usd , target_usd = 0 , target_token_usd = 0");
     }
 
     /**
