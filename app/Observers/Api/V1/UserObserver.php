@@ -145,7 +145,20 @@ class UserObserver
                         'user_days'=>$days
                     ]
                 );
-                $user->target_usd = $target->usd;
+                $per = 0.50;
+                if ($target->hours <= $hours){
+                    $per += 0.25;
+                }
+                if ($target->days <= $days){
+                    $per += 0.25;
+                }
+                $t = $target->usd * $per;
+                $user->target_usd = $t;
+                $agency = Agency::query ()->find ($user->agency_id);
+                if ($agency){
+                    $agency->target_usd = $t * $target->agency_share/100;
+                    $agency->save ();
+                }
             }
         }
 
