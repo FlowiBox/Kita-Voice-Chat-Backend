@@ -52,8 +52,8 @@ class LoginController extends Controller
     }
 
     protected function loginWithPhonePassword($fields){
-        if (Auth::attempt($fields)){
-            $user = User::find(Auth::id ());
+        if (Auth::guard ('api')->attempt($fields)){
+            $user = \auth ()->user ();
             $this->logoutAsConfiguration($user);
             $token = $user->createToken('api_token')->plainTextToken;
             $user->auth_token=$token;
