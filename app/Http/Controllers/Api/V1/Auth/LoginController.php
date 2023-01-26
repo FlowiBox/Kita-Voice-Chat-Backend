@@ -11,6 +11,7 @@ use App\Models\Country;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -52,18 +53,18 @@ class LoginController extends Controller
     }
 
     protected function loginWithPhonePassword($fields){
-        if (Auth::guard ('api')->attempt($fields)){
-            $user = \auth ()->user ();
-            $this->logoutAsConfiguration($user);
-            $token = $user->createToken('api_token')->plainTextToken;
-            $user->auth_token=$token;
-            if (!$this->canLogin($user)){
-                return Common::apiResponse (false,'you are blocked',[],408);
-            }
-            return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
-        }else{
-            return Common::apiResponse (false,'credentials does\'t match',[],422);
+        $user = User::where('phone', $fields['phone'])->first();
+
+        if (!$user || !Hash::check($fields['password'], $user->password)) {
+            return response('credentials does\'t match', 503);
         }
+        $this->logoutAsConfiguration($user);
+        $token = $user->createToken('api_token')->plainTextToken;
+        $user->auth_token=$token;
+        if (!$this->canLogin($user)){
+            return Common::apiResponse (false,'you are blocked',[],408);
+        }
+        return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
     }
 
     protected function loginWithGoogle($data){
