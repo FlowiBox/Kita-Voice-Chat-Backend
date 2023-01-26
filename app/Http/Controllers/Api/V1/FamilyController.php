@@ -183,7 +183,7 @@ class FamilyController extends Controller
         if ($user->id != $family->user_id) return Common::apiResponse (0,'not allowed',null,403);
         DB::beginTransaction ();
         try {
-            FamilyUser::query ()->where ('family_id',$$family->id)->delete ();
+            FamilyUser::query ()->where ('family_id',$family->id)->delete ();
             User::query ()->where ('family_id',$id)->update (['family_id'=>null]);
             $family->delete ();
             DB::commit ();
