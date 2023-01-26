@@ -54,6 +54,13 @@ class UserController extends MainController
     }
 
 
+    public function update ( $id )
+    {
+//        dd ($this->form ());
+//        if ($this->form ()->input ('password'))
+        return $this->form()->update($id);
+    }
+
 
     /**
      * Make a grid builder.
