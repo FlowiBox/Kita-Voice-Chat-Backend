@@ -179,11 +179,13 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::prefix ('families')->group (function (){
         Route::get ('all',[\App\Http\Controllers\Api\V1\FamilyController::class,'index']);
+        Route::get ('show/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'show']);
         Route::post('create',[\App\Http\Controllers\Api\V1\FamilyController::class,'store']);
         Route::post ('ranking',[\App\Http\Controllers\Api\V1\FamilyController::class,'ranking']);
         Route::post ('edit/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'update']);
         Route::post ('join/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'join']);
         Route::get ('delete/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'destroy']);
+        Route::post ('remove_user',[\App\Http\Controllers\Api\V1\FamilyController::class,'removeUser']);
     });
 
     Route::post ('charge_to',[\App\Http\Controllers\Api\V1\UserController::class,'chargeTo']);

@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api\V1;
 use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
+use App\Models\FamilyUser;
 use App\Models\Ware;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -49,6 +50,7 @@ class UserResource extends JsonResource
             ],
             'agency'=>$agency_joined,
             'is_agency_request'=>($reqs_count >= 1)?true:false,
+            'is_family_admin'=>$this->is_family_admin,
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,

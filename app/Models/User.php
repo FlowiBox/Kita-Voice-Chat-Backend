@@ -43,7 +43,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['my_store','lang','avatar','gender','flag','usd'];
+    protected $appends = ['my_store','lang','avatar','gender','flag','usd','is_family_admin','is_family_owner'];
 
 
     public function profile(){
@@ -128,6 +128,25 @@ class User extends Authenticatable
 //    }
 
 
+
+    public function getIsFamilyAdminAttribute(){
+        $family_user = FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->first ();
+        if ($family_user){
+            if ($family_user->user_type == 1 ){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public function getIsFamilyOwnerAttribute(){
+        $family = Family::query ()->where ('user_id',$this->id)->exists ();
+        if ($family){
+            return true;
+        }
+        return false;
+    }
 
 
 

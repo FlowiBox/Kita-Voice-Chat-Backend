@@ -158,7 +158,13 @@ class FamilyController extends Controller
     {
         $user = $request->user ();
         $family = Family::find($id);
-        if ($user->id != $family->user_id) return Common::apiResponse (0,'not allowed',null,403);
+        $is_admin = FamilyUser::query ()
+            ->where ('user_type',1)
+            ->where ('user_id',$user->id)
+            ->where ('family_id',$family->id)
+            ->where ('status',1)
+            ->exists ();
+        if (($user->id != $family->user_id) || !$is_admin) return Common::apiResponse (0,'not allowed',null,403);
         if (!$family) return Common::apiResponse (0,'not found',null,404);
         if ($request->name){$family->name = $request->name ;}
         if ($request->introduce){$family->introduce = $request->introduce ;}
@@ -232,4 +238,27 @@ class FamilyController extends Controller
 
 
     }
+
+    public function removeUser(Request $request){
+        $me = $request->user ();
+        if (!$request->family_id || !$request->user_id) return Common::apiResponse (0,'missing params',null,422);
+        $family = Family::query ()->find ($request->family_id);
+        $user = User::query ()->find ($request->user_id);
+        if (!$family || !$user){
+            return Common::apiResponse (0,'family not found',null,404);
+        }
+        DB::beginTransaction ();
+        try {
+            $user->family_id;
+            FamilyUser::query ()->where ('family_id',$family->id)->where ('user_id',$request->user_id)->delete ();
+            $user->save ();
+            DB::commit ();
+            return Common::apiResponse (1,'success', new FamilyResource(Family::find($family->id)),200);
+        }catch (\Exception $exception){
+            DB::rollBack ();
+            return Common::apiResponse (0,'failed',null,400);
+        }
+    }
+
+
 }

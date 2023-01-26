@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\V1;
 
+use App\Models\FamilyUser;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,7 +20,9 @@ class FamilyResource extends JsonResource
         if (!@$this->user_id){
             $owner = new \stdClass();
         }
+        $mems = FamilyUser::query ()->where ('family_id',@$this->id)->pluck ('user_id');
         return [
+            'id'=>@$this->id,
             'name'=>@$this->name?:'',
             'introduce'=>@$this->introduce?:'',
             'image'=>@$this->image?:'',
@@ -27,6 +30,9 @@ class FamilyResource extends JsonResource
             'max_num_of_members'=>@$this->num?:'',
             'rank'=>@$this->rank?:0,
             'owner'=>$owner,
+            'am_i_owner'=>(@$this->user_id == $request->user ()->id) ?true:false,
+            'am_i_admin'=>$request->user ()->is_family_admin ?true:false,
+            'members'=>UserResource::collection (User::query ()->whereIn ('id',$mems)->where ('id','!=',$this->user_id)->get ())
         ];
     }
 }

@@ -147,10 +147,10 @@ class UserObserver
                 );
                 $per = 0.50;
                 if ($target->hours <= $hours){
-                    $per += 0.25;
+                    $per += 0.20;
                 }
                 if ($target->days <= $days){
-                    $per += 0.25;
+                    $per += 0.30;
                 }
                 $t = $target->usd * $per;
                 $user->target_usd = $t;
@@ -169,6 +169,6 @@ class UserObserver
      * @return void
      */
     public function saving(User $user){
-
+        $user->uuid = rand (1000000,9999999);
     }
 }
