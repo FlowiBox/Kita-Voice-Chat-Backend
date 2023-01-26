@@ -3,8 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\Helpers\Common;
+use App\Models\Admin;
 use App\Models\Charge;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -93,8 +95,14 @@ class ChargeController extends MainController
         $grid->column('charger_id',__('charger id'))->modal ('Charger info',function ($model){
             if ($model->charger_id){
                 if ($model->charger_type == 'app'){
+                    if (!User::query ()->where ('id',$model->user_id)->exists ()){
+                        return null;
+                    }
                     return Common::getUserShow($model->charger_id);
                 }else{
+                    if (!Admin::query ()->where ('id',$model->user_id)->exists ()){
+                        return null;
+                    }
                     return Common::getAdminShow($model->charger_id);
                 }
             }
@@ -109,8 +117,14 @@ class ChargeController extends MainController
         $grid->column('user_id',__('user id'))->modal ('User info',function ($model){
             if ($model->user_id){
                 if ($model->user_type == 'app'){
+                    if (!User::query ()->where ('id',$model->user_id)->exists ()){
+                        return null;
+                    }
                     return Common::getUserShow($model->user_id);
                 }else{
+                    if (!Admin::query ()->where ('id',$model->user_id)->exists ()){
+                        return null;
+                    }
                     return Common::getAdminShow($model->user_id);
                 }
 
