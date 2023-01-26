@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Charge;
 use App\Models\Code;
 use App\Models\Pack;
 use App\Models\User;
@@ -513,6 +514,43 @@ class UserController extends Controller
         $user->tokens()->delete();
         $user->delete();
         return Common::apiResponse (1,'account deleted successfully');
+    }
+
+
+    public function chargeTo(Request $request){
+        $to = User::query ()->find ($request->to_id);
+        $from = $request->user ();
+        $usd = $request->usd;
+        if (!$usd || !$to){
+            return Common::apiResponse (0,'missing params',422);
+        }
+        $rate = Common::getConf ('one_usd_value_in_coins')?:100;
+        $coins = $usd * $rate;
+        if (($from->old_usd + $from->target_usd - $from->target_token_usd) < $usd){
+            return Common::apiResponse (0,'balance not enough',405);
+        }
+        DB::beginTransaction ();
+        try {
+            Charge::query ()->create (
+                [
+                    'charger_id'=>$from->id,
+                    'charger_type'=>'app',
+                    'user_id'=>$to->id,
+                    'user_type'=>'app',
+                    'amount'=>$coins,
+                    'amount_type'=>2,
+                    'balance_before'=>$to->di
+                ]
+            );
+            $from->increment('target_token_usd',$usd);
+            $to->increment ('di',$coins);
+            DB::commit ();
+            return Common::apiResponse (1,'success',null,201);
+        }catch (\Exception $exception){
+            dd ($exception->getMessage ());
+            DB::rollBack ();
+            return Common::apiResponse (0,'failed',400);
+        }
     }
 
 }

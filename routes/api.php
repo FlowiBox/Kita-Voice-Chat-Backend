@@ -186,5 +186,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('delete/{id}',[\App\Http\Controllers\Api\V1\FamilyController::class,'destroy']);
     });
 
+    Route::post ('charge_to',[\App\Http\Controllers\Api\V1\UserController::class,'chargeTo']);
+
 
 });

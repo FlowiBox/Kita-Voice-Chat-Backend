@@ -263,10 +263,10 @@ Trait CalcsTrait
             'id'=>$user->id,
             'coins'=>$user->di,
             'diamonds'=>$user->coins,
-            'room_coins'=>$user->room_coins,
+//            'room_diamonds'=>$user->room_coins,
             'silver_coins'=>$user->gold,
-            'withdrawal_coins' => (double)$coins ,
-            'coupons' => Db ::table ( 'user_coupons' ) -> join ( 'wares' , 'user_coupons.ware_id' , '=' , 'wares.id' ) -> where ( ['user_coupons.user_id' => $user_id , 'wares.enable' => 1] ) -> count ()
+            'usd' => (double)$user->usd ,
+//            'coupons' => Db ::table ( 'user_coupons' ) -> join ( 'wares' , 'user_coupons.ware_id' , '=' , 'wares.id' ) -> where ( ['user_coupons.user_id' => $user_id , 'wares.enable' => 1] ) -> count ()
         ];
     }
 

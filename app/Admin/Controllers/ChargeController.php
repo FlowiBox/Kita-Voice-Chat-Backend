@@ -92,11 +92,20 @@ class ChargeController extends MainController
         $grid->id('ID');
         $grid->column('charger_id',__('charger id'))->modal ('Charger info',function ($model){
             if ($model->charger_id){
-                return Common::getAdminShow($model->charger_id);
+                if ($model->charger_type == 'app'){
+                    return Common::getUserShow($model->charger_id);
+                }else{
+                    return Common::getAdminShow($model->charger_id);
+                }
             }
             return null;
         });
-//        $grid->column('charger_type',__ ('charger type'));
+        $grid->column('charger_type',__ ('charger type'))->using (
+            [
+                'app'=>__ ('app'),
+                'dash'=>__ ('office')
+            ]
+        );
         $grid->column('user_id',__('user id'))->modal ('User info',function ($model){
             if ($model->user_id){
                 if ($model->user_type == 'app'){
@@ -111,10 +120,10 @@ class ChargeController extends MainController
         $grid->column('user_type',__ ('user type'))->using (
             [
                 'app'=>__ ('app'),
-                'dash'=>__ ('agency')
+                'dash'=>__ ('office')
             ]
         );
-        $grid->amount(__('amount'));
+        $grid->amount(__('coins'));
 //        $grid->amount_type('amount_type');
         $grid->column('created_at',trans('admin.created_at'))->diffForHumans ();
 //        $grid->updated_at(trans('admin.updated_at'));

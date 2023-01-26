@@ -43,7 +43,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['my_store','lang','avatar','gender','flag'];
+    protected $appends = ['my_store','lang','avatar','gender','flag','usd'];
 
 
     public function profile(){
@@ -109,6 +109,10 @@ class User extends Authenticatable
             $q->whereNotNull('agency_id')->where('agency_id', '=', @$user->agency_id);
         }
 
+    }
+
+    public function getUsdAttribute(){
+        return $this->attributes['old_usd'] + $this->attributes['target_usd'] - $this->attributes['target_token_usd'];
     }
 
 

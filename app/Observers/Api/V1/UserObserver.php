@@ -46,50 +46,7 @@ class UserObserver
                 AgencyJoinRequest::query ()->where ('user_id',$user->id)->delete ();
             }
         }
-        if ($user->is_host == 1){
 
-            $target = Target::query ()->where ('diamonds','<=',$user->coins)->orderBy ('diamonds','desc')->first ();
-            if ($target){
-                $hours = 0;
-                $days = 0;
-                $times = LiveTime::query ()->where ('uid',$user->id)
-                    ->whereYear ('created_at','=',Carbon::now ()->year)
-                    ->whereMonth ('created_at','=',Carbon::now ()->month)
-                    ->selectRaw('uid, count(hours) as hnum, count(days) as dnum')
-                    ->groupBy ('uid')
-                    ->first ()
-                ;
-                if ($times){
-                    $hours = $times->hnum;
-                    $days = $times->days;
-                }
-                UserTarget::query ()->updateOrCreate (
-                    [
-                        'user_id'=>$user->id,
-                        'add_month'=>Carbon::now ()->month,
-                        'add_year'=>Carbon::now ()->year
-                    ],
-                    [
-                        'user_id'=>$user->id,
-                        'add_month'=>Carbon::now ()->month,
-                        'add_year'=>Carbon::now ()->year,
-                        'agency_id'=>$user->agency_id,
-                        'family_id'=>$user->family_id,
-                        'target_id'=>$target->id,
-                        'target_diamonds'=>$target->diamonds,
-                        'target_usd'=>$target->usd,
-                        'target_hours'=>$target->hours,
-                        'target_days'=>$target->days,
-                        'target_agency_share'=>$target->agency_share,
-                        'user_diamonds'=>$user->coins,
-                        'user_hours'=>$hours,
-                        'user_days'=>$days
-                    ]
-                );
-            }else{
-                UserTarget::query ()->where (['user_id'=>$user->id,'add_month'=>Carbon::now ()->month,'add_year'=>Carbon::now ()->year])->delete ();
-            }
-        }
 
     }
 
@@ -148,6 +105,50 @@ class UserObserver
         if ($user->status == 0){
             $user->tokens()->delete ();
         }
+
+        if ($user->is_host == 1){
+            $target = Target::query ()->where ('diamonds','<=',$user->coins)->orderBy ('diamonds','desc')->first ();
+            if ($target){
+                $hours = 0;
+                $days = 0;
+                $times = LiveTime::query ()->where ('uid',$user->id)
+                    ->whereYear ('created_at','=',Carbon::now ()->year)
+                    ->whereMonth ('created_at','=',Carbon::now ()->month)
+                    ->selectRaw('uid, count(hours) as hnum, count(days) as dnum')
+                    ->groupBy ('uid')
+                    ->first ()
+                ;
+                if ($times){
+                    $hours = $times->hnum;
+                    $days = $times->days;
+                }
+                UserTarget::query ()->updateOrCreate (
+                    [
+                        'user_id'=>$user->id,
+                        'add_month'=>Carbon::now ()->month,
+                        'add_year'=>Carbon::now ()->year
+                    ],
+                    [
+                        'user_id'=>$user->id,
+                        'add_month'=>Carbon::now ()->month,
+                        'add_year'=>Carbon::now ()->year,
+                        'agency_id'=>$user->agency_id,
+                        'family_id'=>$user->family_id,
+                        'target_id'=>$target->id,
+                        'target_diamonds'=>$target->diamonds,
+                        'target_usd'=>$target->usd,
+                        'target_hours'=>$target->hours,
+                        'target_days'=>$target->days,
+                        'target_agency_share'=>$target->agency_share,
+                        'user_diamonds'=>$user->coins,
+                        'user_hours'=>$hours,
+                        'user_days'=>$days
+                    ]
+                );
+                $user->target_usd = $target->usd;
+            }
+        }
+
     }
 
     /**

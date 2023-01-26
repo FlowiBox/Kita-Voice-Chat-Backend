@@ -65,6 +65,7 @@ Route::group(
             'store'=>'charges.new'
         ]
     ]);
+    $router->resource ('charge_values','ChargeValueController');
     $router->resource ('userTarget','UserTargetController',[
         'names'=>[
             'index'=>'user_targets'
