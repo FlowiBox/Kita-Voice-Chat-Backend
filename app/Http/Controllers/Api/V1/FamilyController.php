@@ -179,11 +179,20 @@ class FamilyController extends Controller
     public function destroy(Request $request,$id)
     {
         $user = $request->user ();
-        $family = Family::find($id);
-        if ($user->id != $family->user_id) return Common::apiResponse (0,'not allowed');
-        Family::query ()->find ($id)->delete ();
-        FamilyUser::query ()->where ('family_id',$id)->delete ();
-        User::query ()->where ('family_id',$id)->update (['family_id'=>null]);
+        $family = Family::query()->where('user_id',$user->id)->first ();
+        if ($user->id != $family->user_id) return Common::apiResponse (0,'not allowed',null,403);
+        DB::beginTransaction ();
+        try {
+            FamilyUser::query ()->where ('family_id',$$family->id)->delete ();
+            User::query ()->where ('family_id',$id)->update (['family_id'=>null]);
+            $family->delete ();
+            DB::commit ();
+            return Common::apiResponse (1,'success',null,201);
+        }catch (\Exception $exception){
+            DB::rollBack ();
+            return Common::apiResponse (0,'failed',null,400);
+        }
+
     }
 
 
