@@ -38,7 +38,6 @@ class ChargeAction extends Action
         }
 
         $charger = Auth::user ();
-
         DB::beginTransaction ();
         try {
             $charge = new Charge();
@@ -52,7 +51,7 @@ class ChargeAction extends Action
             $user->di += $request->amount;
             $charge->save ();
             $user->save ();
-            if (!$charger->isRole('admin') || !$charger->isRole('developer')){
+            if (!$charger->isRole('admin') && !$charger->isRole('developer')){
                 if ($charger->di < $request->amount){
                     return $this->response()->error(__ ('balance not enough'))->refresh();
                 }
