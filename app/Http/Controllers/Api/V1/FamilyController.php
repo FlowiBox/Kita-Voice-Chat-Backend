@@ -45,12 +45,26 @@ class FamilyController extends Controller
         }
         $data = $query->get ()->toArray ();
 
+        $em = [
+            'id'=>0,
+            'name'=>'',
+            'introduce'=>'',
+            'image'=>'',
+            'notice'=>'',
+            'max_num_of_members'=>0,
+            'rank'=>0,
+            'owner'=>new \stdClass(),
+            'am_i_member'=>false,
+            'am_i_owner'=>false,
+            'am_i_admin'=>false,
+            'members'=>[]
+        ];
+
         $top = array_slice ($data,0,3);
-        $top[0]=@$top[0]?:null;
-        $top[1]=@$top[1]?:null;
-        $top[2]=@$top[2]?:null;
+        $top[0]=@$top[0]?:$em;
+        $top[1]=@$top[1]?:$em;
+        $top[2]=@$top[2]?:$em;
         $other = array_slice ($data,3);
-        $top = FamilyResource::collection ($top);
         $other = FamilyResource::collection ($other);
         return Common::apiResponse (1,'',[
             'top'=>$top,
@@ -187,6 +201,7 @@ class FamilyController extends Controller
     {
         $user = $request->user ();
         $family = Family::query()->where('user_id',$user->id)->first ();
+        if (!$family) return Common::apiResponse (0,'not found',null,404);
         if ($user->id != $family->user_id) return Common::apiResponse (0,'not allowed',null,403);
         DB::beginTransaction ();
         try {

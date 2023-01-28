@@ -16,6 +16,9 @@ class FamilyResource extends JsonResource
      */
     public function toArray($request)
     {
+//        if (!$this->resource){
+//            return null;
+//        }
         $owner = new UserResource(User::find(@$this->user_id?:0));
         if (!@$this->user_id){
             $owner = new \stdClass();
@@ -30,6 +33,7 @@ class FamilyResource extends JsonResource
             'max_num_of_members'=>@$this->num?:'',
             'rank'=>@$this->rank?:0,
             'owner'=>$owner,
+            'am_i_member'=>FamilyUser::query ()->where ('user_id',$request->user ()->id)->where ('family_id',$this->id)->where ('status',1)->exists (),
             'am_i_owner'=>(@$this->user_id == $request->user ()->id) ?true:false,
             'am_i_admin'=>$request->user ()->is_family_admin ?true:false,
             'members'=>UserResource::collection (User::query ()->whereIn ('id',$mems)->where ('id','!=',$this->user_id)->get ())
