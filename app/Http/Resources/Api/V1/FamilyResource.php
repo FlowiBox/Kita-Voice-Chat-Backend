@@ -23,7 +23,7 @@ class FamilyResource extends JsonResource
         if (!@$this->user_id){
             $owner = new \stdClass();
         }
-        $mems = FamilyUser::query ()->where ('family_id',@$this->id)->pluck ('user_id');
+        $mems = FamilyUser::query ()->where ('family_id',@$this->id)->where ('status',1)->pluck ('user_id');
         return [
             'id'=>@$this->id,
             'name'=>@$this->name?:'',

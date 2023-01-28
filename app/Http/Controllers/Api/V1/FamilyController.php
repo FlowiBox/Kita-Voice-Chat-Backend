@@ -287,10 +287,13 @@ class FamilyController extends Controller
     }
 
     public function changeReqType(Request $request){
-        if (!$request->type || !$request->req_id || !in_array ($request->type,[0,1])){
+        if (!$request->type || !$request->user_id || $request->family_id || !in_array ($request->type,[0,1])){
             return Common::apiResponse (0,'invalid data',null,422);
         }
-        $req = FamilyUser::query ()->find ($request->req_id);
+        $req = FamilyUser::query ()
+            ->where ('user_id',$request->user_id)
+            ->where ('family_id',$request->family_id)
+            ->where ('status',1)->first ();
         if (!$req) return Common::apiResponse (0,'not found',null,404);
         $req->user_type = $request->type;
         $req->save ();
@@ -310,9 +313,9 @@ class FamilyController extends Controller
         $family = Family::query ()->find ($request->family_id);
         $user = User::query ()->find ($request->user_id);
         if (!$family || !$user){
-            return Common::apiResponse (0,'family not found',null,404);
+            return Common::apiResponse (0,'not found',null,404);
         }
-        if (!$is_admin || ($family->user_id != $me->id)) return Common::apiResponse (0,'not allowed',null,403);
+        if (!$is_admin && ($family->user_id != $me->id)) return Common::apiResponse (0,'not allowed',null,403);
         DB::beginTransaction ();
         try {
             $user->family_id;
