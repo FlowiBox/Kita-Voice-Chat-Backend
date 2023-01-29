@@ -309,6 +309,7 @@ class FamilyController extends Controller
     }
 
     public function removeUser(Request $request){
+        if (!$request->family_id || !$request->user_id) return Common::apiResponse (0,'missing params',null,422);
         $me = $request->user ();
         $is_admin = FamilyUser::query ()
             ->where ('user_type',1)
@@ -316,18 +317,18 @@ class FamilyController extends Controller
             ->where ('family_id',$request->family_id )
             ->where ('status',1)
             ->exists ();
-        if (!$request->family_id || !$request->user_id) return Common::apiResponse (0,'missing params',null,422);
+
         $family = Family::query ()->find ($request->family_id);
         $user = User::query ()->find ($request->user_id);
+        if ($user->id == $me->id) return Common::apiResponse (0,'try to remove your self',null,433);
         if (!$family || !$user){
             return Common::apiResponse (0,'not found',null,404);
         }
         if (!$is_admin && ($family->user_id != $me->id)) return Common::apiResponse (0,'not allowed',null,403);
         DB::beginTransaction ();
         try {
-            $user->family_id;
+            $user->family_id = null;
             FamilyUser::query ()->where ('family_id',$family->id)->where ('user_id',$request->user_id)->delete ();
-            $user->save ();
             DB::commit ();
             return Common::apiResponse (1,'success', new FamilyResource(Family::find($family->id)),200);
         }catch (\Exception $exception){
