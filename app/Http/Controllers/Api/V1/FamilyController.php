@@ -260,7 +260,7 @@ class FamilyController extends Controller
         if (!$family){
             $fu = FamilyUser::query ()->where ('user_id',$request->user ()->id)->where ('user_type',1)->first ();
             if ($fu){
-                $family = Family::query ()->where ('user_id',$fu->family_id)->first ();
+                $family = Family::query ()->where ('id',$fu->family_id)->first ();
             }
 
         }
