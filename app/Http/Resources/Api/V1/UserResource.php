@@ -56,7 +56,7 @@ class UserResource extends JsonResource
             'is_family_member'=>FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->exists (),
             'family_id'=>FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->value ('family_id'),
             'is_family_owner'=>Family::query ()->where ('user_id',$this->id)->exists (),
-            'family_name'=>@Family::query ()->where ('user_id',$this->id)->first()->name?:'',
+            'family_name'=>@Family::query ()->where ('id',(@FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->value ('family_id')))->first()->name?:'',
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,
