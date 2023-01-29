@@ -5,6 +5,7 @@ namespace App\Http\Resources\Api\V1;
 use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
+use App\Models\Family;
 use App\Models\FamilyUser;
 use App\Models\Ware;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -54,6 +55,8 @@ class UserResource extends JsonResource
             'is_family_admin'=>$this->is_family_admin,
             'is_family_member'=>FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->exists (),
             'family_id'=>FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->value ('family_id'),
+            'is_family_owner'=>Family::query ()->where ('user_id',$this->id)->exists (),
+            'family_name'=>@Family::query ()->where ('user_id',$this->id)->first()->name?:'',
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,
