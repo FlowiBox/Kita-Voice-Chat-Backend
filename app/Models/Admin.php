@@ -16,5 +16,9 @@ class Admin extends Administrator
         return @$this->agency->id;
     }
 
+    public function getImgAttribute(){
+        return $this->attributes['avatar'];
+    }
+
 
 }

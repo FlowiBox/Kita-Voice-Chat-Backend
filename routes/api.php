@@ -192,6 +192,8 @@ Route::middleware('auth:sanctum')->group (function (){
     });
 
     Route::post ('charge_to',[\App\Http\Controllers\Api\V1\UserController::class,'chargeTo']);
+    Route::post ('charge_history',[\App\Http\Controllers\Api\V1\UserController::class,'charge_history']);
+    Route::post ('chargePage',[\App\Http\Controllers\Api\V1\UserController::class,'chargePage']);
 
 
 });

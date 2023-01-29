@@ -148,6 +148,10 @@ class User extends Authenticatable
         return false;
     }
 
+    public function getImgAttribute(){
+        return $this->avatar;
+    }
+
 
 
 }

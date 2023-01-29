@@ -1162,6 +1162,13 @@ class RoomController extends Controller
     }
 
 
+    public function PK(Request $request){
+        $room = Room::query ()->where ('uid',$request->owner_id)->first ();
+        if (!$room) return Common::apiResponse (0,'not found',null,404);
+//        $room->
+    }
+
+
 
 
 

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\ChargeResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Charge;
 use App\Models\Code;
+use App\Models\GiftLog;
 use App\Models\Pack;
 use App\Models\User;
 use App\Models\Ware;
@@ -516,6 +518,21 @@ class UserController extends Controller
         return Common::apiResponse (1,'account deleted successfully');
     }
 
+    public function chargePage(Request $request){
+        $user = $request->user ();
+        $month_received = GiftLog::query ()
+            ->where ('receiver_id',$user->id)
+            ->whereYear ('created_at',Carbon::now ()->year)
+            ->whereMonth ('created_at',Carbon::now ()->month)
+            ->sum ('receiver_obtain');
+        $data = [
+            'diamonds'=>$month_received,
+            'usd'=>$user->old_usd+$user->target_usd-$user->target_token_usd,
+            'usd_coin'=>Common::getConf ('one_usd_value_in_coins')?:10
+        ];
+        return Common::apiResponse (1,'',$data,200);
+    }
+
 
     public function chargeTo(Request $request){
         $to = User::query ()->find ($request->to_id);
@@ -551,6 +568,20 @@ class UserController extends Controller
             DB::rollBack ();
             return Common::apiResponse (0,'failed',400);
         }
+    }
+
+
+    public function charge_history(Request $request){
+        $me = $request->user ();
+        if (!$request->type) return Common::apiResponse (0,'missing params',null,422);
+        $q = Charge::query ();
+        if ($request->type == 'received'){
+            $q = $q->where ('user_type','app')->where ('user_id',$me->id);
+        }
+        if ($request->type == 'sent'){
+            $q = $q->where ('charger_type','app')->where ('charger_id',$me->id);
+        }
+        return Common::apiResponse (1,'',ChargeResource::collection ($q->get ()),200);
     }
 
 }

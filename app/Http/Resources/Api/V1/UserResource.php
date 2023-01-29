@@ -60,6 +60,7 @@ class UserResource extends JsonResource
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,
+            'usd'=>$this->old_usd+$this->target_usd-$this->target_token_usd,
             'vip'=>Common::vip_center ($this->id),
             'income'=>Common::user_income ($this->id),
             'my_store'=>$this->my_store,

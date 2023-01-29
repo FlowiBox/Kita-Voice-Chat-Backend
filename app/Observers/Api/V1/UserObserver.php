@@ -4,6 +4,7 @@ namespace App\Observers\Api\V1;
 
 use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
+use App\Models\GiftLog;
 use App\Models\LiveTime;
 use App\Models\Target;
 use App\Models\User;
@@ -111,7 +112,12 @@ class UserObserver
         }
 
         if ($user->is_host == 1){
-            $target = Target::query ()->where ('diamonds','<=',$user->coins)->orderBy ('diamonds','desc')->first ();
+            $month_received = GiftLog::query ()
+                ->where ('receiver_id',$user->id)
+                ->whereYear ('created_at',Carbon::now ()->year)
+                ->whereMonth ('created_at',Carbon::now ()->month)
+                ->sum ('receiver_obtain');
+            $target = Target::query ()->where ('diamonds','<=',$month_received)->orderBy ('diamonds','desc')->first ();
             if ($target){
                 $hours = 0;
                 $days = 0;
@@ -144,7 +150,7 @@ class UserObserver
                         'target_hours'=>$target->hours,
                         'target_days'=>$target->days,
                         'target_agency_share'=>$target->agency_share,
-                        'user_diamonds'=>$user->coins,
+                        'user_diamonds'=>$month_received,
                         'user_hours'=>$hours,
                         'user_days'=>$days
                     ]
