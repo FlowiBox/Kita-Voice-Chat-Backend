@@ -6,9 +6,11 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\FamilyResource;
 use App\Http\Resources\Api\V1\FamilyUserResource;
+use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Family;
 use App\Models\FamilyUser;
+use App\Models\Room;
 use App\Models\User;
 use Facade\FlareClient\Api;
 use Illuminate\Http\Request;
@@ -265,7 +267,7 @@ class FamilyController extends Controller
 
         }
         if (!$family) return Common::apiResponse (0,'not found',null,404);
-        $req = FamilyUserResource::collection (FamilyUser::query ()->where ('family_id',$family->id)->where ('user_id','!=',$request->user ()->id)->get ());
+        $req = FamilyUserResource::collection (FamilyUser::query ()->where ('family_id',$family->id)->where ('user_id','!=',$request->user ()->id)->where ('status',0)->get ());
         return Common::apiResponse (1,'',$req,200);
     }
 
@@ -361,6 +363,17 @@ class FamilyController extends Controller
             'members'=>UserResource::collection ($members)
         ];
         return Common::apiResponse (1,'',$data,200);
+    }
+
+    public function getFamilyRooms(Request $request){
+        if (!$request->family_id) return Common::apiResponse (0,'missing params',null,422);
+        $family = Family::query ()->find ($request->family_id);
+        if (!$family) return Common::apiResponse (0,'not found',null,404);
+        $fu = FamilyUser::query ()->where ('family_id',$family->id)->where ('status',1)->pluck ('user_id');
+        $rooms = Room::query ()->whereIn ('uid',$fu)->where (function ($q){
+            $q->where('is_afk',1)->orWhere('room_visitor','!=','');
+        })->orderBy('hot','desc')->get();
+        return Common::apiResponse (1,'',RoomResource::collection ($rooms),200);
     }
 
 
