@@ -294,7 +294,7 @@ class FamilyController extends Controller
     }
 
     public function changeReqType(Request $request){
-        if (!$request->type || !$request->user_id || !$request->family_id || !in_array ($request->type,['0','1'])){
+        if ($request->type == null || !$request->user_id || !$request->family_id || !in_array ($request->type,[0,1])){
             return Common::apiResponse (0,'invalid data',null,422);
         }
         $req = FamilyUser::query ()
