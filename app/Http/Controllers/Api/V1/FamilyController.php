@@ -338,4 +338,30 @@ class FamilyController extends Controller
     }
 
 
+    public function getMembersList(Request $request){
+        if (!$request->family_id) return Common::apiResponse (0,'missing params',null,422);
+        $family = Family::query ()->where ('id',$request->family_id)->first ();
+        if (!$family) return Common::apiResponse (0,'not found',null,404);
+        $owner = User::query ()->find ($family->user_id);
+        $admin_ids = FamilyUser::query ()
+            ->where ('family_id',$family->id)
+            ->where ('status',1)
+            ->where ('user_type',1)
+            ->pluck ('user_id');
+        $member_ids = FamilyUser::query ()
+            ->where ('family_id',$family->id)
+            ->where ('status',1)
+            ->where ('user_type',0)
+            ->pluck ('user_id');
+        $admins = User::query ()->whereIn ('id',$admin_ids)->get ();
+        $members = User::query ()->whereIn ('id',$member_ids)->get ();
+        $data = [
+            'owner'=>new UserResource($owner),
+            'admins'=> UserResource::collection ($admins),
+            'members'=>UserResource::collection ($members)
+        ];
+        return Common::apiResponse (1,'',$data,200);
+    }
+
+
 }
