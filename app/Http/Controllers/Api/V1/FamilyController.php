@@ -376,5 +376,12 @@ class FamilyController extends Controller
         return Common::apiResponse (1,'',RoomResource::collection ($rooms),200);
     }
 
+    public function exitFamily(Request $request){
+        $user = $request->user ();
+        FamilyUser::query ()->where ('user_id',$user->id)->delete ();
+        $user->family_id = 0;
+        return Common::apiResponse (1,'done',null,201);
+    }
+
 
 }
