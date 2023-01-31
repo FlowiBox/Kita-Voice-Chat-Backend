@@ -303,6 +303,10 @@ class FamilyController extends Controller
         if ($request->type == null || !$request->user_id || !$request->family_id || !in_array ($request->type,[0,1])){
             return Common::apiResponse (0,'invalid data',null,422);
         }
+        $family = Family::query ()->find ($request->family_id);
+        if (!$family) return Common::apiResponse (0,'not found',null,404);
+        if ($request->type == 1 && $family->admins_num >= $family->num_admins) return Common::apiResponse (0,'full admins',null,454);
+        if ($request->type == 0 && $family->members_num >= $family->num) return Common::apiResponse (0,'full members',null,455);
         $req = FamilyUser::query ()
             ->where ('user_id',$request->user_id)
             ->where ('family_id',$request->family_id)

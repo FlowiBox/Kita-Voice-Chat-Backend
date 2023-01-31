@@ -581,7 +581,11 @@ class UserController extends Controller
         if ($request->type == 'sent'){
             $q = $q->where ('charger_type','app')->where ('charger_id',$me->id);
         }
+        if ($request->by_date){
+            $q = $q->where('created_at','like',"%$request->by_date%");
+        }
         return Common::apiResponse (1,'',ChargeResource::collection ($q->get ()),200);
     }
+
 
 }

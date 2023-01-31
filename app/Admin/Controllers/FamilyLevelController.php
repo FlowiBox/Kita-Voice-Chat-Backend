@@ -37,10 +37,10 @@ class FamilyLevelController extends Controller
      */
     public function show($id, Content $content)
     {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
+//        return $content
+//            ->header(trans('admin.detail'))
+//            ->description(trans('admin.description'))
+//            ->body($this->detail($id));
     }
 
     /**
@@ -85,10 +85,15 @@ class FamilyLevelController extends Controller
         $grid->column('name',__ ('name'));
         $grid->column('img',__ ('img'))->image ('',30);
         $grid->column('exp',__ ('exp'));
+        $grid->column('members',__ ('members'));
+        $grid->column('admins',__ ('admins'));
 //        $grid->type('type');
 //        $grid->created_at(trans('admin.created_at'));
 //        $grid->updated_at(trans('admin.updated_at'));
 
+        $grid->actions (function ($actions){
+            $actions->disableView();
+        });
         return $grid;
     }
 
@@ -123,9 +128,11 @@ class FamilyLevelController extends Controller
         $form = new Form(new FamilyLevel);
 
         $form->display('ID');
-        $form->text('name', 'name');
-        $form->image('img', 'img');
-        $form->number('exp', 'exp');
+        $form->text('name', __('name'));
+        $form->image('img', __('img'));
+        $form->number('exp', __('exp'));
+        $form->number('members', __('members'));
+        $form->number('admins', __('admins'));
 //        $form->text('type', 'type');
 //        $form->display(trans('admin.created_at'));
 //        $form->display(trans('admin.updated_at'));

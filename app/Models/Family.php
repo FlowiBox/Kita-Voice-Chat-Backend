@@ -18,6 +18,11 @@ class Family extends Model
         return $fu;
     }
 
+    public function getAdminsNumAttribute(){
+        $fu = FamilyUser::query ()->where ('family_id',$this->id)->where ('status',1)->where ('user_type',1)->count ();
+        return $fu;
+    }
+
     public function getLevelAttribute(){
         $giftLogs = GiftLog::query ()->where ('receiver_family_id',$this->id)->sum ('giftPrice');
         $level = FamilyLevel::query ()->where ('exp','<=',$giftLogs)->orderByDesc ('exp')->first ();
