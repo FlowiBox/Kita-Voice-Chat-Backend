@@ -221,7 +221,7 @@ class UserController extends Controller
             $v->user_id = $v->{$keywords};
             $v->exp = ceil($v->exp);
             $v->avatar = @$users->profile->avatar?:'';
-            $v->nickname = $users->nickname?:'';
+            $v->nickname = @$users->nickname?:'';
             $v->sex = @$users->profile->gender == 1?trans ('male'):trans ('female');
             $v->stars_img = Common::getLevel($v->{$keywords}, 1 ,'img')?:"";
             $v->gold_img = Common::getLevel($v->{$keywords}, 2 ,'img')?:"";

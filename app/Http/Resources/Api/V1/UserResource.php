@@ -33,6 +33,14 @@ class UserResource extends JsonResource
             }
         }
 
+        $family = Family::query ()->where ('user_id',$this->id)->first ();
+        $f = [
+            'name'=>$family->name,
+            'max_num'=>$family->num,
+            'img'=>$family->image,
+            'members_num'=>$family->members_num
+        ];
+
         $data = [
             'id'=>$this->id,
             'uuid'=>$this->uuid,
@@ -57,6 +65,7 @@ class UserResource extends JsonResource
             'family_id'=>FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->value ('family_id'),
             'is_family_owner'=>Family::query ()->where ('user_id',$this->id)->exists (),
             'family_name'=>@Family::query ()->where ('id',(@FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->value ('family_id')))->first()->name?:'',
+            'family_data'=>$f,
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,

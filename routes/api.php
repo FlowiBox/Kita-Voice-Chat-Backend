@@ -191,6 +191,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('change_user_type',[\App\Http\Controllers\Api\V1\FamilyController::class,'changeReqType']);
         Route::post ('getMembersList',[\App\Http\Controllers\Api\V1\FamilyController::class,'getMembersList']);
         Route::post ('getFamilyRooms',[\App\Http\Controllers\Api\V1\FamilyController::class,'getFamilyRooms']);
+        Route::post ('exitFamily',[\App\Http\Controllers\Api\V1\FamilyController::class,'exitFamily']);
     });
 
     Route::post ('charge_to',[\App\Http\Controllers\Api\V1\UserController::class,'chargeTo']);

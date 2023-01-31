@@ -229,6 +229,7 @@ class FamilyController extends Controller
         if ($family->id == $user->family_id){
             return Common::apiResponse (0,'already joined',null,405);
         }
+        if ($family->members_num >= $family->num) return Common::apiResponse (0,'family is full members',null,444);
         $fu = FamilyUser::query ()->where ('user_id',$user->id)->where ('family_id',$family->id)->where ('status',1)->exists ();
         if ($fu){
             $user->family_id = $family->id;
@@ -276,6 +277,9 @@ class FamilyController extends Controller
         if (!$request->status || !$request->req_id) return Common::apiResponse (0,'missing params',null,422);
         $req = FamilyUser::query ()->find ($request->req_id);
         if (!$req) return Common::apiResponse (0,'not found',null,404);
+        $family = Family::query ()->first ($req->family_id);
+        if (!$family) return Common::apiResponse (0,'not found',null,404);
+        if ($request->status == 1 && $family->members_num >= $family->num) return Common::apiResponse (0,'family is full members',null,444);
         DB::beginTransaction ();
         try {
             $req->status = $request->status;
