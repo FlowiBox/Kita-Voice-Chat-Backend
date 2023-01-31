@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api\V1;
 
 use App\Models\Admin;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChargeResource extends JsonResource
@@ -47,7 +48,7 @@ class ChargeResource extends JsonResource
             'sender'=>$sender_data,
             'receiver'=>$receiver_data,
             'value'=>$this->amount,
-            'time'=>$this->created_at
+            'time'=>$this->created_at->format('Y-m-d h:i:s A')
         ];
     }
 }
