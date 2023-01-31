@@ -26,7 +26,7 @@ class FamilyController extends Controller
     public function index(Request $request)
     {
         $search = $request->search;
-        $query =DB::table ('families')->where ('status',1);
+        $query =Family::query ()->where ('status',1);
         if ($search){
             $query = $query->where ('name',$search);
         }

@@ -8,6 +8,7 @@ class Family extends Model
 {
     protected $guarded = ['id'];
 
+
     public function owner(){
         return $this->belongsTo (User::class);
     }
@@ -25,4 +26,37 @@ class Family extends Model
         }
         return '';
     }
+
+    public function getLevelMaxMembersNumAttribute(){
+        $giftLogs = GiftLog::query ()->where ('receiver_family_id',$this->id)->sum ('giftPrice');
+        $level = FamilyLevel::query ()->where ('exp','<=',$giftLogs)->orderByDesc ('exp')->first ();
+        if ($level){
+            return $level->members;
+        }
+        return null;
+    }
+
+    public function getLevelMaxAdminsNumAttribute(){
+        $giftLogs = GiftLog::query ()->where ('receiver_family_id',$this->id)->sum ('giftPrice');
+        $level = FamilyLevel::query ()->where ('exp','<=',$giftLogs)->orderByDesc ('exp')->first ();
+        if ($level){
+            return $level->admins;
+        }
+        return null;
+    }
+
+    public function getNumAttribute($value){
+        if ($this->level_max_members_num){
+            return $this->level_max_members_num;
+        }
+        return $value;
+    }
+
+    public function getNumAdminsAttribute(){
+        if ($this->level_max_admins_num){
+            return $this->level_max_admins_num;
+        }
+        return 2;
+    }
+
 }
