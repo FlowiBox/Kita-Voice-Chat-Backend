@@ -40,7 +40,8 @@ class UserResource extends JsonResource
                 'name'=>$family->name,
                 'max_num'=>$family->num,
                 'img'=>$family->image,
-                'members_num'=>$family->members_num
+                'members_num'=>$family->members_num,
+                'level'=>$family->level
             ];
         }
 

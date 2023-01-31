@@ -16,4 +16,13 @@ class Family extends Model
         $fu = FamilyUser::query ()->where ('family_id',$this->id)->where ('status',1)->where ('user_type',0)->count ();
         return $fu;
     }
+
+    public function getLevelAttribute(){
+        $giftLogs = GiftLog::query ()->where ('receiver_family_id',$this->id)->sum ('giftPrice');
+        $level = FamilyLevel::query ()->where ('exp','<=',$giftLogs)->orderByDesc ('exp')->first ();
+        if ($level){
+            return $level->name;
+        }
+        return '';
+    }
 }

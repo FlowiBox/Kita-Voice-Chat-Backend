@@ -82,12 +82,12 @@ class FamilyLevelController extends Controller
         $grid = new Grid(new FamilyLevel);
 
         $grid->id('ID');
-        $grid->name('name');
-        $grid->img('img');
-        $grid->exp('exp');
-        $grid->type('type');
-        $grid->created_at(trans('admin.created_at'));
-        $grid->updated_at(trans('admin.updated_at'));
+        $grid->column('name',__ ('name'));
+        $grid->column('img',__ ('img'))->image ('',30);
+        $grid->column('exp',__ ('exp'));
+//        $grid->type('type');
+//        $grid->created_at(trans('admin.created_at'));
+//        $grid->updated_at(trans('admin.updated_at'));
 
         return $grid;
     }
@@ -102,13 +102,13 @@ class FamilyLevelController extends Controller
     {
         $show = new Show(FamilyLevel::findOrFail($id));
 
-        $show->id('ID');
-        $show->name('name');
-        $show->img('img');
-        $show->exp('exp');
-        $show->type('type');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
+//        $show->id('ID');
+//        $show->name('name');
+//        $show->img('img');
+//        $show->exp('exp');
+//        $show->type('type');
+//        $show->created_at(trans('admin.created_at'));
+//        $show->updated_at(trans('admin.updated_at'));
 
         return $show;
     }
@@ -124,11 +124,11 @@ class FamilyLevelController extends Controller
 
         $form->display('ID');
         $form->text('name', 'name');
-        $form->text('img', 'img');
-        $form->text('exp', 'exp');
-        $form->text('type', 'type');
-        $form->display(trans('admin.created_at'));
-        $form->display(trans('admin.updated_at'));
+        $form->image('img', 'img');
+        $form->number('exp', 'exp');
+//        $form->text('type', 'type');
+//        $form->display(trans('admin.created_at'));
+//        $form->display(trans('admin.updated_at'));
 
         return $form;
     }
