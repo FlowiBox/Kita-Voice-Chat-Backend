@@ -33,13 +33,17 @@ class UserResource extends JsonResource
             }
         }
 
+        $f = new \stdClass();
         $family = Family::query ()->where ('user_id',$this->id)->first ();
-        $f = [
-            'name'=>$family->name,
-            'max_num'=>$family->num,
-            'img'=>$family->image,
-            'members_num'=>$family->members_num
-        ];
+        if ($family){
+            $f = [
+                'name'=>$family->name,
+                'max_num'=>$family->num,
+                'img'=>$family->image,
+                'members_num'=>$family->members_num
+            ];
+        }
+
 
         $data = [
             'id'=>$this->id,
