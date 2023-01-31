@@ -11,6 +11,7 @@ use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Background;
 use App\Models\LiveTime;
+use App\Models\Pk;
 use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\RoomView;
@@ -18,6 +19,7 @@ use App\Models\User;
 use App\Repositories\Room\RoomRepo;
 use App\Repositories\Room\RoomRepoInterface;
 use App\Traits\HelperTraits\RoomTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -1162,10 +1164,41 @@ class RoomController extends Controller
     }
 
 
-    public function PK(Request $request){
-        $room = Room::query ()->where ('uid',$request->owner_id)->first ();
+    public function createPK(Request $request){
+        if (!$request->owner_id) return Common::apiResponse (0,'missing params',null,422);
+        $room = Room::query ()->where ('uid',$request->owner_id)->where ('room_status',1)->first ();
         if (!$room) return Common::apiResponse (0,'not found',null,404);
-//        $room->
+        if (!$room->is_afk && $room->room_visitor = '') return Common::apiResponse (0,'room closed',null,403);
+        $ex = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->exists ();
+        if ($ex) return Common::apiResponse (0,'already exists',null,405);
+        Pk::query ()->create (
+            [
+                'room_id'=>$room->id,
+                'team_1_boss'=>$request->team_1_boss,
+                'team_2_boss'=>$request->team_2_boss,
+                'team_1'=>$request->team_1,
+                'team_2'=>$request->team_2,
+                'judge'=>$request->judge,
+                'status'=>1,
+                'prize_value'=>$request->prize_value,
+                'start_at'=>Carbon::now (),
+                'end_at'=>Carbon::now ()->addMinutes ($request->minutes),
+                'title'=>$request->title,
+                'team_1_title'=>$request->team_1_title,
+                'team_2_title'=>$request->team_2_title,
+                'conditions'=>$request->conditions,
+            ]
+        );
+        return Common::apiResponse (1,'created',null,201);
+    }
+
+    public function closePK(Request $request){
+        $pk = Pk::query ()->find ($request->pk_id);
+        if (!$pk) return Common::apiResponse (0,'not found',null,404);
+        $pk->status = 0;
+        $pk->winner = $request->winner_team;
+        $pk->save ();
+        return Common::apiResponse (1,'closed',null,201);
     }
 
 
