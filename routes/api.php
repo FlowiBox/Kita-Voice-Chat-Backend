@@ -201,5 +201,11 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::post ('charge_history',[\App\Http\Controllers\Api\V1\UserController::class,'charge_history']);
     Route::post ('chargePage',[\App\Http\Controllers\Api\V1\UserController::class,'chargePage']);
 
+    Route::prefix ('black_list')->group (function (){
+        Route::get ('/',[\App\Http\Controllers\Api\V1\BlackListController::class,'index']);
+        Route::post ('/add',[\App\Http\Controllers\Api\V1\BlackListController::class,'add']);
+        Route::post ('/remove',[\App\Http\Controllers\Api\V1\BlackListController::class,'remove']);
+    });
+
 
 });

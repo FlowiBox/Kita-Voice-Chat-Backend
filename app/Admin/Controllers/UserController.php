@@ -8,6 +8,7 @@ use App\Models\Agency;
 use App\Models\Charge;
 use App\Models\Country;
 use App\Models\User;
+use App\Models\Ware;
 use App\Traits\AdminTraits\AdminControllersTrait;
 use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\AdminController;
@@ -56,8 +57,6 @@ class UserController extends MainController
 
     public function update ( $id )
     {
-//        dd ($this->form ());
-//        if ($this->form ()->input ('password'))
         return $this->form()->update($id);
     }
 
@@ -183,8 +182,6 @@ class UserController extends MainController
         $form->text('google_id', __('google id'));
 //        $form->switch ('is_host',__('is host'))->options (Common::getSwitchStates ());
         $form->switch ('status',__('block status'))->options (Common::getSwitchStates2 ());
-
-//        $form->select ('dre')
 
         return $form;
     }
