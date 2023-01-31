@@ -68,7 +68,7 @@ class UserResource extends JsonResource
             'is_agency_request'=>($reqs_count >= 1)?true:false,
             'is_family_admin'=>$this->is_family_admin,
             'is_family_member'=>$this->family_id?true:false,
-            'family_id'=>FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->value ('family_id'),
+            'family_id'=>$this->family_id,
             'is_family_owner'=>Family::query ()->where ('user_id',$this->id)->exists (),
             'family_name'=>@Family::query ()->where ('id',(@FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->value ('family_id')))->first()->name?:'',
             'family_data'=>$f,

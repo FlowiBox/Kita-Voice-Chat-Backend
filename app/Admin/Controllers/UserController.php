@@ -184,6 +184,8 @@ class UserController extends MainController
 //        $form->switch ('is_host',__('is host'))->options (Common::getSwitchStates ());
         $form->switch ('status',__('block status'))->options (Common::getSwitchStates2 ());
 
+//        $form->select ('dre')
+
         return $form;
     }
 
