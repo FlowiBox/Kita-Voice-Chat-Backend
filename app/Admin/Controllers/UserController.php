@@ -85,6 +85,7 @@ class UserController extends MainController
         });
         $grid->column('id', __('Id'));
         $grid->column ('uuid','uuid')->editable ();
+        $grid->column ('is_gold_id',__ ('Gold id'))->switch (Common::getSwitchStates ());
         $grid->column('name', __('Name'));
         $grid->column('nickname', __('NickName'));
         $grid->column('email', __('Email'));
@@ -122,6 +123,7 @@ class UserController extends MainController
         $show = new Show(User::findOrFail($id));
 
         $show->field('id', __('Id'));
+        $show->field('uuid', __('uuid'));
         $show->field ('avatar',__('avatar'))->image ('',200);
         $show->field('name', __('Name'));
         $show->field('nickname', __('NickName'));
@@ -152,6 +154,9 @@ class UserController extends MainController
     {
         $form = new Form(new User());
 
+        $form->display('id', __('id'));
+        $form->text('uuid', __('uuid'));
+        $form->switch ('is_gold_id',__('Gold id'))->states (Common::getSwitchStates ());
         $form->text('name', __('Name'));
         $form->select ('country_id',trans ('country'))->options (function (){
             $ops = [0=>'no country'];

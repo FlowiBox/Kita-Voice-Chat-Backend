@@ -49,6 +49,7 @@ class UserResource extends JsonResource
         $data = [
             'id'=>$this->id,
             'uuid'=>$this->uuid,
+            'is_gold'=>$this->is_gold_id,
             'name'=>$this->name?:'',
             'email'=>$this->email?:"",
             'phone'=>$this->phone?:'',
