@@ -19,10 +19,13 @@ class FamilyResource extends JsonResource
 //        if (!$this->resource){
 //            return null;
 //        }
-        $owner = new UserResource(User::find(@$this->user_id?:0));
-        if (!@$this->user_id){
+        $user = User::find($this->user_id);
+        if ($user){
+            $owner = new UserResource($user);
+        }else{
             $owner = new \stdClass();
         }
+
         $mems = FamilyUser::query ()->where ('family_id',@$this->id)->where ('status',1)->pluck ('user_id');
         return [
             'id'=>@$this->id,
