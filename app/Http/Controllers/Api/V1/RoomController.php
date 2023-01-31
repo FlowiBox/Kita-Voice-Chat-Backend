@@ -624,7 +624,7 @@ class RoomController extends Controller
         $user_id= $request->user_id;
         $phase=$request->phase;
         if(!$data['owner_id'] || !$user_id) return Common::apiResponse(0,__('Missing data'),null,422);
-        $room=(array)DB::table('rooms')->where(['uid'=>$data['owner_id']])->whereIn('room_status',['neq',4])->selectRaw('id,room_visitor,room_admin,microphone,free_mic')->first();
+        $room=(array)DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,room_visitor,room_admin,microphone,free_mic')->first();
         if(!$room)  return Common::apiResponse(0,__('room does not exist'));
         $vis_arr= !$room['room_visitor'] ? [] : explode(",", $room['room_visitor']);
         if(!in_array($user_id, $vis_arr) && $data['uid'] != $user_id)   return Common::apiResponse(0,__('The user is not in this room'),null,403);
