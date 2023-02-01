@@ -7,6 +7,7 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\EditRoomRequest;
+use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Background;
@@ -303,6 +304,12 @@ class RoomController extends Controller
         //Total value of all gifts received      stopped here
         $room_info['giftPrice'] = DB::table('gift_logs')->where('receiver_id',$owner_id)->sum('giftPrice');
 
+        $pk = Pk::query ()->where ('room_id',$room_info['id'])->where ('status',1)->first ();
+        $room_info['pk'] = new \stdClass();
+        if ($pk){
+            $room_info['pk'] = new PkResource($pk);
+        }
+        $room_info['is_pk'] = $pk?true:false;
 
         if($room_info['room_pass'] &&  $owner_id != $user_id){
             if(!$room_pass) return Common::apiResponse(false,__('The room is locked, please enter the password'),null,409);
@@ -1180,20 +1187,11 @@ class RoomController extends Controller
         Pk::query ()->create (
             [
                 'room_id'=>$room->id,
-//                'team_1_boss'=>$request->team_1_boss,
-//                'team_2_boss'=>$request->team_2_boss,
-//                'team_1'=>$request->team_1,
-//                'team_2'=>$request->team_2,
-//                'judge'=>$request->judge,
                 'status'=>1,
                 'mics'=>$room->microphone,
 //                'prize_value'=>$request->prize_value,
                 'start_at'=>Carbon::now (),
                 'end_at'=>Carbon::now ()->addMinutes ($request->minutes),
-//                'title'=>$request->title,
-//                'team_1_title'=>$request->team_1_title,
-//                'team_2_title'=>$request->team_2_title,
-//                'conditions'=>$request->conditions,
             ]
         );
         return Common::apiResponse (1,'created',null,201);

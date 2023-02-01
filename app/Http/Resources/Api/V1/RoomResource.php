@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api\V1;
 
 use App\Helpers\Common;
 use App\Http\Resources\CountryResource;
+use App\Models\Pk;
 use App\Models\User;
 use App\Repositories\User\UserRepo;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,6 +19,7 @@ class RoomResource extends JsonResource
      */
     public function toArray($request)
     {
+        $pk = Pk::query ()->where ('room_id',$this->id)->where ('status',1)->first ();
         $data = [
             'id'=>$this->id,
             'owner_id'=>$this->uid?:0,
@@ -34,6 +36,7 @@ class RoomResource extends JsonResource
             'room_intro'=>$this->room_intro?:'',
             'is_recommended'=>$this->is_recommended?:0,
             'lang'=>$this->lang?:'',
+            'is_pk'=>$pk?true:false,
             'country'=>$this->country?new CountryResource($this->country):[
                 'id'=>0,
                 'name'=> '',

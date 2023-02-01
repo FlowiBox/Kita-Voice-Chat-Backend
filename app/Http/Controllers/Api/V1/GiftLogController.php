@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Models\Agency;
+use App\Models\Pk;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -169,6 +170,16 @@ class GiftLogController extends Controller
         }else{
             $to_id = $data['toUid'];
             $to = @User::query ()->find ($data['toUid'])->name?:'empty name';
+        }
+        $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
+        if ($pk){
+            $t1 = explode (',',$pk->team_1);
+            $t2 = explode (',',$pk->team_2);
+            if (in_array ($to_id,$t1)){
+                $pk->increment ('t1_score',$gift->price*$data['num']);
+            }elseif(in_array ($to_id,$t2)){
+                $pk->increment ('t2_score',$gift->price*$data['num']);
+            }
         }
 
         Common::sendToZego_2 ('SendBroadcastMessage',$room->id,$user->id,$user->name,($user->name?:' empty name'.' send gift ') . $gift->price . ' to ' . $to );

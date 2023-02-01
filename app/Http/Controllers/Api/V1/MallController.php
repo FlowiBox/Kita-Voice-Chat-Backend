@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\WareResource;
 use App\Models\Ware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MallController extends Controller
 {
@@ -92,5 +93,32 @@ class MallController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    public function silver_value(){
+        $v = Common::getConf ('silver_value')?:10;
+        return Common::apiResponse (1,'',['coin'=>1,'silver'=>$v],200);
+    }
+
+    public function buySilverCoins(Request $request){
+        if (!$request->coins) return Common::apiResponse (0,'missing params',null,422);
+        $v = Common::getConf ('silver_value')?:10;
+        $user = $request->user ();
+        $coins = $request->coins;
+        DB::beginTransaction ();
+        try {
+            $user->gold += $coins * $v;
+            $user->di -= $coins;
+            $user->save();
+            DB::commit ();
+        }catch (\Exception $exception){
+            DB::rollBack ();
+            return Common::apiResponse (0,'failed',null,400);
+        }
+    }
+
+    public function buyVip(){
+
     }
 }
