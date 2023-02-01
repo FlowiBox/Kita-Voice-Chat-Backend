@@ -631,7 +631,7 @@ class RoomController extends Controller
         $vis_arr= !$room['room_visitor'] ? [] : explode(",", $room['room_visitor']);
         if(!in_array($user_id, $vis_arr) && $data['uid'] != $user_id)   return Common::apiResponse(0,__('The user is not in this room'),null,403);
 
-        $position = $data['position'];//Wheat sequence 0-8
+        $position = $data['position'];//mic sequence 0-8
         if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
 
         $mic_arr=explode(',', $room['microphone']);
@@ -690,6 +690,12 @@ class RoomController extends Controller
         $mic_arr[$position]=$user_id;
         $mic=implode(',', $mic_arr);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$mic]);
+        $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
+        $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
+        if ($pk){
+            $pk->mics = $mic;
+            $pk->save ();
+        }
 
         $user=(array)DB::table('users')->selectRaw('id,nickname')->find($user_id);
         $user['avatar']=@User::query ()->find ($user_id)->profile->avatar;
@@ -1174,19 +1180,20 @@ class RoomController extends Controller
         Pk::query ()->create (
             [
                 'room_id'=>$room->id,
-                'team_1_boss'=>$request->team_1_boss,
-                'team_2_boss'=>$request->team_2_boss,
-                'team_1'=>$request->team_1,
-                'team_2'=>$request->team_2,
-                'judge'=>$request->judge,
+//                'team_1_boss'=>$request->team_1_boss,
+//                'team_2_boss'=>$request->team_2_boss,
+//                'team_1'=>$request->team_1,
+//                'team_2'=>$request->team_2,
+//                'judge'=>$request->judge,
                 'status'=>1,
-                'prize_value'=>$request->prize_value,
+                'mics'=>$room->microphone,
+//                'prize_value'=>$request->prize_value,
                 'start_at'=>Carbon::now (),
                 'end_at'=>Carbon::now ()->addMinutes ($request->minutes),
-                'title'=>$request->title,
-                'team_1_title'=>$request->team_1_title,
-                'team_2_title'=>$request->team_2_title,
-                'conditions'=>$request->conditions,
+//                'title'=>$request->title,
+//                'team_1_title'=>$request->team_1_title,
+//                'team_2_title'=>$request->team_2_title,
+//                'conditions'=>$request->conditions,
             ]
         );
         return Common::apiResponse (1,'created',null,201);

@@ -6,6 +6,7 @@ namespace App\Traits\HelperTraits;
 
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Mic;
+use App\Models\Pk;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -179,7 +180,12 @@ trait RoomTrait
         $microphone[$position] = 0;
         $microphone = implode(',', $microphone);
         $result = DB::table('rooms')->where('uid',$uid)->update(['microphone'=>$microphone]);
-
+        $room = Room::query ()->where ('uid',$uid)->first ();
+        $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
+        if ($pk){
+            $pk->mics = $microphone;
+            $pk->save ();
+        }
         //clear timer
         Db::table('time_logs')->where(['uid'=>$uid,'user_id'=>$user_id])->delete();
 
