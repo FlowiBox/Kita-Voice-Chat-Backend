@@ -49,6 +49,8 @@ class UserObserver
         }
 
 
+
+
     }
 
     /**
@@ -89,7 +91,7 @@ class UserObserver
      * @return void
      */
     public function creating(User $user){
-
+        $user->uuid = (string)rand (1000000,9999999);
     }
 
     /**
@@ -108,7 +110,7 @@ class UserObserver
         }
 
         if (!$user->uuid){
-            $user->uuid = rand (1000000,9999999);
+            $user->uuid = (string)rand (1000000,9999999);
         }
 
         if ($user->is_host == 1){
@@ -178,7 +180,5 @@ class UserObserver
      * @param User $user
      * @return void
      */
-    public function saving(User $user){
-        $user->uuid = rand (1000000,9999999);
-    }
+
 }

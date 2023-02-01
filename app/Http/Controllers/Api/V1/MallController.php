@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\UserResource;
 use App\Http\Resources\WareResource;
+use App\Models\User;
 use App\Models\Ware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -106,12 +108,14 @@ class MallController extends Controller
         $v = Common::getConf ('silver_value')?:10;
         $user = $request->user ();
         $coins = $request->coins;
+        if ($user->di < $coins) return Common::apiResponse (0,'low balance',null,405);
         DB::beginTransaction ();
         try {
             $user->gold += $coins * $v;
             $user->di -= $coins;
             $user->save();
             DB::commit ();
+            return Common::apiResponse (1,'',new UserResource($user),200);
         }catch (\Exception $exception){
             DB::rollBack ();
             return Common::apiResponse (0,'failed',null,400);

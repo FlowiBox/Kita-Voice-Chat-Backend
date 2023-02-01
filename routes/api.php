@@ -207,5 +207,10 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('/remove',[\App\Http\Controllers\Api\V1\BlackListController::class,'remove']);
     });
 
+    Route::prefix ('silver')->group (function (){
+        Route::get ('/value',[\App\Http\Controllers\Api\V1\MallController::class,'silver_value']);
+        Route::post ('/buy',[\App\Http\Controllers\Api\V1\MallController::class,'buySilverCoins']);
+    });
+
 
 });
