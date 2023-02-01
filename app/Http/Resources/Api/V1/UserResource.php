@@ -34,6 +34,7 @@ class UserResource extends JsonResource
         }
 
         $f = new \stdClass();
+        $fn = '';
         $family = Family::query ()->where ('id',$this->family_id)->first ();
         if ($family){
             $f = [
@@ -43,6 +44,7 @@ class UserResource extends JsonResource
                 'members_num'=>$family->members_num,
                 'level'=>$family->level
             ];
+            $fn = $family->name;
         }
 
 
@@ -70,7 +72,7 @@ class UserResource extends JsonResource
             'is_family_member'=>$this->family_id?true:false,
             'family_id'=>$this->family_id,
             'is_family_owner'=>Family::query ()->where ('user_id',$this->id)->exists (),
-            'family_name'=>@Family::query ()->where ('id',(@FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->value ('family_id')))->first()->name?:'',
+            'family_name'=>$fn,
             'family_data'=>$f,
             'profile'=>new ProfileResource($this->profile),
             'level'=>Common::level_center ($this->id),

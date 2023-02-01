@@ -244,14 +244,11 @@ class FamilyController extends Controller
             $fu1->family_id = $family->id;
             $fu1->user_type = 0;
             $fu1->status = 0;
-            $user->family_id = $family->id;
             $fu1->save ();
-            $user->save();
             DB::commit ();
             return Common::apiResponse (1,'',new FamilyResource($family));
         }catch (\Exception $exception){
             DB::rollBack ();
-            dd ($exception);
             return Common::apiResponse (0,'failed',null,400);
         }
 
