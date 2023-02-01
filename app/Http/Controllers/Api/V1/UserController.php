@@ -34,10 +34,12 @@ class UserController extends Controller
     public function show(Request $request,$id){
         $me = $request->user ();
         $user = User::query ()->find ($id);
+        if (!$user) return Common::apiResponse (false,'not found',null,404);
+        if (in_array ($user->id,Common::getUserBlackList ($me->id))) return Common::apiResponse (0,'in black list',null,403);
+        if (in_array ($me->id,Common::getUserBlackList ($user->id))) return Common::apiResponse (0,'in black list',null,403);
         if ($me->id != $user->id){
             $user->profileVisits()->sync([$me->id]);
         }
-        if (!$user) return Common::apiResponse (false,'not found',null,404);
         $data = new UserResource($user);
         return Common::apiResponse (true,'',$data,200);
     }
