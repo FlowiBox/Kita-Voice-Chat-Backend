@@ -17,6 +17,16 @@ class PKObserver
         //
     }
 
+    public function creating(PK $pK)
+    {
+        if (!$pK->team_1){
+            $pK->team_1 = '0,0,0,0';
+        }
+        if (!$pK->team_2){
+            $pK->team_2 = '0,0,0,0';
+        }
+    }
+
     /**
      * Handle the PK "updated" event.
      *
