@@ -52,7 +52,7 @@ class GiftLogController extends Controller
         $user=DB::table('users')->select(['id','di','name'])->where(['id'=>$data['user_id']])->first();
 
         if(!$gift) return Common::apiResponse(0,'Gift does not exist or has been removed',null,404);
-        $room=DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,uid,room_visitor,play_num,hot')->first();
+        $room=DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,uid,room_visitor,play_num,hot,room_pass')->first();
 
         if(!$room)  return Common::apiResponse(0,'room does not exist',null,404);
         $vis_arr=explode(",",$room->room_visitor);
@@ -201,7 +201,7 @@ class GiftLogController extends Controller
                         'send_id'=>(integer)$data['user_id'],
                         'receiver_id'=>(integer)$to_id,
                         'owner_id'=>(integer)$data['owner_id'],
-                        'is_password'=>$room->room_pass?true:false,
+                        'is_password'=>@$room->room_pass?true:false,
                         "giftImg"=>$gift->img
                     ]
                 ];
