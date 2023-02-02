@@ -1240,7 +1240,6 @@ class RoomController extends Controller
                 'percentagepk_team2'=>$t2p
             ]
         ];
-        dd ($mc);
         $json = json_encode ($mc);
         Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
         return Common::apiResponse (1,'done',null,201);
