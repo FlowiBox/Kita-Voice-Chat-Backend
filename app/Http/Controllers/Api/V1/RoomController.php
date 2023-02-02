@@ -1220,24 +1220,19 @@ class RoomController extends Controller
         if (!$request->owner_id) return Common::apiResponse (0,'missing params',null,422);
         $room = Room::query ()->where ('uid',$request->owner_id)->first ();
         if (!$room) return Common::apiResponse (0,'not found',null,404);
-        $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
-        if (!$pk) return Common::apiResponse (0,'not found',null,404);
-        $totalDuration = Carbon::parse($pk->start_at)->diffInSeconds($pk->end_at);
-        $t1p = 0;
-        $t2p = 0;
-        if (($pk->t1_score+$pk->t2_score) > 0){
-            $t1p = $pk->t1_score/($pk->t1_score+$pk->t2_score);
-            $t2p = $pk->t2_score/($pk->t1_score+$pk->t2_score);
-        }
+//        $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
+//        if (!$pk) return Common::apiResponse (0,'not found',null,404);
+//        $totalDuration = Carbon::parse($pk->start_at)->diffInSeconds($pk->end_at);
+//        $t1p = 0;
+//        $t2p = 0;
+//        if (($pk->t1_score+$pk->t2_score) > 0){
+//            $t1p = $pk->t1_score/($pk->t1_score+$pk->t2_score);
+//            $t2p = $pk->t2_score/($pk->t1_score+$pk->t2_score);
+//        }
 
         $mc = [
             'messageContent'=>[
-                'message'=>'updatePk',
-                'PkTime'=>gmdate('H:i:s', $totalDuration),
-                'scoreTeam1'=>$pk->t1_score,
-                'scoreTeam2'=>$pk->t2_score,
-                'percentagepk_team1'=>$t1p,
-                'percentagepk_team2'=>$t2p
+                'message'=>'showPK'
             ]
         ];
         $json = json_encode ($mc);
