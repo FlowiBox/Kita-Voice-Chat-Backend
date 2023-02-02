@@ -35,7 +35,7 @@ class RegisterRequest extends FormRequest
             $rules['phone'] = ['required','unique:users'];
             $rules['code'] = ['required'];
             $rules['password'] = ['required'];
-            $rules['device_token']=[];
+            $rules['device_token']=['unique:users'];
         }elseif ($this->get ('type') == 'google'){
             $rules['google_id'] = ['required','unique:users'];
         }elseif ($this->get ('type') == 'facebook'){
