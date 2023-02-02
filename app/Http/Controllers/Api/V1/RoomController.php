@@ -1207,7 +1207,10 @@ class RoomController extends Controller
     }
 
     public function closePK(Request $request){
-        $pk = Pk::query ()->find ($request->pk_id);
+        if (!$request->owner_id) return Common::apiResponse (0,'missing params',null,422);
+        $room = Room::query ()->where ('uid',$request->owner_id)->first ();
+        if (!$room) return Common::apiResponse (0,'not found',null,404);
+        $pk = Pk::query ()->where ('room_id',$room->id)->first ();
         if (!$pk) return Common::apiResponse (0,'not found',null,404);
         $pk->status = 0;
         $pk->winner = $request->winner_team;
