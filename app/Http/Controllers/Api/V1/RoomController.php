@@ -637,7 +637,7 @@ class RoomController extends Controller
         $room=(array)DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,room_visitor,room_admin,microphone,free_mic')->first();
         if(!$room)  return Common::apiResponse(0,__('room does not exist'));
         $vis_arr= !$room['room_visitor'] ? [] : explode(",", $room['room_visitor']);
-        if(!in_array($user_id, $vis_arr) && $data['uid'] != $user_id)   return Common::apiResponse(0,__('The user is not in this room'),null,403);
+        if(!in_array($user_id, $vis_arr) && $data['owner_id'] != $user_id)   return Common::apiResponse(0,__('The user is not in this room'),null,403);
 
         $position = $data['position'];//mic sequence 0-8
         if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
