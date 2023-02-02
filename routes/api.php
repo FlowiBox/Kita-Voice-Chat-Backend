@@ -80,6 +80,7 @@ Route::middleware('auth:sanctum')->group (function (){
 
         Route::post ('createPK',[\App\Http\Controllers\Api\V1\RoomController::class,'createPK']);
         Route::post ('closePK',[\App\Http\Controllers\Api\V1\RoomController::class,'closePK']);
+        Route::post ('showPK',[\App\Http\Controllers\Api\V1\RoomController::class,'showPK']);
 
     });
     Route::prefix ('mall')->group (function (){
@@ -209,6 +210,7 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::prefix ('silver')->group (function (){
         Route::get ('/value',[\App\Http\Controllers\Api\V1\MallController::class,'silver_value']);
+        Route::get ('/history',[\App\Http\Controllers\Api\V1\MallController::class,'silver_history']);
         Route::post ('/buy',[\App\Http\Controllers\Api\V1\MallController::class,'buySilverCoins']);
     });
 

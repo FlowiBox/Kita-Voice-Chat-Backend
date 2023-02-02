@@ -6,6 +6,8 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Http\Resources\WareResource;
+use App\Models\Silver;
+use App\Models\SilverHestory;
 use App\Models\User;
 use App\Models\Ware;
 use Illuminate\Http\Request;
@@ -99,20 +101,28 @@ class MallController extends Controller
 
 
     public function silver_value(){
-        $v = Common::getConf ('silver_value')?:10;
-        return Common::apiResponse (1,'',['coin'=>1,'silver'=>$v],200);
+        $data = Silver::query ()->select ('coin','silver')->orderBy ('sort')->get ();
+        return Common::apiResponse (1,'',$data,200);
     }
 
     public function buySilverCoins(Request $request){
-        if (!$request->coins) return Common::apiResponse (0,'missing params',null,422);
-        $v = Common::getConf ('silver_value')?:10;
+        if (!$request->silver_id) return Common::apiResponse (0,'missing params',null,422);
         $user = $request->user ();
-        $coins = $request->coins;
-        if ($user->di < $coins) return Common::apiResponse (0,'low balance',null,405);
+        $silver = Silver::query ()->find ($request->silver_id);
+        if (!$silver) return Common::apiResponse (0,'not found',null,404);
+        if ($user->di < $silver->coin) return Common::apiResponse (0,'low balance',null,405);
         DB::beginTransaction ();
         try {
-            $user->gold += $coins * $v;
-            $user->di -= $coins;
+            SilverHestory::query ()->create (
+                [
+                    'coins'=>$silver->coin,
+                    'silvers'=>$silver->silver,
+                    'silver_id'=>$silver->id,
+                    'user_id'=>$user->id
+                ]
+            );
+            $user->gold += $silver->silver;
+            $user->di -= $silver->coin;
             $user->save();
             DB::commit ();
             return Common::apiResponse (1,'',new UserResource($user),200);
@@ -120,6 +130,12 @@ class MallController extends Controller
             DB::rollBack ();
             return Common::apiResponse (0,'failed',null,400);
         }
+    }
+
+    public function silver_history(Request $request){
+        $user = $request->user ();
+        $hes = SilverHestory::query ()->where ('user_id',$user->id)->select ('coins','silvers','created_at as time')->get ();
+        return Common::apiResponse (1,'',$hes,200);
     }
 
     public function buyVip(){

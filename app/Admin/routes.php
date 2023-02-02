@@ -80,6 +80,7 @@ Route::group(
 
     $router->resource ('agency_join_requests','AgencyJoinRequestController');
     $router->resource ('family_levels','FamilyLevelController');
+    $router->resource ('silver','SilverController');
 
 
 }
