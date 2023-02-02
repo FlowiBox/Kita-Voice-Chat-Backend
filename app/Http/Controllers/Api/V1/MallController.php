@@ -101,7 +101,7 @@ class MallController extends Controller
 
 
     public function silver_value(){
-        $data = Silver::query ()->select ('id','coin','silver')->orderBy ('sort')->get ();
+        $data = Silver::query ()->select ('coin','silver')->orderBy ('sort')->get ();
         return Common::apiResponse (1,'',$data,200);
     }
 
