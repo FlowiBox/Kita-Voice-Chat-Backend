@@ -306,10 +306,10 @@ class RoomController extends Controller
 
         $pk = Pk::query ()->where ('room_id',$room_info['id'])->where ('status',1)->first ();
         $room_info['pk'] = new \stdClass();
-        $room_info['is_pk'] = 0;
+        $room_info['is_pk'] = false;
         if ($pk){
             $room_info['pk'] = new PkResource($pk);
-            $room_info['is_pk'] = 1;
+            $room_info['is_pk'] = true;
         }
 
         if($room_info['room_pass'] &&  $owner_id != $user_id){
