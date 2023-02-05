@@ -455,16 +455,16 @@ class RoomController extends Controller
         $user = $request->user ();
         $user->now_room_uid = $room_info['owner_id'];
         $user->save();
-        $timer_id = 0;
-        if($owner_id == $user_id){
-            $timer = LiveTime::query ()->create (
-                [
-                    'uid'=>$owner_id,
-                    'start_time'=>time ()
-                ]
-            );
-            $timer_id = $timer->id;
-        }
+//        $timer_id = 0;
+//        if($owner_id == $user_id){
+//            $timer = LiveTime::query ()->create (
+//                [
+//                    'uid'=>$owner_id,
+//                    'start_time'=>time ()
+//                ]
+//            );
+//            $timer_id = $timer->id;
+//        }
 
         $d = [
             "messageContent"=>[
@@ -479,7 +479,7 @@ class RoomController extends Controller
             Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
             Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,$user->name.' inter room');
         }
-        $room_info['timer_id'] = $timer_id;
+//        $room_info['timer_id'] = $timer_id;
         $room_info['password_status']=$room_info['room_pass']==""?false:true;
 
         return Common::apiResponse (true,'',$room_info);
@@ -495,14 +495,12 @@ class RoomController extends Controller
         $user = $request->user ();
         $user->now_room_uid = 0;
         $user->save();
-        if ($request->owner_id == $user_id){
-            $this->calcTime ($request->timer_id);
-        }
+        $this->calcTime ($user_id);
         return Common::apiResponse(true,'exited',['visitor_ids_list'=>$visitor_ids_list]);
     }
 
-    public function calcTime($timer_id){
-        $timer = LiveTime::query ()->find ($timer_id);
+    public function calcTime($uid){
+        $timer = LiveTime::query ()->where ('uid',$uid)->where ('end_time','')->first ();
         if ($timer){
             $hours = floor((time ()-$timer->start_time)/(60*60));
             $timer->end_time = time ();
@@ -714,6 +712,12 @@ class RoomController extends Controller
         if($res){
             //Remove mic sequence
             Common::delMicHand($user_id);
+            $timer = LiveTime::query ()->create (
+                [
+                    'uid'=>$user_id,
+                    'start_time'=>time ()
+                ]
+            );
             return Common::apiResponse(1,__('Success on the mic'),$res_arr);
         }else{
             return Common::apiResponse(0,__('Failed to mic'),null,400);
@@ -725,6 +729,7 @@ class RoomController extends Controller
         $data = $request;
         $result=Common::go_microphone_hand($data['owner_id'],$data['user_id']);
         if($result){
+            $this->calcTime($data['user_id']);
             return Common::apiResponse(1,__('Success'));
         }else{
             return Common::apiResponse(0,__('Failed'),null,400);
@@ -885,6 +890,7 @@ class RoomController extends Controller
             $json = json_encode ($mc);
 //            Common::sendToZego_3 ('KickoutUser',$room_id,$black_id);
             Common::sendToZego_4 ('SendCustomCommand',$room_id,$uid,$black_id,$json);
+            $this->calcTime($black_id);
             return Common::apiResponse(1,'success');
         }else{
             return Common::apiResponse(0,'fail',null,400);

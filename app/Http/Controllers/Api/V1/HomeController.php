@@ -8,9 +8,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CountryResource;
 use App\Models\Background;
 use App\Models\Country;
+use App\Models\GiftLog;
+use App\Models\LiveTime;
 use App\Models\RoomCategory;
 use App\Models\User;
 use App\Models\Vip;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -87,6 +90,70 @@ class HomeController extends Controller
             return Common::apiResponse (1,'exists',true);
         }
         return Common::apiResponse (0,'does not exist',false,404);
+    }
+
+
+    public function getTimes(Request $request){
+        $user_id = $request->user_id?:$request->user ()->id;
+        $hours = 0;
+        $days = 0;
+        $diamonds = 0;
+        if ($request->time == 'today'){
+            $times = LiveTime::query ()->where ('uid',$user_id)
+                ->whereYear ('created_at','=',Carbon::now ()->year)
+                ->whereMonth ('created_at','=',Carbon::now ()->month)
+                ->whereDay ('created_at','=',Carbon::now ()->day)
+                ->selectRaw('uid, count(hours) as hnum, count(days) as dnum')
+                ->groupBy ('uid')
+                ->first ()
+            ;
+            if ($times){
+                $hours = $times->hnum;
+                $days = $times->dnum;
+            }
+
+            $gifts_d = GiftLog::query ()->where ('receiver_id',$user_id)
+                ->whereYear ('created_at','=',Carbon::now ()->year)
+                ->whereMonth ('created_at','=',Carbon::now ()->month)
+                ->whereDay ('created_at','=',Carbon::now ()->day)
+                ->sum ('receiver_obtain');
+            $diamonds = $gifts_d;
+        }elseif($request->time == 'month'){
+            $times = LiveTime::query ()->where ('uid',$user_id)
+                ->whereYear ('created_at','=',Carbon::now ()->year)
+                ->whereMonth ('created_at','=',Carbon::now ()->month)
+                ->selectRaw('uid, count(hours) as hnum, count(days) as dnum')
+                ->groupBy ('uid')
+                ->first ()
+            ;
+            if ($times){
+                $hours = $times->hnum;
+                $days = $times->dnum;
+            }
+
+            $gifts_d = GiftLog::query ()->where ('receiver_id',$user_id)
+                ->whereYear ('created_at','=',Carbon::now ()->year)
+                ->whereMonth ('created_at','=',Carbon::now ()->month)
+                ->sum ('receiver_obtain');
+            $diamonds = $gifts_d;
+        }else{
+            $times = LiveTime::query ()->where ('uid',$user_id)
+                ->selectRaw('uid, count(hours) as hnum, count(days) as dnum')
+                ->groupBy ('uid')
+                ->first ()
+            ;
+            if ($times){
+                $hours = $times->hnum;
+                $days = $times->dnum;
+            }
+
+            $gifts_d = GiftLog::query ()->where ('receiver_id',$user_id)
+                ->sum ('receiver_obtain');
+            $diamonds = $gifts_d;
+        }
+
+        return Common::apiResponse (1,'',['diamonds'=>$diamonds,'days'=>$days,'hours'=>$hours],200);
+
     }
 
 

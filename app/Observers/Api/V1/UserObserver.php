@@ -132,7 +132,7 @@ class UserObserver
                 ;
                 if ($times){
                     $hours = $times->hnum;
-                    $days = $times->days;
+                    $days = $times->dnum;
                 }
                 UserTarget::query ()->updateOrCreate (
                     [

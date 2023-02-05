@@ -117,6 +117,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('go_order_list',[\App\Http\Controllers\Api\V1\OrderController::class,'go_order_list']);
         Route::get ('get_user_union',[\App\Http\Controllers\Api\V1\UnionController::class,'getUserUnion']);
         Route::get ('agency_join_requests',[\App\Http\Controllers\Api\V1\AgencyController::class,'joinRequests']);
+        Route::post ('getTimes',[\App\Http\Controllers\Api\V1\HomeController::class,'getTimes']);
     });
 
     Route::post ('send_pack',[\App\Http\Controllers\Api\V1\UserController::class,'sendPack']);
