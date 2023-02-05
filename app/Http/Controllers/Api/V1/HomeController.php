@@ -98,6 +98,7 @@ class HomeController extends Controller
         $hours = 0;
         $days = 0;
         $diamonds = 0;
+        $today = false;
         if ($request->time == 'today'){
             $times = LiveTime::query ()->where ('uid',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
@@ -118,6 +119,9 @@ class HomeController extends Controller
                 ->whereDay ('created_at','=',Carbon::now ()->day)
                 ->sum ('receiver_obtain');
             $diamonds = $gifts_d;
+            if ($days >= 1){
+                $today = true;
+            }
         }elseif($request->time == 'month'){
             $times = LiveTime::query ()->where ('uid',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
@@ -152,7 +156,7 @@ class HomeController extends Controller
             $diamonds = $gifts_d;
         }
 
-        return Common::apiResponse (1,'',['diamonds'=>$diamonds,'days'=>$days,'hours'=>$hours],200);
+        return Common::apiResponse (1,'',['diamonds'=>$diamonds,'days'=>$days,'hours'=>$hours, 'today'=>$today],200);
 
     }
 
