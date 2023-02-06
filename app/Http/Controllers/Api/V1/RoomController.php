@@ -429,7 +429,7 @@ class RoomController extends Controller
 
         foreach ($room_info as $k => &$v){
             if (!$v){
-                if (in_array ($k,['is_afk','gap','exp','sort','num','audio_sort','audio_num','strto_time'])){
+                if (in_array ($k,['is_afk','gap','exp','sort','num','audio_sort','audio_num','strto_time','is_pk'])){
                     $v = 0;
                 }else{
                     $v = '';
