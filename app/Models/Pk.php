@@ -12,11 +12,11 @@ class Pk extends Model
 
     public function getT1PerAttribute(){
         if (($this->t1_score + $this->t2_score) > 0){
-            $res = $this->t1_score/($this->t1_score + $this->t1_score);
+            $res = $this->t1_score/($this->t1_score + $this->t2_score);
         }else{
             $res = 0;
         }
-        return $res;
+        return (double)$res;
     }
 
     public function getT2PerAttribute(){
@@ -25,6 +25,6 @@ class Pk extends Model
         }else{
             $res = 0;
         }
-        return $res;
+        return (double)$res;
     }
 }
