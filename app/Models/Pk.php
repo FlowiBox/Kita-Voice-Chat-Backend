@@ -16,7 +16,7 @@ class Pk extends Model
         }else{
             $res = 0;
         }
-        return (double)$res;
+        return "$res";
     }
 
     public function getT2PerAttribute(){
@@ -25,6 +25,6 @@ class Pk extends Model
         }else{
             $res = 0;
         }
-        return (double)$res;
+        return "$res";
     }
 }
