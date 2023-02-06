@@ -83,6 +83,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('showPK',[\App\Http\Controllers\Api\V1\RoomController::class,'showPK']);
 
 
+
         Route::post ('admins',[\App\Http\Controllers\Api\V1\RoomController::class,'getAdmins']);
 
     });
