@@ -10,6 +10,7 @@ use App\Models\Background;
 use App\Models\Country;
 use App\Models\GiftLog;
 use App\Models\LiveTime;
+use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\User;
 use App\Models\Vip;
@@ -158,6 +159,21 @@ class HomeController extends Controller
 
         return Common::apiResponse (1,'',['diamonds'=>$diamonds,'days'=>$days,'hours'=>$hours, 'today'=>$today],200);
 
+    }
+
+    public function hidePk(Request $request){
+        if (!$request->owner_id) return Common::apiResponse (0,'missing param',null,422);
+        $user = $request->user ();
+        $room = Room::query ()->where ('uid',$request->owner_id)->first ();
+        if (!$room) return Common::apiResponse (0,'not found',null,404);
+        $d = [
+            "messageContent"=>[
+                "message"=>"hidePK",
+            ]
+        ];
+        $json = json_encode ($d);
+        Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+        return Common::apiResponse (1,'done',null,201);
     }
 
 

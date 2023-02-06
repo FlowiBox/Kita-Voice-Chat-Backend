@@ -168,6 +168,7 @@ Route::middleware('auth:sanctum')->group (function (){
     });
 
     Route::get ('vip_count',[\App\Http\Controllers\Api\V1\HomeController::class,'countVips']);
+    Route::post ('hidePk',[\App\Http\Controllers\Api\V1\HomeController::class,'hidePk']);
 
 
     Route::prefix ('account')->group (function (){

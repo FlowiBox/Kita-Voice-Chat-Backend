@@ -86,7 +86,12 @@ class RoomController extends MainController
     {
         $grid = new Grid(new Room);
 
-
+        $grid->filter (function (Grid\Filter $filter){
+            $filter->expand ();
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('uid',__ ('owner_id'));
+            });
+        });
 
         $grid->id('ID');
         $grid->column('numid',trans ('custom id'));
@@ -106,6 +111,7 @@ class RoomController extends MainController
         $grid->column('microphone',trans ('microphone'));
         $grid->column('room_visitor',trans ('room_visitor'));
         $grid->column('is_afk',trans ('owner in'))->switch (Common::getSwitchStates ());
+//        $grid->column('free_mic',trans ('is mic free'))->switch (Common::getSwitchStates ());
 
         $grid->actions (function ($action){
             $action->disableView ();

@@ -647,7 +647,7 @@ class RoomController extends Controller
 
         //How to play free mic
         $adm_id=$request->user ()->id;
-        if($room['free_mic'] == 0 && $adm_id != $data['owner_id']){
+        if($room['free_mic'] == 1 && $adm_id != $data['owner_id']){
             $adm_arr= $room['room_admin'] ? explode(",", $room['room_admin']) : [$data['owner_id']];
             if(!in_array($adm_id, $vis_arr))    return Common::apiResponse(0,__('Please enter this room first'),null,403);
             if(!in_array($adm_id, $adm_arr))    return Common::apiResponse(0,__('You do not have this permission yet'),null,408);
