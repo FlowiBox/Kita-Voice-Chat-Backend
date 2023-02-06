@@ -8,6 +8,7 @@ use App\Models\Agency;
 use App\Models\Pk;
 use App\Models\Room;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -180,6 +181,21 @@ class GiftLogController extends Controller
             }elseif(in_array ($to_id,$t2)){
                 $pk->increment ('t2_score',$gift->price*$data['num']);
             }
+
+            $ms = ['messageContent'=> [
+                "message"=> "updatePk",
+                "PkTime"=>Carbon::parse ($pk->end_at)->diffInMinutes(now ()),
+                "scoreTeam1"=>$pk->t1_score,
+                "scoreTeam2"=>$pk->t2_score,
+                "percentagepk_team1"=>$pk->t1_per,
+                "percentagepk_team2"=>$pk->t2_per
+                ]
+            ];
+
+            $json = json_encode ($ms);
+
+            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+
         }
 
         Common::sendToZego_2 ('SendBroadcastMessage',$room->id,$user->id,$user->name,($user->name?:' empty name'.' send gift ') . $gift->price . ' to ' . $to );
