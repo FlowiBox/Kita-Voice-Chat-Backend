@@ -1230,9 +1230,9 @@ class RoomController extends Controller
         if (!$request->owner_id) return Common::apiResponse (0,'missing params',null,422);
         $room = Room::query ()->where ('uid',$request->owner_id)->first ();
         if (!$room) return Common::apiResponse (0,'not found',null,404);
-        $pk = Pk::query ()->where ('room_id',$room->id)->first ();
+        $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
         if (!$pk) return Common::apiResponse (0,'not found',null,404);
-        $pk->status = 0;
+        Pk::query ()->where ('room_id',$room->id)->where ('status',1)->update (['status'=>0]);
         if ($pk->t1_score > $pk->t2_score){
             $winner = 1;
         }elseif ($pk->t2_score > $pk->t1_score){
