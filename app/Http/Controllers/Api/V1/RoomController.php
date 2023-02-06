@@ -207,6 +207,20 @@ class RoomController extends Controller
 
 //------------------------------------------------------------------ops----------------------------------------------------------------
 
+
+    public function getAdmins(Request $request){
+        if (!$request->owner_id) return Common::apiResponse (0,'missing params',null,422);
+        $room = Room::query ()->where ('uid',$request->owner_id)->first ();
+        if (!$room) return Common::apiResponse (0,'not found',null,404);
+        $room_admin = explode (',',$room->room_admin);
+        $admins = User::query ()->whereIn ('id',$room_admin)->get ();
+        $ads = UserResource::collection ($admins);
+        return Common::apiResponse (1,'',$ads,200);
+    }
+
+
+
+
     //get_room_by_owner_id
 
     public function get_room_by_owner_id(Request $request){
@@ -1219,8 +1233,27 @@ class RoomController extends Controller
         $pk = Pk::query ()->where ('room_id',$room->id)->first ();
         if (!$pk) return Common::apiResponse (0,'not found',null,404);
         $pk->status = 0;
-        $pk->winner = $request->winner_team;
+        if ($pk->t1_score > $pk->t2_score){
+            $winner = 1;
+        }elseif ($pk->t2_score > $pk->t1_score){
+            $winner = 2;
+        }else{
+            $winner = 0;
+        }
+        $pk->winner = $winner;
         $pk->save ();
+        $mc = [
+            'messageContent'=>[
+                'message'=>'closePk',
+                'scoreTeam1'=>'',
+                'scoreTeam2'=>'',
+                'percentagepk_team1'=>$pk->t1_per,
+                'percentagepk_team2'=>$pk->t2_per,
+                'winner_Team'=>$winner,
+            ]
+        ];
+        $json = json_encode ($mc);
+        Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
         return Common::apiResponse (1,'closed',null,201);
     }
 

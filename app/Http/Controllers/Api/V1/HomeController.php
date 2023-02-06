@@ -157,7 +157,7 @@ class HomeController extends Controller
             $diamonds = $gifts_d;
         }
 
-        return Common::apiResponse (1,'',['diamonds'=>$diamonds,'days'=>$days,'hours'=>$hours, 'today'=>$today],200);
+        return Common::apiResponse (1,'',['diamonds'=>(integer)$diamonds,'days'=>$days,'hours'=>$hours, 'today'=>$today],200);
 
     }
 

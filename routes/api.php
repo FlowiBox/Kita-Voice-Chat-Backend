@@ -82,6 +82,8 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('closePK',[\App\Http\Controllers\Api\V1\RoomController::class,'closePK']);
         Route::post ('showPK',[\App\Http\Controllers\Api\V1\RoomController::class,'showPK']);
 
+        Route::post ('admins',[\App\Http\Controllers\Api\V1\RoomController::class,'getAdmins']);
+
     });
     Route::prefix ('mall')->group (function (){
         Route::get ('wares',[\App\Http\Controllers\Api\V1\MallController::class,'index']);
