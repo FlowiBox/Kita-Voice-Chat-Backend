@@ -228,6 +228,7 @@ class UserController extends Controller
             $v->stars_img = Common::getLevel($v->{$keywords}, 1 ,'img')?:"";
             $v->gold_img = Common::getLevel($v->{$keywords}, 2 ,'img')?:"";
             $v->vip_img = Common::getLevel($v->{$keywords}, 3 ,'img')?:"";
+            $v->user = $users;
             if ($v->{$keywords} == $user_id) $l = $i;
             unset($v->{$keywords});
         }
@@ -241,6 +242,7 @@ class UserController extends Controller
         $kong['stars_img']='';
         $kong['gold_img']='';
         $kong['vip_img']='';
+        $kong['user']=new \stdClass();
         if ($class != 3){
             $data[0] = isset($data[0]) ? $data[0] : $kong;
             $data[1] = isset($data[1]) ? $data[1] : $kong;

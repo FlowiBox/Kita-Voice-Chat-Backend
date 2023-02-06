@@ -215,5 +215,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('/buy',[\App\Http\Controllers\Api\V1\MallController::class,'buySilverCoins']);
     });
 
-
+    Route::prefix ('coins')->group (function (){
+        Route::get ('/list',[\App\Http\Controllers\Api\V1\MallController::class,'coinList']);
+    });
 });

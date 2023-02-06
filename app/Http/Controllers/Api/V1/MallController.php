@@ -6,6 +6,7 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Http\Resources\WareResource;
+use App\Models\Coin;
 use App\Models\Silver;
 use App\Models\SilverHestory;
 use App\Models\User;
@@ -138,7 +139,10 @@ class MallController extends Controller
         return Common::apiResponse (1,'',$hes,200);
     }
 
-    public function buyVip(){
-
+    public function coinList(){
+        $data = Coin::query ()->select ('id','usd','coin')->get ();
+        return Common::apiResponse (1,'',$data,200);
     }
+
+
 }
