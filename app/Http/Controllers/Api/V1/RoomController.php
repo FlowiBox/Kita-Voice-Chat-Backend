@@ -1245,8 +1245,8 @@ class RoomController extends Controller
         $mc = [
             'messageContent'=>[
                 'message'=>'closePk',
-                'scoreTeam1'=>'',
-                'scoreTeam2'=>'',
+                'scoreTeam1'=>$pk->t1_score,
+                'scoreTeam2'=>$pk->t2_score,
                 'percentagepk_team1'=>$pk->t1_per,
                 'percentagepk_team2'=>$pk->t2_per,
                 'winner_Team'=>$winner,
