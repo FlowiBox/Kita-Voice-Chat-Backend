@@ -177,10 +177,11 @@ class GiftLogController extends Controller
             $t1 = explode (',',$pk->team_1);
             $t2 = explode (',',$pk->team_2);
             if (in_array ($to_id,$t1)){
-                $pk->increment ('t1_score',$gift->price*$data['num']);
+                $pk->t1_score += $gift->price*($data['num']?:1);
             }elseif(in_array ($to_id,$t2)){
-                $pk->increment ('t2_score',$gift->price*$data['num']);
+                $pk->t2_score += $gift->price*($data['num']?:1);
             }
+            $pk->save ();
 
             $ms = ['messageContent'=> [
                 "message"=> "updatePk",
