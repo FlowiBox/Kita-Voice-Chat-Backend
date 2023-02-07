@@ -1294,6 +1294,15 @@ class RoomController extends Controller
             ->orderByDesc('total')
             ->first();
         $fUser = User::query ()->find ($gl->sender_id);
+
+        $ms = [
+            'messageContent'=>[
+                'message'=>'topSendGifts',
+                'img'=>'user img',
+                'id'=>'user id',
+                'name'=>'user name'
+            ]
+        ];
         return Common::apiResponse (1,'',['user'=>new UserResource($fUser),'total'=>(integer)$gl->total],200);
     }
 }

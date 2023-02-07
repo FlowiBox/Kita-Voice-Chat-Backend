@@ -105,6 +105,9 @@ class ProfileController extends Controller
         if ($request->bio){
             $user->bio = $request->bio;
         }
+        if ($request->chat_id){
+            $user->chat_id = $request->chat_id;
+        }
 
         $user->save();
         $profile = $user->profile;
