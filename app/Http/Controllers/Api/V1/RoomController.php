@@ -11,6 +11,7 @@ use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Background;
+use App\Models\GiftLog;
 use App\Models\LiveTime;
 use App\Models\Pk;
 use App\Models\Room;
@@ -1280,5 +1281,19 @@ class RoomController extends Controller
         $json = json_encode ($mc);
         Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
         return Common::apiResponse (1,'done',null,201);
+    }
+
+
+    public function firstOfRoom(Request $request){
+        $uid = $request->owner_id;
+        if (!$uid) return Common::apiResponse (0,'missing param',null,422);
+        $gl = GiftLog::query()
+            ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
+            ->where('roomowner_id', $uid)
+            ->groupBy('sender_id')
+            ->orderByDesc('total')
+            ->first();
+        $fUser = User::query ()->find ($gl->sender_id);
+        return Common::apiResponse (1,'',['user'=>new UserResource($fUser),'total'=>(integer)$gl->total],200);
     }
 }

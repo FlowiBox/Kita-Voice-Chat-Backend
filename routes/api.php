@@ -85,6 +85,7 @@ Route::middleware('auth:sanctum')->group (function (){
 
 
         Route::post ('admins',[\App\Http\Controllers\Api\V1\RoomController::class,'getAdmins']);
+        Route::post ('firstOfRoom',[\App\Http\Controllers\Api\V1\RoomController::class,'firstOfRoom']);
 
     });
     Route::prefix ('mall')->group (function (){
