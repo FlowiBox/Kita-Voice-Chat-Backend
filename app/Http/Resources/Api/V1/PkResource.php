@@ -32,8 +32,8 @@ class PkResource extends JsonResource
             'h'=>Carbon::parse ($this->end_at)->diff (now ())->h,
             'm'=>Carbon::parse ($this->end_at)->diff (now ())->i,
             's'=>Carbon::parse ($this->end_at)->diff (now ())->s,
-            't1_scale'=>$this->t1_per,
-            't2_scale'=>$this->t2_per,
+            't1_scale'=>(double)$this->t1_per,
+            't2_scale'=>(double)$this->t2_per,
         ];
     }
 }
