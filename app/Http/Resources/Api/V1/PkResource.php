@@ -18,13 +18,7 @@ class PkResource extends JsonResource
     {
         $t1 = User::query ()->whereIn ('id',explode (',',$this->team_1))->get ();
         $t2 = User::query ()->whereIn ('id',explode (',',$this->team_2))->get ();
-        $t1_scale = 0;
-        $t2_scale = 0;
-        if (($this->t1_score + $this->t2_score) > 0){
-            $t1_scale = $this->t1_score/($this->t1_score + $this->t2_score);
-            $t2_scale = $this->t2_score/($this->t1_score + $this->t2_score);
-        }
-//        dd (Carbon::parse ($this->end_at)->diff (now ()));
+
         return [
             'id'=>$this->id,
             'room_id'=>$this->room_id,
@@ -38,8 +32,8 @@ class PkResource extends JsonResource
             'h'=>Carbon::parse ($this->end_at)->diff (now ())->h,
             'm'=>Carbon::parse ($this->end_at)->diff (now ())->i,
             's'=>Carbon::parse ($this->end_at)->diff (now ())->s,
-            't1_scale'=>$t1_scale,
-            't2_scale'=>$t2_scale,
+            't1_scale'=>$this->t1_per,
+            't2_scale'=>$this->t2_per,
         ];
     }
 }
