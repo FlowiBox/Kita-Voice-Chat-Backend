@@ -14,7 +14,7 @@ class Pk extends Model
         if (($this->t1_score + $this->t2_score) > 0){
             $res = $this->t1_score/($this->t1_score + $this->t2_score);
         }else{
-            $res = 0;
+            $res = 0.5;
         }
         return "$res";
     }
@@ -23,7 +23,7 @@ class Pk extends Model
         if (($this->t1_score + $this->t2_score) > 0){
             $res = $this->t2_score/($this->t1_score + $this->t2_score);
         }else{
-            $res = 0;
+            $res = 0.5;
         }
         return "$res";
     }
