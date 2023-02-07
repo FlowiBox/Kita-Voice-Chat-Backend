@@ -70,6 +70,8 @@ class LoginController extends Controller
     protected function loginWithGoogle($data){
         $user = User::query ()->whereNotNull ('google_id')->where ('google_id',$data['google_id'])->first ();
         if ($user){
+            $user->is_points_first = 0;
+            $user->save ();
             if(!$user->device_token){
                 $user->device_token = @$data['device_token'];
                 $user->save ();
@@ -96,6 +98,7 @@ class LoginController extends Controller
                 $token = $user->createToken('api_token')->plainTextToken;
                 $country = Country::query ()->where('phone_code','101')->first ();
                 $user->country_id = @$country->id?:0;
+                $user->is_points_first = 1;
                 $user->save();
                 $user->auth_token=$token;
                 return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
@@ -106,6 +109,8 @@ class LoginController extends Controller
     protected function loginWithFacebook($data){
         $user = User::query ()->whereNotNull ('facebook_id')->where ('facebook_id',$data['facebook_id'])->first ();
         if ($user){
+            $user->is_points_first = 0;
+            $user->save ();
             if(!$user->device_token){
                 $user->device_token = @$data['device_token'];
                 $user->save ();
@@ -133,9 +138,11 @@ class LoginController extends Controller
                 );
                 $country = Country::query ()->where('phone_code','101')->first ();
                 $user->country_id = @$country->id?:0;
+                $user->is_points_first = 1;
                 $user->save();
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
+
                 return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
             }
         }
