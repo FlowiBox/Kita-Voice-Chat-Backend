@@ -152,8 +152,8 @@ class LoginController extends Controller
                 'code'=>$code
             ]
         );
-        $client = new \CMText\TextClient('908ab716-9d9d-4143-a983-b6d74aee7d0e');
-        $result = $client->SendMessage('Message_Text', 'CM.com', [ '201271820459' ]);
+//        $client = new \CMText\TextClient('908ab716-9d9d-4143-a983-b6d74aee7d0e');
+//        $result = $client->SendMessage('Message_Text', 'CM.com', [ '201271820459' ]);
 //        dd ($result);
         return Common::apiResponse (true,'code is sent to your phone',null,200);
     }
