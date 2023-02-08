@@ -759,6 +759,16 @@ class RoomController extends Controller
         $result=Common::go_microphone_hand($data['owner_id'],$data['user_id']);
         if($result){
             $this->calcTime($data['user_id']);
+
+
+            $ms = [
+                "messageContent"=>[
+                    "message"=>"leaveMic",
+                    "userId"=>$data['user_id']
+                ]
+            ];
+            $json = json_encode ($ms);
+            Common::sendToZego ('SendCustomCommand',$data['owner_id'],$data['user_id'],$json);
             return Common::apiResponse(1,__('Success'));
         }else{
             return Common::apiResponse(0,__('Failed'),null,400);
