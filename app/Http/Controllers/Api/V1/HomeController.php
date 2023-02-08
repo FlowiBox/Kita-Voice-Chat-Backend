@@ -90,7 +90,7 @@ class HomeController extends Controller
         if (in_array ($user_id,$me->friends_ids()->toArray())){
             return Common::apiResponse (1,'exists',true);
         }
-        return Common::apiResponse (0,'does not exist',false,404);
+        return Common::apiResponse (1,'does not exists',false);
     }
 
 
