@@ -759,8 +759,6 @@ class RoomController extends Controller
         $result=Common::go_microphone_hand($data['owner_id'],$data['user_id']);
         if($result){
             $this->calcTime($data['user_id']);
-
-
             $ms = [
                 "messageContent"=>[
                     "message"=>"leaveMic",

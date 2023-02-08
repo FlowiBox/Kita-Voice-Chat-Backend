@@ -385,6 +385,7 @@ class FamilyController extends Controller
         $user = $request->user ();
         FamilyUser::query ()->where ('user_id',$user->id)->delete ();
         $user->family_id = 0;
+        $user->save();
         return Common::apiResponse (1,'done',null,201);
     }
 
