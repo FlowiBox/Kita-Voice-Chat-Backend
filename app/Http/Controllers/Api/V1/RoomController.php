@@ -757,6 +757,8 @@ class RoomController extends Controller
     public function go_microphone(Request $request){
         $data = $request;
         $result=Common::go_microphone_hand($data['owner_id'],$data['user_id']);
+        $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
+        if (!$room) return Common::apiResponse (0,'room not found',null,404);
         if($result){
             $this->calcTime($data['user_id']);
             $ms = [
@@ -766,7 +768,7 @@ class RoomController extends Controller
                 ]
             ];
             $json = json_encode ($ms);
-            Common::sendToZego ('SendCustomCommand',$data['owner_id'],$data['user_id'],$json);
+            Common::sendToZego ('SendCustomCommand',$room->id,$data['user_id'],$json);
             return Common::apiResponse(1,__('Success'));
         }else{
             return Common::apiResponse(0,__('Failed'),null,400);
