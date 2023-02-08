@@ -327,6 +327,20 @@ class RoomController extends Controller
             $room_info['is_pk'] = 1;
         }
 
+
+        $gl = GiftLog::query()
+            ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
+            ->where('roomowner_id', $owner_id)
+            ->groupBy('sender_id')
+            ->orderByDesc('total')
+            ->first();
+        $fUser = User::query ()->find ($gl->sender_id);
+
+        $t_user = $fUser;
+
+        $room_info['top_user'] = $t_user?:new \stdClass();
+
+
         if($room_info['room_pass'] &&  $owner_id != $user_id){
             if(!$room_pass) return Common::apiResponse(false,__('The room is locked, please enter the password'),null,409);
             if($room_info['room_pass'] != $room_pass )  return Common::apiResponse(false,__('Password is incorrect, please re-enter'),null,410);

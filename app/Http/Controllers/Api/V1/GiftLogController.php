@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Models\Agency;
+use App\Models\GiftLog;
 use App\Models\Pk;
 use App\Models\Room;
 use App\Models\User;
@@ -165,6 +166,33 @@ class GiftLogController extends Controller
             DB::rollback();
             return Common::apiResponse(0,'Gift delivery failed',null,400);
         }
+
+
+
+        $gl = GiftLog::query()
+            ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
+            ->where('roomowner_id', $data['owner_id'])
+            ->groupBy('sender_id')
+            ->orderByDesc('total')
+            ->first();
+        $fUser = User::query ()->find ($gl->sender_id);
+
+        $ms1 = [
+            'messageContent'=>[
+                'message'=>'topSendGifts',
+                'img'=>$fUser->avatar,
+                'id'=>$fUser->id,
+                'name'=>$fUser->name
+            ]
+        ];
+
+        $json = json_encode ($ms1);
+
+        Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+
+
+
+
         if(is_array($to_arr) && count ($to_arr) > 0){
             $to_id = $to_arr[0];
             $to = 'room';
