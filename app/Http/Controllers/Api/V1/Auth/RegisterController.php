@@ -21,8 +21,11 @@ class RegisterController extends Controller
             }
             Code::query ()->where ('phone',$request->phone)->where ('code',$request->code)->delete ();
         }
+        if (User::query ()->where ('phone',$request->phone)->exists ()){
+            return Common::apiResponse (0,'already exists',null,405);
+        }
         $user = User::query ()->create(
-            $request->validated ()
+            $request->validated()
         );
         if (!$request->country_id){
             $country = Country::query ()->where('phone_code','101')->first ();

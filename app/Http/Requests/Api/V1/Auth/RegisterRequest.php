@@ -32,7 +32,7 @@ class RegisterRequest extends FormRequest
             $rules['email'] = ['required','unique:users','email'];
             $rules['password'] = ['required'];
         }elseif ($this->get ('type') == 'phone_pass'){
-            $rules['phone'] = ['required','unique:users'];
+            $rules['phone'] = ['required'];
             $rules['code'] = ['required'];
             $rules['password'] = ['required'];
             $rules['device_token']=['unique:users'];
