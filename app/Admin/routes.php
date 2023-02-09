@@ -82,6 +82,8 @@ Route::group(
     $router->resource ('family_levels','FamilyLevelController');
     $router->resource ('silver','SilverController');
     $router->resource ('coins','CoinController');
+    $router->resource ('ovip','OVipController');
+    $router->resource ('vip_privilege','VipPrivilegeController');
 
 
 }
