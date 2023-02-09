@@ -201,10 +201,12 @@ Trait CalcsTrait
         $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
 
         $star_level      = self ::getLevel ( $user_id , 1 );
+        $current_star_num = self::getCurrentLevel (1,$star_level,'exp');
         $next_star_num   = self ::getNextLevel ( 1 , $star_level , 'exp' );
         $next_star_level = self ::getNextLevel ( 1 , $star_level , 'level' );
 
         $gold_level      = self ::getLevel ( $user_id , 2 );
+        $current_gold_num = self::getCurrentLevel (2,$star_level,'exp');
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
         $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
 
@@ -217,6 +219,13 @@ Trait CalcsTrait
         $data['sender_level']      = (integer)$gold_level?:0;
         $data['next_sender_num']   = (integer)$next_gold_num?:0;
         $data['next_sender_level'] = (integer)$next_gold_level?:0;
+
+        $data['prev_receiver_num'] = (integer)$current_star_num?:0;
+        $data['prev_sender_num'] = (integer)$current_gold_num?:0;
+
+        $data['receiver_per'] = $data['receiver_num']/($data['next_receiver_num']-$data['prev_receiver_num'])?:1;
+        $data['sender_per']=$data['sender_num']/($data['next_sender_num']-$data['prev_sender_num'])?:1;
+
         return $data;
     }
 
@@ -344,6 +353,14 @@ Trait CalcsTrait
         $max  = DB ::table ( 'vips' ) -> where ( ['type' => $type] ) -> orderByDesc ( 'id' ) -> limit ( 1 ) -> value ( $field );
         $next = DB ::table ( 'vips' ) -> where ( 'type' , $type ) -> where ( 'level' , '>' , $level ) -> orderBy ( 'level' ) -> limit ( 1 ) -> value ( $field )?:0;
         return ($next ?: $max);
+    }
+
+
+    public static function getCurrentLevel ( $type = null , $level = 0 , $field = null )
+    {
+        if ( !$type || !$field ) return 0;
+        $le = DB ::table ( 'vips' ) -> where ( 'type' , $type ) -> where ( 'level' , '=' , $level ) -> value ( $field )?:0;
+        return ($le);
     }
 
 
