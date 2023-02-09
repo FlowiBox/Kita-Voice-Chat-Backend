@@ -787,12 +787,23 @@ class RoomController extends Controller
         if($request->user ()->id != $data['owner_id'] || !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'),null,408);
         }
+
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
         $microphone[$position] = -1;
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if($res){
+            $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
+            $ms = [
+                'messageContent'=>[
+                    'message'=>'lockMic',
+                    'userId'=>$request->user ()->id,
+                    'position'=>$data['position']
+                ]
+            ];
+            $json = json_encode ($ms);
+            Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
            return Common::apiResponse(1,__('Successfully locked the microphone position'));
         }else{
            return Common::apiResponse(0,__('Failed to lock microphone'),null,400);
@@ -817,6 +828,16 @@ class RoomController extends Controller
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if($res){
+            $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
+            $ms = [
+                'messageContent'=>[
+                    'message'=>'unLockMic',
+                    'userId'=>$request->user ()->id,
+                    'position'=>$data['position']
+                ]
+            ];
+            $json = json_encode ($ms);
+            Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
             return Common::apiResponse(1,__('Successfully unlocked the microphone'));
         }else{
             return Common::apiResponse(0,__('Failed to unlock microphone'),null,400);
@@ -842,6 +863,15 @@ class RoomController extends Controller
         $str=implode(',', $sound_arr);
         $res = DB::table('rooms')->where('uid',$uid)->update(['room_sound'=>$str]);
         if($res){
+            $room = Room::query ()->where ('uid',$uid)->first ();
+            $ms = [
+                'messageContent'=>[
+                    'message'=>'muteMic',
+                    'userId'=>$user_id,
+                ]
+            ];
+            $json = json_encode ($ms);
+            Common::sendToZego ('SendCustomCommand',$room->id,$user_id,$json);
            return Common::apiResponse(1,__('Successfully muted'));
         }else{
             return Common::apiResponse(0,__('Failed to mute'),null,400);
@@ -866,6 +896,15 @@ class RoomController extends Controller
         $sound = implode(',', $sound_arr);
         $res = DB::table('rooms')->where('uid',$uid)->update(['room_sound'=>$sound]);
         if($res){
+            $room = Room::query ()->where ('uid',$uid)->first ();
+            $ms = [
+                'messageContent'=>[
+                    'message'=>'UnMuteMic',
+                    'userId'=>$user_id,
+                ]
+            ];
+            $json = json_encode ($ms);
+            Common::sendToZego ('SendCustomCommand',$room->id,$user_id,$json);
             return Common::apiResponse(1,__('Successfully unmuted'));
         }else{
             return Common::apiResponse(0,__('Unmute failed'),null,400);
