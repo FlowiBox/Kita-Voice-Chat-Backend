@@ -480,6 +480,22 @@ class RoomController extends Controller
             $room_info['room_background'] = $bg->img;
         }
 
+        $mics=explode (',',$room_info['microphone']);
+        $arr = [];
+        foreach ($mics as $key=>$mic){
+            if ($mic == '0'){
+                $arr[$key]='empty';
+            }elseif ($mic == '-1'){
+                $arr[$key]='locked';
+            }elseif ($mic == '-2'){
+                $arr[$key]='muted';
+            }else{
+                $arr[$key]=new UserResource(User::query ()->find ($mic));
+            }
+        }
+        $room_info['microphones'] = $arr;
+
+
 
         $user = $request->user ();
         $user->now_room_uid = $room_info['owner_id'];
@@ -792,8 +808,8 @@ class RoomController extends Controller
         $microphone = explode(',', $microphone);
         $microphone[$position] = -1;
         $microphone = implode(',', $microphone);
-        $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
-        if($res){
+        DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
+        if(true){
             $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
             $ms = [
                 'messageContent'=>[
@@ -827,7 +843,7 @@ class RoomController extends Controller
         $microphone[$position] = 0;
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
-        if($res){
+        if(true){
             $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
             $ms = [
                 'messageContent'=>[
