@@ -337,9 +337,10 @@ Trait CalcsTrait
 
 
     //المستوى الأقصى ونقاط الخبرة
-    public static function getNextLevel ( $type = null , $level = null , $field = null )
+    public static function getNextLevel ( $type = null , $level = 0 , $field = null )
     {
-        if ( !$type || !$field || !$level ) return 0;
+        if ( !$type || !$field ) return 0;
+
         $max  = DB ::table ( 'vips' ) -> where ( ['type' => $type] ) -> orderByDesc ( 'id' ) -> limit ( 1 ) -> value ( $field );
         $next = DB ::table ( 'vips' ) -> where ( 'type' , $type ) -> where ( 'level' , '>' , $level ) -> orderBy ( 'level' ) -> limit ( 1 ) -> value ( $field )?:0;
         return ($next ?: $max);
