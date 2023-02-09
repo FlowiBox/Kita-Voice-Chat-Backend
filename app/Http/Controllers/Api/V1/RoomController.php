@@ -784,7 +784,7 @@ class RoomController extends Controller
         if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
         $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
         $admins = explode (',',$admins);
-        if($request->user ()->id != $data['owner_id'] || !in_array ($request->user ()->id,$admins) ) {
+        if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'),null,408);
         }
 
@@ -819,7 +819,7 @@ class RoomController extends Controller
         if($position <0 || $position >9)  return Common::apiResponse(0,__('position error'));
         $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
         $admins = explode (',',$admins);
-        if($request->user ()->id != $data['owner_id'] || !in_array ($request->user ()->id,$admins) ) {
+        if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'),null,408);
         }
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
