@@ -109,6 +109,10 @@ class ProfileController extends Controller
             $user->chat_id = $request->chat_id;
         }
 
+        if ($request->notification_id){
+            $user->notification_id = $request->notification_id;
+        }
+
         $user->save();
         $profile = $user->profile;
         if ($request->gender){
