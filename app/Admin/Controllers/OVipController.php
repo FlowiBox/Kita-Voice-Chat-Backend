@@ -81,11 +81,11 @@ class OVipController extends Controller
      */
     protected function grid()
     {
-        $arr = [];
-        $privs = VipPrivilege::all ();
-        foreach ($privs as $priv){
-            $arr[$priv->id]=$priv->name;
-        }
+//        $arr = [];
+//        $privs = VipPrivilege::all ();
+//        foreach ($privs as $priv){
+//            $arr[$priv->id]=$priv->name;
+//        }
         $grid = new Grid(new OVip);
 
         $grid->id('ID');
@@ -129,19 +129,19 @@ class OVipController extends Controller
      */
     protected function form()
     {
-        $arr = [];
-        $privs = VipPrivilege::all ();
-        foreach ($privs as $priv){
-            $arr[$priv->id]=$priv->name;
-        }
+//        $arr = [];
+//        $privs = VipPrivilege::all ();
+//        foreach ($privs as $priv){
+//            $arr[$priv->id]=$priv->name;
+//        }
 
         $form = new Form(new OVip);
 
         $form->display('ID');
-        $form->text('level', 'level');
-        $form->text('name', 'name');
-        $form->text('img', 'img');
-        $form->text('price', 'price');
+        $form->number('level', __('level'));
+        $form->text('name', __('name'));
+        $form->image('img', __('img'));
+        $form->currency('price', __('price'));
 //        $form->multipleSelect('privileges', __('privileges'))->options ($arr);
         $form->belongsToMany('privilegs', Privileges::class, __('privileges'));
 //        $form->display(trans('admin.created_at'));

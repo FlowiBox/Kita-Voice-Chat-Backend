@@ -7,9 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Http\Resources\WareResource;
 use App\Models\Coin;
+use App\Models\OVip;
 use App\Models\Silver;
 use App\Models\SilverHestory;
 use App\Models\User;
+use App\Models\VipPrivilege;
 use App\Models\Ware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -142,6 +144,24 @@ class MallController extends Controller
     public function coinList(){
         $data = Coin::query ()->select ('id','usd','coin')->get ();
         return Common::apiResponse (1,'',$data,200);
+    }
+
+
+    public function vipList(){
+        $list = OVip::query ()->orderBy ('level')->get ()->map(function ($i){
+            $privs = VipPrivilege::query ()->get ()->map(function ($p) use ($i){
+                $mp = $i->privilegs()->pluck('id')->toArray();
+                if (in_array ($p->id,$mp)){
+                    $p->active = true;
+                }else{
+                    $p->active = false;
+                }
+                return $p;
+            });
+            $i->privilegs = $privs;
+            return $i;
+        });
+        return Common::apiResponse (1,'',$list,200);
     }
 
 

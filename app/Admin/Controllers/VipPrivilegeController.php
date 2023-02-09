@@ -82,12 +82,12 @@ class VipPrivilegeController extends Controller
         $grid = new Grid(new VipPrivilege);
 
         $grid->id('ID');
-        $grid->name('name');
-        $grid->title('title');
-        $grid->img1('img1');
-        $grid->img2('img2');
-        $grid->created_at(trans('admin.created_at'));
-        $grid->updated_at(trans('admin.updated_at'));
+        $grid->column('name',__('name'));
+        $grid->column('title',__ ('title'));
+        $grid->column('img1',__ ('img 1'))->image ('',30);
+//        $grid->img2('img2');
+//        $grid->created_at(trans('admin.created_at'));
+//        $grid->updated_at(trans('admin.updated_at'));
 
         return $grid;
     }
@@ -123,12 +123,12 @@ class VipPrivilegeController extends Controller
         $form = new Form(new VipPrivilege);
 
         $form->display('ID');
-        $form->text('name', 'name');
-        $form->text('title', 'title');
-        $form->text('img1', 'img1');
-        $form->text('img2', 'img2');
-        $form->display(trans('admin.created_at'));
-        $form->display(trans('admin.updated_at'));
+        $form->text('name', __('name'));
+        $form->text('title', __('title'));
+        $form->image('img1', __('img1'));
+        $form->file('img2', __('img2'));
+//        $form->display(trans('admin.created_at'));
+//        $form->display(trans('admin.updated_at'));
 
         return $form;
     }
