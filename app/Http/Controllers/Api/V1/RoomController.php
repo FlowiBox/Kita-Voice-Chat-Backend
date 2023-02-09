@@ -338,7 +338,7 @@ class RoomController extends Controller
 
         $t_user = $fUser;
 
-        $room_info['top_user'] = new UserResource($t_user)?:new \stdClass();
+        $room_info['top_user'] = $t_user?new UserResource($t_user):new \stdClass();
 
 
         if($room_info['room_pass'] &&  $owner_id != $user_id){
