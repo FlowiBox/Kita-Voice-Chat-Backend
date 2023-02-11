@@ -1,7 +1,10 @@
 <?php
 namespace App\Traits\HelperTraits;
 
+use App\Models\Family;
+use App\Models\FamilyLevel;
 use App\Models\GiftLog;
+use App\Models\OfficialMessage;
 use App\Models\OVip;
 use App\Models\User;
 use App\Models\UserVip;
@@ -469,6 +472,36 @@ Trait CalcsTrait
         }
         $info[]=current($arr);
         return $info[$type];
+    }
+
+
+    public static function updateFamilyLevel($family_id){
+        $family = Family::query ()->find ($family_id);
+        if ($family){
+            $giftLogs = GiftLog::query ()->where (function ($q) use ($family){
+                $q->where ('receiver_family_id',$family->id)->orWhere('sender_family_id',$family->id);
+            })->sum ('giftPrice');
+            $level = FamilyLevel::query ()->where ('exp','<=',$giftLogs)->orderByDesc ('exp')->first ();
+            if (@$level->id != @$family->leve){
+                DB::beginTransaction ();
+                try {
+                    OfficialMessage::query ()->create (
+                        [
+                            'title'=>'family level upgraded',
+                            'user_id'=>$family->user_id,
+                            'content'=>'congratulations your family level upgraded',
+                            'url'=>''
+                        ]
+                    );
+                    $family->update (['current_level_id' => $level->id]);
+                    DB::commit ();
+                }catch (\Exception $exception){
+                    DB::rollBack ();
+                }
+
+
+            }
+        }
     }
 
 

@@ -24,12 +24,27 @@ class Family extends Model
     }
 
     public function getLevelAttribute(){
-        $giftLogs = GiftLog::query ()->where ('receiver_family_id',$this->id)->sum ('giftPrice');
-        $level = FamilyLevel::query ()->where ('exp','<=',$giftLogs)->orderByDesc ('exp')->first ();
-        if ($level){
-            return $level->name;
-        }
-        return '';
+        $giftLogs = GiftLog::query ()->where (function ($q){
+            $q->where ('receiver_family_id',$this->id)->orWhere('sender_family_id',$this->id);
+        })->sum ('giftPrice');
+        $cur_level = FamilyLevel::query ()->where ('exp','<=',$giftLogs)->orderByDesc ('exp')->first ();
+        $next_level = FamilyLevel::query ()->where ('exp','>',$giftLogs)->orderBy ('exp')->first ();
+        $min_exp = @$cur_level->exp?:0;
+        $over = $giftLogs - $min_exp;
+        $diff = @$next_level->exp - @$cur_level->exp;
+        $lev = [
+            'level_exp'=>@$cur_level->exp?:0,
+            'level_name'=>@$cur_level->name?:'',
+            'level_img'=>@$cur_level->img?:'',
+            'family_exp'=>$giftLogs,
+            'over_current_level_exp'=>$over,
+            'next_exp'=>@$next_level->exp,
+            'next_name'=>@$next_level->name,
+            'next_img'=>@$next_level->img,
+            'per'=> $over/$diff
+        ];
+
+        return $lev;
     }
 
     public function getLevelMaxMembersNumAttribute(){
