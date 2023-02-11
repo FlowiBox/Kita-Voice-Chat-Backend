@@ -288,7 +288,8 @@ class UserController extends Controller
 
     public function vip_center(Request $request){
         $user = $request->user();
-        $vipCenter = Common::vip_center ($user->id,$request->level);
+//        $vipCenter = Common::vip_center ($user->id,$request->level);
+        $vipCenter = Common::ovip_center ($user->id);
         return Common::apiResponse (1,'',$vipCenter);
     }
 

@@ -7,10 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Http\Resources\WareResource;
 use App\Models\Coin;
+use App\Models\CoinLog;
 use App\Models\OVip;
 use App\Models\Silver;
 use App\Models\SilverHestory;
 use App\Models\User;
+use App\Models\UserVip;
 use App\Models\VipPrivilege;
 use App\Models\Ware;
 use Illuminate\Http\Request;
@@ -146,6 +148,34 @@ class MallController extends Controller
         return Common::apiResponse (1,'',$data,200);
     }
 
+    public function buyCoins(Request $request){
+        if(!$request->pay_method || !$request->coin_id) return Common::apiResponse (0,'missing param',null,422);
+        $user = $request->user ();
+        $coin = Coin::query ()->find ($request->coin_id);
+        if(!$coin) return Common::apiResponse (0,'not found',null,404);
+        DB::beginTransaction ();
+        try {
+            $log = CoinLog::query ()->create (
+                [
+                    'paid_usd'=>$coin->usd,
+                    'obtained_coins'=>$coin->coin,
+                    'user_id'=>$user->id,
+                    'method'=>$request->pay_method,
+                    'trx'=>'125487996663355888',
+                    'status'=>0
+                ]
+            );
+            if ($log->status == 1){
+                $user->increment ('di',$log->obtained_coins);
+            }
+            DB::commit ();
+            return Common::apiResponse (1,'done',null,201);
+        }catch (\Exception $exception){
+            DB::rollBack ();
+            return Common::apiResponse (0,'fail',null,400);
+        }
+    }
+
 
     public function vipList(){
         $list = OVip::query ()->orderBy ('level')->get ()->map(function ($i){
@@ -162,6 +192,64 @@ class MallController extends Controller
             return $i;
         });
         return Common::apiResponse (1,'',$list,200);
+    }
+
+    public function buyVip(Request $request){
+        if (!$request->vip_id ) return Common::apiResponse (0,'missing param',null,422);
+
+        $vip = OVip::query ()->find ($request->vip_id);
+        if (!$vip) return Common::apiResponse (0,'not found',null,404);
+        $qty = $request->qty?:1;
+        $total = $vip->price * $qty;
+        $expire = $vip->expire;
+        if ($expire == 0){
+            $ex = 0;
+        }else{
+            $ex = now ()->addDays ($expire * $qty)->timestamp;
+        }
+        if ($request->type == 1){
+            $type = 1;
+            if (!$request->to_user) return Common::apiResponse (0,'missing param',null,422);
+            $user_id = $request->to_user;
+            $user = User::query ()->find ($user_id);
+            if (!$user) return Common::apiResponse (0,'not found',null,404);
+            $sender= $request->user ();
+            $sender_id = $sender->id;
+            if ($sender->di < $total) return Common::apiResponse (0,'balance low',null,407);
+            $from = $sender;
+        }else{
+            $type = 0;
+            $user = $request->user ();
+            $user_id = $user->id;
+            $sender_id = 0;
+            if ($user->di < $total) return Common::apiResponse (0,'balance low',null,407);
+            $from = $user;
+        }
+
+        DB::beginTransaction ();
+        try {
+            $from->decrement ('di',$total);
+            $uvip = UserVip::query ()->create (
+                [
+                    'type'=>$type,
+                    'sender_id'=>$sender_id,
+                    'user_id'=>$user_id,
+                    'vip_id'=>$vip->id,
+                    'expire'=>$ex,
+                    'qty'=>$qty,
+                    'price'=>$vip->price,
+                    'total'=>$total
+                ]
+            );
+            $user->update (['vip'=>$uvip->id]);
+            DB::commit ();
+            return Common::apiResponse (1,'done',null,201);
+        }catch (\Exception $exception){
+            DB::rollBack ();
+            return Common::apiResponse (0,'fail',null,400);
+        }
+
+
     }
 
 

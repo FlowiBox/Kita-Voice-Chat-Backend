@@ -223,9 +223,11 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::prefix ('coins')->group (function (){
         Route::get ('/list',[\App\Http\Controllers\Api\V1\MallController::class,'coinList']);
+        Route::post ('/buyCoins',[\App\Http\Controllers\Api\V1\MallController::class,'buyCoins']);
     });
 
     Route::prefix ('vips')->group (function (){
         Route::get ('/list',[\App\Http\Controllers\Api\V1\MallController::class,'vipList']);
+        Route::post ('/buyVip',[\App\Http\Controllers\Api\V1\MallController::class,'buyVip']);
     });
 });

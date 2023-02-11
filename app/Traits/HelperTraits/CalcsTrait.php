@@ -2,7 +2,9 @@
 namespace App\Traits\HelperTraits;
 
 use App\Models\GiftLog;
+use App\Models\OVip;
 use App\Models\User;
+use App\Models\UserVip;
 use App\Models\Vip;
 use Illuminate\Support\Facades\DB;
 
@@ -255,6 +257,18 @@ Trait CalcsTrait
         $arr['my_data']     = $data;
         $arr['vip_prev'] = $vip_auth;
         return $arr;
+    }
+
+    public static function ovip_center ( $user_id)
+    {
+        $user = User::query ()->find ($user_id);
+        if (!$user) return new \stdClass();
+        $uvip = UserVip::query ()->find ($user->vip);
+        if (!$uvip) return new \stdClass();
+        $vip = OVip::query ()->find ($uvip->vip_id);
+        if (!$vip) return new \stdClass();
+        $p = $vip->privilegs;
+        return $vip;
     }
 
     //حقيبتي

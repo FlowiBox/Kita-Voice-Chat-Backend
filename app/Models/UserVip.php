@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CoinLog extends Model
+class UserVip extends Model
 {
-    protected $table = 'coin_logs';
+    protected $table = 'users_vips';
     protected $guarded = ['id'];
 }

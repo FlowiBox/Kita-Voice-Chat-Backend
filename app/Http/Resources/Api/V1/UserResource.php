@@ -83,7 +83,7 @@ class UserResource extends JsonResource
             'level'=>Common::level_center ($this->id),
             'diamonds'=>$this->coins?:0,
             'usd'=>$this->old_usd+$this->target_usd-$this->target_token_usd,
-            'vip'=>Common::vip_center ($this->id),
+            'vip'=>Common::ovip_center ($this->id),
             'income'=>Common::user_income ($this->id),
             'my_store'=>$this->my_store,
             'lang'=>$this->lang,
