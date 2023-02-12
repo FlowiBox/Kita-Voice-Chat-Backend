@@ -334,9 +334,15 @@ class RoomController extends Controller
             ->groupBy('sender_id')
             ->orderByDesc('total')
             ->first();
-        $fUser = User::query ()->find ($gl->sender_id);
+        if ($gl){
+            $fUser = User::query ()->find ($gl->sender_id);
+            $t_user = $fUser;
+        }else{
+            $t_user = null;
+        }
 
-        $t_user = $fUser;
+
+
 
         $room_info['top_user'] = $t_user?new UserResource($t_user):new \stdClass();
 
