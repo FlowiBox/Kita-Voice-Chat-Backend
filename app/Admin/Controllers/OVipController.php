@@ -140,7 +140,7 @@ class OVipController extends Controller
         $form->display('ID');
         $form->number('level', __('level'));
         $form->text('name', __('name'));
-        $form->image('img', __('img'));
+        $form->file('img', __('img'));
         $form->currency('price', __('price'));
         $form->number('expire', __('expire'));
         $form->belongsToMany('privilegs', Privileges::class, __('privileges'));
