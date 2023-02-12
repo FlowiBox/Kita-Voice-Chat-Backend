@@ -58,6 +58,8 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post('microphone_status',[\App\Http\Controllers\Api\V1\RoomController::class,'microphone_status']);
         Route::post('up_microphone',[\App\Http\Controllers\Api\V1\RoomController::class,'up_microphone']);
         Route::post('leave_microphone',[\App\Http\Controllers\Api\V1\RoomController::class,'go_microphone']);
+        Route::post('mute_microphone',[\App\Http\Controllers\Api\V1\RoomController::class,'mute_microphone']);
+        Route::post('unmute_microphone',[\App\Http\Controllers\Api\V1\RoomController::class,'unmute_microphone']);
         Route::post('lock_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'shut_microphone']);
         Route::post('unlock_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'open_microphone']);
         Route::post('mute_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'is_sound']);
