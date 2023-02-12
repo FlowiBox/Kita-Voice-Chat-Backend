@@ -10,10 +10,12 @@ use App\Models\Background;
 use App\Models\Country;
 use App\Models\GiftLog;
 use App\Models\LiveTime;
+use App\Models\OVip;
 use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\User;
 use App\Models\Vip;
+use App\Models\VipPrivilege;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,10 +80,28 @@ class HomeController extends Controller
         return Common::apiResponse(1,'',$data);
     }
 
-    public function countVips(){
+    public function countVipsold(){
         $count = Vip::query ()->where ('type',3)->count ();
         $vips =  Vip::query ()->where ('type',3)->select ('id','level','type','img')->get ();
         return Common::apiResponse (1,'',['vip_count'=>$count,'vips'=>$vips]);
+    }
+
+    public function countVips(){
+        $count = OVip::query ()->count ();
+        $list = OVip::query ()->orderBy ('level')->get ()->map(function ($i){
+            $privs = VipPrivilege::query ()->get ()->map(function ($p) use ($i){
+                $mp = $i->privilegs()->pluck('id')->toArray();
+                if (in_array ($p->id,$mp)){
+                    $p->active = true;
+                }else{
+                    $p->active = false;
+                }
+                return $p;
+            });
+            $i->privilegs = $privs;
+            return $i;
+        });
+        return Common::apiResponse (1,'',['vip_count'=>$count,'vips'=>$list]);
     }
 
     public function check_if_friend(Request $request){
