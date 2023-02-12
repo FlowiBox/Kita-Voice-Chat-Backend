@@ -146,7 +146,6 @@ class OVipController extends Controller
         $form->belongsToMany('privilegs', Privileges::class, __('privileges'));
 //        $form->display(trans('admin.created_at'));
 //        $form->display(trans('admin.updated_at'));
-
         return $form;
     }
 }

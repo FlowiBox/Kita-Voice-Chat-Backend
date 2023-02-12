@@ -84,6 +84,20 @@ class VipPrivilegeController extends Controller
         $grid->id('ID');
         $grid->column('name',__('name'));
         $grid->column('title',__ ('title'));
+        $grid->column('type')->select (
+            [
+                0=>trans ('No Type'),
+                1=>trans ('Gemstone'),
+                3=>trans ('Card Scroll'),
+                4=>trans ('Avatar Frame'),
+                5=>trans ('Bubble Frame'),
+                6=>trans ('Entering Special Effects'),
+                7=>trans ('Microphone Aperture'),
+                8=>trans ('Badge'),
+                9=>trans ('NoKick'),
+                10=>trans ('Icon'),
+            ]
+        );
         $grid->column('img1',__ ('img 1'))->image ('',30);
 //        $grid->img2('img2');
 //        $grid->created_at(trans('admin.created_at'));
@@ -125,6 +139,20 @@ class VipPrivilegeController extends Controller
         $form->display('ID');
         $form->text('name', __('name'));
         $form->text('title', __('title'));
+        $form->select('type', trans('type'))->options (
+            [
+                0=>trans ('No Type'),
+                1=>trans ('Gemstone'),
+                3=>trans ('Card Scroll'),
+                4=>trans ('Avatar Frame'),
+                5=>trans ('Bubble Frame'),
+                6=>trans ('Entering Special Effects'),
+                7=>trans ('Microphone Aperture'),
+                8=>trans ('Badge'),
+                9=>trans ('NoKick'),
+                10=>trans ('Icon'),
+            ]
+        );
         $form->image('img1', __('img1'));
         $form->file('img2', __('img2'));
 //        $form->display(trans('admin.created_at'));

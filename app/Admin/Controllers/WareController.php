@@ -104,6 +104,8 @@ class WareController extends Controller
                 6=>trans ('Entering Special Effects'),
                 7=>trans ('Microphone Aperture'),
                 8=>trans ('Badge'),
+                9=>trans ('NoKick'),
+                10=>trans ('Icon'),
             ]
         );
         $grid->column('name')->editable ();
@@ -183,6 +185,8 @@ class WareController extends Controller
                 6=>trans ('Entering Special Effects'),
                 7=>trans ('Microphone Aperture'),
                 8=>trans ('Badge'),
+                9=>trans ('NoKick'),
+                10=>trans ('Icon'),
             ]
         )->rules ('required');
 //        ->rules (function ($form){

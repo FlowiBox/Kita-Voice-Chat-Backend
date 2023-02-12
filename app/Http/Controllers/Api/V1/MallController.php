@@ -186,6 +186,12 @@ class MallController extends Controller
                 }else{
                     $p->active = false;
                 }
+                if ($p->getItem($i->level)){
+                    $p->item = new WareResource($p->getItem($i->level));
+                }else{
+                    $p->item = new \stdClass();
+                }
+
                 return $p;
             });
             $i->privilegs = $privs;
