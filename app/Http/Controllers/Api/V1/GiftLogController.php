@@ -230,7 +230,7 @@ class GiftLogController extends Controller
         $return_arr['users']=$res;
         $return_arr['push']=$push;
         if ($request->to_zego == 1){
-            $ro = Room::query ()->find ($room->id);
+            $gp = GiftLog::query ()->where('roomowner_id',$data['owner_id'])->sum ('giftPrice');
             $d = [
                 "messageContent"=>[
                     "message"=>"showGifts",
@@ -241,7 +241,7 @@ class GiftLogController extends Controller
                     'isExpensive'=>($gift->price >= 2000)?true:false,
                     'num_gift'=>$send_num,
                     "plural"=>(is_array($to_arr) && count ($to_arr) > 1)?true:false,
-                    'gift_price'=>$ro->hot
+                    'gift_price'=>$gp
                 ]
             ];
             $json = json_encode ($d);
