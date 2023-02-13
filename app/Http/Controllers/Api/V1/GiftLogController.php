@@ -241,7 +241,7 @@ class GiftLogController extends Controller
                     'isExpensive'=>($gift->price >= 2000)?true:false,
                     'num_gift'=>$send_num,
                     "plural"=>(is_array($to_arr) && count ($to_arr) > 1)?true:false,
-                    'gift_price'=>$gp
+                    'gift_price'=>(integer)$gp
                 ]
             ];
             $json = json_encode ($d);
