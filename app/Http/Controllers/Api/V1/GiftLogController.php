@@ -264,9 +264,10 @@ class GiftLogController extends Controller
                 foreach ($rooms as $r){
                     $res = Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json2);
                 }
-            }else{
-                $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
             }
+//            else{
+//                $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+//            }
         }
 
         return Common::apiResponse(1,'Gift sent successfully',$return_arr);
