@@ -54,18 +54,21 @@ class FamilyController extends Controller
             'image'=>'',
             'notice'=>'',
             'max_num_of_members'=>0,
-            'rank'=>'0',
+            'max_num_of_admins'=>0,
+            'rank'=>0,
             'owner'=>new \stdClass(),
             'am_i_member'=>false,
             'am_i_owner'=>false,
             'am_i_admin'=>false,
-            'members'=>[]
+            'members'=>[],
+            'num_of_requests'=>0,
+            'level'=>0
         ];
 
         $top = array_slice ($data,0,3);
-        $top[0]=@$top[0]?:$em;
-        $top[1]=@$top[1]?:$em;
-        $top[2]=@$top[2]?:$em;
+        $top[0]=@$top[0]?new FamilyResource($top[0]):$em;
+        $top[1]=@$top[1]?new FamilyResource($top[1]):$em;
+        $top[2]=@$top[2]?new FamilyResource($top[2]):$em;
         $other = array_slice ($data,3);
         $other = FamilyResource::collection ($other);
         return Common::apiResponse (1,'',[

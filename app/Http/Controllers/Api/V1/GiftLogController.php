@@ -182,7 +182,8 @@ class GiftLogController extends Controller
                 'message'=>'topSendGifts',
                 'img'=>$fUser->avatar,
                 'id'=>$fUser->id,
-                'name'=>$fUser->name
+                'name'=>$fUser->name,
+                'frame'=>Common::getUserDress($fUser->id,$fUser->dress_1,4,'img2')?:Common::getUserDress($fUser->id,$fUser->dress_1,4,'img1'),
             ]
         ];
 
