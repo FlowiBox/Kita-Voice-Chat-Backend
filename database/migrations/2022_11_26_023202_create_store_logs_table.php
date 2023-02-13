@@ -16,9 +16,9 @@ class CreateStoreLogsTable extends Migration
         Schema::create('store_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->index()->comment('0 is background')->nullable();
-            $table->decimal('get_nums')->comment('إجمالي مبلغ التحويل')->nullable();
+            $table->decimal('get_nums',20,2)->comment('إجمالي مبلغ التحويل')->nullable();
             $table->unsignedTinyInteger('get_type')->nullable();
-            $table->decimal('now_nums')->comment('الرصيد الحالي')->nullable();
+            $table->decimal('now_nums',20,2)->comment('الرصيد الحالي')->nullable();
             $table->string('adduser')->comment('مسؤول الخلفية')->nullable();
             $table->string('symbol')->nullable();
             $table->tinyInteger('types')->comment('Currency Type 1=Diamond 2=Coin 3=Room Flow')->nullable();

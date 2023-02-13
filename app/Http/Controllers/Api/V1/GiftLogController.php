@@ -343,8 +343,8 @@ class GiftLogController extends Controller
             $this->addRoomHot($uid,$info['giftPrice']);
             //The total amount received by the user
             Common::update_user_total($toUid,3,$info['giftPrice']);
-            Common::updateFamilyLevel($sender_family->family_id);
-            Common::updateFamilyLevel($receiver_family->family_id);
+            Common::updateFamilyLevel(@$sender_family->family_id);
+            Common::updateFamilyLevel(@$receiver_family->family_id);
             return 1;
         }
         else{

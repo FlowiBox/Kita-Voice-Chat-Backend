@@ -217,7 +217,7 @@ class MallController extends Controller
             $type = 1;
             if (!$request->to_user) return Common::apiResponse (0,'missing param',null,422);
             $user_id = $request->to_user;
-            $user = User::query ()->find ($user_id);
+            $user = User::query ()->where ('uuid',$user_id);
             if (!$user) return Common::apiResponse (0,'not found',null,404);
             $sender= $request->user ();
             $sender_id = $sender->id;
