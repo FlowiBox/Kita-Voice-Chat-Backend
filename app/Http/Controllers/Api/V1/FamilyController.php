@@ -54,7 +54,7 @@ class FamilyController extends Controller
             'image'=>'',
             'notice'=>'',
             'max_num_of_members'=>0,
-            'rank'=>0,
+            'rank'=>'0',
             'owner'=>new \stdClass(),
             'am_i_member'=>false,
             'am_i_owner'=>false,
