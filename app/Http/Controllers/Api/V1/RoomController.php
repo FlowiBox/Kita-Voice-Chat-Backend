@@ -1294,7 +1294,7 @@ class RoomController extends Controller
             return Common::apiResponse(0,'not allowed',null,403);
         }
         if(!$uid || !$admin_id)  return Common::apiResponse(0,'invalid data',null,422);
-        $roomAdmin=DB::table('rooms')->where('uid',$uid)->value('room_admin');
+        $roomAdmin = DB::table('rooms')->where('uid',$uid)->value('room_admin');
         $adm_arr= !$roomAdmin ? [] : explode(",", $roomAdmin);
         if(!in_array($admin_id, $adm_arr))   return Common::apiResponse(0,'This user is not an administrator of this room',null,404);
         $key=array_search($admin_id,$adm_arr);

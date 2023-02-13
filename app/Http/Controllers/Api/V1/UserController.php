@@ -228,7 +228,7 @@ class UserController extends Controller
             $v->stars_img = Common::getLevel($v->{$keywords}, 1 ,'img')?:"";
             $v->gold_img = Common::getLevel($v->{$keywords}, 2 ,'img')?:"";
             $v->vip_img = Common::getLevel($v->{$keywords}, 3 ,'img')?:"";
-            $v->user = $users;
+            $v->user = new UserResource($users);
             if ($v->{$keywords} == $user_id) $l = $i;
             unset($v->{$keywords});
         }
