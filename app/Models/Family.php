@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use http\Env\Request;
 use Illuminate\Database\Eloquent\Model;
 
 class Family extends Model
 {
     protected $guarded = ['id'];
+
+    protected $appends = ['rank'];
+
 
 
     public function owner(){
@@ -78,5 +82,36 @@ class Family extends Model
         }
         return 2;
     }
+
+    public function getRankAttribute0(){
+        $gl = GiftLog::query ()->where (function ($q){
+            $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
+        })->sum('giftPrice');
+        return $gl;
+    }
+
+    public function getRankAttribute(){
+        $time = \request ('time');
+        if($time == 'today'){
+            $gl = GiftLog::query ()->whereRaw('CAST(created_at AS DATE) = CAST(NOW() AS DATE)')->where (function ($q) use ($time){
+                $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
+            })->sum('giftPrice');
+        }elseif ($time == 'week'){
+            $gl = GiftLog::query ()->whereRaw('WEEK(CAST(created_at AS DATE)) = WEEK(CAST(NOW() AS DATE))')->where (function ($q) use ($time){
+                $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
+            })->sum('giftPrice');
+        }elseif ($time == 'month'){
+            $gl = GiftLog::query ()->whereRaw('MONTH(CAST(created_at AS DATE)) = MONTH(CAST(NOW() AS DATE))')->where (function ($q) use ($time){
+                $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
+            })->sum('giftPrice');
+        }else{
+            $gl = GiftLog::query ()->where (function ($q) use ($time){
+                $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
+            })->sum('giftPrice');
+        }
+        return $gl;
+    }
+
+
 
 }

@@ -36,16 +36,13 @@ class FamilyController extends Controller
 
     public function ranking(Request $request){
         $time = $request->time;
-        if ($time == 'today'){
-            $query =DB::table ('today_family_views')->where ('status',1)->whereNotNull ('rank')->orderByDesc ('rank');
-        }
-        elseif ($time == 'week'){
-            $query =DB::table ('week_family_views')->where ('status',1)->whereNotNull ('rank')->orderByDesc ('rank');
-        }
-        elseif ($time == 'month'){
-            $query =DB::table ('month_family_views')->where ('status',1)->whereNotNull ('rank')->orderByDesc ('rank');
-        }
-        $data = $query->get ()->toArray ();
+        if (!$time) return Common::apiResponse (0,'time is required',null,422);
+
+
+        $query = Family::query ()->where ('status',1);
+        $data = $query->get ()
+            ->where ('rank','!=',0)
+            ->sortByDesc('rank');
 
         $em = [
             'id'=>0,
@@ -65,11 +62,12 @@ class FamilyController extends Controller
             'level'=>0
         ];
 
-        $top = array_slice ($data,0,3);
+
+        $top = $data->slice (0,3);
         $top[0]=@$top[0]?new FamilyResource($top[0]):$em;
         $top[1]=@$top[1]?new FamilyResource($top[1]):$em;
         $top[2]=@$top[2]?new FamilyResource($top[2]):$em;
-        $other = array_slice ($data,3);
+        $other = $data->slice (3);
         $other = FamilyResource::collection ($other);
         return Common::apiResponse (1,'',[
             'top'=>$top,
@@ -84,7 +82,17 @@ class FamilyController extends Controller
      */
     public function create()
     {
-        //
+        //-------------
+        //        if ($time == 'today'){
+//            $query =DB::table ('today_family_views')->where ('status',1)->whereNotNull ('rank')->orderByDesc ('rank');
+//        }
+//        elseif ($time == 'week'){
+//            $query =DB::table ('week_family_views')->where ('status',1)->whereNotNull ('rank')->orderByDesc ('rank');
+//        }
+//        elseif ($time == 'month'){
+//            $query =DB::table ('month_family_views')->where ('status',1)->whereNotNull ('rank')->orderByDesc ('rank');
+//        }
+//        $data = $query->get ()->toArray ();
     }
 
     /**
