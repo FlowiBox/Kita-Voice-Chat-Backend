@@ -13,7 +13,11 @@ trait InfoTrait
 {
     public static function getUserShow($id){
 
-        $show = new Show(User::findOrFail($id));
+        $user = User::find($id);
+        if (!$user){
+            return null;
+        }
+        $show = new Show($user);
         $show->setResource ('/admin/users');
 
         $show->field('id', __('Id'));
