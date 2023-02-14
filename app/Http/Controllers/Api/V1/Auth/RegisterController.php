@@ -27,6 +27,8 @@ class RegisterController extends Controller
         $user = User::query ()->create(
             $request->validated()
         );
+        $user->is_points_first = 1;
+        $user->save ();
         if (!$request->country_id){
             $country = Country::query ()->where('phone_code','101')->first ();
             $user->country_id = @$country->id?:0;

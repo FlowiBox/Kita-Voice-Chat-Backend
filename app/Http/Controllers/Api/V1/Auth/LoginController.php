@@ -70,8 +70,8 @@ class LoginController extends Controller
     protected function loginWithGoogle($data){
         $user = User::query ()->whereNotNull ('google_id')->where ('google_id',$data['google_id'])->first ();
         if ($user){
-            $user->is_points_first = 0;
-            $user->save ();
+//            $user->is_points_first = 0;
+//            $user->save ();
             if(!$user->device_token){
                 $user->device_token = @$data['device_token'];
                 $user->save ();
@@ -109,8 +109,8 @@ class LoginController extends Controller
     protected function loginWithFacebook($data){
         $user = User::query ()->whereNotNull ('facebook_id')->where ('facebook_id',$data['facebook_id'])->first ();
         if ($user){
-            $user->is_points_first = 0;
-            $user->save ();
+//            $user->is_points_first = 0;
+//            $user->save ();
             if(!$user->device_token){
                 $user->device_token = @$data['device_token'];
                 $user->save ();

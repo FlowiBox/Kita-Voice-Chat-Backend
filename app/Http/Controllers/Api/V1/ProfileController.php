@@ -84,6 +84,8 @@ class ProfileController extends Controller
     {
         $data = $request->all ();
         $user = $request->user ();
+        $user->is_points_first = 0;
+        $user->save ();
         if ($request->name){
             $user->name = $data['name'];
         }
