@@ -54,6 +54,7 @@ class FamilyController extends Controller
             'max_num_of_admins'=>0,
             'rank'=>0,
             'owner'=>new \stdClass(),
+            'me'=>new \stdClass(),
             'am_i_member'=>false,
             'am_i_owner'=>false,
             'am_i_admin'=>false,
@@ -63,7 +64,7 @@ class FamilyController extends Controller
         ];
 
 
-        $top = $data->slice (0,3);
+        $top = $data->take (3);
         $top[0]=@$top[0]?new FamilyResource($top[0]):$em;
         $top[1]=@$top[1]?new FamilyResource($top[1]):$em;
         $top[2]=@$top[2]?new FamilyResource($top[2]):$em;
