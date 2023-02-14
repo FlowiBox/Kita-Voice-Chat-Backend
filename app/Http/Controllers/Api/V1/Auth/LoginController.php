@@ -95,11 +95,11 @@ class LoginController extends Controller
                         'device_token'=>@$data['device_token']
                     ]
                 );
-                $token = $user->createToken('api_token')->plainTextToken;
                 $country = Country::query ()->where('phone_code','101')->first ();
                 $user->country_id = @$country->id?:0;
                 $user->is_points_first = 1;
                 $user->save();
+                $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
                 return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
             }
