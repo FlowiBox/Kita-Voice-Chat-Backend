@@ -41,7 +41,7 @@ class FamilyController extends Controller
 
         $query = Family::query ()->where ('status',1);
         $data = $query->get ()
-            ->where ('rank','!=',0)
+//            ->where ('rank','!=',0)
             ->sortByDesc('rank');
 
         $em = [
@@ -70,7 +70,7 @@ class FamilyController extends Controller
         $other = $data->slice (3);
         $other = FamilyResource::collection ($other);
         return Common::apiResponse (1,'',[
-            'top'=>$top,
+            'top'=>$top->values (),
             'other'=>$other
         ]);
     }
