@@ -41,7 +41,7 @@ class FamilyController extends Controller
 
         $query = Family::query ()->where ('status',1);
         $data = $query->get ()
-//            ->where ('rank','!=',0)
+            ->where ('rank','!=',0)
             ->sortByDesc('rank');
 
         $em = [
