@@ -64,14 +64,14 @@ class FamilyController extends Controller
         ];
 
 
-        $top = $data->take (3);
-        $top[0]=@$top[0]?new FamilyResource($top[0]):$em;
-        $top[1]=@$top[1]?new FamilyResource($top[1]):$em;
-        $top[2]=@$top[2]?new FamilyResource($top[2]):$em;
+        $top = $data->slice (0,3);
+        $t[0]=@$top[0]?new FamilyResource($top[0]):$em;
+        $t[1]=@$top[1]?new FamilyResource($top[1]):$em;
+        $t[2]=@$top[2]?new FamilyResource($top[2]):$em;
         $other = $data->slice (3);
         $other = FamilyResource::collection ($other);
         return Common::apiResponse (1,'',[
-            'top'=>$top->values (),
+            'top'=>$t,
             'other'=>$other
         ]);
     }
