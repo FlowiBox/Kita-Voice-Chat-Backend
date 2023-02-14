@@ -45,7 +45,8 @@ class Family extends Model
             'next_exp'=>@$next_level->exp,
             'next_name'=>@$next_level->name,
             'next_img'=>@$next_level->img,
-            'per'=> $over/$diff
+            'per'=> $over/$diff,
+            'rem'=>$diff-$over
         ];
 
         return $lev;
