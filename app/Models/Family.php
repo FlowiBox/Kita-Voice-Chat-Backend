@@ -37,16 +37,16 @@ class Family extends Model
         $over = $giftLogs - $min_exp;
         $diff = @$next_level->exp - @$cur_level->exp;
         $lev = [
-            'level_exp'=>@$cur_level->exp?:0,
+            'level_exp'=>@(integer)$cur_level->exp?:0,
             'level_name'=>@$cur_level->name?:'',
             'level_img'=>@$cur_level->img?:'',
-            'family_exp'=>$giftLogs,
-            'over_current_level_exp'=>$over,
-            'next_exp'=>@$next_level->exp,
+            'family_exp'=>(integer)$giftLogs,
+            'over_current_level_exp'=>(integer)$over,
+            'next_exp'=>@(integer)$next_level->exp,
             'next_name'=>@$next_level->name,
             'next_img'=>@$next_level->img,
-            'per'=> $over/$diff,
-            'rem'=>$diff-$over
+            'per'=> (double)($over/$diff),
+            'rem'=>(integer)($diff-$over)
         ];
 
         return $lev;
