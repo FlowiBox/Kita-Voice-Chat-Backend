@@ -217,17 +217,17 @@ class UserController extends Controller
         }
         $data=$query->selectRaw("sum(giftPrice) as exp ,". $keywords)->groupBy($keywords)->orderByRaw("exp desc")->limit($limit)->get();
         $i=$l=0;
-        foreach ($data as $k => & $v) {
+        foreach ($data as $k => &$v) {
             $i++;
             $users = User::query ()->find($v->{$keywords});
-            $v->user_id = $v->{$keywords};
+            $v->user_id = @$v->{$keywords};
             $v->exp = ceil($v->exp);
             $v->avatar = @$users->profile->avatar?:'';
             $v->nickname = @$users->nickname?:'';
             $v->sex = @$users->profile->gender == 1?trans ('male'):trans ('female');
-            $v->stars_img = Common::getLevel($v->{$keywords}, 1 ,'img')?:"";
-            $v->gold_img = Common::getLevel($v->{$keywords}, 2 ,'img')?:"";
-            $v->vip_img = Common::getLevel($v->{$keywords}, 3 ,'img')?:"";
+            $v->stars_img = @Common::getLevel($v->{$keywords}, 1 ,'img')?:"";
+            $v->gold_img = @Common::getLevel($v->{$keywords}, 2 ,'img')?:"";
+            $v->vip_img = @Common::getLevel($v->{$keywords}, 3 ,'img')?:"";
             $v->user = new UserResource($users);
             if ($v->{$keywords} == $user_id) $l = $i;
             unset($v->{$keywords});

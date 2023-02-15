@@ -47,4 +47,5 @@ Trait FollowTrait{
     public function onRoomFolloweds(){
         return self::query ()->whereIn('id',$this->followeds_ids ())->whereIn('id',$this->rooms_uids ())->get ();
     }
+
 }
