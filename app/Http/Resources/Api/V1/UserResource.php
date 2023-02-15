@@ -21,21 +21,21 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
 
-        $reqs_count = AgencyJoinRequest::query ()->where ('user_id',$this->id)->where ('status','!=',2)->count ();
+        $reqs_count = AgencyJoinRequest::query ()->where ('user_id',@$this->id)->where ('status','!=',2)->count ();
 
         $agency_joined = null;
-        if($this->agency_id){
-            $agency_joined = Agency::query ()->find ($this->agency_id);
+        if(@$this->agency_id){
+            $agency_joined = Agency::query ()->find (@$this->agency_id);
             $agency_joined = new AgencyResource($agency_joined);
             $agency_joined->am_i_owner = false;
-            if ($agency_joined->owner_id == $this->id){
+            if ($agency_joined->owner_id == @$this->id){
                 $agency_joined->am_i_owner = true;
             }
         }
 
         $f = new \stdClass();
         $fn = '';
-        $family = Family::query ()->where ('id',$this->family_id)->first ();
+        $family = Family::query ()->where ('id',@$this->family_id)->first ();
         if ($family){
             $f = [
                 'name'=>$family->name,
