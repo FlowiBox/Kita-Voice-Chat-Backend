@@ -20,9 +20,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        if (!$this){
-            return [];
-        }
+
 
         $reqs_count = AgencyJoinRequest::query ()->where ('user_id',@$this->id)->where ('status','!=',2)->count ();
 
@@ -67,6 +65,7 @@ class UserResource extends JsonResource
             'number_of_friends'=>$this->numberOfFriends(),
             'profile_visitors'=>$this->profileVisits()->count(),
             'is_follow'=>@(bool)Common::IsFollow (@$request->user ()->id,$this->id),
+            'is_friend'=>in_array ($this->id,$request->user ()->friends_ids()),
             'is_in_live'=>$this->is_in_live(),
             'is_first'=>@(bool)$this->is_points_first,
             'now_room'=>[
