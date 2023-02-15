@@ -50,7 +50,7 @@ class UserResource extends JsonResource
 
 
         if ($request->user ()){
-            $fArr = $request->user ()->friends_ids()->toArray()
+            $fArr = $request->user ()->friends_ids()->toArray();
         }else{
             $fArr = [];
         }
