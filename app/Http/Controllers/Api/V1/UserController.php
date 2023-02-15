@@ -187,7 +187,7 @@ class UserController extends Controller
         if (!in_array($class, [1, 2, 3]) || !in_array($type, [1, 2, 3, 4])) return Common::apiResponse (0,'Parameter error',null,422);
         $is_home=$request->is_home;
         $limit = $is_home ? 3 : 30;
-        $arr=$this->rankingHand($class,$type,$request->user (),$limit,$request->room_uid);
+        $arr=$this->rankingHand($class,$type,@$request->user (),$limit,$request->room_uid);
 
         return Common::apiResponse(1,'',$arr);
     }
