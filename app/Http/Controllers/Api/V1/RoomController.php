@@ -769,6 +769,14 @@ class RoomController extends Controller
                     'start_time'=>time ()
                 ]
             );
+            $ms = [
+                'messageContent'=>[
+                    'message'=>'upMic',
+                    'userId'=>$user_id
+                ]
+            ];
+            $json = json_encode ($ms);
+            Common::sendToZego ('SendCustomCommand',$room->id,$user_id,$json);
             return Common::apiResponse(1,__('Success on the mic'),$res_arr);
         }else{
             return Common::apiResponse(0,__('Failed to mic'),null,400);
