@@ -21,6 +21,7 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
 
+        if (!$this) return null;
         $reqs_count = AgencyJoinRequest::query ()->where ('user_id',@$this->id)->where ('status','!=',2)->count ();
 
         $agency_joined = null;
