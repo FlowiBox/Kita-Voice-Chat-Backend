@@ -13,6 +13,7 @@ use App\Models\LiveTime;
 use App\Models\OVip;
 use App\Models\Room;
 use App\Models\RoomCategory;
+use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Vip;
 use App\Models\VipPrivilege;
@@ -194,6 +195,32 @@ class HomeController extends Controller
         $json = json_encode ($d);
         Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
         return Common::apiResponse (1,'done',null,201);
+    }
+
+
+    public function openTicket(Request $request){
+        if (!$request->contact || !$request->txt){
+            return Common::apiResponse (0,'missing params');
+        }
+        $tkt = Ticket::query ()->create (
+            [
+                'contact_num'=>$request->contact,
+                'problem'=>$request->txt,
+                'status'=>1
+            ]
+        );
+        if ($request->hasFile ('img')){
+            $img = $request->file ('img');
+            $path = Common::upload ('ticket',$img);
+            $tkt->img = $path;
+            $tkt->save ();
+        }
+        $out = [
+            'contact'=>$tkt->contact_num,
+            'txt'=>$tkt->problem,
+            'image'=>$tkt->img
+        ];
+        return Common::apiResponse (1,'done',$out,200);
     }
 
 

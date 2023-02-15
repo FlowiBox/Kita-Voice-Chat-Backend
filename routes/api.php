@@ -233,3 +233,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::post ('/buyVip',[\App\Http\Controllers\Api\V1\MallController::class,'buyVip']);
     });
 });
+
+Route::prefix ('tickets')->group (function (){
+    Route::post ('open',[\App\Http\Controllers\Api\V1\HomeController::class,'openTicket']);
+});

@@ -55,6 +55,12 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
+        'ticket' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/ticket'),
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
         'rooms' => [
             'driver' => 'local',
             'root' => storage_path('app/public/rooms'),

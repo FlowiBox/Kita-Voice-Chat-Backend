@@ -84,6 +84,7 @@ Route::group(
     $router->resource ('coins','CoinController');
     $router->resource ('ovip','OVipController');
     $router->resource ('vip_privilege','VipPrivilegeController');
+    $router->resource ('tickets','TicketController');
 
 
 }
