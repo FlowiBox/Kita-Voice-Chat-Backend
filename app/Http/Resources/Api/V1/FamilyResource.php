@@ -37,7 +37,7 @@ class FamilyResource extends JsonResource
             'notice'=>@$this->notice?:'',
             'max_num_of_members'=>@$this->num?:0,
             'max_num_of_admins'=>@$this->num_admins?:0,
-            'rank'=>@$this->rank?:0,
+            'rank'=>@(integer)$this->rank?:0,
             'owner'=>$owner,
             'me'=>$me,
             'am_i_member'=>FamilyUser::query ()->where ('user_id',$request->user ()->id)->where ('family_id',$this->id)->where ('status',1)->exists (),
