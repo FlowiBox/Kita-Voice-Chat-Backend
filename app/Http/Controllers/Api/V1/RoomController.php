@@ -1465,4 +1465,35 @@ class RoomController extends Controller
         ];
         return Common::apiResponse (1,'',['user'=>new UserResource($fUser),'total'=>(integer)$gl->total],200);
     }
+
+    public function roomMode(Request $request){
+        $room = Room::query ()->where('uid',$request->owner_id)->first ();
+        if (!$room) return Common::apiResponse (0,'not found',null,404);
+        $ms = [
+            'messageContent'=>[
+                'message'=>'roomMode',
+                'mode'=>$room->mode
+            ]
+        ];
+        $json = json_encode ($ms);
+        Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
+        return Common::apiResponse (1,'done',null,201);
+    }
+
+    public function changeMode(Request $request){
+        if (!$request->mode) return Common::apiResponse (0,'missing param',null,422);
+        $room = Room::query ()->where('uid',$request->owner_id)->first ();
+        if (!$room) return Common::apiResponse (0,'not found',null,404);
+        $room->mode = $request->mode;
+        $room->save ();
+        $ms = [
+            'messageContent'=>[
+                'message'=>'roomMode',
+                'mode'=>$request->mode
+            ]
+        ];
+        $json = json_encode ($ms);
+        Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
+        return Common::apiResponse (1,'done',null,201);
+    }
 }
