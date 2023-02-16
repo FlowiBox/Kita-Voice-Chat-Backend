@@ -1469,10 +1469,15 @@ class RoomController extends Controller
     public function roomMode(Request $request){
         $room = Room::query ()->where('uid',$request->owner_id)->first ();
         if (!$room) return Common::apiResponse (0,'not found',null,404);
+        if ($room->mood == 1){
+            $mode = 'party';
+        }else{
+            $mode = 'topCenter';
+        }
         $ms = [
             'messageContent'=>[
                 'message'=>'roomMode',
-                'mode'=>$room->mode
+                'mode'=>$mode
             ]
         ];
         $json = json_encode ($ms);
@@ -1486,10 +1491,15 @@ class RoomController extends Controller
         if (!$room) return Common::apiResponse (0,'not found',null,404);
         $room->mode = $request->mode;
         $room->save ();
+        if ($request->mood == 1){
+            $mode = 'party';
+        }else{
+            $mode = 'topCenter';
+        }
         $ms = [
             'messageContent'=>[
                 'message'=>'roomMode',
-                'mode'=>$request->mode
+                'mode'=>$mode
             ]
         ];
         $json = json_encode ($ms);
