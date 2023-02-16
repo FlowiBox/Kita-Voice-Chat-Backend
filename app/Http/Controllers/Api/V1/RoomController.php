@@ -1486,12 +1486,12 @@ class RoomController extends Controller
     }
 
     public function changeMode(Request $request){
-        if (!$request->mode) return Common::apiResponse (0,'missing param',null,422);
+        if ($request->mode == null) return Common::apiResponse (0,'missing param',null,422);
         $room = Room::query ()->where('uid',$request->owner_id)->first ();
         if (!$room) return Common::apiResponse (0,'not found',null,404);
         $room->mode = $request->mode;
         $room->save ();
-        if ($request->mood == 1){
+        if ($request->mode == '1'){
             $mode = 'party';
         }else{
             $mode = 'topCenter';
