@@ -255,7 +255,7 @@ class RoomController extends Controller
 //            if(!$res)  return Common::apiResponse(false,'Please complete real-name authentication first');
 //        }
         $black_list=Common::getUserBlackList($owner_id);
-        if(in_array($user_id, $black_list)) return Common::apiResponse(false,__('You have been blocked by the other party'));
+        if(in_array($user_id, $black_list)) return Common::apiResponse(false,__('You have been blocked by the other party'),null,423);
         $room_info = (array)DB::table('rooms','rooms')
             ->join('users as users','rooms.uid','=','users.id','left')
             ->join('room_categories as room_categories','rooms.room_type','=','room_categories.id','left')
