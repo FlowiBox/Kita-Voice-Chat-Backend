@@ -86,7 +86,7 @@ class TicketController extends Controller
 
 
         $grid->id('ID');
-//        $grid->user_id('user_id');
+        $grid->user_id('user_id');
         $grid->column('contact_num',__ ('contact'));
         $grid->column('problem',__ ('problem'));
         $grid->column('img',__ ('img'))->image ('',30);

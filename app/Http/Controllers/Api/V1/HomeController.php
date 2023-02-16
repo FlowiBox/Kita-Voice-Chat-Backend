@@ -202,14 +202,10 @@ class HomeController extends Controller
         if (!$request->contact || !$request->txt){
             return Common::apiResponse (0,'missing params');
         }
-        if ($request->user ()){
-            $user_id = $request->user ()->id;
-        }else{
-            $user_id = 0;
-        }
+
         $tkt = Ticket::query ()->create (
             [
-                'user_id'=>$user_id,
+                'user_id'=>$request->user_id,
                 'contact_num'=>$request->contact,
                 'problem'=>$request->txt,
                 'status'=>1
