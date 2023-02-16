@@ -224,4 +224,15 @@ class HomeController extends Controller
     }
 
 
+    public function sendToZego(Request $request){
+        $json = $request->msgcont;
+        $user_id = $request->user_id?:0;
+        $action = $request->action?:'SendCustomCommand';
+        $room = Room::query ()->where('uid',$request->owner_id)->first ();
+        if (!$room) return Common::apiResponse (0,'not found',null,404);
+        Common::sendToZego ($action,$room->id,$user_id,$json);
+        return Common::apiResponse (1,'done',null,201);
+    }
+
+
 }

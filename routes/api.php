@@ -232,6 +232,7 @@ Route::middleware('auth:sanctum')->group (function (){
         Route::get ('/list',[\App\Http\Controllers\Api\V1\MallController::class,'vipList']);
         Route::post ('/buyVip',[\App\Http\Controllers\Api\V1\MallController::class,'buyVip']);
     });
+    Route::post ('send_to_zego',[\App\Http\Controllers\Api\V1\HomeController::class,'sendToZego']);
 });
 
 Route::prefix ('tickets')->group (function (){
