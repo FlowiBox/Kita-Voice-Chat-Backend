@@ -201,31 +201,31 @@ class GiftLogController extends Controller
             $to_id = $data['toUid'];
             $to = @User::query ()->find ($data['toUid'])->name?:'empty name';
         }
-        $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
-        if ($pk){
-            $t1 = explode (',',$pk->team_1);
-            $t2 = explode (',',$pk->team_2);
-            if (in_array ($to_id,$t1)){
-                $pk->increment ('t1_score',$gift->price*$data['num']);
-            }elseif(in_array ($to_id,$t2)){
-                $pk->increment ('t2_score',$gift->price*$data['num']);
-            }
-
-            $ms = ['messageContent'=> [
-                "message"=> "updatePk",
-                "PkTime"=>Carbon::parse ($pk->end_at)->diffInMinutes(now ()),
-                "scoreTeam1"=>$pk->t1_score,
-                "scoreTeam2"=>$pk->t2_score,
-                "percentagepk_team1"=>$pk->t1_per,
-                "percentagepk_team2"=>$pk->t2_per
-                ]
-            ];
-
-            $json = json_encode ($ms);
-
-            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
-
-        }
+//        $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
+//        if ($pk){
+//            $t1 = explode (',',$pk->team_1);
+//            $t2 = explode (',',$pk->team_2);
+//            if (in_array ($to_id,$t1)){
+//                $pk->increment ('t1_score',$gift->price*$data['num']);
+//            }elseif(in_array ($to_id,$t2)){
+//                $pk->increment ('t2_score',$gift->price*$data['num']);
+//            }
+//
+//            $ms = ['messageContent'=> [
+//                "message"=> "updatePk",
+//                "PkTime"=>Carbon::parse ($pk->end_at)->diffInMinutes(now ()),
+//                "scoreTeam1"=>$pk->t1_score,
+//                "scoreTeam2"=>$pk->t2_score,
+//                "percentagepk_team1"=>$pk->t1_per,
+//                "percentagepk_team2"=>$pk->t2_per
+//                ]
+//            ];
+//
+//            $json = json_encode ($ms);
+//
+//            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+//
+//        }
 
         Common::sendToZego_2 ('SendBroadcastMessage',$room->id,$user->id,$user->name,($user->name?:' empty name'.' send gift ') . $gift->price . ' to ' . $to );
         $return_arr['users']=$res;
@@ -347,7 +347,38 @@ class GiftLogController extends Controller
             Common::update_user_total($toUid,3,$info['giftPrice']);
             Common::updateFamilyLevel(@$sender_family->family_id);
             Common::updateFamilyLevel(@$receiver_family->family_id);
-            return 1;
+
+
+            $room = Room::query ()->where ('uid',$uid)->first ();
+
+            $pk = Pk::query ()->where ('room_id',@$room->id)->where ('status',1)->first ();
+            if ($pk) {
+                $t1 = explode ( ',' , $pk -> team_1 );
+                $t2 = explode ( ',' , $pk -> team_2 );
+                if ( in_array ( $toUid , $t1 ) ) {
+                    $pk -> increment ( 't1_score' , $price * $num );
+                }
+                elseif ( in_array ( $toUid , $t2 ) ) {
+                    $pk -> increment ( 't2_score' , $price * $num );
+                }
+
+                $ms = ['messageContent' => [
+                    "message" => "updatePk" ,
+                    "PkTime" => Carbon ::parse ( $pk -> end_at ) -> diffInMinutes ( now () ) ,
+                    "scoreTeam1" => $pk -> t1_score ,
+                    "scoreTeam2" => $pk -> t2_score ,
+                    "percentagepk_team1" => $pk -> t1_per ,
+                    "percentagepk_team2" => $pk -> t2_per
+                ]
+                ];
+
+                $json = json_encode ( $ms );
+
+                Common ::sendToZego ( 'SendCustomCommand' , $room -> id , $user_id , $json );
+            }
+
+
+                return 1;
         }
         else{
             return 0;
