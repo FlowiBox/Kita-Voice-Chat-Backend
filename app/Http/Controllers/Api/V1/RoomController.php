@@ -1292,6 +1292,14 @@ class RoomController extends Controller
         $str=implode(",",$adm_arr);
 
         $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_admin'=>$str]);
+        $rid=DB::table('rooms')->where(['uid'=>$uid])->value('id');
+        $ms = [
+            'messageContent'=>[
+                'message'=>'updateAdmins',
+                'admins'=>$adm_arr
+            ]
+        ];
+        $resu = Common::sendToZego ('SendCustomCommand',$rid,$uid,json_encode ($ms));
         if($res){
             return Common::apiResponse(1,'Set administrator successfully',$adm_arr,200);
         }else{
@@ -1314,6 +1322,14 @@ class RoomController extends Controller
         unset($adm_arr[$key]);
         $str=implode(",", $adm_arr);
         $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_admin'=>$str]);
+        $rid=DB::table('rooms')->where(['uid'=>$uid])->value('id');
+        $ms = [
+            'messageContent'=>[
+                'message'=>'updateAdmins',
+                'admins'=>$adm_arr
+            ]
+        ];
+        $resu = Common::sendToZego ('SendCustomCommand',$rid,$uid,json_encode ($ms));
         if($res){
             return Common::apiResponse(1,'Cancel administrator successfully',$adm_arr,200);
         }else{
