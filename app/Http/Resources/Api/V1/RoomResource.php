@@ -52,6 +52,7 @@ class RoomResource extends JsonResource
             $data['is_mics_free']=$this->free_mic?:0;
             $data['owner'] = $this->owner ();
             $data['admins'] = $this->admins ();
+            $data['admins_ids']=$this->admins ()->pluck('id');
 //            $data['visitors'] = $this->visitors ();
             $data['speak_ban_list'] = $this->banList ();
             $data['muted_list']=$this->muteList ();

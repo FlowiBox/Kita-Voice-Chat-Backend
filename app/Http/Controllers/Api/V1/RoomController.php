@@ -1288,7 +1288,7 @@ class RoomController extends Controller
 
         $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_admin'=>$str]);
         if($res){
-            return Common::apiResponse(1,'Set administrator successfully');
+            return Common::apiResponse(1,'Set administrator successfully',$adm_arr,200);
         }else{
             return Common::apiResponse(0,'Failed to set administrator',null,400);
         }
@@ -1310,7 +1310,7 @@ class RoomController extends Controller
         $str=implode(",", $adm_arr);
         $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_admin'=>$str]);
         if($res){
-            return Common::apiResponse(1,'Cancel administrator successfully');
+            return Common::apiResponse(1,'Cancel administrator successfully',$adm_arr,200);
         }else{
             return Common::apiResponse(0,'Failed to cancel administrator',null,400);
         }
