@@ -232,8 +232,9 @@ class HomeController extends Controller
                 'message'=>$request->message,
             ]
         ];
-        if (is_array($request->ext)){
-            foreach ($request->ext as $k=>$value){
+        $ex = json_decode ($request->ext,true);
+        if (is_array($ex)){
+            foreach ($ex as $k=>$value){
                 $ms['messageContent'][$k] = $value;
             }
         }
