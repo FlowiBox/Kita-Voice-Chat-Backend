@@ -360,6 +360,8 @@ class RoomController extends Controller
             }
         }
 
+        $room_info['admins'] = UserResource::collection (User::query ()->whereIn ('id',$roomAdmin)->get ());
+
         $roomJudge = explode(',', $room_info['room_judge']);
         for ($i=0; $i < count($roomJudge); $i++) {
             if($roomJudge[$i] == $user_id){
@@ -466,7 +468,10 @@ class RoomController extends Controller
             if (!$v){
                 if (in_array ($k,['is_afk','gap','exp','sort','num','audio_sort','audio_num','strto_time','is_pk','mode'])){
                     $v = 0;
-                }else{
+                }elseif (in_array ($k,['admins'])){
+                    $v=[];
+                }
+                else{
                     $v = '';
                 }
             }
