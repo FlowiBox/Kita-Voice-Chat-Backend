@@ -954,7 +954,7 @@ class RoomController extends Controller
         if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'),null,422);
         $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
         $admins = explode (',',$admins);
-        if($request->user ()->id != $uid || !in_array ($request->user ()->id,$admins) ) {
+        if($request->user ()->id != $uid && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'),null,408);
         }
         $sound = DB::table('rooms')->where('uid',$uid)->value('room_sound');
@@ -987,7 +987,7 @@ class RoomController extends Controller
         if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'),null,422);
         $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
         $admins = explode (',',$admins);
-        if($request->user ()->id != $uid || !in_array ($request->user ()->id,$admins) ) {
+        if($request->user ()->id != $uid && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'));
         }
         $sound = DB::table('rooms')->where('uid',$uid)->value('room_sound');
