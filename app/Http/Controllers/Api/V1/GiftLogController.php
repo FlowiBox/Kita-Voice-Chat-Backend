@@ -194,12 +194,12 @@ class GiftLogController extends Controller
 
 
 
-        if(is_array($to_arr) && count ($to_arr) > 0){
+        if(is_array($to_arr) && count ($to_arr) > 1){
             $to_id = $to_arr[0];
-            $to = 'room';
+            $to = 'الغرفة';
         }else{
-            $to_id = $data['toUid'];
-            $to = @User::query ()->find ($data['toUid'])->name?:'empty name';
+            $to_id = $to_arr[0];
+            $to = @User::query ()->find ($to_id)->name?:'empty name';
         }
 //        $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
 //        if ($pk){
@@ -226,8 +226,8 @@ class GiftLogController extends Controller
 //            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
 //
 //        }
-
-        Common::sendToZego_2 ('SendBroadcastMessage',$room->id,$user->id,$user->name,($user->name?:' empty name'.' send gift ') . $gift->price . ' to ' . $to );
+        $from_name = User::query ()->find ($data['user_id'])->value ('name');
+        Common::sendToZego_2 ('SendBroadcastMessage',$room->id,$data['user_id'],$from_name,'x ارسل هدية ' .$data['num']. $gift->price . ' الى ' . $to );
         $return_arr['users']=$res;
         $return_arr['push']=$push;
         if ($request->to_zego == 1){
@@ -242,7 +242,8 @@ class GiftLogController extends Controller
                     'isExpensive'=>($gift->price >= 2000)?true:false,
                     'num_gift'=>$send_num,
                     "plural"=>(is_array($to_arr) && count ($to_arr) > 1)?true:false,
-                    'gift_price'=>(integer)$gp
+                    'gift_price'=>(integer)$gp,
+
                 ]
             ];
             $json = json_encode ($d);
