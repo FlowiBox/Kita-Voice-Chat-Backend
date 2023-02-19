@@ -227,7 +227,18 @@ class HomeController extends Controller
 
 
     public function sendToZego(Request $request){
-        $json = $request->msgcont;
+        $ms = [
+            'messageContent'=>[
+                'message'=>$request->message,
+            ]
+        ];
+        if (is_array($request->ext)){
+            foreach ($request->ext as $k=>$value){
+                $ms['messageContent'][$k] = $value;
+            }
+        }
+
+        $json = json_encode ($ms);
         $user_id = $request->user_id?:0;
         $action = $request->action?:'SendCustomCommand';
         $room = Room::query ()->where('uid',$request->owner_id)->first ();
