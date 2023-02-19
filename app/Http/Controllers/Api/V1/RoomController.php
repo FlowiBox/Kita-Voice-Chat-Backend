@@ -1326,7 +1326,7 @@ class RoomController extends Controller
         $ms = [
             'messageContent'=>[
                 'message'=>'updateAdmins',
-                'admins'=>$adm_arr
+                'admins'=>array_values($adm_arr)
             ]
         ];
         $resu = Common::sendToZego ('SendCustomCommand',$rid,$uid,json_encode ($ms));
