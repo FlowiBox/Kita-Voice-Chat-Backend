@@ -33,7 +33,17 @@ Trait CalcsTrait
             $total = 0;
         }
 
-        $level = Vip ::query () -> where ( ['type' => $type] ) -> where ( 'di' , '<=' , $total ) -> orderByDesc ( 'di' ) -> limit ( 1 ) -> value ( 'level' );
+        if ($type == 1){
+            $exp = $star_num * 1;
+        }elseif ($type == 2){
+            $exp = $gold_num * 10;
+        }elseif($type == 3 ){
+            $exp = $vip_num * 1;
+        }else{
+            $exp = 0;
+        }
+
+        $level = Vip ::query () -> where ( ['type' => $type] ) -> where ( 'exp' , '<=' , $exp ) -> orderByDesc ( 'exp' ) -> limit ( 1 ) -> value ( 'level' );
 
         if ( $is_image != false ) {
             if ( $level > 0 ) {
@@ -211,12 +221,13 @@ Trait CalcsTrait
         $next_star_level = self ::getNextLevel ( 1 , $star_level , 'level' );
 
         $gold_level      = self ::getLevel ( $user_id , 2 );
-        $current_gold_num = self::getCurrentLevel (2,$star_level,'exp');
+        $current_gold_num = self::getCurrentLevel (2,$gold_level,'exp');
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
         $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
 
         $data['receiver_num']        = (integer)$star_num?:0;
         $data['sender_num']        = (integer)$gold_num?:0;
+
         $data['receiver_level']      = (integer)$star_level?:0;
         $data['next_receiver_num']   = (integer)$next_star_num?:0;
         $data['next_receiver_level'] = (integer)$next_star_level?:0;
@@ -227,6 +238,7 @@ Trait CalcsTrait
 
         $data['prev_receiver_num'] = (integer)$current_star_num?:0;
         $data['prev_sender_num'] = (integer)$current_gold_num?:0;
+
         $rt = $data['next_receiver_num']-$data['prev_receiver_num'];
         $st = $data['next_sender_num']-$data['prev_sender_num'];
         $rc = $data['receiver_num'] - $data['prev_receiver_num'];
@@ -379,7 +391,7 @@ Trait CalcsTrait
     {
         if ( !$type || !$field ) return 0;
 
-        $max  = DB ::table ( 'vips' ) -> where ( ['type' => $type] ) -> orderByDesc ( 'id' ) -> limit ( 1 ) -> value ( $field );
+        $max  = DB ::table ( 'vips' ) -> where ( ['type' => $type] ) -> orderByDesc ( 'exp' ) -> limit ( 1 ) -> value ( $field );
         $next = DB ::table ( 'vips' ) -> where ( 'type' , $type ) -> where ( 'level' , '>' , $level ) -> orderBy ( 'level' ) -> limit ( 1 ) -> value ( $field )?:0;
         return ($next ?: $max);
     }
