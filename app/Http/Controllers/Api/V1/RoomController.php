@@ -817,7 +817,7 @@ class RoomController extends Controller
         $data = $request;
         $position = $data['position'];
         if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
-        $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
+        $admins = Room::query ()->where ('uid',$data['owner_id'])->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'),null,408);
@@ -851,7 +851,7 @@ class RoomController extends Controller
         $data = $request;
         $position = $data['position'];
         if($position <0 || $position >9)  return Common::apiResponse(0,__('position error'));
-        $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
+        $admins = Room::query ()->where ('uid',$data['owner_id'])->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'),null,408);
@@ -884,7 +884,7 @@ class RoomController extends Controller
         $data = $request;
         $position = $data['position'];
         if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
-        $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
+        $admins = Room::query ()->where ('uid',$data['owner_id'])->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'),null,408);
@@ -919,7 +919,7 @@ class RoomController extends Controller
         $data = $request;
         $position = $data['position'];
         if($position <0 || $position >9)  return Common::apiResponse(0,__('position error'));
-        $admins = Room::query ()->where ('uid',$data['owner_id'])->first ()->value ('room_admin');
+        $admins = Room::query ()->where ('uid',$data['owner_id'])->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'),null,408);
@@ -952,7 +952,7 @@ class RoomController extends Controller
         $user_id = $request->user_id ? : 0;
         $uid = $request->owner_id ? : 0;
         if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'),null,422);
-        $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
+        $admins = Room::query ()->where ('uid',$uid)->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $uid && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'),null,408);
@@ -985,7 +985,7 @@ class RoomController extends Controller
         $user_id = $request->user_id ? : 0;
         $uid = $request->owner_id ? : 0;
         if(!$uid || !$user_id)  return Common::apiResponse (0,__ ('require user_id and owner_id'),null,422);
-        $admins = Room::query ()->where ('uid',$uid)->first ()->value ('room_admin');
+        $admins = Room::query ()->where ('uid',$uid)->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $uid && !in_array ($request->user ()->id,$admins) ) {
             return Common::apiResponse(0,__('you dont have permission'));
