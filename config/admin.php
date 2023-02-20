@@ -67,10 +67,26 @@ return [
             'admin',
             'multiLanguage',
             'admin.permission:deny,agency',
-
         ],
 
     ],
+
+
+    'agency_route' => [
+
+        'prefix' => env('AGENCY_ROUTE_PREFIX', 'agency'),
+
+        'namespace' => 'App\\Admin\\Controllers\\AgencyControllers',
+
+        'middleware' => [
+            'web',
+            'admin',
+            'multiLanguage',
+        ],
+
+    ],
+
+
 
     /*
     |--------------------------------------------------------------------------

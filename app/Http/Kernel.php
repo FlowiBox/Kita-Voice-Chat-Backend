@@ -2,7 +2,8 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\AdminOneMiddleware;
+//use App\Http\Middleware\AdminOneMiddleware;
+use App\Http\Middleware\AgencyMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use KevinSoft\MultiLanguage\Middlewares\MultiLanguageMiddleware;
 
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'localization' => \App\Http\Middleware\Localization::class,
         'multiLanguage'=>MultiLanguageMiddleware::class,
+        'agency'=>AgencyMiddleware::class
     ];
 }

@@ -227,9 +227,19 @@ Trait CalcsTrait
 
         $data['prev_receiver_num'] = (integer)$current_star_num?:0;
         $data['prev_sender_num'] = (integer)$current_gold_num?:0;
+        $rt = $data['next_receiver_num']-$data['prev_receiver_num'];
+        $st = $data['next_sender_num']-$data['prev_sender_num'];
+        if ($rt > 0){
+            $data['receiver_per'] = (double)($data['receiver_num']/$rt);
+        }else{
+            $data['receiver_per'] = 0.00;
+        }
+        if($st > 0){
+            $data['sender_per']=(double)($data['sender_num']/$st);
+        }else{
+            $data['sender_per']= 0.00;
+        }
 
-        $data['receiver_per'] = (double)($data['receiver_num']/(($data['next_receiver_num']-$data['prev_receiver_num'])?:1));
-        $data['sender_per']=(double)($data['sender_num']/(($data['next_sender_num']-$data['prev_sender_num'])?:1));
 
         return $data;
     }
