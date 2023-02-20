@@ -533,7 +533,7 @@ class RoomController extends Controller
         $json = json_encode ($d);
         if (!$request->is_update){
             Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
-            Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,$user->name.' inter room');
+            Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,' انضم للغرفة');
         }
 //        $room_info['timer_id'] = $timer_id;
         $room_info['password_status']=$room_info['room_pass']==""?false:true;
