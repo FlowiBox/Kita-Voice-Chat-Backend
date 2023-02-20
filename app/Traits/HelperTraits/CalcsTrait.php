@@ -229,13 +229,15 @@ Trait CalcsTrait
         $data['prev_sender_num'] = (integer)$current_gold_num?:0;
         $rt = $data['next_receiver_num']-$data['prev_receiver_num'];
         $st = $data['next_sender_num']-$data['prev_sender_num'];
+        $rc = $data['receiver_num'] - $data['prev_receiver_num'];
+        $sc = $data['sender_num'] - $data['prev_sender_num'];
         if ($rt > 0){
-            $data['receiver_per'] = (double)($data['receiver_num']/$rt);
+            $data['receiver_per'] = (double)($rc/$rt);
         }else{
             $data['receiver_per'] = 0.00;
         }
         if($st > 0){
-            $data['sender_per']=(double)($data['sender_num']/$st);
+            $data['sender_per']=(double)($sc/$st);
         }else{
             $data['sender_per']= 0.00;
         }
