@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Web\Controllers;
+namespace App\Http\Controllers\Web;
 
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
@@ -26,6 +26,7 @@ class AuthController extends Controller
      */
     public function getLogin()
     {
+
         if ($this->guard()->check()) {
             return redirect($this->redirectPath());
         }

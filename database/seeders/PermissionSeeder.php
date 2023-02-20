@@ -101,6 +101,20 @@ class PermissionSeeder extends Seeder
                 ['name'=>'show Family','slug'=>'show-family'],
                 ['name'=>'delete Family','slug'=>'delete-family'],
 
+                //family level
+                ['name'=>'Browse Family Level','slug'=>'browse-family-level'],
+                ['name'=>'Create Family Level','slug'=>'create-family-level'],
+                ['name'=>'Edit Family Level','slug'=>'edit-family-level'],
+                ['name'=>'show Family Level','slug'=>'show-family-level'],
+                ['name'=>'delete Family Level','slug'=>'delete-family-level'],
+
+                //family user
+                ['name'=>'Browse Family User','slug'=>'browse-family-user'],
+                ['name'=>'Create Family User','slug'=>'create-family-user'],
+                ['name'=>'Edit Family User','slug'=>'edit-family-user'],
+                ['name'=>'show Family User','slug'=>'show-family-user'],
+                ['name'=>'delete Family User','slug'=>'delete-family-user'],
+
                 //GIFT
                 ['name'=>'Browse Gift','slug'=>'browse-gift'],
                 ['name'=>'Create Gift','slug'=>'create-gift'],
@@ -121,6 +135,41 @@ class PermissionSeeder extends Seeder
                 ['name'=>'Edit Carousel','slug'=>'edit-carousel'],
                 ['name'=>'show Carousel','slug'=>'show-carousel'],
                 ['name'=>'delete Carousel','slug'=>'delete-carousel'],
+
+                //Agency-join-requests
+                ['name'=>'Browse Agency-join-requests','slug'=>'browse-agency-join-requests'],
+                ['name'=>'Create Agency-join-requests','slug'=>'create-agency-join-requests'],
+                ['name'=>'Edit Agency-join-requests','slug'=>'edit-agency-join-requests'],
+                ['name'=>'show Agency-join-requests','slug'=>'show-agency-join-requests'],
+                ['name'=>'delete Agency-join-requests','slug'=>'delete-agency-join-requests'],
+
+                //Coins
+                ['name'=>'Browse Coins','slug'=>'browse-coins'],
+                ['name'=>'Create Coins','slug'=>'create-coins'],
+                ['name'=>'Edit Coins','slug'=>'edit-coins'],
+                ['name'=>'show Coins','slug'=>'show-coins'],
+                ['name'=>'delete Coins','slug'=>'delete-coins'],
+
+                //Coin-logs
+                ['name'=>'Browse Coin Logs','slug'=>'browse-coin-logs'],
+                ['name'=>'Create Coin Logs','slug'=>'create-coin-logs'],
+                ['name'=>'Edit Coin Logs','slug'=>'edit-coin-logs'],
+                ['name'=>'show Coin Logs','slug'=>'show-coin-logs'],
+                ['name'=>'delete Coin Logs','slug'=>'delete-coin-logs'],
+
+                //Official Messages
+                ['name'=>'Browse Official Messages','slug'=>'browse-official-messages'],
+                ['name'=>'Create Official Messages','slug'=>'create-official-messages'],
+                ['name'=>'Edit Official Messages','slug'=>'edit-official-messages'],
+                ['name'=>'show Official Messages','slug'=>'show-official-messages'],
+                ['name'=>'delete Official Messages','slug'=>'delete-official-messages'],
+
+                //Vip
+                ['name'=>'Browse Vips','slug'=>'browse-vips'],
+                ['name'=>'Create Vips','slug'=>'create-vips'],
+                ['name'=>'Edit Vips','slug'=>'edit-vips'],
+                ['name'=>'show Vips','slug'=>'show-vips'],
+                ['name'=>'delete Vips','slug'=>'delete-vips'],
             ]
         );
     }

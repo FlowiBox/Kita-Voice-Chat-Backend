@@ -2,7 +2,8 @@
 
 namespace App\Classes;
 
-use App\Http\Web\Controllers\AuthController;
+
+use App\Http\Controllers\Web\AuthController;
 use Closure;
 use Encore\Admin\Auth\Database\Menu;
 use Encore\Admin\Layout\Content;

@@ -88,7 +88,7 @@ class VipController extends AdminController
             ]
         );
         $form->number('level', __('Level'));
-        $form->number('exp', __('Exp'));
+        $form->number('exp', __('Exp'))->help (__('sender: 1 coin = 10 exp -- receiver: 1 coin = 1 exp'));
         $form->number('di', __('Diamonds'));
         $form->number('co', __('Coins'));
         $form->image ('img','Image');
