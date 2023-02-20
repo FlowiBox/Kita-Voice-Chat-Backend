@@ -35,15 +35,15 @@ class VipController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('type', __('Type'))->select (
             [
-                1=>__ ('broadcaster level'),
-                2=>__ ('honor level'),
-                3=>__ ('vip'),
+                1=>__ ('broadcaster'),
+                2=>__ ('honor'),
+//                3=>__ ('vip'),
             ]
         );
         $grid->column('level', __('Level'));
         $grid->column('exp', __('Exp'));
-        $grid->column('di', __('Diamonds'));
-        $grid->column('co', __('Coins'));
+//        $grid->column('di', __('Diamonds'));
+//        $grid->column('co', __('Coins'));
         $grid->column('img', __('Image'))->image ('','50','50');
         return $grid;
     }
