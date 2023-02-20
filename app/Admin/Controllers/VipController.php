@@ -40,8 +40,8 @@ class VipController extends AdminController
 //                3=>__ ('vip'),
             ]
         );
-        $grid->column('level', __('Level'));
-        $grid->column('exp', __('Exp'));
+        $grid->column('level', __('Level'))->editable ();
+        $grid->column('exp', __('Exp'))->editable ();
 //        $grid->column('di', __('Diamonds'));
 //        $grid->column('co', __('Coins'));
         $grid->column('img', __('Image'))->image ('','50','50');
