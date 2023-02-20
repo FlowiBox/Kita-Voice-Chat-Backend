@@ -243,17 +243,16 @@ Trait CalcsTrait
         $st = $data['next_sender_num']-$data['prev_sender_num'];
         $rc = $data['receiver_num'] - $data['prev_receiver_num'];
         $sc = $data['sender_num'] - $data['prev_sender_num'];
-        if ($rt > 0){
+        if ($rt > 0 && ($rc/$rt) < 1 && ($rc/$rt) > 0){
             $data['receiver_per'] = (double)($rc/$rt);
         }else{
-            $data['receiver_per'] = 0.00;
+            $data['receiver_per'] = (double)0.00;
         }
-        if($st > 0){
+        if($st > 0 && ($sc/$st) < 1 && ($sc/$st) > 0){
             $data['sender_per']=(double)($sc/$st);
         }else{
-            $data['sender_per']= 0.00;
+            $data['sender_per']= (double)0.00;
         }
-
 
         return $data;
     }

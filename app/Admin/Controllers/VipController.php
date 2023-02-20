@@ -82,16 +82,16 @@ class VipController extends AdminController
 
         $form->select('type', __('Type'))->options (
             [
-                1=>__ ('broadcaster level'),
-                2=>__ ('honor level'),
-                3=>__ ('vip'),
+                1=>__ ('broadcaster'),
+                2=>__ ('honor'),
+//                3=>__ ('vip'),
             ]
-        );
+        )->default (2);
         $form->number('level', __('Level'));
         $form->number('exp', __('Exp'))->help (__('sender: 1 coin = 10 exp -- receiver: 1 coin = 1 exp'));
-        $form->number('di', __('Diamonds'));
-        $form->number('co', __('Coins'));
-        $form->image ('img','Image');
+//        $form->number('di', __('Diamonds'));
+//        $form->number('co', __('Coins'));
+        $form->image ('img',__('Image'));
 
         return $form;
     }
