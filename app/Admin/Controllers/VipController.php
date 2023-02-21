@@ -62,11 +62,11 @@ class VipController extends AdminController
         $show->field('type', __('Type'))->number ();
         $show->field('level', __('Level'))->number ();
         $show->field('exp', __('Exp'))->number ();
-        $show->field('di', __('Diamonds'))->number ();
-        $show->field('co', __('Coins'))->number ();
+//        $show->field('di', __('Diamonds'))->number ();
+//        $show->field('co', __('Coins'))->number ();
         $show->field('img', __('Image'))->image ();
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+//        $show->field('created_at', __('Created at'));
+//        $show->field('updated_at', __('Updated at'));
 
         return $show;
     }
@@ -88,7 +88,7 @@ class VipController extends AdminController
             ]
         )->default (2);
         $form->number('level', __('Level'));
-        $form->number('exp', __('Exp'))->help (__('sender: 1 coin = 10 exp -- receiver: 1 coin = 1 exp'));
+        $form->number('exp', __('Exp'))->help (__('sender: 1 coin = 1 exp -- receiver: 1 coin = 1 exp'));
 //        $form->number('di', __('Diamonds'));
 //        $form->number('co', __('Coins'));
         $form->image ('img',__('Image'));

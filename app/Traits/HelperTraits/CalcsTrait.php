@@ -36,7 +36,7 @@ Trait CalcsTrait
         if ($type == 1){
             $exp = $star_num * 1;
         }elseif ($type == 2){
-            $exp = $gold_num * 10;
+            $exp = $gold_num * 1;
         }elseif($type == 3 ){
             $exp = $vip_num * 1;
         }else{
@@ -233,11 +233,11 @@ Trait CalcsTrait
         $data['next_receiver_level'] = (integer)$next_star_level?:0;
 
         $data['sender_level']      = (integer)$gold_level?:0;
-        $data['next_sender_num']   = (integer)($next_gold_num/10);
+        $data['next_sender_num']   = (integer)($next_gold_num);
         $data['next_sender_level'] = (integer)$next_gold_level?:0;
 
         $data['prev_receiver_num'] = (integer)$current_star_num?:0;
-        $data['prev_sender_num'] = (integer)($current_gold_num/10);
+        $data['prev_sender_num'] = (integer)($current_gold_num);
 
         $rt = $data['next_receiver_num']-$data['prev_receiver_num'];
         $st = $data['next_sender_num']-$data['prev_sender_num'];
