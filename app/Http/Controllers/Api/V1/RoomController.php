@@ -688,14 +688,17 @@ class RoomController extends Controller
         $user_id= $request->user_id;
         $phase=$request->phase;
         if(!$data['owner_id'] || !$user_id) return Common::apiResponse(0,__('Missing data'),null,422);
-        $room=(array)DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,room_visitor,room_admin,microphone,free_mic')->first();
+        $room=(array)DB::table('rooms')->where(['uid'=>$data['owner_id']])->selectRaw('id,room_visitor,room_admin,microphone,free_mic,mode')->first();
         if(!$room)  return Common::apiResponse(0,__('room does not exist'));
         $vis_arr= !$room['room_visitor'] ? [] : explode(",", $room['room_visitor']);
         if(!in_array($user_id, $vis_arr) && $data['owner_id'] != $user_id)   return Common::apiResponse(0,__('The user is not in this room'),null,403);
 
         $position = $data['position'];//mic sequence 0-8
-        if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
-
+        if ($room['mode'] != '1'){
+            if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
+        }else{
+            if($position <0 || $position >17) return Common::apiResponse(0,__('position error'),null,422);
+        }
         $mic_arr=explode(',', $room['microphone']);
         if($mic_arr[$position] == -1)   return Common::apiResponse(0,__('This slot has been locked'),null,408);
         if($mic_arr[$position] != 0)   return Common::apiResponse(0,__('There is a user on the mic'),null,405);
@@ -816,7 +819,12 @@ class RoomController extends Controller
     {
         $data = $request;
         $position = $data['position'];
-        if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
+        $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
+        if (@$room->mode != '1'){
+            if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
+        }else{
+            if($position <0 || $position >17) return Common::apiResponse(0,__('position error'),null,422);
+        }
         $admins = Room::query ()->where ('uid',$data['owner_id'])->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
@@ -827,9 +835,8 @@ class RoomController extends Controller
         $microphone = explode(',', $microphone);
         $microphone[$position] = -2;
         $microphone = implode(',', $microphone);
-        DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
+        $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if(true){
-            $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
             $ms = [
                 'messageContent'=>[
                     'message'=>'muteMic',
@@ -850,7 +857,12 @@ class RoomController extends Controller
     {
         $data = $request;
         $position = $data['position'];
-        if($position <0 || $position >9)  return Common::apiResponse(0,__('position error'));
+        $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
+        if (@$room->mode != '1'){
+            if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
+        }else{
+            if($position <0 || $position >17) return Common::apiResponse(0,__('position error'),null,422);
+        }
         $admins = Room::query ()->where ('uid',$data['owner_id'])->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
@@ -883,7 +895,12 @@ class RoomController extends Controller
     {
         $data = $request;
         $position = $data['position'];
-        if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
+        $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
+        if (@$room->mode != '1'){
+            if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
+        }else{
+            if($position <0 || $position >17) return Common::apiResponse(0,__('position error'),null,422);
+        }
         $admins = Room::query ()->where ('uid',$data['owner_id'])->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
@@ -894,9 +911,8 @@ class RoomController extends Controller
         $microphone = explode(',', $microphone);
         $microphone[$position] = -1;
         $microphone = implode(',', $microphone);
-        DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
-        if(true){
-            $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
+        $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
+        if($res){
             $ms = [
                 'messageContent'=>[
                     'message'=>'lockMic',
@@ -918,7 +934,12 @@ class RoomController extends Controller
     {
         $data = $request;
         $position = $data['position'];
-        if($position <0 || $position >9)  return Common::apiResponse(0,__('position error'));
+        $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
+        if (@$room->mode != '1'){
+            if($position <0 || $position >9) return Common::apiResponse(0,__('position error'),null,422);
+        }else{
+            if($position <0 || $position >17) return Common::apiResponse(0,__('position error'),null,422);
+        }
         $admins = Room::query ()->where ('uid',$data['owner_id'])->value ('room_admin');
         $admins = explode (',',$admins);
         if($request->user ()->id != $data['owner_id'] && !in_array ($request->user ()->id,$admins) ) {
@@ -1507,7 +1528,7 @@ class RoomController extends Controller
     }
 
     public function changeMode(Request $request){
-        if ($request->mode == null) return Common::apiResponse (0,'missing param',null,422);
+        if ($request->mode == null || !$request->owner_id) return Common::apiResponse (0,'missing param',null,422);
         $room = Room::query ()->where('uid',$request->owner_id)->first ();
         if (!$room) return Common::apiResponse (0,'not found',null,404);
         $room->mode = $request->mode;

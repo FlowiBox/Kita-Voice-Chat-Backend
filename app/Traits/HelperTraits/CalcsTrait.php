@@ -230,6 +230,8 @@ Trait CalcsTrait
         $data['receiver_num']        = (integer)$star_num;
         $data['receiver_img']        = $star_level_img;
         $data['sender_num']          = (integer)$gold_num;
+        $data['sender_rem']          = (integer)($next_gold_num-($gold_num - $current_gold_num));
+        $data['receiver_rem']        = (integer)($next_star_num-($star_num - $current_star_num));
         $data['sender_img']          = $gold_level_img;
 
         $data['receiver_level']      = (integer)$star_level?:0;
