@@ -19,8 +19,13 @@ class ChargeAction extends Action
 
     public function handle(Request $request)
     {
+
         if ($request->user_type == 'app'){
-            $user = User::query ()->find ($request->user_id);
+            if ($request->id_type == '1'){
+                $user = User::query ()->where ('uuid',$request->user_id)->first ();
+            }else{
+                $user = User::query ()->find ($request->user_id);
+            }
             if (!$user){
                 return $this->response()->error(__('user not found'))->refresh();
             }
@@ -73,6 +78,7 @@ class ChargeAction extends Action
         $this->hidden('charger_id', 'charger id')->value (Auth::id ());
         $this->hidden('charger_type', 'charger_type')->value ('dash');
         $this->text('user_id', __('user id'));
+        $this->select('id_type', __('id type'))->options ([0=>__('normal'),1=>__('big')]);
         $this->select('user_type', __('user type'))->options (['app'=>__ ('app'),'dash'=>__ ('dash')])->default ('app');
         $this->text('amount', __('amount'));
         $this->hidden('amount_type', 'amount_type')->value (1);
