@@ -54,7 +54,7 @@ class ProfileController extends Controller
         $me = $request->user ();
         $user = User::query ()->find ($id);
         if ($me->id != $user->id){
-            $user->profileVisits()->sync([$me->id]);
+            $user->profileVisits()->attach([$me->id]);
         }
         if($user){
             return Common::apiResponse (true,'',new UserResource($user),200);
