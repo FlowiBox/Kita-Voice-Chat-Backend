@@ -216,11 +216,13 @@ Trait CalcsTrait
         $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
 
         $star_level      = self ::getLevel ( $user_id , 1 );
+        $star_level_img      = self ::getLevel ( $user_id , 1 ,true);
         $current_star_num = self::getCurrentLevel (1,$star_level,'exp');
         $next_star_num   = self ::getNextLevel ( 1 , $star_level , 'exp' );
         $next_star_level = self ::getNextLevel ( 1 , $star_level , 'level' );
 
         $gold_level      = self ::getLevel ( $user_id , 2 );
+        $gold_level_img      = self ::getLevel ( $user_id , 2 ,true);
         $current_gold_num = self::getCurrentLevel (2,$gold_level,'exp');
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
         $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
