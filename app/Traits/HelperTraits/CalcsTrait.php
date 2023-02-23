@@ -228,7 +228,9 @@ Trait CalcsTrait
         $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
 
         $data['receiver_num']        = (integer)$star_num;
-        $data['sender_num']        = (integer)$gold_num;
+        $data['receiver_img']        = $star_level_img;
+        $data['sender_num']          = (integer)$gold_num;
+        $data['sender_img']          = $gold_level_img;
 
         $data['receiver_level']      = (integer)$star_level?:0;
         $data['next_receiver_num']   = (integer)$next_star_num?:0;
