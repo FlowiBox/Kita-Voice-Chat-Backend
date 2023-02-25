@@ -4,73 +4,20 @@ namespace App\Admin\Controllers;
 
 use App\Models\ChargeValue;
 use App\Http\Controllers\Controller;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class ChargeValueController extends Controller
+class ChargeValueController extends MainController
 {
     use HasResourceActions;
+    public $permission_name = 'charge';
+    public $hiddenColumns = [
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('admin.index'))
-            ->description(trans('admin.description'))
-            ->body($this->grid());
-    }
-
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
+    ];
 
     /**
      * Make a grid builder.
@@ -92,7 +39,7 @@ class ChargeValueController extends Controller
         );
         $grid->column('usd_img',__ ('usd image'))->image ('',30);
         $grid->column('type_img',__ ('type image'))->image ('',30);
-
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -114,7 +61,7 @@ class ChargeValueController extends Controller
 //        $show->type_img('type_img');
 //        $show->created_at(trans('admin.created_at'));
 //        $show->updated_at(trans('admin.updated_at'));
-
+        $this->extendShow ($show);
         return $show;
     }
 

@@ -5,75 +5,22 @@ namespace App\Admin\Controllers;
 use App\Helpers\Common;
 use App\Models\Country;
 use App\Http\Controllers\Controller;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class CountryController extends Controller
+class CountryController extends MainController
 {
     use HasResourceActions;
 
+    public $permission_name = 'country';
+    public $hiddenColumns = [
 
+    ];
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('admin.index'))
-            ->description(trans('admin.description'))
-            ->body($this->grid());
-    }
-
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
 
     /**
      * Make a grid builder.
@@ -95,7 +42,7 @@ class CountryController extends Controller
         $grid->continent_name(trans('continent name'));
         $grid->e_continent_name(trans('english continent name'));
         $grid->column ('status',trans ('status'))->switch (Common::getSwitchStates ());
-
+        $this->extendGrid ($grid);
 
         return $grid;
     }
@@ -120,7 +67,7 @@ class CountryController extends Controller
         $show->continent_name(trans('continent name'));
         $show->e_continent_name(trans('english continent name'));
 
-
+        $this->extendShow ($show);
         return $show;
     }
 

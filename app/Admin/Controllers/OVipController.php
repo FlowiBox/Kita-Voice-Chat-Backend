@@ -12,67 +12,13 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class OVipController extends Controller
+class OVipController extends MainController
 {
     use HasResourceActions;
+    public $permission_name = 'vips';
+    public $hiddenColumns = [
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('admin.index'))
-            ->description(trans('admin.description'))
-            ->body($this->grid());
-    }
-
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
+    ];
 
     /**
      * Make a grid builder.
@@ -96,7 +42,7 @@ class OVipController extends Controller
         $grid->column('expire',__ ('expire'));
 //        $grid->created_at(trans('admin.created_at'));
 //        $grid->updated_at(trans('admin.updated_at'));
-
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -110,15 +56,15 @@ class OVipController extends Controller
     {
         $show = new Show(OVip::findOrFail($id));
 
-        $show->id('ID');
-        $show->level('level');
-        $show->name('name');
-        $show->img('img');
-        $show->price('price');
-        $show->privileges('privileges');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
-
+//        $show->id('ID');
+//        $show->level('level');
+//        $show->name('name');
+//        $show->img('img');
+//        $show->price('price');
+//        $show->privileges('privileges');
+//        $show->created_at(trans('admin.created_at'));
+//        $show->updated_at(trans('admin.updated_at'));
+        $this->extendShow ($show);
         return $show;
     }
 

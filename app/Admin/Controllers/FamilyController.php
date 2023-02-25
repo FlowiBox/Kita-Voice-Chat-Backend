@@ -4,73 +4,21 @@ namespace App\Admin\Controllers;
 
 use App\Models\Family;
 use App\Http\Controllers\Controller;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class FamilyController extends Controller
+class FamilyController extends MainController
 {
     use HasResourceActions;
+    public $permission_name = 'family';
+    public $hiddenColumns = [
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('Families'))
-            ->description(trans('list'))
-            ->body($this->grid());
-    }
+    ];
 
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
 
     /**
      * Make a grid builder.
@@ -83,7 +31,7 @@ class FamilyController extends Controller
 
         $grid->id('ID');
 //        $grid->is_success('is_success');
-        $grid->column('image',__('image'));
+        $grid->column('image',__('image'))->image ('',30);
         $grid->column('name',__ ('name'));
         $grid->column('introduce',__ ('introduce'));
         $grid->column('notice',__ ('notice'));
@@ -96,7 +44,7 @@ class FamilyController extends Controller
 //        $grid->start_time('start_time');
 //        $grid->created_at(trans('admin.created_at'));
 //        $grid->updated_at(trans('admin.updated_at'));
-
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -125,7 +73,7 @@ class FamilyController extends Controller
 //        $show->start_time('start_time');
 //        $show->created_at(trans('admin.created_at'));
 //        $show->updated_at(trans('admin.updated_at'));
-
+        $this->extendShow ($show);
         return $show;
     }
 

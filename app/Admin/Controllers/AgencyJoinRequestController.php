@@ -6,6 +6,7 @@ use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
 use App\Http\Controllers\Controller;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -13,53 +14,18 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\Auth;
 
-class AgencyJoinRequestController extends Controller
+class AgencyJoinRequestController extends MainController
 {
     use HasResourceActions;
+    public $permission_name = 'agency-join-requests';
+    public $hiddenColumns = [
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('admin.index'))
-            ->description(trans('admin.description'))
-            ->body($this->grid());
-    }
+    ];
 
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
 
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
+
+
+
 
     public function update ( $id )
     {
@@ -72,19 +38,7 @@ class AgencyJoinRequestController extends Controller
         return $this->form()->update($id);
     }
 
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
+
 
     /**
      * Make a grid builder.
@@ -131,7 +85,7 @@ class AgencyJoinRequestController extends Controller
             return null;
         });
         $grid->column('updated_at',trans('time'))->diffForHumans ();
-
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -153,6 +107,8 @@ class AgencyJoinRequestController extends Controller
         $show->created_at(trans('admin.created_at'));
         $show->updated_at(trans('admin.updated_at'));
 
+        $this->extendShow ($show);
+
         return $show;
     }
 
@@ -172,6 +128,7 @@ class AgencyJoinRequestController extends Controller
         $form->hidden('change_status_admin_id', 'change_status_admin_id');
         $form->display(trans('admin.created_at'));
         $form->display(trans('admin.updated_at'));
+
 
         return $form;
     }

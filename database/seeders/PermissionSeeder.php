@@ -24,12 +24,19 @@ class PermissionSeeder extends Seeder
                 ['name'=>'show Users','slug'=>'show-users'],
                 ['name'=>'delete Users','slug'=>'delete-users'],
 
+                //target
+                ['name'=>'Browse Target','slug'=>'browse-target'],
+                ['name'=>'Create Target','slug'=>'create-target'],
+                ['name'=>'Edit Target','slug'=>'edit-target'],
+                ['name'=>'show Target','slug'=>'show-target'],
+                ['name'=>'delete Target','slug'=>'delete-target'],
+
                 //usertarget
-                ['name'=>'Browse UserTarget','slug'=>'browse-usertarget'],
-                ['name'=>'Create UserTarget','slug'=>'create-usertarget'],
-                ['name'=>'Edit UserTarget','slug'=>'edit-usertarget'],
-                ['name'=>'show UserTarget','slug'=>'show-usertarget'],
-                ['name'=>'delete UserTarget','slug'=>'delete-usertarget'],
+                ['name'=>'Browse User Target','slug'=>'browse-user-target'],
+                ['name'=>'Create User Target','slug'=>'create-user-target'],
+                ['name'=>'Edit User Target','slug'=>'edit-user-target'],
+                ['name'=>'show User Target','slug'=>'show-user-target'],
+                ['name'=>'delete User Target','slug'=>'delete-user-target'],
 
                 //rooms
                 ['name'=>'Browse Rooms','slug'=>'browse-rooms'],
@@ -191,7 +198,43 @@ class PermissionSeeder extends Seeder
                 ['name'=>'Edit Ticket','slug'=>'edit-ticket'],
                 ['name'=>'show Ticket','slug'=>'show-ticket'],
                 ['name'=>'delete Ticket','slug'=>'delete-ticket'],
+
+                //Black List
+                ['name'=>'Browse Black List','slug'=>'browse-black-list'],
+                ['name'=>'Create Black List','slug'=>'create-black-list'],
+                ['name'=>'Edit Black List','slug'=>'edit-black-list'],
+                ['name'=>'show Black List','slug'=>'show-black-list'],
+                ['name'=>'delete Black List','slug'=>'delete-black-list'],
+
+                //Recharge Request
+                ['name'=>'Browse Recharge Request','slug'=>'browse-recharge-request'],
+                ['name'=>'Create Recharge Request','slug'=>'create-recharge-request'],
+                ['name'=>'Edit Recharge Request','slug'=>'edit-recharge-request'],
+                ['name'=>'show Recharge Request','slug'=>'show-recharge-request'],
+                ['name'=>'delete Recharge Request','slug'=>'delete-recharge-request'],
+
+                //Categories
+                ['name'=>'Browse Categories','slug'=>'browse-categories'],
+                ['name'=>'Create Categories','slug'=>'create-categories'],
+                ['name'=>'Edit Categories','slug'=>'edit-categories'],
+                ['name'=>'show Categories','slug'=>'show-categories'],
+                ['name'=>'delete Categories','slug'=>'delete-categories'],
+
+                //Gold Coins
+                ['name'=>'Browse Gold Coins','slug'=>'browse-gold-coins'],
+                ['name'=>'Create Gold Coins','slug'=>'create-gold-coins'],
+                ['name'=>'Edit Gold Coins','slug'=>'edit-gold-coins'],
+                ['name'=>'show Gold Coins','slug'=>'show-gold-coins'],
+                ['name'=>'delete Gold Coins','slug'=>'delete-gold-coins'],
+
+                //Wares
+                ['name'=>'Browse Wares','slug'=>'browse-wares'],
+                ['name'=>'Create Wares','slug'=>'create-wares'],
+                ['name'=>'Edit Wares','slug'=>'edit-wares'],
+                ['name'=>'show Wares','slug'=>'show-wares'],
+                ['name'=>'delete Wares','slug'=>'delete-wares'],
             ]
         );
     }
 }
+

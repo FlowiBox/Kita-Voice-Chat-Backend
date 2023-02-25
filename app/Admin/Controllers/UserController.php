@@ -17,6 +17,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\App;
 
 
@@ -32,7 +33,15 @@ class UserController extends MainController
     public $permission_name = 'users';
     public $hiddenColumns = [
         'is_host',
-        'status'
+        'status',
+        'is_gold_id',
+        'id',
+        'email',
+        'phone',
+        'di',
+        'gold',
+        'coins',
+        'actions'
     ];
 
     public function __construct ()
@@ -84,8 +93,15 @@ class UserController extends MainController
             });
         });
         $grid->column('id', __('Id'));
-        $grid->column ('uuid','uuid')->editable ();
-        $grid->column ('is_gold_id',__ ('Gold id'))->switch (Common::getSwitchStates ());
+        $grid->column ('uuid',__('uuid'))->expand(function ($model) {
+
+            $targets = $model->targets()->get()->map(function ($target) {
+                return $target->only(['id', 'created_at']);
+            });
+
+            return new Table(['ID', 'release time'], $targets->toArray());
+        });
+        $grid->column ('is_gold_id',__ ('use Gold id'))->switch (Common::getSwitchStates ());
         $grid->column('name', __('Name'));
         $grid->column('nickname', __('NickName'));
         $grid->column('email', __('Email'));

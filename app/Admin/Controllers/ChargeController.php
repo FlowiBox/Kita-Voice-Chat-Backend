@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\Charge;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -16,7 +17,10 @@ use Encore\Admin\Show;
 class ChargeController extends MainController
 {
     use HasResourceActions;
+    public $permission_name = 'charge';
+    public $hiddenColumns = [
 
+    ];
     /**
      * Index interface.
      *
@@ -25,6 +29,9 @@ class ChargeController extends MainController
      */
     public function index(Content $content)
     {
+        if (! \Encore\Admin\Facades\Admin ::user()->can( '*')){
+            Permission::check('browse-'.$this->permission_name);
+        }
         return $content
             ->header(trans('admin.index'))
             ->description(trans('admin.description'))
@@ -34,51 +41,6 @@ class ChargeController extends MainController
             });
     }
 
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
-
-
-
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
 
 
 
@@ -143,6 +105,7 @@ class ChargeController extends MainController
 //        $grid->updated_at(trans('admin.updated_at'));
         $grid->disableActions ();
         $grid->disableCreateButton ();
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -165,7 +128,7 @@ class ChargeController extends MainController
 //        $show->amount_type('amount_type');
 //        $show->created_at(trans('admin.created_at'));
 //        $show->updated_at(trans('admin.updated_at'));
-
+        $this->extendShow ($show);
         return $show;
     }
 

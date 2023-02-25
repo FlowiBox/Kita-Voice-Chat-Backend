@@ -8,18 +8,23 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class VipController extends AdminController
+class VipController extends MainController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Vips';
+    protected $title = 'Levels';
+
+    public $permission_name = 'level';
+    public $hiddenColumns = [
+
+    ];
 
     public function __construct ()
     {
-        $this->title = __('Vips');
+        $this->title = __('Levels');
     }
 
 
@@ -44,7 +49,8 @@ class VipController extends AdminController
         $grid->column('exp', __('Exp'))->editable ();
 //        $grid->column('di', __('Diamonds'));
 //        $grid->column('co', __('Coins'));
-        $grid->column('img', __('Image'))->image ('','50','50');
+        $grid->column('img', __('Image'))->image ('','30');
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -67,7 +73,7 @@ class VipController extends AdminController
         $show->field('img', __('Image'))->image ();
 //        $show->field('created_at', __('Created at'));
 //        $show->field('updated_at', __('Updated at'));
-
+        $this->extendShow ($show);
         return $show;
     }
 

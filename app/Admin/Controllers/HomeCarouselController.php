@@ -11,67 +11,14 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class HomeCarouselController extends Controller
+class HomeCarouselController extends MainController
 {
     use HasResourceActions;
+    public $permission_name = 'carousel';
+    public $hiddenColumns = [
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('admin.index'))
-            ->description(trans('admin.description'))
-            ->body($this->grid());
-    }
+    ];
 
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
 
     /**
      * Make a grid builder.
@@ -88,7 +35,7 @@ class HomeCarouselController extends Controller
         $grid->column('url',trans ('url'))->url ();
         $grid->column('enable',trans ('enable'))->switch (Common::getSwitchStates ());
         $grid->column('sort',trans ('sort'));
-
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -102,14 +49,14 @@ class HomeCarouselController extends Controller
     {
         $show = new Show(HomeCarousel::findOrFail($id));
 
-        $show->id('ID');
-        $show->img('img');
-        $show->contents('contents');
-        $show->url('url');
-        $show->enable('enable');
-        $show->sort('sort');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
+//        $show->id('ID');
+//        $show->img('img');
+//        $show->contents('contents');
+//        $show->url('url');
+//        $show->enable('enable');
+//        $show->sort('sort');
+//        $show->created_at(trans('admin.created_at'));
+//        $show->updated_at(trans('admin.updated_at'));
 
         return $show;
     }

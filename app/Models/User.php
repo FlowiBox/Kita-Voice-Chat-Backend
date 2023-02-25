@@ -154,7 +154,9 @@ class User extends Authenticatable
     }
 
 
-
+    public function targets(){
+        return $this->hasMany (UserTarget::class);
+    }
 
 
 }

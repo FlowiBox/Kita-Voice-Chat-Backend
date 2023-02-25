@@ -4,16 +4,20 @@ namespace App\Admin\Controllers;
 
 use App\Models\Config;
 use App\Http\Controllers\Controller;
+use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class ConfigController extends Controller
+class ConfigController extends MainController
 {
     use HasResourceActions;
+    public $permission_name = 'config';
+    public $hiddenColumns = [
 
+    ];
     /**
      * Index interface.
      *
@@ -22,6 +26,9 @@ class ConfigController extends Controller
      */
     public function index(Content $content)
     {
+        if (! \Encore\Admin\Facades\Admin ::user()->can( '*')){
+            Permission::check('browse-'.$this->permission_name);
+        }
         return $content
             ->header(trans('admin.index'))
             ->description(trans('admin.description'))
@@ -85,6 +92,7 @@ class ConfigController extends Controller
         $grid->name(trans('name'));
         $grid->column('value',trans('value'))->editable ();
         $grid->desc(trans ('description'));
+        $this->extendGrid ($grid);
 
         return $grid;
     }
@@ -102,7 +110,7 @@ class ConfigController extends Controller
         $show->id('ID');
         $show->name(trans('name'));
         $show->value(trans('value'));
-
+        $this->extendShow ($show);
         return $show;
     }
 

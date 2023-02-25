@@ -102,6 +102,25 @@ class MainController extends AdminController
             );
         }
 
+        if (in_array ('actions',$this->hiddenColumns)){
+            $grid->disableActions ();
+        }
+
+        $grid->export(function ($export) {
+
+            $export->filename($this->permission_name.'.csv');
+
+            $export->except($this->hiddenColumns);
+
+//            $export->only(['column3', 'column4' ...]);
+//
+//            $export->originalValue(['column1', 'column2' ...]);
+//
+//            $export->column('column_5', function ($value, $original) {
+//                return $value;
+//            });
+        });
+
     }
 
 

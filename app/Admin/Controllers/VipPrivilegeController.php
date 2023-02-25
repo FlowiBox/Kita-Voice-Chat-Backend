@@ -10,68 +10,14 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class VipPrivilegeController extends Controller
+class VipPrivilegeController extends MainController
 {
     use HasResourceActions;
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('admin.index'))
-            ->description(trans('admin.description'))
-            ->body($this->grid());
-    }
+    public $permission_name = 'vip-privilege';
+    public $hiddenColumns = [
 
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
-
+    ];
     /**
      * Make a grid builder.
      *
@@ -102,7 +48,7 @@ class VipPrivilegeController extends Controller
 //        $grid->img2('img2');
 //        $grid->created_at(trans('admin.created_at'));
 //        $grid->updated_at(trans('admin.updated_at'));
-
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -116,14 +62,14 @@ class VipPrivilegeController extends Controller
     {
         $show = new Show(VipPrivilege::findOrFail($id));
 
-        $show->id('ID');
-        $show->name('name');
-        $show->title('title');
-        $show->img1('img1');
-        $show->img2('img2');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
-
+//        $show->id('ID');
+//        $show->name('name');
+//        $show->title('title');
+//        $show->img1('img1');
+//        $show->img2('img2');
+//        $show->created_at(trans('admin.created_at'));
+//        $show->updated_at(trans('admin.updated_at'));
+        $this->extendShow ($show);
         return $show;
     }
 

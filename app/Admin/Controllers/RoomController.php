@@ -18,64 +18,11 @@ use Encore\Admin\Widgets\Table;
 class RoomController extends MainController
 {
     use HasResourceActions;
+    public $permission_name = 'rooms';
+    public $hiddenColumns = [
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('admin.index'))
-            ->description(trans('admin.description'))
-            ->body($this->grid());
-    }
+    ];
 
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
 
     /**
      * Make a grid builder.
@@ -116,7 +63,7 @@ class RoomController extends MainController
         $grid->actions (function ($action){
             $action->disableView ();
         });
-
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -130,46 +77,46 @@ class RoomController extends MainController
     {
         $show = new Show(Room::findOrFail($id));
 
-        $show->id('ID');
-        $show->numid('numid');
-        $show->uid('uid');
-        $show->room_status('room_status');
-        $show->room_name('room_name');
-        $show->room_cover('room_cover');
-        $show->room_intro('room_intro');
-        $show->room_pass('room_pass');
-        $show->room_class('room_class');
-        $show->room_type('room_type');
-        $show->room_welcome('room_welcome');
-        $show->room_admin('room_admin');
-        $show->room_visitor('room_visitor');
-        $show->room_speak('room_speak');
-        $show->room_sound('room_sound');
-        $show->room_black('room_black');
-        $show->week_star('week_star');
-        $show->ranking('ranking');
-        $show->is_popular('is_popular');
-        $show->secret_chat('secret_chat');
-        $show->is_top('is_top');
-        $show->sort('sort');
-        $show->room_background('room_background');
-        $show->microphone('microphone');
-        $show->super_uid('super_uid');
-        $show->is_afk('is_afk');
-        $show->hot('hot');
-        $show->room_judge('room_judge');
-        $show->is_prohibit_sound('is_prohibit_sound');
-        $show->openid('openid');
-        $show->commission_proportion('commission_proportion');
-        $show->fresh_time('fresh_time');
-        $show->start_hour('start_hour');
-        $show->end_hour('end_hour');
-        $show->is_recommended('is_recommended');
-        $show->play_num('play_num');
-        $show->free_mic('free_mic');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
-
+//        $show->id('ID');
+//        $show->numid('numid');
+//        $show->uid('uid');
+//        $show->room_status('room_status');
+//        $show->room_name('room_name');
+//        $show->room_cover('room_cover');
+//        $show->room_intro('room_intro');
+//        $show->room_pass('room_pass');
+//        $show->room_class('room_class');
+//        $show->room_type('room_type');
+//        $show->room_welcome('room_welcome');
+//        $show->room_admin('room_admin');
+//        $show->room_visitor('room_visitor');
+//        $show->room_speak('room_speak');
+//        $show->room_sound('room_sound');
+//        $show->room_black('room_black');
+//        $show->week_star('week_star');
+//        $show->ranking('ranking');
+//        $show->is_popular('is_popular');
+//        $show->secret_chat('secret_chat');
+//        $show->is_top('is_top');
+//        $show->sort('sort');
+//        $show->room_background('room_background');
+//        $show->microphone('microphone');
+//        $show->super_uid('super_uid');
+//        $show->is_afk('is_afk');
+//        $show->hot('hot');
+//        $show->room_judge('room_judge');
+//        $show->is_prohibit_sound('is_prohibit_sound');
+//        $show->openid('openid');
+//        $show->commission_proportion('commission_proportion');
+//        $show->fresh_time('fresh_time');
+//        $show->start_hour('start_hour');
+//        $show->end_hour('end_hour');
+//        $show->is_recommended('is_recommended');
+//        $show->play_num('play_num');
+//        $show->free_mic('free_mic');
+//        $show->created_at(trans('admin.created_at'));
+//        $show->updated_at(trans('admin.updated_at'));
+        $this->extendShow ($show);
         return $show;
     }
 

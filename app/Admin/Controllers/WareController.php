@@ -11,67 +11,13 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class WareController extends Controller
+class WareController extends MainController
 {
     use HasResourceActions;
+    public $permission_name = 'wares';
+    public $hiddenColumns = [
 
-    /**
-     * Index interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function index(Content $content)
-    {
-        return $content
-            ->header(trans('admin.index'))
-            ->description(trans('admin.description'))
-            ->body($this->grid());
-    }
-
-    /**
-     * Show interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function show($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.detail'))
-            ->description(trans('admin.description'))
-            ->body($this->detail($id));
-    }
-
-    /**
-     * Edit interface.
-     *
-     * @param mixed $id
-     * @param Content $content
-     * @return Content
-     */
-    public function edit($id, Content $content)
-    {
-        return $content
-            ->header(trans('admin.edit'))
-            ->description(trans('admin.description'))
-            ->body($this->form()->edit($id));
-    }
-
-    /**
-     * Create interface.
-     *
-     * @param Content $content
-     * @return Content
-     */
-    public function create(Content $content)
-    {
-        return $content
-            ->header(trans('admin.create'))
-            ->description(trans('admin.description'))
-            ->body($this->form());
-    }
+    ];
 
     /**
      * Make a grid builder.
@@ -83,7 +29,7 @@ class WareController extends Controller
         $grid = new Grid(new Ware);
 
         $grid->id('ID');
-        $grid->column('get_type')->select (
+        $grid->column('get_type',__ ('get_type'))->select (
             [
                 1=>trans ('vip level automatic acquisition'),
 //               2=>trans ('activity'),
@@ -95,7 +41,7 @@ class WareController extends Controller
 //               8=>trans ('cp level unlock'),
             ]
         );
-        $grid->column('type')->select (
+        $grid->column('type',__ ('type'))->select (
             [
                 1=>trans ('Gemstone'),
                 3=>trans ('Card Scroll'),
@@ -108,17 +54,17 @@ class WareController extends Controller
                 10=>trans ('Icon'),
             ]
         );
-        $grid->column('name')->editable ();
-        $grid->title('title');
-        $grid->column('price')->currency ();
-        $grid->score('score');
-        $grid->level('level');
-        $grid->column('show_img')->image ('',30);
+        $grid->column('name',__ ('name'))->editable ();
+        $grid->title(__('title'));
+        $grid->column('price',__ ('price'))->currency ();
+//        $grid->score('score');
+        $grid->level(__('level'));
+        $grid->column('show_img',__ ('show_img'))->image ('',30);
         $grid->column('color',__('color'));
-        $grid->expire('expire');
-        $grid->column('enable')->switch (Common::getSwitchStates ());
-        $grid->sort('sort');
-
+        $grid->expire(__('expire'));
+        $grid->column('enable',__ ('enable'))->switch (Common::getSwitchStates ());
+        $grid->sort('sort',__ ('sort'));
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -132,24 +78,24 @@ class WareController extends Controller
     {
         $show = new Show(Ware::findOrFail($id));
 
-        $show->id('ID');
-        $show->get_type('get_type');
-        $show->type('type');
-        $show->name('name');
-        $show->title('title');
-        $show->price('price');
-        $show->score('score');
-        $show->level('level');
-        $show->show_img('show_img');
-        $show->img1('img1');
-        $show->img2('img2');
-        $show->img3('img3');
-        $show->color('color');
-        $show->expire('expire');
-        $show->enable('enable');
-        $show->sort('sort');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
+//        $show->id('ID');
+//        $show->get_type('get_type');
+//        $show->type('type');
+//        $show->name('name');
+//        $show->title('title');
+//        $show->price('price');
+//        $show->score('score');
+//        $show->level('level');
+//        $show->show_img('show_img');
+//        $show->img1('img1');
+//        $show->img2('img2');
+//        $show->img3('img3');
+//        $show->color('color');
+//        $show->expire('expire');
+//        $show->enable('enable');
+//        $show->sort('sort');
+//        $show->created_at(trans('admin.created_at'));
+//        $show->updated_at(trans('admin.updated_at'));
 
         return $show;
     }
@@ -197,7 +143,7 @@ class WareController extends Controller
         $form->text('name', trans('name'));
         $form->text('title', trans('title'));
         $form->currency('price', trans('price'))->symbol ('💰');
-        $form->number('score', trans('score'));
+//        $form->number('score', trans('score'));
         $form->number('level', trans('level'));
         $form->image('show_img', trans('img'));
         $form->image('img1', trans('img'));

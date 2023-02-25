@@ -22,6 +22,8 @@ class AdminUserController extends \Encore\Admin\Controllers\UserController
 
     protected $model;
 
+
+
     public function __construct ()
     {
         $userModel = Admin::class;

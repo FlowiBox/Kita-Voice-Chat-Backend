@@ -16,7 +16,7 @@ class UserTargetController extends MainController
 {
     use HasResourceActions;
 
-    public $permission_name = 'usertarget';
+    public $permission_name = 'user-target';
     public $hiddenColumns = [
 
     ];
@@ -54,7 +54,7 @@ class UserTargetController extends MainController
         $grid->column('user_days',__ ('user days'));
         $grid->disableActions ();
         $grid->disableCreateButton ();
-
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -68,25 +68,25 @@ class UserTargetController extends MainController
     {
         $show = new Show(UserTarget::findOrFail($id));
 
-        $show->id('ID');
-        $show->user_id('user_id');
-        $show->agency_id('agency_id');
-        $show->union_id('union_id');
-        $show->family_id('family_id');
-        $show->target_id('target_id');
-        $show->target_diamonds('target_diamonds');
-        $show->add_month('add_month');
-        $show->add_year('add_year');
-        $show->target_usd('target_usd');
-        $show->target_hours('target_hours');
-        $show->target_days('target_days');
-        $show->target_agency_share('target_agency_share');
-        $show->user_diamonds('user_diamonds');
-        $show->user_hours('user_hours');
-        $show->user_days('user_days');
-        $show->created_at(trans('admin.created_at'));
-        $show->updated_at(trans('admin.updated_at'));
-
+//        $show->id('ID');
+//        $show->user_id('user_id');
+//        $show->agency_id('agency_id');
+//        $show->union_id('union_id');
+//        $show->family_id('family_id');
+//        $show->target_id('target_id');
+//        $show->target_diamonds('target_diamonds');
+//        $show->add_month('add_month');
+//        $show->add_year('add_year');
+//        $show->target_usd('target_usd');
+//        $show->target_hours('target_hours');
+//        $show->target_days('target_days');
+//        $show->target_agency_share('target_agency_share');
+//        $show->user_diamonds('user_diamonds');
+//        $show->user_hours('user_hours');
+//        $show->user_days('user_days');
+//        $show->created_at(trans('admin.created_at'));
+//        $show->updated_at(trans('admin.updated_at'));
+        $this->extendShow ($show);
         return $show;
     }
 
@@ -99,24 +99,24 @@ class UserTargetController extends MainController
     {
         $form = new Form(new UserTarget);
 
-        $form->display('ID');
-        $form->text('user_id', 'user_id');
-        $form->text('agency_id', 'agency_id');
-        $form->text('union_id', 'union_id');
-        $form->text('family_id', 'family_id');
-        $form->text('target_id', 'target_id');
-        $form->text('target_diamonds', 'target_diamonds');
-        $form->text('add_month', 'add_month');
-        $form->text('add_year', 'add_year');
-        $form->text('target_usd', 'target_usd');
-        $form->text('target_hours', 'target_hours');
-        $form->text('target_days', 'target_days');
-        $form->text('target_agency_share', 'target_agency_share');
-        $form->text('user_diamonds', 'user_diamonds');
-        $form->text('user_hours', 'user_hours');
-        $form->text('user_days', 'user_days');
-        $form->display(trans('admin.created_at'));
-        $form->display(trans('admin.updated_at'));
+//        $form->display('ID');
+//        $form->text('user_id', 'user_id');
+//        $form->text('agency_id', 'agency_id');
+//        $form->text('union_id', 'union_id');
+//        $form->text('family_id', 'family_id');
+//        $form->text('target_id', 'target_id');
+//        $form->text('target_diamonds', 'target_diamonds');
+//        $form->text('add_month', 'add_month');
+//        $form->text('add_year', 'add_year');
+//        $form->text('target_usd', 'target_usd');
+//        $form->text('target_hours', 'target_hours');
+//        $form->text('target_days', 'target_days');
+//        $form->text('target_agency_share', 'target_agency_share');
+//        $form->text('user_diamonds', 'user_diamonds');
+//        $form->text('user_hours', 'user_hours');
+//        $form->text('user_days', 'user_days');
+//        $form->display(trans('admin.created_at'));
+//        $form->display(trans('admin.updated_at'));
 
         return $form;
     }
