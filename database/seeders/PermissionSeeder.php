@@ -165,11 +165,32 @@ class PermissionSeeder extends Seeder
                 ['name'=>'delete Official Messages','slug'=>'delete-official-messages'],
 
                 //Vip
+                ['name'=>'Browse Level','slug'=>'browse-level'],
+                ['name'=>'Create Level','slug'=>'create-level'],
+                ['name'=>'Edit Level','slug'=>'edit-level'],
+                ['name'=>'show Level','slug'=>'show-level'],
+                ['name'=>'delete Level','slug'=>'delete-level'],
+
+                //OVip
                 ['name'=>'Browse Vips','slug'=>'browse-vips'],
                 ['name'=>'Create Vips','slug'=>'create-vips'],
                 ['name'=>'Edit Vips','slug'=>'edit-vips'],
                 ['name'=>'show Vips','slug'=>'show-vips'],
                 ['name'=>'delete Vips','slug'=>'delete-vips'],
+
+                //Vip privilege
+                ['name'=>'Browse Privilege','slug'=>'browse-vip-privilege'],
+                ['name'=>'Create Privilege','slug'=>'create-vip-privilege'],
+                ['name'=>'Edit Privilege','slug'=>'edit-vip-privilege'],
+                ['name'=>'show Privilege','slug'=>'show-vip-privilege'],
+                ['name'=>'delete Privilege','slug'=>'delete-vip-privilege'],
+
+                //Ticket
+                ['name'=>'Browse Ticket','slug'=>'browse-ticket'],
+                ['name'=>'Create Ticket','slug'=>'create-ticket'],
+                ['name'=>'Edit Ticket','slug'=>'edit-ticket'],
+                ['name'=>'show Ticket','slug'=>'show-ticket'],
+                ['name'=>'delete Ticket','slug'=>'delete-ticket'],
             ]
         );
     }

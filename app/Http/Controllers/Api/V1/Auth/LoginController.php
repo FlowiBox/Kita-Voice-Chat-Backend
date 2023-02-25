@@ -200,7 +200,7 @@ class LoginController extends Controller
     }
 
     public function logoutAsConfiguration($user){
-        if (Common::getConf ('login_from_only_one_device')){
+        if (Common::getConf ('login_from_only_one_device') == 'yes'){
             $user->tokens()->delete();
         }
     }

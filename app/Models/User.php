@@ -15,6 +15,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable ,FollowTrait;
 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -61,7 +62,7 @@ class User extends Authenticatable
     }
 
     public function getAvatarAttribute(){
-        return @$this->profile ()->first ()->avatar?:'';
+        return @$this->profile ()->first ()->avatar?:Common::getConf ('default_img');
     }
 
     public function getGenderAttribute(){
