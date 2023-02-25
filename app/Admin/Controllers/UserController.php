@@ -96,10 +96,49 @@ class UserController extends MainController
         $grid->column ('uuid',__('uuid'))->expand(function ($model) {
 
             $targets = $model->targets()->get()->map(function ($target) {
-                return $target->only(['id', 'created_at']);
+                $au = $target->target_usd * $target->target_agency_share/100;
+                $target->agency_obtain = $au;
+                $target->user_obtain = $target->target_usd;
+                $target = $target->only(
+                    [
+                        'id',
+                        'add_month',
+                        'add_year',
+                        'target_usd',
+                        'target_hours',
+                        'target_days',
+                        'target_agency_share',
+                        'user_diamonds',
+                        'user_hours',
+                        'user_days',
+                        'user_obtain',
+                        'agency_obtain',
+                        'created_at'
+                    ]
+                );
+
+
+                return $target;
             });
 
-            return new Table(['ID', 'release time'], $targets->toArray());
+            return new Table(
+                [
+                    'ID',
+                    __('month'),
+                    __('year'),
+                    __('usd').' '.__ ('deserved'),
+                    __ ('target hours'),
+                    __ ('target days'),
+                    __ ('agency share').'(%)',
+                    __ ('user diamonds'),
+                    __ ('user hours'),
+                    __ ('user days'),
+                    __('user obtain'),
+                    __('agency obtain'),
+                    __('at time'),
+
+                ]
+                , $targets->toArray());
         });
         $grid->column ('is_gold_id',__ ('use Gold id'))->switch (Common::getSwitchStates ());
         $grid->column('name', __('Name'));

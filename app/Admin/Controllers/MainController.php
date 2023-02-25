@@ -106,7 +106,7 @@ class MainController extends AdminController
             $grid->disableActions ();
         }
 
-        $grid->export(function ($export) {
+        $grid->export(function ($export) use ($grid){
 
             $export->filename($this->permission_name.'.csv');
 
@@ -114,7 +114,7 @@ class MainController extends AdminController
 
 //            $export->only(['column3', 'column4' ...]);
 //
-//            $export->originalValue(['column1', 'column2' ...]);
+            $export->originalValue($grid->columnNames);
 //
 //            $export->column('column_5', function ($value, $original) {
 //                return $value;

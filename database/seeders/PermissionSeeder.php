@@ -18,11 +18,11 @@ class PermissionSeeder extends Seeder
             [
 
                 //users
-                ['name'=>'Browse Users','slug'=>'browse-users'],
-                ['name'=>'Create Users','slug'=>'create-users'],
-                ['name'=>'Edit Users','slug'=>'edit-users'],
-                ['name'=>'show Users','slug'=>'show-users'],
-                ['name'=>'delete Users','slug'=>'delete-users'],
+//                ['name'=>'Browse Users','slug'=>'browse-users'],
+//                ['name'=>'Create Users','slug'=>'create-users'],
+//                ['name'=>'Edit Users','slug'=>'edit-users'],
+//                ['name'=>'show Users','slug'=>'show-users'],
+//                ['name'=>'delete Users','slug'=>'delete-users'],
 
                 //target
                 ['name'=>'Browse Target','slug'=>'browse-target'],
