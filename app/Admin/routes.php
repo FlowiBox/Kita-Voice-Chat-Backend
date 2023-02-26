@@ -86,6 +86,7 @@ Route::group(
     $router->resource ('ovip','OVipController');
     $router->resource ('vip_privilege','VipPrivilegeController');
     $router->resource ('tickets','TicketController');
+    $router->resource ('pages','PageController');
 
 
 }

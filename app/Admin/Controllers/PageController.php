@@ -126,9 +126,8 @@ class PageController extends Controller
         $form->text('type', 'type');
         $form->text('name', 'name');
         $form->text('url', 'url');
-        $form->text('content', 'content');
-        $form->display(trans('admin.created_at'));
-        $form->display(trans('admin.updated_at'));
+        $form->textarea('content', 'content');
+
 
         return $form;
     }

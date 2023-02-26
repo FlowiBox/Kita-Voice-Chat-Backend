@@ -93,9 +93,27 @@ class UserController extends MainController
             });
         });
         $grid->column('id', __('Id'));
-        $grid->column ('uuid',__('uuid'))->expand(function ($model) {
+        $grid->column ('uuid',__('uuid'));
 
-            $targets = $model->targets()->get()->map(function ($target) {
+        $grid->column ('is_gold_id',__ ('use Gold id'))->switch (Common::getSwitchStates ());
+        $grid->column('name', __('Name'));
+        $grid->column('nickname', __('NickName'));
+        $grid->column('email', __('Email'));
+        $grid->column('phone', __('Phone'));
+        $grid->column('di', __('coins'));
+        $grid->column('gold', __('silver coins'));
+        $grid->column('coins', __('diamonds'));
+        $grid->column('status', __('block status'))->switch (Common::getSwitchStates2 () );
+        $grid->column ('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
+            if ($model->agency_id){
+                return Common::getAgencyShow ($model->agency_id);
+            }
+            return null;
+        });
+
+        $grid->column ('target',__ ('target'))->expand(function ($model) {
+
+            $targets = $model->targets()->orderBy('created_at','desc')->get()->map(function ($target) {
                 $au = $target->target_usd * $target->target_agency_share/100;
                 $target->agency_obtain = $au;
                 $target->user_obtain = $target->target_usd;
@@ -113,7 +131,7 @@ class UserController extends MainController
                         'user_days',
                         'user_obtain',
                         'agency_obtain',
-                        'created_at'
+                        'updated_at'
                     ]
                 );
 
@@ -140,23 +158,6 @@ class UserController extends MainController
                 ]
                 , $targets->toArray());
         });
-        $grid->column ('is_gold_id',__ ('use Gold id'))->switch (Common::getSwitchStates ());
-        $grid->column('name', __('Name'));
-        $grid->column('nickname', __('NickName'));
-        $grid->column('email', __('Email'));
-        $grid->column('phone', __('Phone'));
-        $grid->column('di', __('coins'));
-        $grid->column('gold', __('silver coins'));
-        $grid->column('coins', __('diamonds'));
-        $grid->column('status', __('block status'))->switch (Common::getSwitchStates2 () );
-        $grid->column ('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
-            if ($model->agency_id){
-                return Common::getAgencyShow ($model->agency_id);
-            }
-            return null;
-        });
-
-
 
 
 
