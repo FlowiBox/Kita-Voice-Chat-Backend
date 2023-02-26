@@ -89,7 +89,13 @@ class GiftController extends MainController
         $form->display('ID');
         $form->text('name', __('name'));
         $form->text('e_name', __('e_name'));
-        $form->select('type', __('type'))->options ([1=>__ ('normal'),2=>__ ('hot'),3=>__ ('other')]);
+        $form->select('type', __('type'))->options (
+            [
+                1=>__ ('normal'),
+                2=>__ ('hot'),
+                3=>__ ('country')
+            ]
+        );
         $form->number('vip_level', __('vip_level'))->min (0)->placeholder (__ ('less than 256'));
 //        $form->number('hot', 'hot')->min (0);
 //        $form->switch('is_play', __ ('is_play'))->states (Common::getSwitchStates ());
