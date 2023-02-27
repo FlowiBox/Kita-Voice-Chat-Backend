@@ -108,6 +108,7 @@ class UserResource extends JsonResource
             'facebook_bind'=>@$this->facebook_id?true:false,
             'google_bind'=>@$this->google_id?true:false,
             'phone_bind'=>@$this->phone?true:false,
+            'visit_time'=>''
         ];
 
 //        $additional = [
@@ -134,6 +135,9 @@ class UserResource extends JsonResource
         }
         if (@$this->is_mic == '0' || @$this->is_mic == '1'){
             $data['is_mic'] = $this->is_mic;
+        }
+        if ($this->pivot){
+            $data['visit_time']=$this->pivot->updated_at;
         }
         return $data;
     }
