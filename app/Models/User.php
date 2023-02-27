@@ -92,7 +92,8 @@ class User extends Authenticatable
     }
 
     public function profileVisits(){
-        return $this->belongsToMany (User::class,'profile_visitors','user_id','visitor_id','id','id');
+        return $this->belongsToMany (User::class,'profile_visitors','user_id','visitor_id','id','id') ->withPivot('created_at')
+            ->orderBy('pivot_created_at', 'desc');
     }
 
     public function is_in_live(){
