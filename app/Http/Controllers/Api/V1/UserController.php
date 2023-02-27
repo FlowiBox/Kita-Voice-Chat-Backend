@@ -38,7 +38,7 @@ class UserController extends Controller
         if (in_array ($user->id,Common::getUserBlackList ($me->id))) return Common::apiResponse (0,'in black list',null,403);
         if (in_array ($me->id,Common::getUserBlackList ($user->id))) return Common::apiResponse (0,'in black list',null,403);
         if ($me->id != $user->id){
-            $user->profileVisits()->sync([$me->id]);
+            $user->profileVisits()->attach([$me->id]);
         }
         $data = new UserResource($user);
         return Common::apiResponse (true,'',$data,200);
