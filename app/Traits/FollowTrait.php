@@ -14,7 +14,7 @@ Trait FollowTrait{
     }
 
     public function rooms_uids(){
-        return Room::query ()->where ('room_status',1)->pluck ('uid');
+        return Room::query ()->where ('room_status',1)->where ('is_afk',1)->pluck ('uid');
     }
 
     public function followers(){
