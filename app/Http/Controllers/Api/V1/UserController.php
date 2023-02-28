@@ -229,7 +229,7 @@ class UserController extends Controller
         foreach ($data as $k => &$v) {
             $users = @User::query ()->find($v->{$keywords});
             if (!$users){
-                unset($v);
+                unset($data[$k]);
                 continue;
             }
             $i++;
