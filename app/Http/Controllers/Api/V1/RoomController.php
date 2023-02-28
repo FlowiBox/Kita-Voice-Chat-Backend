@@ -7,10 +7,12 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\EditRoomRequest;
+use App\Http\Resources\Api\V1\FamilyResource;
 use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Background;
+use App\Models\Family;
 use App\Models\GiftLog;
 use App\Models\LiveTime;
 use App\Models\Pk;
@@ -264,7 +266,7 @@ class RoomController extends Controller
                         'rooms.room_cover','room_categories.name','rooms.room_cover','rooms.room_intro',
                         'rooms.room_pass','rooms.room_type','rooms.hot','rooms.room_background','rooms.room_admin',
                         'rooms.room_speak','rooms.room_sound','rooms.microphone','rooms.room_judge','rooms.is_afk',
-                        'users.nickname','rooms.room_visitor','rooms.play_num','rooms.free_mic','rooms.room_welcome'])
+                        'users.nickname','rooms.room_visitor','rooms.play_num','rooms.free_mic','rooms.room_welcome','rooms.session'])
             ->first ();
 
         if(!$room_info) return Common::apiResponse (false,'No room yet, please create first',null,404);
@@ -276,6 +278,9 @@ class RoomController extends Controller
         if($room_id && $room_id != $owner_id){
             Common::quit_hand($room_id,$user_id);
         }
+
+        $family = new FamilyResource(Family::query ()->where ('user_id',$owner_id)->first ());
+        $room_info['owner_family'] = $family;
 
         if($room_info['room_status'] == 3) return Common::apiResponse(false,'The room has been banned, please contact customer service',null,408);
         //enter your room
@@ -317,7 +322,7 @@ class RoomController extends Controller
 
 
         //Total value of all gifts received      stopped here
-        $room_info['giftPrice'] = (integer)DB::table('gift_logs')->where('roomowner_id',$owner_id)->sum('giftPrice');
+        $room_info['giftPrice'] = $room_info['session'];//(integer)DB::table('gift_logs')->where('roomowner_id',$owner_id)->sum('giftPrice');
 
         $pk = Pk::query ()->where ('room_id',$room_info['id'])->where ('status',1)->first ();
         $room_info['pk'] = new \stdClass();
@@ -466,7 +471,7 @@ class RoomController extends Controller
 
         foreach ($room_info as $k => &$v){
             if (!$v){
-                if (in_array ($k,['is_afk','gap','exp','sort','num','audio_sort','audio_num','strto_time','is_pk','mode'])){
+                if (in_array ($k,['is_afk','gap','exp','sort','num','audio_sort','audio_num','strto_time','is_pk','mode','session'])){
                     $v = 0;
                 }elseif (in_array ($k,['admins'])){
                     $v=[];

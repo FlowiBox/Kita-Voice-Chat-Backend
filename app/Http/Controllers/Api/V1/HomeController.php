@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CountryResource;
 use App\Models\Background;
 use App\Models\Country;
+use App\Models\Exchange;
+use App\Models\ExchangeLog;
 use App\Models\GiftLog;
 use App\Models\LiveTime;
 use App\Models\OVip;
@@ -246,6 +248,30 @@ class HomeController extends Controller
         if (!$room) return Common::apiResponse (0,'not found',null,404);
         Common::sendToZego ($action,$room->id,$user_id,$json);
         return Common::apiResponse (1,'done',null,201);
+    }
+
+    public function exchangeList(Request $request){
+        $list = Exchange::query ()->where ('type',$request->type)->orderBy ('diamonds')->get ();
+        return Common::apiResponse (1,'',$list,200);
+    }
+
+    public function exchangeSave(Request $request){
+        $user = $request->user ();
+        $ex = Exchange::query ()->find ($request->item_id);
+        if (!$ex) return Common::apiResponse (0,'not found',null,404);
+        try {
+            DB::beginTransaction ();
+            ExchangeLog::query ()->create (
+                [
+                    'user_id'=>$user->id,
+                ]
+            );
+            DB::commit ();
+
+        }catch (\Exception $exception){
+            DB::rollBack ();
+        }
+
     }
 
 

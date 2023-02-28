@@ -355,6 +355,9 @@ trait RoomTrait
 
 
 
+
+
+
     public static function unlock_wares($user_id, $cp_id = null)
     {
         if ($cp_id) {
@@ -544,5 +547,9 @@ trait RoomTrait
             }
         }
         return $can_kick;
+    }
+
+    public static function increaseRoomSession($room,$num){
+        $room->increment ('session',$num);
     }
 }

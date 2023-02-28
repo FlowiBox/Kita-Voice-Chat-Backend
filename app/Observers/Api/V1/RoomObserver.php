@@ -43,11 +43,18 @@ class RoomObserver
 
 
     public function updating (Room $room){
-
+        $this->resetRoomSession ($room);
     }
 
 
     public function saving(Room $room){
+
+        $this->changeMode ($room);
+        $this->resetRoomSession ($room);
+
+    }
+
+    public function changeMode($room){
         $mics = explode (',',$room->microphone);
 
         if ($room->mode == '1'){
@@ -60,6 +67,14 @@ class RoomObserver
                 $m = array_slice ($mics,0,10);
                 $room->microphone = implode (',',$m);
             }
+        }
+    }
+
+    public function resetRoomSession($room){
+        $owner_in = $room->is_afk;
+        $visitors = explode (',',$room->room_visitor);
+        if (count ($visitors) < 1 && $owner_in != 1){
+            $room->session = 0;
         }
     }
 }

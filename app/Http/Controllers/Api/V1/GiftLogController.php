@@ -133,6 +133,9 @@ class GiftLogController extends Controller
                     $price = $data['num'] * $gift->price;
                     Common::add_play_num($data['owner_id'],$v,$price);
                 }
+                // increase session
+                $pr = $data['num'] * $gift->price;
+                Common::increaseRoomSession ($room,$pr);
                 //broadcast
                 if($gift->is_play == 1){
                     $info['uid']=$data['owner_id'];
@@ -232,7 +235,8 @@ class GiftLogController extends Controller
         $return_arr['users']=$res;
         $return_arr['push']=$push;
         if ($request->to_zego == 1){
-            $gp = GiftLog::query ()->where('roomowner_id',$data['owner_id'])->sum ('giftPrice');
+//            $gp = GiftLog::query ()->where('roomowner_id',$data['owner_id'])->sum ('giftPrice');
+            $gp = $room->session;
             $d = [
                 "messageContent"=>[
                     "message"=>"showGifts",
