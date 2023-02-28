@@ -464,8 +464,7 @@ class UserController extends Controller
             ->first ();
 
         if($pack){
-            $pack->is_used = 1;
-            $pack->save ();
+            Pack::query ()->where(['user_id'=>$user->id])->where ('id',$item_id)->update (['is_used'=>1]);
             if (in_array ($pack->type,$types)){
                 $user->update(['dress_'.$user_dress_after_i_changed[$pack->type]=>$pack->target_id]);
                 return Common::apiResponse (1,'success',new UserResource($user));

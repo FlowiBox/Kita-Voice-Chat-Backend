@@ -286,7 +286,7 @@ class HomeController extends Controller
 
         }catch (\Exception $exception){
             DB::rollBack ();
-            return Common::apiResponse (0,'fail',null,400);
+            return Common::apiResponse (0,$exception->getMessage (),null,400);
         }
 
     }
