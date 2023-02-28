@@ -278,8 +278,12 @@ class RoomController extends Controller
         if($room_id && $room_id != $owner_id){
             Common::quit_hand($room_id,$user_id);
         }
+        $f = Family::query ()->where ('user_id',$owner_id)->first ();
+        $family = new \stdClass();
+        if ($f){
+            $family = new FamilyResource($f);
+        }
 
-        $family = new FamilyResource(Family::query ()->where ('user_id',$owner_id)->first ());
         $room_info['owner_family'] = $family;
 
         if($room_info['room_status'] == 3) return Common::apiResponse(false,'The room has been banned, please contact customer service',null,408);
