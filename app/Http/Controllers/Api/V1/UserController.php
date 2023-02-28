@@ -179,7 +179,7 @@ class UserController extends Controller
             if ($v->is_read == 1){
                 DB::table('packs')->where(array('id'=>$v->id))->update(array('is_read'=>0));
             }
-            
+
 
         }
 
@@ -458,7 +458,9 @@ class UserController extends Controller
             ->where(['user_id'=>$user->id])
             ->where ('id',$item_id)
             ->first ();
+
         if($pack){
+            $pack->update (['is_used'=>1]);
             if (in_array ($pack->type,$types)){
                 $user->update(['dress_'.$user_dress_after_i_changed[$pack->type]=>$pack->target_id]);
                 return Common::apiResponse (1,'success',new UserResource($user));
