@@ -65,7 +65,7 @@ class ExchangeController extends MainController
         $form->select('type', __('type'))->options (
             [
                 0=>__('coin'),
-                1=>__('gold'),
+                1=>__('silver'),
             ]
         );
 
