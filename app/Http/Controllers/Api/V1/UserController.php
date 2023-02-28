@@ -206,19 +206,21 @@ class UserController extends Controller
 
         if ($class == 1) {
             $keywords = 'receiver_id';
+            $rel = 'receiver';
         } elseif ($class == 2) {
             $keywords = 'sender_id';
+            $rel = 'sender';
         }else{
             $keywords = 'sender_id';
+            $rel = 'sender';
         }
+        $query = GiftLog::query ()->whereHas ($rel);
         if ($type == 1) {
-            $query = DB::table('gift_logs')->whereDay('created_at', Carbon::now ()->day);
+            $query = $query->whereDay('created_at', Carbon::now ()->day);
         } elseif ($type == 2) {
-            $query = DB::table('gift_logs')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+            $query = $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
         } elseif ($type == 3) {
-            $query = DB::table('gift_logs')->whereMonth('created_at', Carbon::now()->month);
-        }else{
-            $query = DB::table('gift_logs');
+            $query = $query->whereMonth('created_at', Carbon::now()->month);
         }
         if (!in_array ($class,[1,2])){
             $query = $query->where ('receiver_id',$room_uid);
@@ -228,10 +230,10 @@ class UserController extends Controller
         $i=$l=0;
         foreach ($data as $k => &$v) {
             $users = @User::query ()->find($v->{$keywords});
-            if (!$users){
-                unset($data[$k]);
-                continue;
-            }
+//            if (!$users){
+//                unset($data[$k]);
+//                continue;
+//            }
             $i++;
             $v->user_id = @$v->{$keywords};
             $v->exp = ceil($v->exp);
