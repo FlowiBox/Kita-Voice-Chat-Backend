@@ -251,6 +251,9 @@ class HomeController extends Controller
     }
 
     public function exchangeList(Request $request){
+        if ($request->type == null){
+            return Common::apiResponse (0,'missing param',null,422);
+        }
         $list = Exchange::query ()->where ('type',$request->type)->orderBy ('diamonds')->get ();
         return Common::apiResponse (1,'',$list,200);
     }
@@ -259,17 +262,30 @@ class HomeController extends Controller
         $user = $request->user ();
         $ex = Exchange::query ()->find ($request->item_id);
         if (!$ex) return Common::apiResponse (0,'not found',null,404);
+        if ($user->coins < $ex->diamonds){
+            return Common::apiResponse (0,'balance low',null,407);
+        }
         try {
             DB::beginTransaction ();
             ExchangeLog::query ()->create (
                 [
                     'user_id'=>$user->id,
+                    'diamonds'=>$ex->diamonds,
+                    'value'=>$ex->value,
+                    'type'=>$ex->type
                 ]
             );
+            $user->coins -= $ex->diamonds;
+            if ($ex->type == 0){
+                $user->di += $ex->value;
+            }elseif ($ex->type == 1){
+                $user->gold +=  $ex->value;
+            }
             DB::commit ();
 
         }catch (\Exception $exception){
             DB::rollBack ();
+            return Common::apiResponse (0,'fail',null,400);
         }
 
     }

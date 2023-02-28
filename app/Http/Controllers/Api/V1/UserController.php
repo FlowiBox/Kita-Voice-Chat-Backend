@@ -227,8 +227,9 @@ class UserController extends Controller
         $data=$query->selectRaw("sum(giftPrice) as exp ,". $keywords)->groupBy($keywords)->orderByRaw("exp desc")->limit($limit)->get();
         $i=$l=0;
         foreach ($data as $k => &$v) {
-            $i++;
             $users = @User::query ()->find($v->{$keywords});
+            if (!$users) continue;
+            $i++;
             $v->user_id = @$v->{$keywords};
             $v->exp = ceil($v->exp);
             $v->avatar = @$users->profile->avatar?:'';
@@ -460,7 +461,8 @@ class UserController extends Controller
             ->first ();
 
         if($pack){
-            $pack->update (['is_used'=>1]);
+            $pack->is_used = 1;
+            $pack->save ();
             if (in_array ($pack->type,$types)){
                 $user->update(['dress_'.$user_dress_after_i_changed[$pack->type]=>$pack->target_id]);
                 return Common::apiResponse (1,'success',new UserResource($user));
