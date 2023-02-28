@@ -282,6 +282,7 @@ class HomeController extends Controller
                 $user->gold +=  $ex->value;
             }
             DB::commit ();
+            return Common::apiResponse (1,'',null,201);
 
         }catch (\Exception $exception){
             DB::rollBack ();
