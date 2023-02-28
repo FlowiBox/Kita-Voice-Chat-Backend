@@ -266,7 +266,7 @@ class RoomController extends Controller
                         'rooms.room_cover','room_categories.name','rooms.room_cover','rooms.room_intro',
                         'rooms.room_pass','rooms.room_type','rooms.hot','rooms.room_background','rooms.room_admin',
                         'rooms.room_speak','rooms.room_sound','rooms.microphone','rooms.room_judge','rooms.is_afk',
-                        'users.nickname','rooms.room_visitor','rooms.play_num','rooms.free_mic','rooms.room_welcome','rooms.session'])
+                        'users.nickname','rooms.room_visitor','rooms.play_num','rooms.free_mic','rooms.room_welcome','rooms.session','users.uuid as uuid'])
             ->first ();
 
         if(!$room_info) return Common::apiResponse (false,'No room yet, please create first',null,404);

@@ -110,6 +110,7 @@ class UserController extends Controller
 
     public function my_pack(Request $request){
         $user_id = $request->user ()->id;
+        $user = $request->user ();
         $this->unlock_dress($user_id);
         $type = $request->type;
         if(!in_array($type,[1,2,3,4,5,6,7]))    return Common::apiResponse (0,'type not found',null,404);
@@ -178,6 +179,7 @@ class UserController extends Controller
             if ($v->is_read == 1){
                 DB::table('packs')->where(array('id'=>$v->id))->update(array('is_read'=>0));
             }
+            
 
         }
 
