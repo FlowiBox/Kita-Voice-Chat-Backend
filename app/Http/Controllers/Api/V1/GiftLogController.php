@@ -239,7 +239,7 @@ class GiftLogController extends Controller
         $return_arr['push']=$push;
         if ($request->to_zego == 1){
 //            $gp = GiftLog::query ()->where('roomowner_id',$data['owner_id'])->sum ('giftPrice');
-            $gp = $room->session;
+            $gp = Room::query ()->where ('uid',$request->owner_id)->value ('session');
             $d = [
                 "messageContent"=>[
                     "message"=>"showGifts",
