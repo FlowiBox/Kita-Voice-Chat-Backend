@@ -180,19 +180,22 @@ class GiftLogController extends Controller
             ->first();
         $fUser = User::query ()->find ($gl->sender_id);
 
-        $ms1 = [
-            'messageContent'=>[
-                'message'=>'topSendGifts',
-                'img'=>$fUser->avatar,
-                'id'=>$fUser->id,
-                'name'=>$fUser->name,
-                'frame'=>Common::getUserDress($fUser->id,$fUser->dress_1,4,'img2')?:Common::getUserDress($fUser->id,$fUser->dress_1,4,'img1'),
-            ]
-        ];
+        if ($fUser){
+            $ms1 = [
+                'messageContent'=>[
+                    'message'=>'topSendGifts',
+                    'img'=>$fUser->avatar,
+                    'id'=>$fUser->id,
+                    'name'=>$fUser->name,
+                    'frame'=>Common::getUserDress($fUser->id,$fUser->dress_1,4,'img2')?:Common::getUserDress($fUser->id,$fUser->dress_1,4,'img1'),
+                ]
+            ];
 
-        $json = json_encode ($ms1);
+            $json = json_encode ($ms1);
 
-        Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+        }
+
 
 
 
