@@ -262,6 +262,7 @@ class HomeController extends Controller
         $user = $request->user ();
         $ex = Exchange::query ()->find ($request->item_id);
         if (!$ex) return Common::apiResponse (0,'not found',null,404);
+        if ($user->is_host == 1) return Common::apiResponse (0,'not allowed',null,403);
         if ($user->coins < $ex->diamonds){
             return Common::apiResponse (0,'balance low',null,407);
         }
@@ -283,7 +284,7 @@ class HomeController extends Controller
             }
             $user->save();
             DB::commit ();
-            return Common::apiResponse (1,'',null,201);
+            return Common::apiResponse (1,'',$user->coins,200);
 
         }catch (\Exception $exception){
             DB::rollBack ();
