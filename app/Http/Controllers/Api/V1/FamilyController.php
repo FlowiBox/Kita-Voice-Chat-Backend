@@ -39,7 +39,7 @@ class FamilyController extends Controller
         if (!$time) return Common::apiResponse (0,'time is required',null,422);
 
 
-        $query = Family::query ()->where ('status',1);
+        $query = Family::query ()->where ('status',1)->whereHas ('owner');
         $data = $query->get ()
             ->where ('rank','!=',0)
             ->sortByDesc('rank');

@@ -53,8 +53,10 @@ class UserController extends Controller
 
     public function userFriend(Request $request){
         $user = $request->user ();
+
         switch ($request->type){
             case '1': // they follow me
+                $request['pid'] = $user->id;
                 return Common::apiResponse (true,'',UserResource::collection ($user->followers()),200);
             case '2': // I follow them
                 return Common::apiResponse (true,'',UserResource::collection ($user->followeds()),200);
@@ -549,9 +551,9 @@ class UserController extends Controller
             ->whereMonth ('created_at',Carbon::now ()->month)
             ->sum ('receiver_obtain');
         $data = [
-            'diamonds'=>$month_received,
-            'usd'=>$user->old_usd+$user->target_usd-$user->target_token_usd,
-            'usd_coin'=>Common::getConf ('one_usd_value_in_coins')?:10
+            'diamonds'=>(string)$month_received,
+            'usd'=>(double)$user->old_usd+$user->target_usd-$user->target_token_usd,
+            'usd_coin'=>(integer)Common::getConf ('one_usd_value_in_coins')?:10
         ];
         return Common::apiResponse (1,'',$data,200);
     }

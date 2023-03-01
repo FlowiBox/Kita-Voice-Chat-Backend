@@ -6,16 +6,17 @@ use App\Models\Room;
 
 Trait FollowTrait{
     public function followers_ids(){
-        return Follow::query ()->where ('followed_user_id',$this->id)->pluck ('user_id');
+        return Follow::query ()->where ('followed_user_id',$this->id)->orderByDesc('id')->pluck ('user_id');
     }
 
     public function followeds_ids(){
-        return Follow::query ()->where ('user_id',$this->id)->pluck ('followed_user_id');
+        return Follow::query ()->where ('user_id',$this->id)->orderByDesc('id')->pluck ('followed_user_id');
     }
 
     public function rooms_uids(){
         return Room::query ()->where ('room_status',1)->where ('is_afk',1)->pluck ('uid');
     }
+
 
     public function followers(){
         return self::query ()->whereIn('id',$this->followers_ids ())->get ();

@@ -108,7 +108,8 @@ class UserResource extends JsonResource
             'facebook_bind'=>@$this->facebook_id?true:false,
             'google_bind'=>@$this->google_id?true:false,
             'phone_bind'=>@$this->phone?true:false,
-            'visit_time'=>''
+            'visit_time'=>'',
+            'follow_time'=>$this->getFollowDate($request->get ('pid'))
         ];
 
 //        $additional = [

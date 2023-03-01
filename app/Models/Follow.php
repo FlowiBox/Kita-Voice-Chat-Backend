@@ -9,4 +9,12 @@ class Follow extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    public function followed(){
+        return $this->belongsTo (User::class,'followed_user_id');
+    }
+
+    public function follower(){
+        return $this->belongsTo (User::class,'user_id');
+    }
 }

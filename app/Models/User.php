@@ -159,5 +159,13 @@ class User extends Authenticatable
         return $this->hasMany (UserTarget::class);
     }
 
+    public function getFollowDate($id){
+        $f = Follow::query ()->where ('user_id',$this->id)->where ('followed_user_id',$id)->value ('created_at');
+        if ($f){
+            return $f;
+        }
+        return '';
+    }
+
 
 }
