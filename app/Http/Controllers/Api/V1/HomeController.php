@@ -281,6 +281,7 @@ class HomeController extends Controller
             }elseif ($ex->type == 1){
                 $user->gold +=  $ex->value;
             }
+            $user->save();
             DB::commit ();
             return Common::apiResponse (1,'',null,201);
 
