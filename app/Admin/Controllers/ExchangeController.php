@@ -16,6 +16,11 @@ class ExchangeController extends MainController
      */
     protected $title = 'Exchange';
 
+    public $permission_name = 'exchange';
+    public $hiddenColumns = [
+
+    ];
+
     /**
      * Make a grid builder.
      *
@@ -29,7 +34,7 @@ class ExchangeController extends MainController
         $grid->column('diamonds', __('diamonds'));
         $grid->column('value', __('value'));
         $grid->column('type', __('type'));
-
+        $this->extendGrid ($grid);
         return $grid;
     }
 
@@ -46,7 +51,7 @@ class ExchangeController extends MainController
 //        $show->field('id', __('ID'));
 //        $show->field('created_at', __('Created at'));
 //        $show->field('updated_at', __('Updated at'));
-
+        $this->extendShow ($show);
         return $show;
     }
 

@@ -549,7 +549,7 @@ trait RoomTrait
         return $can_kick;
     }
 
-    public static function increaseRoomSession($room,$num){
-        $room->increment ('session',$num);
+    public static function increaseRoomSession($owner_id,$num){
+        Room::query ()->where ('uid',$owner_id)->increment ('session',$num);
     }
 }

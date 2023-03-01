@@ -100,7 +100,7 @@ class MainController extends AdminController
 
                 }
             );
-            if (in_array ('actions',$this->hiddenColumns)){
+            if (! Admin ::user () -> can ( 'edit-' . $permission_name ) && ! Admin ::user () -> can ( 'delete-' . $permission_name ) && ! Admin ::user () -> can ( 'create-' . $permission_name )){
                 $grid->disableActions ();
             }
         }

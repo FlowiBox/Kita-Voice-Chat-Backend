@@ -135,7 +135,7 @@ class GiftLogController extends Controller
                 }
                 // increase session
                 $pr = $data['num'] * $gift->price;
-                Common::increaseRoomSession ($room,$pr);
+                Common::increaseRoomSession ($data['owner_id'],$pr);
                 //broadcast
                 if($gift->is_play == 1){
                     $info['uid']=$data['owner_id'];

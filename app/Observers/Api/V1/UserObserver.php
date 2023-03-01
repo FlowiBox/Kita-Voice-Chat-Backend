@@ -166,11 +166,11 @@ class UserObserver
                 }
                 $t = $target->usd * $per;
                 $user->target_usd = $t;
-                $agency = Agency::query ()->find ($user->agency_id);
-                if ($agency){
-                    $agency->target_usd = $t * $target->agency_share/100;
-                    $agency->save ();
-                }
+//                $agency = Agency::query ()->find ($user->agency_id);
+//                if ($agency){
+//                    $agency->target_usd = $t * ($target->agency_share/100);
+//                    $agency->save ();
+//                }
             }
         }
 
