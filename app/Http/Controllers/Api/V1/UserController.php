@@ -230,10 +230,6 @@ class UserController extends Controller
         $i=$l=0;
         foreach ($data as $k => &$v) {
             $users = @User::query ()->find($v->{$keywords});
-//            if (!$users){
-//                unset($data[$k]);
-//                continue;
-//            }
             $i++;
             $v->user_id = @$v->{$keywords};
             $v->exp = ceil($v->exp);

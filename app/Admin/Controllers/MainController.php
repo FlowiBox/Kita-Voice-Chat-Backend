@@ -100,11 +100,12 @@ class MainController extends AdminController
 
                 }
             );
+            if (in_array ('actions',$this->hiddenColumns)){
+                $grid->disableActions ();
+            }
         }
 
-        if (in_array ('actions',$this->hiddenColumns)){
-            $grid->disableActions ();
-        }
+
 
         $grid->export(function ($export) use ($grid){
 
