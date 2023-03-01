@@ -251,11 +251,12 @@ class HomeController extends Controller
     }
 
     public function exchangeList(Request $request){
+        $user = $request->user ();
         if ($request->type == null){
             return Common::apiResponse (0,'missing param',null,422);
         }
         $list = Exchange::query ()->where ('type',$request->type)->orderBy ('diamonds')->get ();
-        return Common::apiResponse (1,'',$list,200);
+        return Common::apiResponse (1,$user->coins,$list,200);
     }
 
     public function exchangeSave(Request $request){
