@@ -284,7 +284,7 @@ class HomeController extends Controller
             }
             $user->save();
             DB::commit ();
-            return Common::apiResponse (1,'',$user->coins,200);
+            return Common::apiResponse (1,$user->coins,$user->coins,200);
 
         }catch (\Exception $exception){
             DB::rollBack ();
