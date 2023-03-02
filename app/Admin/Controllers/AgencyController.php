@@ -6,6 +6,7 @@ use App\Helpers\Common;
 use App\Models\Agency;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserTarget;
 use App\Traits\AdminTraits\AdminUserTrait;
 use Encore\Admin\Admin;
 use Encore\Admin\Auth\Permission;
@@ -32,6 +33,8 @@ class AgencyController extends MainController
         return $content
             ->title(__($this->title))
             ->row(function($row) use ($id){
+                $row->column(12, $this->targetGrid($id));
+            })->row(function($row) use ($id){
                 $row->column(12, $this->usersGrid($id));
             });
     }
@@ -128,10 +131,8 @@ class AgencyController extends MainController
             $filter->expand ();
             $filter->column(1/2, function ($filter) {
                 $filter->equal('uuid',__ ('uuid'));
-                $filter->equal('is_host',__('is host'))->select([0=>'normal',1=>'host']);
             });
             $filter->column(1/2, function ($filter) {
-                $filter->equal('agency_id',__('agency'))->select(Common::by_agency_filter ());
                 $filter->equal('family_id',__('Family'))->select(Common::by_family_filter ());
             });
         });
@@ -205,9 +206,36 @@ class AgencyController extends MainController
 
 
 
-        $this->extendGrid ($grid);
+        $grid->disableActions ();
+        $grid->disableCreateButton ();
 
 
+        return $grid;
+    }
+
+    public function targetGrid($id){
+        $grid = new Grid(new UserTarget);
+        $grid->model ()->where ('agency_id',$id);
+        $grid->id('ID');
+        $grid->column('user_id',__('user id'))->modal ('user info',function ($model){
+            return Common::getUserShow ($model->user_id);
+        });
+        $grid->column('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
+            return Common::getAgencyShow ($model->agency_id);
+        });
+        $grid->column('target_id',__ ('target id'));
+        $grid->column('target_diamonds',__ ('target diamonds'));
+        $grid->column('add_month',__ ('month'));
+        $grid->column('add_year',__ ('year'));
+        $grid->column('target_usd',__('usd').' '.__ ('deserved'));
+        $grid->column('target_hours',__ ('target hours'));
+        $grid->column('target_days',__ ('target days'));
+        $grid->column('target_agency_share',__ ('agency share').'(%)');
+        $grid->column('user_diamonds',__ ('user diamonds'));
+        $grid->column('user_hours',__ ('user hours'));
+        $grid->column('user_days',__ ('user days'));
+        $grid->disableActions ();
+        $grid->disableCreateButton ();
         return $grid;
     }
 }
