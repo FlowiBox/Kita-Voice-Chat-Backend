@@ -69,7 +69,7 @@ class CommunityController extends Controller
 //        $arr['gmskill'] = $gmskill;
 
         $arr['user'] = UserResource::collection ($this->user_search_hand($user_id, $keywords));//$user;
-        $arr['rooms'] = $rooms;
+//        $arr['rooms'] = $rooms;
 //        $arr['dynamics'] = $dynamics;
         return Common::apiResponse(1, '', $arr);
 

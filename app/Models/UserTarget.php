@@ -18,4 +18,5 @@ class UserTarget extends Model
         }
 
     }
+
 }

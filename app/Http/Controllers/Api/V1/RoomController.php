@@ -326,7 +326,7 @@ class RoomController extends Controller
 
 
         //Total value of all gifts received      stopped here
-        $room_info['giftPrice'] = $room_info['session']?:0;//(integer)DB::table('gift_logs')->where('roomowner_id',$owner_id)->sum('giftPrice');
+        $room_info['giftPrice'] = (integer)$room_info['session']?:0;//(integer)DB::table('gift_logs')->where('roomowner_id',$owner_id)->sum('giftPrice');
 
         $pk = Pk::query ()->where ('room_id',$room_info['id'])->where ('status',1)->first ();
         $room_info['pk'] = new \stdClass();

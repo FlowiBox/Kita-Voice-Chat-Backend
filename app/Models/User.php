@@ -44,7 +44,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['my_store','lang','avatar','gender','flag','usd','is_family_admin','is_family_owner'];
+    protected $appends = [
+        'my_store',
+        'lang',
+        'avatar',
+        'gender',
+        'flag',
+        'usd',
+        'is_family_admin',
+        'is_family_owner',
+        'intro',
+        'frame'
+    ];
 
 
     public function profile(){
@@ -166,6 +177,26 @@ class User extends Authenticatable
         }
         return '';
     }
+
+    public function getIntroAttribute(){
+        $img = $this->dress_3;
+        $img = Ware::query ()->find ($img);
+        if ($img){
+            return $img->show_img;
+        }
+        return '';
+    }
+
+    public function getFrameAttribute(){
+        $img = $this->dress_1;
+        $img = Ware::query ()->find ($img);
+        if ($img){
+            return $img->show_img;
+        }
+        return '';
+    }
+
+
 
 
 }

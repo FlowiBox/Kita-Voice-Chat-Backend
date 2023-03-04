@@ -9,6 +9,7 @@ use App\Models\Charge;
 use App\Models\Country;
 use App\Models\User;
 use App\Traits\AdminTraits\AdminControllersTrait;
+use Encore\Admin\Actions\Response;
 use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Facades\Admin;
@@ -26,6 +27,21 @@ class MainController extends AdminController
     public $permission_name;
     public $hiddenColumns;
 
+    protected $response;
+    public function response()
+    {
+        if (is_null($this->response)) {
+            $this->response = new Response();
+        }
+
+        if (method_exists($this, 'dialog')) {
+            $this->response->swal();
+        } else {
+            $this->response->toastr();
+        }
+
+        return $this->response;
+    }
 
     public function index ( Content $content )
     {

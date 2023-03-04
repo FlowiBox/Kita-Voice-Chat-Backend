@@ -33,10 +33,15 @@ class AgencyController extends MainController
         return $content
             ->title(__($this->title))
             ->row(function($row) use ($id){
+                $row->column(12,__ ('target'));
                 $row->column(12, $this->targetGrid($id));
-            })->row(function($row) use ($id){
-                $row->column(12, $this->usersGrid($id));
             });
+//            ->row(function($row) use ($id){
+//                $row->column(12,__ ('Users'));
+//                $row->column(12, $this->usersGrid($id));
+//            });
+
+
     }
 
 
@@ -215,27 +220,29 @@ class AgencyController extends MainController
 
     public function targetGrid($id){
         $grid = new Grid(new UserTarget);
-        $grid->model ()->where ('agency_id',$id);
-        $grid->id('ID');
-        $grid->column('user_id',__('user id'))->modal ('user info',function ($model){
-            return Common::getUserShow ($model->user_id);
+        $grid->filter (function (Grid\Filter $filter){
+            $filter->expand ();
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('add_month',__ ('month'));
+            });
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('add_year',__('year'));
+            });
         });
+        $grid->model ()->where ('agency_id',$id)
+            ->selectRaw ('agency_id,add_month as m,add_year as y,SUM(target_agency_share * target_usd / 100) as tot')
+            ->groupByRaw ('agency_id,m,y')
+        ;
         $grid->column('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
             return Common::getAgencyShow ($model->agency_id);
         });
-        $grid->column('target_id',__ ('target id'));
-        $grid->column('target_diamonds',__ ('target diamonds'));
-        $grid->column('add_month',__ ('month'));
-        $grid->column('add_year',__ ('year'));
-        $grid->column('target_usd',__('usd').' '.__ ('deserved'));
-        $grid->column('target_hours',__ ('target hours'));
-        $grid->column('target_days',__ ('target days'));
-        $grid->column('target_agency_share',__ ('agency share').'(%)');
-        $grid->column('user_diamonds',__ ('user diamonds'));
-        $grid->column('user_hours',__ ('user hours'));
-        $grid->column('user_days',__ ('user days'));
+        $grid->column('m',__ ('month'));
+        $grid->column('y',__ ('year'));
+        $grid->column('tot',__('agency obtain'));
         $grid->disableActions ();
         $grid->disableCreateButton ();
+
         return $grid;
     }
+
 }
