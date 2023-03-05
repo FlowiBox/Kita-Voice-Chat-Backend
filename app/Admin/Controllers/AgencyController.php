@@ -43,7 +43,7 @@ class AgencyController extends MainController
                 $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $agency->old_usd + $agency->target_usd - $agency->target_token_usd));
                 $row->column(3, new InfoBox(__('Targets'), 'gift', 'yellow', '?type=target', UserTarget::query ()->where ('agency_id',$id)->selectRaw ('agency_id,add_month,add_year,ROUND(SUM(agency_obtain), 2) as tot')
                     ->groupByRaw ('agency_id,add_month,add_year')->get ()->count ()));
-                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
+//                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
             })
             ->row(function($row) use ($id){
 
@@ -57,7 +57,8 @@ class AgencyController extends MainController
                     $row->column(12,__ ('balance details'));
                     $row->column(12, $this->balance_details($id));
                 }else{
-
+                    $row->column(12,__ ('target'));
+                    $row->column(12, $this->targetGrid($id));
                 }
 
             })
@@ -271,7 +272,7 @@ class AgencyController extends MainController
             });
         });
         $grid->model ()->where ('agency_id',$id)
-            ->selectRaw ('agency_id,add_month as m,add_year as y,ROUND(SUM(agency_obtain), 2) as tot')
+            ->selectRaw ('agency_id,add_month as m,add_year as y,ROUND(SUM(agency_obtain), 4) as tot')
             ->groupByRaw ('agency_id,m,y')
         ;
         $grid->column('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
