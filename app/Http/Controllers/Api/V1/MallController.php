@@ -105,9 +105,10 @@ class MallController extends Controller
     }
 
 
-    public function silver_value(){
+    public function silver_value(Request $request){
+        $user = $request->user ();
         $data = Silver::query ()->select ('id','coin','silver')->orderBy ('sort')->get ();
-        return Common::apiResponse (1,'',$data,200);
+        return Common::apiResponse (1,$user->gold,$data,200);
     }
 
     public function buySilverCoins(Request $request){
@@ -143,9 +144,10 @@ class MallController extends Controller
         return Common::apiResponse (1,'',$hes,200);
     }
 
-    public function coinList(){
+    public function coinList(Request $request){
+        $user = $request->user ();
         $data = Coin::query ()->select ('id','usd','coin')->get ();
-        return Common::apiResponse (1,'',$data,200);
+        return Common::apiResponse (1,$user->di,$data,200);
     }
 
     public function buyCoins(Request $request){

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helpers\Common;
 use App\Traits\FollowTrait;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;

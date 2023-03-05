@@ -7,7 +7,9 @@ use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
 use App\Models\Family;
 use App\Models\FamilyUser;
+use App\Models\Pack;
 use App\Models\Ware;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -20,7 +22,9 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-
+        Pack::query ()->whereIn ('target_id',[$this->dress_1,$this->dress_2,$this->dress_3,$this->dress_4])
+            ->where ('expire','!=',0)
+            ->where ('expire','<',Carbon::now ()->timestamp)->delete ();
 
         $reqs_count = AgencyJoinRequest::query ()->where ('user_id',@$this->id)->where ('status','!=',2)->count ();
 

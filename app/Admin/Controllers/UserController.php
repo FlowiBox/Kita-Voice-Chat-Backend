@@ -7,10 +7,12 @@ use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\Charge;
 use App\Models\Country;
+use App\Models\Pack;
 use App\Models\User;
 use App\Models\UserTarget;
 use App\Models\Ware;
 use App\Traits\AdminTraits\AdminControllersTrait;
+use Carbon\Carbon;
 use Encore\Admin\Auth\Permission;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Facades\Admin;
@@ -242,6 +244,46 @@ class UserController extends MainController
         $form->text('google_id', __('google id'));
 //        $form->switch ('is_host',__('is host'))->options (Common::getSwitchStates ());
         $form->switch ('status',__('block status'))->options (Common::getSwitchStates2 ());
+        $form->html(function (){
+            if (!$this->intro){
+                return __('empty');
+            }
+            return "<img width='50' title='intro img' src='".asset ('storage').'/'.$this->intro."'>";
+        });
+        $form->select ('dress_3',__ ('intro'))->options (function (){
+            $arr = [0=>__ ('empty')];
+            $pack = Pack::query ()->where ('user_id',@$this->id)->where ('type',6)->where (function ($q){
+                $q->where ('expire',0)->orWhere ('expire','>',Carbon::now ()->timestamp);
+            })->get ();
+
+            foreach ($pack as $item){
+                $ware = Ware::find(@$item->target_id);
+                if ($ware){
+                    $arr[$ware->id]=$ware->name;
+                }
+            }
+            return $arr;
+        });
+        $form->html(function (){
+            if (!$this->frame){
+                return __('empty');
+            }
+            return "<img width='50' title='intro img' src='".asset ('storage').'/'.$this->frame."'>";
+        });
+        $form->select ('dress_1',__ ('frame'))->options (function (){
+            $arr = [0=>__ ('empty')];
+            $pack = Pack::query ()->where ('user_id',@$this->id)->where ('type',4)->where (function ($q){
+                $q->where ('expire',0)->orWhere ('expire','>',Carbon::now ()->timestamp);
+            })->get ();
+
+            foreach ($pack as $item){
+                $ware = Ware::find(@$item->target_id);
+                if ($ware){
+                    $arr[$ware->id]=$ware->name;
+                }
+            }
+            return $arr;
+        });
 
         return $form;
     }
