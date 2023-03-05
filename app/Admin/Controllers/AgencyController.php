@@ -230,7 +230,7 @@ class AgencyController extends MainController
             });
         });
         $grid->model ()->where ('agency_id',$id)
-            ->selectRaw ('agency_id,add_month as m,add_year as y,SUM(target_agency_share * target_usd / 100) as tot')
+            ->selectRaw ('agency_id,add_month as m,add_year as y,ROUND(SUM(target_agency_share * target_usd / 100), 2) as tot')
             ->groupByRaw ('agency_id,m,y')
         ;
         $grid->column('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
