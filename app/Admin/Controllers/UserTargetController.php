@@ -52,6 +52,8 @@ class UserTargetController extends MainController
         $grid->column('user_diamonds',__ ('user diamonds'));
         $grid->column('user_hours',__ ('user hours'));
         $grid->column('user_days',__ ('user days'));
+        $grid->column('user_obtain',__ ('user obtain'));
+        $grid->column('agency_obtain',__ ('agency obtain'));
         $grid->disableActions ();
         $grid->disableCreateButton ();
         $this->extendGrid ($grid);

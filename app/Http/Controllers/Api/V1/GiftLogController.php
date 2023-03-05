@@ -245,6 +245,7 @@ class GiftLogController extends Controller
                     "message"=>"showGifts",
                     "showGift"=>$gift->show_img?:$gift->show_img2,
                     'giftImg'=>$gift->img,
+                    'gift_id'=>$gift->id,
                     'send_id' => (integer)$data['user_id'],
                     'receiver_id'=>(integer)$to_id,
                     'isExpensive'=>($gift->price >= 2000)?true:false,

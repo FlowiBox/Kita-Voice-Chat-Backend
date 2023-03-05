@@ -5,8 +5,11 @@ namespace App\Admin\Controllers;
 use App\Helpers\Common;
 use App\Models\Agency;
 use App\Http\Controllers\Controller;
+use App\Models\Gift;
+use App\Models\Room;
 use App\Models\User;
 use App\Models\UserTarget;
+use App\Models\Ware;
 use App\Traits\AdminTraits\AdminUserTrait;
 use Encore\Admin\Admin;
 use Encore\Admin\Auth\Permission;
@@ -15,6 +18,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\InfoBox;
 use Encore\Admin\Widgets\Table;
 
 class AgencyController extends MainController
@@ -30,16 +34,35 @@ class AgencyController extends MainController
 
     public function show ( $id , Content $content )
     {
+
         return $content
-            ->title(__($this->title))
+            ->title(__("agency details"))
+            ->row(function ($row) use ($id){
+                $agency = Agency::find($id);
+                $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', '?type=users', User::query ()->where ('agency_id',$id)->count ()));
+                $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $agency->old_usd + $agency->target_usd - $agency->target_token_usd));
+                $row->column(3, new InfoBox(__('Targets'), 'gift', 'yellow', '?type=target', UserTarget::query ()->where ('agency_id',$id)->selectRaw ('agency_id,add_month,add_year,ROUND(SUM(agency_obtain), 2) as tot')
+                    ->groupByRaw ('agency_id,add_month,add_year')->get ()->count ()));
+                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
+            })
             ->row(function($row) use ($id){
-                $row->column(12,__ ('target'));
-                $row->column(12, $this->targetGrid($id));
-            });
-//            ->row(function($row) use ($id){
-//                $row->column(12,__ ('Users'));
-//                $row->column(12, $this->usersGrid($id));
-//            });
+
+                if (request ('type') == 'users'){
+                    $row->column(12,__ ('Users'));
+                    $row->column(12, $this->usersGrid($id));
+                }elseif(request ('type') == 'target'){
+                    $row->column(12,__ ('target'));
+                    $row->column(12, $this->targetGrid($id));
+                }elseif (request ('type') == 'balance_details'){
+                    $row->column(12,__ ('balance details'));
+                    $row->column(12, $this->balance_details($id));
+                }else{
+
+                }
+
+            })
+
+            ;
 
 
     }
@@ -71,6 +94,27 @@ class AgencyController extends MainController
         $grid->column('phone',trans ('phone'));
         $grid->column('img',trans ('img'))->image ('',30);
 
+        $this->extendGrid ($grid);
+
+        return $grid;
+    }
+
+    protected function balance_details($id){
+        $grid = new Grid(new Agency);
+
+        $grid->model ()->where ('id',$id);
+
+        $grid->id('ID');
+        $grid->column('owner_id',trans ('owner id'))->modal ('owner info',function ($model){
+            return Common::getAdminShow ($model->owner_id);
+        });
+        $grid->column('name',trans ('name'));
+        $grid->column('old_usd',trans ('old'));
+        $grid->column('target_usd',trans ('target'));
+        $grid->column('target_token_usd',trans ('token'));
+        $grid->column('img',trans ('img'))->image ('',30);
+        $grid->disableActions ();
+        $grid->disableCreateButton ();
         $this->extendGrid ($grid);
 
         return $grid;
@@ -163,9 +207,6 @@ class AgencyController extends MainController
         $grid->column ('target',__ ('target'))->expand(function ($model) {
 
             $targets = $model->targets()->orderBy('created_at','desc')->get()->map(function ($target) {
-                $au = $target->target_usd * $target->target_agency_share/100;
-                $target->agency_obtain = $au;
-                $target->user_obtain = $target->target_usd;
                 $target = $target->only(
                     [
                         'id',
@@ -230,7 +271,7 @@ class AgencyController extends MainController
             });
         });
         $grid->model ()->where ('agency_id',$id)
-            ->selectRaw ('agency_id,add_month as m,add_year as y,ROUND(SUM(target_agency_share * target_usd / 100), 2) as tot')
+            ->selectRaw ('agency_id,add_month as m,add_year as y,ROUND(SUM(agency_obtain), 2) as tot')
             ->groupByRaw ('agency_id,m,y')
         ;
         $grid->column('agency_id',__ ('agency id'))->modal ('agency info',function ($model){

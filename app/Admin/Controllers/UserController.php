@@ -117,9 +117,6 @@ class UserController extends MainController
         $grid->column ('target',__ ('target'))->expand(function ($model) {
 
             $targets = $model->targets()->orderBy('created_at','desc')->get()->map(function ($target) {
-                $au = $target->target_usd * $target->target_agency_share/100;
-                $target->agency_obtain = $au;
-                $target->user_obtain = $target->target_usd;
                 $target = $target->only(
                     [
                         'id',
