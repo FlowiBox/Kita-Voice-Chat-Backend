@@ -111,6 +111,9 @@ class UserController extends Controller
 //Obtaining method 1 vip level automatic acquisition 2 activities 3 treasure box 4 purchase 5 = background addition
 
     public function my_pack(Request $request){
+        Pack::query ()
+            ->where ('expire','!=',0)
+            ->where ('expire','<',Carbon::now ()->timestamp)->delete ();
         $user_id = $request->user ()->id;
         $user = $request->user ();
         $this->unlock_dress($user_id);

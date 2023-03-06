@@ -180,21 +180,15 @@ class User extends Authenticatable
     }
 
     public function getIntroAttribute(){
-        $img = $this->dress_3;
-        $img = Ware::query ()->find ($img);
-        if ($img){
-            return $img->show_img;
-        }
-        return '';
+        return Common::getUserDress($this->id,$this->dress_3,6,'show_img');
     }
 
     public function getFrameAttribute(){
-        $img = $this->dress_1;
-        $img = Ware::query ()->find ($img);
-        if ($img){
-            return $img->show_img;
-        }
-        return '';
+        return Common::getUserDress($this->id,$this->dress_1,4,'show_img');
+    }
+
+    public function getBubbleAttribute(){
+        return Common::getUserDress($this->id,$this->dress_2,5,'show_img');
     }
 
 

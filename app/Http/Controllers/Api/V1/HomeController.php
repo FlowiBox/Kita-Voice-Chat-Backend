@@ -128,7 +128,7 @@ class HomeController extends Controller
                 ->whereYear ('created_at','=',Carbon::now ()->year)
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
                 ->whereDay ('created_at','=',Carbon::now ()->day)
-                ->selectRaw('uid, count(hours) as hnum, count(days) as dnum')
+                ->selectRaw('uid, SUM(hours) as hnum, SUM(days) as dnum')
                 ->groupBy ('uid')
                 ->first ()
             ;
@@ -150,7 +150,7 @@ class HomeController extends Controller
             $times = LiveTime::query ()->where ('uid',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
-                ->selectRaw('uid, count(hours) as hnum, count(days) as dnum')
+                ->selectRaw('uid, SUM(hours) as hnum, SUM(days) as dnum')
                 ->groupBy ('uid')
                 ->first ()
             ;
@@ -166,7 +166,7 @@ class HomeController extends Controller
             $diamonds = $gifts_d;
         }else{
             $times = LiveTime::query ()->where ('uid',$user_id)
-                ->selectRaw('uid, count(hours) as hnum, count(days) as dnum')
+                ->selectRaw('uid, SUM(hours) as hnum, SUM(days) as dnum')
                 ->groupBy ('uid')
                 ->first ()
             ;
@@ -179,6 +179,8 @@ class HomeController extends Controller
                 ->sum ('receiver_obtain');
             $diamonds = $gifts_d;
         }
+
+        $hours = gmdate('H:i:s', $hours * 60 * 60);
 
         return Common::apiResponse (1,'',['diamonds'=>(integer)$diamonds,'days'=>$days,'hours'=>$hours, 'today'=>$today],200);
 

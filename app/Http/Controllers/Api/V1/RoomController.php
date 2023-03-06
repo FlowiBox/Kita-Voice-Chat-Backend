@@ -1098,9 +1098,14 @@ class RoomController extends Controller
                 ]
             ];
             $json = json_encode ($mc);
-//            Common::sendToZego_3 ('KickoutUser',$room_id,$black_id);
+            $b = User::find($black_id);
+            $n = 'nan';
+            if ($b){
+                $n = $b->name?:'nan';
+            }
             Common::sendToZego_4 ('SendCustomCommand',$room_id,$uid,$black_id,$json);
             $this->calcTime($black_id);
+            Common::sendToZego_2 ('SendBroadcastMessage',$room_id,$uid,'room'," تم طرد $n" );
             return Common::apiResponse(1,'success');
         }else{
             return Common::apiResponse(0,'fail',null,400);
@@ -1330,6 +1335,12 @@ class RoomController extends Controller
             ]
         ];
         $resu = Common::sendToZego ('SendCustomCommand',$rid,$uid,json_encode ($ms));
+        $a = User::find($admin_id);
+        $n = 'nan';
+        if ($a){
+            $n = $a->name?:'nan';
+        }
+        Common::sendToZego_2 ('SendBroadcastMessage',$rid,$uid,'room'," اصبح ادمن $n" );
         if($res){
             return Common::apiResponse(1,'Set administrator successfully',$adm_arr,200);
         }else{

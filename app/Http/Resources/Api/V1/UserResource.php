@@ -22,10 +22,10 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        Pack::query ()->whereIn ('target_id',[$this->dress_1,$this->dress_2,$this->dress_3,$this->dress_4])
+
+        Pack::query ()
             ->where ('expire','!=',0)
             ->where ('expire','<',Carbon::now ()->timestamp)->delete ();
-
         $reqs_count = AgencyJoinRequest::query ()->where ('user_id',@$this->id)->where ('status','!=',2)->count ();
 
         $agency_joined = null;

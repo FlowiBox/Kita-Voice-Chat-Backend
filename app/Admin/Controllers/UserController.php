@@ -20,6 +20,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\InfoBox;
 use Encore\Admin\Widgets\Table;
 use Illuminate\Support\Facades\App;
 
@@ -64,6 +65,18 @@ class UserController extends MainController
                 $row->column(12, $this->grid());
 //                $row->column(2, view('admin.grid.users.actions'));
             });
+    }
+
+    public function show ( $id , Content $content )
+    {
+        return $content->row(function ($row) use ($id){
+        $user = User::find($id);
+//        $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', '?type=users', User::query ()->where ('agency_id',$id)->count ()));
+        $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $user->old_usd + $user->target_usd - $user->target_token_usd));
+//        $row->column(3, new InfoBox(__('Targets'), 'gift', 'yellow', '?type=target', UserTarget::query ()->where ('agency_id',$id)->selectRaw ('agency_id,add_month,add_year,ROUND(SUM(agency_obtain), 2) as tot')
+//            ->groupByRaw ('agency_id,add_month,add_year')->get ()->count ()));
+//                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
+    });
     }
 
 

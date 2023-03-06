@@ -248,7 +248,7 @@ class FamilyController extends Controller
             $user->save();
             return Common::apiResponse (0,'already joined',null,405);
         }
-
+        FamilyUser::query ()->where ('user_id',$user->id)->delete ();
         try {
             DB::beginTransaction ();
             $fu1 = new FamilyUser();
