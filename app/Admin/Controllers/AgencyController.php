@@ -189,21 +189,9 @@ class AgencyController extends MainController
         $grid->column('id', __('Id'));
         $grid->column ('uuid',__('uuid'));
 
-        $grid->column ('is_gold_id',__ ('use Gold id'))->switch (Common::getSwitchStates ());
         $grid->column('name', __('Name'));
-        $grid->column('nickname', __('NickName'));
-        $grid->column('email', __('Email'));
-        $grid->column('phone', __('Phone'));
-        $grid->column('di', __('coins'));
-        $grid->column('gold', __('silver coins'));
+
         $grid->column('coins', __('diamonds'));
-        $grid->column('status', __('block status'))->switch (Common::getSwitchStates2 () );
-        $grid->column ('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
-            if ($model->agency_id){
-                return Common::getAgencyShow ($model->agency_id);
-            }
-            return null;
-        });
 
         $grid->column ('target',__ ('target'))->expand(function ($model) {
 
@@ -249,8 +237,6 @@ class AgencyController extends MainController
                 ]
                 , $targets->toArray());
         });
-
-
 
 
         $grid->disableActions ();
