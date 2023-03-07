@@ -172,7 +172,6 @@ class AgencyController extends MainController
         return $form;
     }
 
-
     public function usersGrid($id){
         $grid = new Grid(new User());
         $grid->model ()->where ('agency_id',$id);
@@ -190,6 +189,14 @@ class AgencyController extends MainController
         $grid->column ('uuid',__('uuid'));
 
         $grid->column('name', __('Name'));
+
+        $grid->column('target_usd', __('target usd'));
+
+        $grid->column('target_token_usd', __('target token usd'));
+
+        $grid->column('current', __('current usd'))->using (function ($row){
+            return $row->target_usd - $row->target_token_usd;
+        });
 
         $grid->column('coins', __('diamonds'));
 

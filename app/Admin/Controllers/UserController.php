@@ -63,20 +63,21 @@ class UserController extends MainController
             ->title(__($this->title))
             ->row(function($row) {
                 $row->column(12, $this->grid());
-//                $row->column(2, view('admin.grid.users.actions'));
             });
     }
 
     public function show ( $id , Content $content )
     {
-        return $content->row(function ($row) use ($id){
-        $user = User::find($id);
-//        $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', '?type=users', User::query ()->where ('agency_id',$id)->count ()));
-        $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $user->old_usd + $user->target_usd - $user->target_token_usd));
-//        $row->column(3, new InfoBox(__('Targets'), 'gift', 'yellow', '?type=target', UserTarget::query ()->where ('agency_id',$id)->selectRaw ('agency_id,add_month,add_year,ROUND(SUM(agency_obtain), 2) as tot')
-//            ->groupByRaw ('agency_id,add_month,add_year')->get ()->count ()));
-//                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
-    });
+        return $content->row(
+            function ($row) use ($id){
+                $user = User::find($id);
+                $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $user->old_usd + $user->target_usd - $user->target_token_usd));
+            }
+        )->row (__('pack'))
+            ->row (function ($row) use ($id){
+            $row->column(12, $this->packList($id));
+        })
+        ;
     }
 
 
@@ -300,5 +301,48 @@ class UserController extends MainController
 
 
 
+    protected function packList($id){
+        $grid = new Grid(new Pack);
+
+        $grid->id('ID');
+        $grid->column('user_id',__ ('user id'));
+        $grid->column('get_type',__ ('get type'))->using (
+            [
+                1=>__ ('vip level automatic acquisition'),
+                2=>__ ('activities'),
+                3=>__ ('treasure box'),
+                4=>__ ('purchase'),
+                5=>__ ('background addition'),
+            ]
+        );
+        $grid->column('type',__ ('type'))->using (
+            [
+                1=>__ ('gem'),
+                2=>__ ('gift'),
+                3=>__ ('card roll'),
+                4=>__ ('avatar frame'),
+                5=>__ ('bubble frame'),
+                6=>__ ('entry special effects'),
+                7=>__ ('microphone aperture'),
+                8=>__ ('badge'),
+            ]
+        );
+        $grid->column('target_id',__ ('img'))->display (function (){
+            $ware = Ware::query ()->where ('id',$this->target_id)->value ('show_img');
+            $src = asset ("storage/$ware");
+            return "<img width='30' src='$src'>";
+        });
+        $grid->column('expire',__ ('expire'))->display (function ($row){
+            if ($this->expire){
+                return Carbon::createFromTimestamp($this->expire)->format('Y-m-d H:i:s');
+            }
+            return __ ('no time');
+        });
+
+        $grid->disableActions ();
+        $grid->disableCreateButton ();
+
+        return $grid;
+    }
 
 }
