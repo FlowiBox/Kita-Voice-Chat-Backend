@@ -224,8 +224,6 @@ class User extends Authenticatable
     public function hasRoom(){
         return Room::query ()
             ->where ('uid',$this->id)
-            ->where ('is_afk',1)
-            ->where ('room_visitor','!=','')
             ->exists ();
     }
 
