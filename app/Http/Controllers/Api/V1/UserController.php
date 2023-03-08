@@ -53,7 +53,7 @@ class UserController extends Controller
         return [
             'visitor' => $visitor,
             'fans' => $fans,
-            'followers' => $followers,
+            'followers' => $friends,
             'income' => $income,
             'frame' => $frame,
             'enteirs' => $enteirs,
