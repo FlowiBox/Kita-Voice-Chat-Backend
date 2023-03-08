@@ -23,7 +23,7 @@ class UserController extends Controller
         $user = $request->user();
         $visitor = 0;
         $fans = 0;
-        $followers = 0;
+        $friends = 0;
         $income = 0;
         $frame = 0;
         $enteirs = 0;
@@ -34,8 +34,8 @@ class UserController extends Controller
         if ($request->fans != null){
             $fans = (integer)$user->numberOfFans() - (integer)$request->fans;
         }
-        if ($request->followers != null){
-            $followers = (integer)$user->numberOfFollowings() - (integer)$request->followers;
+        if ($request->friends != null){
+            $friends = (integer)$user->numberOfFriends() - (integer)$request->friends;
         }
         if ($request->income != null){
             $income = (integer)$user->coins - (integer)$request->income;
