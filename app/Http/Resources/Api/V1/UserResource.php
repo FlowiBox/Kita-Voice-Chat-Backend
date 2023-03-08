@@ -59,6 +59,16 @@ class UserResource extends JsonResource
             $fArr = [];
         }
 
+        $statics = [
+            'visitor'=>0,
+            'fans'=>0,
+            'followers'=>0,
+            'income'=>0,
+            'frame'=>0,
+            'enteirs'=>0,
+            'bubble'=>0,
+        ];
+
 
         $data = [
             'id'=>@$this->id,
@@ -118,25 +128,8 @@ class UserResource extends JsonResource
             'intro_num'=>$this->intros_count(),
             'frame_num'=>$this->frames_count(),
             'bubble_num'=>$this->bubble_count(),
+            'statics'=>$this->statics?:$statics
         ];
-
-//        $additional = [
-//            'star_level'=>Common::getLevel ($this->id,1),
-//            'gold_level'=>Common::getLevel ($this->id,2),
-//            'vip_level'=>Common::getLevel ($this->id,3),
-//            'hz_level'=>Common::getHzLevel ($this->id,3),
-//            'is_follow'=>Common::IsFollow (@$request->user ()->id,$this->id),
-//            'star_img'=>Common::getLevel ($this->id,1,true),
-//            'gold_img'=>Common::getLevel ($this->id,2,true),
-//            'vip_img'=>Common::getLevel ($this->id,3,true),
-//            'images'=>[
-//                $this->img_1,
-//                $this->img_2,
-//                $this->img_3,
-//            ],
-//            'room_info'=>Common::getRoomInfo ($this->id),
-//            'user_gifts'=>Common::getUserGifts ($this->id)
-//        ];
 
 
         if ($this->auth_token){

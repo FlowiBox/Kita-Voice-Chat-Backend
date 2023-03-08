@@ -18,9 +18,53 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+
+    public function handelStatics($request){
+        $user = $request->user();
+        $visitor = 0;
+        $fans = 0;
+        $followers = 0;
+        $income = 0;
+        $frame = 0;
+        $enteirs = 0;
+        $bubble = 0;
+        if ($request->visitor != null){
+            $visitor = (integer)$user->profileVisits()->count() - (integer)$request->visitor;
+        }
+        if ($request->fans != null){
+            $fans = (integer)$user->numberOfFans() - (integer)$request->fans;
+        }
+        if ($request->followers != null){
+            $followers = (integer)$user->numberOfFollowings() - (integer)$request->followers;
+        }
+        if ($request->income != null){
+            $income = (integer)$user->coins - (integer)$request->income;
+        }
+        if ($request->frame != null){
+            $frame = (integer)$user->frames_count() - (integer)$request->frame;
+        }
+        if ($request->enteirs != null){
+            $enteirs = (integer)$user->intros_count() - (integer)$request->enteirs;
+        }
+        if ($request->bubble != null){
+            $bubble = (integer)$user->bubble_count() - (integer)$request->bubble;
+        }
+
+        return [
+            'visitor' => $visitor,
+            'fans' => $fans,
+            'followers' => $followers,
+            'income' => $income,
+            'frame' => $frame,
+            'enteirs' => $enteirs,
+            'bubble' => $bubble
+        ];
+    }
+
     public function my_data(Request $request){
         $user = $request->user ();
         $this->unlock_dress($user->id);
+        $user->statics = $this->handelStatics ($request);
         $data = new UserResource($user);
         return Common::apiResponse (true,'',$data,200);
     }
