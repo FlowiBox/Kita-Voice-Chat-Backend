@@ -191,6 +191,44 @@ class User extends Authenticatable
         return Common::getUserDress($this->id,$this->dress_2,5,'show_img');
     }
 
+    public function intros_count(){
+        return Pack::query ()
+            ->where ('user_id',$this->id)
+            ->where ('type',6)
+            ->where (function ($q){
+                $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
+            })
+            ->count ();
+    }
+
+    public function frames_count(){
+        return Pack::query ()
+            ->where ('user_id',$this->id)
+            ->where ('type',4)
+            ->where (function ($q){
+                $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
+            })
+            ->count ();
+    }
+
+    public function bubble_count(){
+        return Pack::query ()
+            ->where ('user_id',$this->id)
+            ->where ('type',5)
+            ->where (function ($q){
+                $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
+            })
+            ->count ();
+    }
+
+    public function hasRoom(){
+        return Room::query ()
+            ->where ('uid',$this->id)
+            ->where ('is_afk',1)
+            ->where ('room_visitor','!=','')
+            ->exists ();
+    }
+
 
 
 

@@ -113,7 +113,11 @@ class UserResource extends JsonResource
             'google_bind'=>@$this->google_id?true:false,
             'phone_bind'=>@$this->phone?true:false,
             'visit_time'=>'',
-            'follow_time'=>$this->getFollowDate($request->get ('pid'))
+            'follow_time'=>$this->getFollowDate($request->get ('pid')),
+            'has_room'=>$this->hasRoom(),
+            'intro_num'=>$this->intros_count(),
+            'frame_num'=>$this->frames_count(),
+            'bubble_num'=>$this->bubble_count(),
         ];
 
 //        $additional = [
