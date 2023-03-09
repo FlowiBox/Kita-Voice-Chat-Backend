@@ -252,6 +252,9 @@ class RoomController extends Controller
         $owner_id  = $request['owner_id'];
         $user_id   = $request->user ()->id;
 
+        $ia = DB::table ('rooms')->where ('uid',$owner_id)->value ('is_afk');
+        $rv = DB::table ('rooms')->where ('uid',$owner_id)->value ('room_visitor');
+
 //        if($owner_id == $user_id){
 //            $res=DB::table('users')->where('id',$user_id)->value('is_idcard');
 //            if(!$res)  return Common::apiResponse(false,'Please complete real-name authentication first');
@@ -546,7 +549,12 @@ class RoomController extends Controller
         }
 //        $room_info['timer_id'] = $timer_id;
         $room_info['password_status']=$room_info['room_pass']==""?false:true;
-
+        if ($ia == 0 && $rv == '' && $user->id == $owner_id ){
+            $tokens = $user->my_followers()->pluck('notification_id')->toArray();
+//            $tokens=['djKn0TyMQ-qeDWSXKCB7VS:APA91bHmuuRATZqQCDz1LhwyaN4_FuZ-T33bCIOZPh51A3HAzQQ_SwD9wNIgJC9My_0dTCgA2ka50boXRzndp3saa9nqT1Mlnmkldm6lNdjoLiJ6S_UUnGCkV-DShvBFfltXL2AhfxiW'];
+            $res = Common::send_firebase_notification ($tokens,'room open',$room_info['room_intro'].' now opened');
+//            dd ($res);
+        }
         return Common::apiResponse (true,'',$room_info);
     }
 

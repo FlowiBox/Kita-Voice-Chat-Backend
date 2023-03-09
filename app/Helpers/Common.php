@@ -188,8 +188,62 @@ class Common{
     }
 
 
-    public static function redirect_to(){
+    public static function send_firebase_notification($tokens, $title, $body,$icon = '',$data = [],$action = '', $type = '', $id = '', $notification_type = 'user_notification')
+    {
 
+        #API access key from Google API's Console
+        if (!defined('API_ACCESS_KEY'))
+            define('API_ACCESS_KEY', 'AAAA50BR6kU:APA91bFKjV8CCKrmAPUnTQx1uepRBQ5LoLT258NLo24p1Io8U1RAhYTMrUxMJZQmPKDxmBhm_VkNJaYLoy_vRno0XVQZI60qFuQhKh6rmXhEpFAeJOKjuD_4wVa3Ekr4d5fKLoZciPeo');
+
+        #prep the bundle
+        $msg = array(
+            "android_channel_id"=>"high_importance_channel",
+            'body'=> $body,
+            'title'=> $title,
+            "sound"=> "default",
+            "notification_count"=>1,
+            "visibility"=>"PUBLIC",
+            "click_action"=> "FLUTTER_NOTIFICATION_CLICK",
+        );
+
+        $fields = array(
+            'registration_ids'    => $tokens,
+//            'data'                => $data,
+            "notification" => $msg,
+            "priority"=> "high",
+            "content_available"=>true,
+            "direct_boot_ok"=> true,
+            "apns"=>[
+                "payload"=>[
+                    "aps"=>[
+                        "mutable-content"=>1
+                    ]
+                ],
+                "fcm_options"=> [
+                    "image"=>"https://foo.bar/pizza-monster.png"
+                ]
+            ],
+        );
+
+        // echo json_encode( $fields );
+
+        $headers = array(
+            'Authorization: key=' . API_ACCESS_KEY,
+            'Content-Type: application/json'
+        );
+
+        #Send Reponse To FireBase Server
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
     }
+
 
 }

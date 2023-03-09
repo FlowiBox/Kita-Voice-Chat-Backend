@@ -49,4 +49,8 @@ Trait FollowTrait{
         return self::query ()->whereIn('id',$this->followeds_ids ())->whereIn('id',$this->rooms_uids ())->get ();
     }
 
+    public function my_followers(){
+        return self::query ()->whereIn('id',$this->followers_ids ());
+    }
+
 }
