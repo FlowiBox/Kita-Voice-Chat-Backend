@@ -551,8 +551,9 @@ class RoomController extends Controller
         $room_info['password_status']=$room_info['room_pass']==""?false:true;
         if ($ia == 0 && $rv == '' && $user->id == $owner_id ){
             $tokens = $user->my_followers()->pluck('notification_id')->toArray();
+            $un = $user->name;
 //            $tokens=['djKn0TyMQ-qeDWSXKCB7VS:APA91bHmuuRATZqQCDz1LhwyaN4_FuZ-T33bCIOZPh51A3HAzQQ_SwD9wNIgJC9My_0dTCgA2ka50boXRzndp3saa9nqT1Mlnmkldm6lNdjoLiJ6S_UUnGCkV-DShvBFfltXL2AhfxiW'];
-            $res = Common::send_firebase_notification ($tokens,'room open',$room_info['room_intro'].' now opened');
+            $res = Common::send_firebase_notification ($tokens,"لقد قام $un بفتح غرفته",$room_info['room_intro']);
 //            dd ($res);
         }
         return Common::apiResponse (true,'',$room_info);
