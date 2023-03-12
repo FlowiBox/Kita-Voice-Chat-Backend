@@ -41,7 +41,7 @@ class RoomRepo implements RoomRepoInterface {
                     $q->where('room_type', $req->type);
                 }
             })->leftJoin('gift_logs','rooms.uid','gift_logs.roomowner_id')
-            ->groupBy('rooms.id')
+            ->groupBy('rooms.*')
             ->orderByDesc('total_price');
 
 
