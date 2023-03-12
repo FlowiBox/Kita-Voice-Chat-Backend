@@ -19,28 +19,28 @@ class RoomRepo implements RoomRepoInterface {
 
 
         $result = Room::select('rooms.*', DB::raw('SUM(gift_logs.giftPrice * gift_logs.giftNum) as total_price'))
-            ->where('rooms.room_status',1)->where(function ($q){
-                $q->where('rooms.is_afk',1)->orWhere('rooms.room_visitor','!=','');
+            ->where('rooms.room_status', 1)->where(function ($q){
+                $q->where('rooms.is_afk', 1)->orWhere('rooms.room_visitor', '!=', '');
             })->where(function ($q) use ($req){
                 if ($search = $req->search){
-                    $q->where('rooms.room_name',$search)->orWhere('rooms.numid',$search)->orWhere('rooms.uid',$search);
+                    $q->where('rooms.room_name', $search)->orWhere('rooms.numid', $search)->orWhere('rooms.uid', $search);
                 }
                 if ($req->country_id){
-                    $q->whereHas('owner',function ($q) use ($req){
-                        $q->where('country_id',$req->country_id);
+                    $q->whereHas('owner', function ($q) use ($req){
+                        $q->where('country_id', $req->country_id);
                     });
                 }
                 if ($req->class){
-                    $q->where('room_class',$req->class);
+                    $q->where('room_class', $req->class);
                 }
                 if ($req->type){
-                    $q->where('room_type',$req->type);
+                    $q->where('room_type', $req->type);
                 }
-            })->leftJoin('gift_logs', 'rooms.uid', '=', 'gifts.roomowner_id')
-            ->where('gift_logs.created_at', '>=', now()->subHour())
-            ->groupBy('rooms.id', 'rooms.numid')
+            })->leftJoin('gift_logs', function ($join) {
+                $join->on('rooms.uid', '=', 'gift_logs.roomowner_id')
+                    ->where('gift_logs.created_at', '>', now()->subHour());
+            })->groupBy('rooms.id', 'rooms.numid')
             ->orderByDesc('total_price');
-
 
 
 
