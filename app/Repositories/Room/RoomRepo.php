@@ -39,7 +39,7 @@ class RoomRepo implements RoomRepoInterface {
             })->leftJoin('gift_logs', function ($join) {
                 $join->on('rooms.uid', '=', 'gift_logs.roomowner_id')
                     ->where('gift_logs.created_at', '>', now()->subHour());
-            })->groupBy('rooms.*')
+            })
             ->orderByDesc('total_price');
 
 
