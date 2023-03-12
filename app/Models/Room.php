@@ -42,4 +42,8 @@ class Room extends Model
     public function myType(){
         return $this->belongsTo (RoomCategory::class,'room_type')->select ('name','img');
     }
+
+    public function gifts(){
+        return $this->hasMany (GiftLog::class,'roomowner_id','uid');
+    }
 }
