@@ -18,35 +18,25 @@ class RoomRepo implements RoomRepoInterface {
     {
 
 
-        $result = Room::select('rooms.*',
-           DB::raw(
-               'SUM( case when gift_logs.created_at > "'.now ()->subHour ().'" then gift_logs.giftPrice * gift_logs.giftNum else 0 end) as total_price'
-           )
-        )
-            ->where('rooms.room_status', 1)->where(function ($q){
-                $q->where('rooms.is_afk', 1)->orWhere('rooms.room_visitor', '!=', '');
-            })->where(function ($q) use ($req){
-                if ($search = $req->search){
-                    $q->where('rooms.room_name', $search)->orWhere('rooms.numid', $search)->orWhere('rooms.uid', $search);
-                }
-                if ($req->country_id){
-                    $q->whereHas('owner', function ($q) use ($req){
-                        $q->where('country_id', $req->country_id);
-                    });
-                }
-                if ($req->class){
-                    $q->where('room_class', $req->class);
-                }
-                if ($req->type){
-                    $q->where('room_type', $req->type);
-                }
-            })->leftJoin('gift_logs','rooms.uid','gift_logs.roomowner_id')
-            ->groupBy('rooms.id')
-            ->orderByDesc('total_price');
-
-        dd ($result->get());
-
-
+        $result = $this->model->where('room_status',1)->where(function ($q){
+            $q->where('is_afk',1)->orWhere('room_visitor','!=','');
+        })->where(function ($q) use ($req){
+            if ($search = $req->search){
+                $q->where('room_name',$search)->orWhere('numid',$search)->orWhere('uid',$search);
+            }
+            if ($req->country_id){
+                $q->whereHas('owner',function ($q) use ($req){
+                    $q->where('country_id',$req->country_id);
+                });
+            }
+            if ($req->class){
+                $q->where('room_class',$req->class);
+            }
+            if ($req->type){
+                $q->where('room_type',$req->type);
+            }
+        })->orderByDesc('hot')
+           ;
 
         if ($pp = $req->pp){ // pp = perPage
             return $result->paginate($pp);
