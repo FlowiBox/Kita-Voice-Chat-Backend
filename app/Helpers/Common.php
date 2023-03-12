@@ -3,9 +3,13 @@ namespace App\Helpers;
 use App\Models\Config;
 use App\Models\Follow;
 use App\Models\GiftLog;
+use App\Models\Pack;
+use App\Models\PackLog;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\UserVip;
 use App\Models\Vip;
+use App\Models\Ware;
 use App\Traits\HelperTraits\AdminTrait;
 use App\Traits\HelperTraits\AttributesTrait;
 use App\Traits\HelperTraits\CalcsTrait;
@@ -246,6 +250,29 @@ class Common{
         $result = curl_exec($ch);
         curl_close($ch);
         return $result;
+    }
+
+
+    public static function handelVip($vip,$user){
+        $wares = Ware::query ()->where ('get_type',1)->where ('level',$vip->level)->get ();
+        foreach ($wares as $ware){
+            Pack::query ()->create (
+                [
+                    'user_id'=>$user->id,
+                    'get_type'=>$ware->get_type,
+                    'type'=>$ware->type,
+                    'target_id'=>$ware->id,
+                    'num'=>1,
+                    'expire'=>now ()->addDays ($ware->expire)->timestamp
+                ]
+            );
+        }
+        $uvip = UserVip::query ()->where ('user_id',$user->id)->where (function ($q){
+            $q->where('expire',0)->orWhere('expire','>',now ()->timestamp);
+        })->orderBy ('level','desc')->first ();
+        if ($uvip){
+            $user->update (['vip'=>$uvip->id]);
+        }
     }
 
 

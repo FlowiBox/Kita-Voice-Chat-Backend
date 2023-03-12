@@ -7,4 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class PackLog extends Model
 {
     protected $table = 'pack_logs';
+    protected $guarded = ['id'];
 }

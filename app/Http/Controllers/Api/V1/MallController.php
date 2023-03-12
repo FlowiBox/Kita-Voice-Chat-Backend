@@ -9,6 +9,7 @@ use App\Http\Resources\WareResource;
 use App\Models\Coin;
 use App\Models\CoinLog;
 use App\Models\OVip;
+use App\Models\Pack;
 use App\Models\Silver;
 use App\Models\SilverHestory;
 use App\Models\User;
@@ -237,19 +238,20 @@ class MallController extends Controller
         DB::beginTransaction ();
         try {
             $from->decrement ('di',$total);
-            $uvip = UserVip::query ()->create (
+            UserVip::query ()->create (
                 [
                     'type'=>$type,
                     'sender_id'=>$sender_id,
                     'user_id'=>$user_id,
                     'vip_id'=>$vip->id,
+                    'level'=>$vip->level,
                     'expire'=>$ex,
                     'qty'=>$qty,
                     'price'=>$vip->price,
                     'total'=>$total
                 ]
             );
-            $user->update (['vip'=>$uvip->id]);
+            Common::handelVip ($vip,$user);
             DB::commit ();
             return Common::apiResponse (1,'done',null,201);
         }catch (\Exception $exception){
