@@ -186,6 +186,7 @@ class AgencyController extends MainController
             });
         });
         $grid->column('id', __('Id'));
+
         $grid->column ('uuid',__('uuid'));
 
         $grid->column('name', __('Name'));
@@ -194,8 +195,8 @@ class AgencyController extends MainController
 
         $grid->column('target_token_usd', __('target token usd'));
 
-        $grid->column('current', __('current usd'))->using (function ($row){
-            return $row->target_usd - $row->target_token_usd;
+        $grid->column('current', __('current usd'))->display (function (){
+            return $this->target_usd - $this->target_token_usd;
         });
 
         $grid->column('coins', __('diamonds'));

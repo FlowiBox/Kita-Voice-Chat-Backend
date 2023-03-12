@@ -6,11 +6,11 @@ use App\Models\Room;
 
 Trait FollowTrait{
     public function followers_ids(){
-        return Follow::query ()->where ('followed_user_id',$this->id)->orderByDesc('id')->pluck ('user_id');
+        return Follow::query ()->where ('followed_user_id',$this->id)->orderByDesc('created_at')->pluck ('user_id');
     }
 
     public function followeds_ids(){
-        return Follow::query ()->where ('user_id',$this->id)->orderByDesc('id')->pluck ('followed_user_id');
+        return Follow::query ()->where ('user_id',$this->id)->orderByDesc('created_at')->pluck ('followed_user_id');
     }
 
     public function rooms_uids(){

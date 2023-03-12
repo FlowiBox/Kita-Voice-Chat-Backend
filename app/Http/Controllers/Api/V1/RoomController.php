@@ -47,7 +47,7 @@ class RoomController extends Controller
     public function index(Request $request)
     {
         $result = $this->repo->all ($request);
-        return Common::apiResponse (true,'',RoomResource::collection ($result),200);
+        return Common::apiResponse (true,'',RoomResource::collection ($result),200,Common::getPaginates ($result));
     }
 
     /**

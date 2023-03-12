@@ -37,7 +37,7 @@ class RoomRepo implements RoomRepoInterface {
         if ($pp = $req->pp){ // pp = perPage
             return $result->paginate($pp);
         }
-        return $result->get();
+        return $result->paginate(8);
     }
 
     public function find ( $id )
