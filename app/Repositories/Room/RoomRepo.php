@@ -44,7 +44,7 @@ class RoomRepo implements RoomRepoInterface {
             ->groupBy('rooms.id')
             ->orderByDesc('total_price');
 
-        dd ($result);
+        dd ($result->get());
 
 
 
