@@ -19,6 +19,7 @@ class RoomResource extends JsonResource
      */
     public function toArray($request)
     {
+        Common::setHourHot($this->uid);
         $pk = Pk::query ()->where ('room_id',$this->id)->where ('status',1)->first ();
         $data = [
             'id'=>$this->id,

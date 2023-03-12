@@ -511,25 +511,26 @@ Trait CalcsTrait
                 $q->where ('receiver_family_id',$family->id)->orWhere('sender_family_id',$family->id);
             })->sum ('giftPrice');
             $level = FamilyLevel::query ()->where ('exp','<=',$giftLogs)->orderByDesc ('exp')->first ();
-            if (@$level->id != @$family->leve){
-                DB::beginTransaction ();
-                try {
-                    OfficialMessage::query ()->create (
-                        [
-                            'title'=>'family level upgraded',
-                            'user_id'=>$family->user_id,
-                            'content'=>'congratulations your family level upgraded',
-                            'url'=>''
-                        ]
-                    );
-                    $family->update (['current_level_id' => $level->id]);
-                    DB::commit ();
-                }catch (\Exception $exception){
-                    DB::rollBack ();
+            if ($level){
+                if ($level->id != $family->current_level_id){
+                    DB::beginTransaction ();
+                    try {
+                        OfficialMessage::query ()->create (
+                            [
+                                'title'=>'family level upgraded',
+                                'user_id'=>$family->user_id,
+                                'content'=>'congratulations your family level upgraded',
+                                'url'=>''
+                            ]
+                        );
+                        $family->update (['current_level_id' => $level->id]);
+                        DB::commit ();
+                    }catch (\Exception $exception){
+                        DB::rollBack ();
+                    }
                 }
-
-
             }
+
         }
     }
 

@@ -16,8 +16,6 @@ class RoomRepo implements RoomRepoInterface {
 
     public function all ( $req )
     {
-
-
         $result = $this->model->where('room_status',1)->where(function ($q){
             $q->where('is_afk',1)->orWhere('room_visitor','!=','');
         })->where(function ($q) use ($req){
@@ -35,8 +33,7 @@ class RoomRepo implements RoomRepoInterface {
             if ($req->type){
                 $q->where('room_type',$req->type);
             }
-        })->orderByDesc('hot')
-           ;
+        })->orderByDesc('hour_hot');
 
         if ($pp = $req->pp){ // pp = perPage
             return $result->paginate($pp);

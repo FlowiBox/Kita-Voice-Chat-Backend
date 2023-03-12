@@ -440,4 +440,6 @@ class GiftLogController extends Controller
     protected function addRoomHot($uid,$hot){
         DB::table('rooms')->where('uid',$uid)->increment('hot',$hot);
     }
+
+
 }

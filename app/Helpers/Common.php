@@ -276,4 +276,13 @@ class Common{
     }
 
 
+    public static function setHourHot($uid){
+        $hot = GiftLog::query()->where('roomowner_id', $uid)
+            ->where('created_at', '>', now()->subHour())
+            ->selectRaw('SUM(giftPrice * giftNum) as total_gift_value')
+            ->first();
+        DB::table ('rooms')->where ('uid',$uid)->update (['hour_hot'=>(integer)$hot->total_gift_value]);
+    }
+
+
 }

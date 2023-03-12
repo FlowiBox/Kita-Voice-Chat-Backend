@@ -46,4 +46,5 @@ class Room extends Model
     public function gifts(){
         return $this->hasMany (GiftLog::class,'roomowner_id','uid');
     }
+
 }
