@@ -1,6 +1,8 @@
 <?php
 namespace App\Helpers;
+use App\Http\Resources\CountryResource;
 use App\Models\Config;
+use App\Models\Country;
 use App\Models\Follow;
 use App\Models\GiftLog;
 use App\Models\Pack;
@@ -44,7 +46,8 @@ class Common{
                 'data'      => $data,
 
                 'extra_data'=> [
-                    'storage_base_url'=>self::getConf ('storage_base_url') ?:asset ('storage')
+                    'storage_base_url'=>self::getConf ('storage_base_url') ?:asset ('storage'),
+                    'countries'=>CountryResource::collection (Country::query ()->where ('status',1)->get ())
                 ],
 
                 'paginates' =>$paginates
