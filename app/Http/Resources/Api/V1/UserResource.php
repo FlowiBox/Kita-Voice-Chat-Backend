@@ -3,8 +3,10 @@
 namespace App\Http\Resources\Api\V1;
 
 use App\Helpers\Common;
+use App\Http\Resources\CountryResource;
 use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
+use App\Models\Country;
 use App\Models\Family;
 use App\Models\FamilyUser;
 use App\Models\Pack;
@@ -128,7 +130,8 @@ class UserResource extends JsonResource
             'intro_num'=>$this->intros_count(),
             'frame_num'=>$this->frames_count(),
             'bubble_num'=>$this->bubble_count(),
-            'statics'=>$this->statics?:$statics
+            'statics'=>$this->statics?:$statics,
+            'countries'=>CountryResource::collection (Country::query ()->where ('status',1)->get ())
         ];
 
 
