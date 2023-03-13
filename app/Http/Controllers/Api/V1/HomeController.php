@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Agora;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\TrxResource;
 use App\Http\Resources\CountryResource;
 use App\Models\Background;
+use App\Models\CoinLog;
 use App\Models\Country;
 use App\Models\Exchange;
 use App\Models\ExchangeLog;
@@ -298,5 +300,11 @@ class HomeController extends Controller
 
     }
 
+
+    public function trxLog(Request $request){
+        $user = $request->user ();
+        $trx = CoinLog::query ()->where ('user_id',$user->id)->get ();
+        return Common::apiResponse (1,'',TrxResource::collection ($trx),200);
+    }
 
 }

@@ -239,6 +239,8 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::post ('send_to_zego',[\App\Http\Controllers\Api\V1\HomeController::class,'sendToZego']);
     Route::post ('get_room_mode',[\App\Http\Controllers\Api\V1\RoomController::class,'roomMode']);
     Route::post ('change_room_mode',[\App\Http\Controllers\Api\V1\RoomController::class,'changeMode']);
+
+    Route::get ('trxs',[\App\Http\Controllers\Api\V1\HomeController::class,'trxLog']);
 });
 
 Route::prefix ('tickets')->group (function (){
