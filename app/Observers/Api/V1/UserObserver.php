@@ -2,6 +2,7 @@
 
 namespace App\Observers\Api\V1;
 
+use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
 use App\Models\GiftLog;
@@ -154,7 +155,15 @@ class UserObserver
                 $t = $target->usd * $per;
                 $ap = $target->agency_share/100;
                 $user->target_usd = $t;
-
+                $tar = UserTarget::query ()
+                    ->where ('user_id',$user->id)
+                    ->where ('add_month',Carbon::now ()->month)
+                    ->where ('add_year',Carbon::now ()->year)
+                    ->where ('target_id',$target->id)
+                    ->exists ();
+                if (!$tar){
+                    Common::sendOfficialMessage ($user->id,__ ('congratulations'),__ ('you achieve new target'));
+                }
                 UserTarget::query ()->updateOrCreate (
                     [
                         'user_id'=>$user->id,

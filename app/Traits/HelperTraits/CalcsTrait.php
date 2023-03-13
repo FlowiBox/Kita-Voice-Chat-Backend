@@ -7,12 +7,61 @@ use App\Models\GiftLog;
 use App\Models\OfficialMessage;
 use App\Models\OVip;
 use App\Models\User;
+use App\Models\UserLevelLog;
 use App\Models\UserVip;
 use App\Models\Vip;
 use Illuminate\Support\Facades\DB;
 
 Trait CalcsTrait
 {
+
+    public static function sendOfficialMessage($user_id,$title = '',$content = '',$type = 1){
+        OfficialMessage::query ()->create (
+            [
+                'title'=>$title,
+                'user_id'=>$user_id,
+                'content'=>$content,
+                'img'=>'',
+                'type'=>$type
+            ]
+        );
+    }
+
+    public static function handelLevelLog($user_id = null , $type = null ,$level = 0,$total = 0){
+        if ($type == 1){
+            $key = 'host';
+        }
+        elseif ($type == 2 ){
+            $key = 'normal';
+        }
+        else{
+            $key = 'vip';
+            return;
+        }
+        $level_log = UserLevelLog::query ()
+            ->where ('user_id',$user_id)
+            ->where ('type',$type)
+            ->where ('level',$level)
+            ->exists ();
+        if (!$level_log && $level != 0){
+
+            try {
+                DB::beginTransaction ();
+                UserLevelLog::query ()->create (
+                    [
+                        'user_id'=>$user_id,
+                        'type'=>$type,
+                        'level'=>$level,
+                        'total'=>$total
+                    ]
+                );
+                self::sendOfficialMessage ($user_id,__ ('congratulations'),__ ("you $key level up"));
+                DB::commit ();
+            }catch (\Exception $exception){
+                DB::rollBack ();
+            }
+        }
+    }
 
     public static function getLevel ( $user_id = null , $type = null , $is_image = false )
     {
@@ -61,6 +110,7 @@ Trait CalcsTrait
             }
         }
         else {
+            self::handelLevelLog ($user_id,$type,$level,$total);
             return $level?:0;
         }
 
