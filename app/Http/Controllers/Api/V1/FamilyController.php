@@ -223,7 +223,7 @@ class FamilyController extends Controller
             User::query ()->where ('family_id',$id)->update (['family_id'=>null]);
             $family->delete ();
             DB::commit ();
-            return Common::apiResponse (1,'success',null,201);
+            return Common::apiResponse (1,'success',new  UserResource($user),200);
         }catch (\Exception $exception){
             DB::rollBack ();
             return Common::apiResponse (0,'failed',null,400);
