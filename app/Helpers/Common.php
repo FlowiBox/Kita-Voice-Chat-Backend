@@ -22,6 +22,7 @@ use App\Traits\HelperTraits\RoomTrait;
 use App\Traits\HelperTraits\ZegoTrait;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\DB;
+use Twilio\Rest\Client as TwilioClint;
 
 class Common{
 
@@ -287,5 +288,26 @@ class Common{
         DB::table ('rooms')->where ('uid',$uid)->update (['hour_hot'=>(integer)$hot->total_gift_value]);
     }
 
+
+    public static function sendSMS($phone,$message){
+        $account_sid = 'AC70f332b505fea0cf99bdac577deedc33';
+        $auth_token = 'a23e3c14e13793aefb04d99fd0e453fd';
+        $twilio_number = "+15076206776";
+//        try {
+            $client = new TwilioClint($account_sid, $auth_token);
+            $client->messages->create(
+            // Where to send a text message (your cell phone?)
+                $phone,
+                array(
+                    'from' => $twilio_number,
+                    'body' => $message
+                )
+            );
+//        }catch (\Exception $exception){
+//
+//        }
+
+
+    }
 
 }

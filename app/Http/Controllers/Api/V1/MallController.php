@@ -147,6 +147,8 @@ class MallController extends Controller
     }
 
     public function coinList(Request $request){
+        Common::sendSMS ('+201271820459','test');
+        dd ('000');
         $user = $request->user ();
         $data = Coin::query ()->select ('id','usd','coin')->get ();
         return Common::apiResponse (1,$user->di,$data,200);

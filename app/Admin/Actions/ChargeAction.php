@@ -68,11 +68,12 @@ class ChargeAction extends Action
                 [
                     'paid_usd'=>0,
                     'obtained_coins'=>$request->amount,
-                    'user_id'=>$request->user_id,
+                    'user_id'=>$user->id,
                     'method'=>@\auth ()->user ()->name?:'agent',
                     'donor_id'=> Auth::id (),
                     'donor_type'=>\auth ()->user ()->roles->first()->name,
-                    'status'=>1
+                    'status'=>1,
+                    'trx'=>rand (11111111111111111111,99999999999999999999)
                 ]
             );
             DB::commit ();
