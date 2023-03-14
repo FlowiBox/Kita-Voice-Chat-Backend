@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Http;
 Trait ZegoTrait
 {
 
-    public static  $serverSecret = 'd161c1daca18e1fa29ca74de431d5981';
-    public static  $appId = 1381228;
+    public static  $serverSecret = 'ba8914c16097d73d831f9d0441d13c2e';
+    public static  $appId = 299148760;
 
     public static function getSignatureNonce(){
         return bin2hex(random_bytes(8));

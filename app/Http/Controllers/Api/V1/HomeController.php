@@ -303,7 +303,7 @@ class HomeController extends Controller
 
     public function trxLog(Request $request){
         $user = $request->user ();
-        $trx = CoinLog::query ()->where ('user_id',$user->id)->get ();
+        $trx = CoinLog::query ()->where ('user_id',$user->id)->orderByDesc ('id')->get ();
         return Common::apiResponse (1,'',TrxResource::collection ($trx),200);
     }
 
