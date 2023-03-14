@@ -557,6 +557,7 @@ Trait CalcsTrait
     public static function updateFamilyLevel($family_id){
         $family = Family::query ()->find ($family_id);
         if ($family){
+            $family->update (['today_rank'=>1,'week_rank'=>1,'month_rank'=>1]);
             $giftLogs = GiftLog::query ()->where (function ($q) use ($family){
                 $q->where ('receiver_family_id',$family->id)->orWhere('sender_family_id',$family->id);
             })->sum ('giftPrice');
