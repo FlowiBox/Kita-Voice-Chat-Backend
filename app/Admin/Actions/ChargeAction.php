@@ -4,6 +4,7 @@ namespace App\Admin\Actions;
 
 use App\Models\Admin;
 use App\Models\Charge;
+use App\Models\CoinLog;
 use App\Models\User;
 use Encore\Admin\Actions\Action;
 use Encore\Admin\Form;
@@ -63,6 +64,17 @@ class ChargeAction extends Action
                 $charger->di -= $request->amount;
                 $charger->save();
             }
+            CoinLog::query ()->create (
+                [
+                    'paid_usd'=>0,
+                    'obtained_coins'=>$request->amount,
+                    'user_id'=>$request->user_id,
+                    'method'=>'agent',
+                    'donor_id'=> Auth::id (),
+                    'donor_type'=>'agent',
+                    'status'=>1
+                ]
+            );
             DB::commit ();
             return $this->response()->success('success')->refresh();
         }catch (\Exception $exception){
