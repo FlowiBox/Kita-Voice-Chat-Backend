@@ -275,7 +275,11 @@ class UserController extends Controller
             $query = $query->where ('receiver_id',$room_uid);
             $limit = 1000;
         }
-        $data=$query->selectRaw("sum(giftPrice) as exp ,". $keywords)->groupBy($keywords)->orderByRaw("exp desc")->limit($limit)->get();
+        $data=$query->selectRaw("sum(giftPrice) as exp ,". $keywords)
+            ->groupBy($keywords)->orderByRaw("exp desc")
+            ->limit($limit)->get()->reject(function ($q){
+                return $q->exp == 0;
+            });
         $i=$l=0;
         foreach ($data as $k => &$v) {
             $users = @User::query ()->find($v->{$keywords});
