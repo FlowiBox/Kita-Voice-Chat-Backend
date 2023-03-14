@@ -11,6 +11,7 @@ use Encore\Admin\Form;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ChargeAction extends Action
 {
@@ -73,7 +74,7 @@ class ChargeAction extends Action
                     'donor_id'=> Auth::id (),
                     'donor_type'=>\auth ()->user ()->roles->first()->name,
                     'status'=>1,
-                    'trx'=>rand (11111111111111111111,99999999999999999999)
+                    'trx'=>$randomString = Str::random(18)
                 ]
             );
             DB::commit ();
