@@ -39,8 +39,8 @@ class FamilyController extends Controller
         if (!$time) return Common::apiResponse (0,'time is required',null,422);
 
 
-        $query = Family::query ()->where ('status',1)->whereHas ('owner');
-        $data = $query->orderByDesc ($request->time."_rank")->limit(33)->get ();
+        $query = Family::query ()->where ('status',1)->whereHas ('owner')->where ($time."_rank",'!=',0);
+        $data = $query->orderByDesc ($time."_rank")->limit(33)->get ();
 
         $em = [
             'id'=>0,
