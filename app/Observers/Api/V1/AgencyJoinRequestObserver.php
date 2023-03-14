@@ -2,6 +2,7 @@
 
 namespace App\Observers\Api\V1;
 
+use App\Helpers\Common;
 use App\Models\AgencyJoinRequest;
 use App\Models\User;
 
@@ -68,6 +69,7 @@ class AgencyJoinRequestObserver
             if ($user){
                 $user->agency_id = $agencyJoinRequest->agency_id;
                 $user->save ();
+                Common::sendOfficialMessage ($user->id,'congratulations','you are accepted in agency');
             }
         }
     }
