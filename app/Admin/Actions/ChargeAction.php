@@ -69,9 +69,9 @@ class ChargeAction extends Action
                     'paid_usd'=>0,
                     'obtained_coins'=>$request->amount,
                     'user_id'=>$request->user_id,
-                    'method'=>'agent',
+                    'method'=>@\auth ()->user ()->name?:'agent',
                     'donor_id'=> Auth::id (),
-                    'donor_type'=>'agent',
+                    'donor_type'=>\auth ()->user ()->roles->first()->name,
                     'status'=>1
                 ]
             );
