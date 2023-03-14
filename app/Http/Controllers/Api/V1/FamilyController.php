@@ -41,7 +41,6 @@ class FamilyController extends Controller
 
         $query = Family::query ()->where ('status',1)->whereHas ('owner');
         $data = $query->get ()
-            ->where ('rank','!=',0)
             ->sortByDesc('rank');
 
         $em = [

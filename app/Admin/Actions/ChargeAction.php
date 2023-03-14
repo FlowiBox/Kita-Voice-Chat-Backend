@@ -50,7 +50,7 @@ class ChargeAction extends Action
             $charge = new Charge();
             $charge->charger_id = Auth::id ();
             $charge->charger_type = 'dash';
-            $charge->user_id = $request->user_id;
+            $charge->user_id = $user->id;
             $charge->user_type = $request->user_type;
             $charge->amount = $request->amount;
             $charge->amount_type = 1;
