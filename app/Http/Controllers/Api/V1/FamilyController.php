@@ -40,8 +40,7 @@ class FamilyController extends Controller
 
 
         $query = Family::query ()->where ('status',1)->whereHas ('owner');
-        $data = $query->get ()
-            ->sortByDesc('rank');
+        $data = $query->orderByDesc ($request->time."_rank")->limit(33)->get ();
 
         $em = [
             'id'=>0,

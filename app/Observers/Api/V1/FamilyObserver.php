@@ -4,6 +4,7 @@ namespace App\Observers\Api\V1;
 
 use App\Models\Family;
 use App\Models\FamilyUser;
+use App\Models\GiftLog;
 use App\Models\User;
 
 class FamilyObserver
@@ -16,7 +17,7 @@ class FamilyObserver
      */
     public function created(Family $family)
     {
-        //
+
     }
 
     /**
