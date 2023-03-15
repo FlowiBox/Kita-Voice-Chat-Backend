@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/', function () {
+    \App\Helpers\Common::fireBaseDatabase ('1');
     return view ('welcome');
 });
 

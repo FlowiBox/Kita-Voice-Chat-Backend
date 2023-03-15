@@ -23,6 +23,7 @@ use App\Traits\HelperTraits\RoomTrait;
 use App\Traits\HelperTraits\ZegoTrait;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\DB;
+use Kreait\Firebase\Factory;
 use Twilio\Rest\Client as TwilioClint;
 
 class Common{
@@ -321,6 +322,20 @@ class Common{
                 'type'=>$type
             ]
         );
+    }
+
+    public static function fireBaseFactory(){
+        return (new Factory)
+            ->withServiceAccount(public_path ('firebase_credentials.json'))
+            ->withDatabaseUri('https://yay-chat-c2333-default-rtdb.firebaseio.com');
+    }
+
+    public static function fireBaseDatabase($user,$obj){
+        $factory = self::fireBaseFactory ();
+        $database = $factory->createDatabase();
+        $database->getReference("news/$user")
+            ->set($obj);
+
     }
 
 }

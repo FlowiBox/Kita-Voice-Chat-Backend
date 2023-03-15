@@ -172,7 +172,7 @@ class User extends Authenticatable
     }
 
     public function getFollowDate($id){
-        $f = Follow::query ()->where ('user_id',$this->id)->where ('followed_user_id',request ()->user ()->id)->value ('created_at');
+        $f = Follow::query ()->where ('user_id',$this->id)->where ('followed_user_id',@request ()->user ()->id)->value ('created_at');
         if ($f){
             return $f;
         }
@@ -180,7 +180,7 @@ class User extends Authenticatable
     }
 
     public function getFollowDateAttribute(){
-        $f = Follow::query ()->where ('user_id',$this->id)->where ('followed_user_id',request ()->user ()->id)->value ('created_at');
+        $f = Follow::query ()->where ('user_id',$this->id)->where ('followed_user_id',@request ()->user ()->id)->value ('created_at');
         if ($f){
             return $f;
         }
@@ -188,7 +188,7 @@ class User extends Authenticatable
     }
 
     public function getFollowedDateAttribute(){
-        $f = Follow::query ()->where ('user_id',request ()->user ()->id)->where ('followed_user_id',$this->id)->value ('created_at');
+        $f = Follow::query ()->where ('user_id',@request ()->user ()->id)->where ('followed_user_id',$this->id)->value ('created_at');
         if ($f){
             return $f;
         }

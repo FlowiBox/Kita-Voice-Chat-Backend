@@ -12,6 +12,7 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "jxlwqq/material-ui": "^1.0",
         "jxlwqq/watermark": "^1.0",
+        "kreait/laravel-firebase": "^4.2",
         "laravel-admin-ext/chartjs": "^1.0",
         "laravel-admin-ext/cropper": "^1.0",
         "laravel-admin-ext/helpers": "2.*",
