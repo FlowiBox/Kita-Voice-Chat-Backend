@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\OfficialMessage;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,15 +17,15 @@ class CommunityController extends Controller
         $user_id = $request->user ()->id;
         $page = $request->page ?: 1;
         if (!$user_id) return Common::apiResponse (0, 'un_auth');
-//        $ids = DB::table('off_reads')->where('user_id', $user_id)
-//            ->where('is_read', 2)
-//            ->select('off_id');
-        $data = DB::table('official_messages')
-            // ->where('id','not in',$ids)
-            ->where('user_id', 'in', [0, $user_id])
-            ->orderBy('created_at', 'asc')
-            ->get();
-
+        $ids = DB::table('off_reads')->where('user_id', $user_id)
+            ->where('is_read', 1)
+            ->pluck('off_id')->toArray ();
+        $data = OfficialMessage::query ()
+//             ->whereNotIn('id',$ids)
+            ->whereIn('user_id',  [0, $user_id])
+            ->where ('type',$request->type)
+            ;
+        $data = $data->orderBy('created_at', 'asc')->get();
         foreach ($data as $k => &$v) {
             $v->url = $v->url ?: '';
             $v->is_read = DB::table('off_reads')->where('user_id', $user_id)->where('off_id', $v->id)->value('id') ? 1 : 0;

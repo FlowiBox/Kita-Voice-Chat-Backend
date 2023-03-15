@@ -5,6 +5,7 @@ use App\Models\Config;
 use App\Models\Country;
 use App\Models\Follow;
 use App\Models\GiftLog;
+use App\Models\OfficialMessage;
 use App\Models\Pack;
 use App\Models\PackLog;
 use App\Models\Room;
@@ -308,6 +309,18 @@ class Common{
 //        }
 
 
+    }
+
+    public static function sendOfficialMessage($user_id,$title = '',$content = '',$type = 2){
+        OfficialMessage::query ()->create (
+            [
+                'title'=>$title,
+                'user_id'=>$user_id,
+                'content'=>$content,
+                'img'=>'',
+                'type'=>$type
+            ]
+        );
     }
 
 }

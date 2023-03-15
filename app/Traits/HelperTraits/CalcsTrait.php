@@ -15,17 +15,7 @@ use Illuminate\Support\Facades\DB;
 Trait CalcsTrait
 {
 
-    public static function sendOfficialMessage($user_id,$title = '',$content = '',$type = 1){
-        OfficialMessage::query ()->create (
-            [
-                'title'=>$title,
-                'user_id'=>$user_id,
-                'content'=>$content,
-                'img'=>'',
-                'type'=>$type
-            ]
-        );
-    }
+
 
     public static function handelLevelLog($user_id = null , $type = null ,$level = 0,$total = 0){
         if ($type == 1){
