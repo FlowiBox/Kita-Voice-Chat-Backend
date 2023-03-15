@@ -45,6 +45,7 @@ class FamilyResource extends JsonResource
             'am_i_admin'=>$request->user ()->is_family_admin ?true:false,
             'members'=>UserResource::collection (User::query ()->whereIn ('id',$mems)->where ('id','!=',$this->user_id)->get ()),
             'num_of_requests'=>FamilyUser::query ()->where ('family_id',$this->id)->where ('status',0)->count (),
+            'num_of_members'=>$this->members_count,
             'level'=>@$this->level?:'',
             'today_rank'=>$this->today_rank,
             'week_rank'=>$this->week_rank,

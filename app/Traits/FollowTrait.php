@@ -19,14 +19,14 @@ Trait FollowTrait{
 
 
     public function followers(){
-        return self::query ()->whereIn('id',$this->followers_ids ())->get ();
+        return self::query ()->whereIn('id',$this->followers_ids ())->get ()->sortByDesc('follow_date');
     }
     public function followeds(){
-        return self::query ()->whereIn('id',$this->followeds_ids ())->get ();
+        return self::query ()->whereIn('id',$this->followeds_ids ())->get ()->sortByDesc('followed_date');
     }
 
     public function friends(){
-        return self::query ()->whereIn('id',$this->followeds_ids ())->whereIn('id',$this->followers_ids ())->get ();
+        return self::query ()->whereIn('id',$this->followeds_ids ())->whereIn('id',$this->followers_ids ())->get ()->sortByDesc(['follow_date','followed_date']);
     }
 
     public function friends_ids(){

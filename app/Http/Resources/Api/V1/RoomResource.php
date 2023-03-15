@@ -21,12 +21,14 @@ class RoomResource extends JsonResource
     {
         Common::setHourHot($this->uid);
         $pk = Pk::query ()->where ('room_id',$this->id)->where ('status',1)->first ();
+        $owner = $this->is_afk?1:0;
+        $num = $this->visitors ()->count () + $owner;
         $data = [
             'id'=>$this->id,
             'owner_id'=>$this->uid?:0,
             'room_id'=>$this->numid?:0,
             'name'=>$this->room_name?:'',
-            'visitors_count'=>$this->visitors ()->count (),
+            'visitors_count'=>$num,
             'cover'=>$this->room_cover?:'',
             'class'=>$this->myClass?:new \stdClass(),
             'type'=>$this->myType?:new \stdClass(),
