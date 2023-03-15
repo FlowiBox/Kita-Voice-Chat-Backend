@@ -330,12 +330,10 @@ class Common{
             ->withDatabaseUri('https://yay-chat-c2333-default-rtdb.firebaseio.com');
     }
 
-    public static function fireBaseDatabase($user,$obj){
+    public static function fireBaseDatabase($path,$obj){
         $factory = self::fireBaseFactory ();
         $database = $factory->createDatabase();
-        $database->getReference("news/$user")
-            ->set($obj);
-
+        $database->getReference($path) ->set($obj);
     }
 
 }

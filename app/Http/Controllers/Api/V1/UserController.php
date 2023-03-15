@@ -91,6 +91,13 @@ class UserController extends Controller
                 ]
             );
         }
+        if ($me->id != $user->id){
+            $path = "$id/visitors";
+            $obj = [
+                'id'=>$request->user ()->id,
+            ];
+            Common::fireBaseDatabase ($path,$obj);
+        }
         $data = new UserResource($user);
         return Common::apiResponse (true,'',$data,200);
     }

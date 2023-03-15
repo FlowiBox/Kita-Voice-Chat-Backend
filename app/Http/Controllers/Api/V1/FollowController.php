@@ -28,6 +28,36 @@ class FollowController extends Controller
                 'status'=>1
             ]
         );
+        $id = $request->user_id ;
+        $path = "$id/followers";
+        $obj = [
+            'id'=>$request->user ()->id,
+        ];
+        Common::fireBaseDatabase ($path,$obj);
+
+        $id = $request->user ()->id ;
+        $path = "$id/followings";
+        $obj = [
+            'id'=>$request->user_id,
+        ];
+        Common::fireBaseDatabase ($path,$obj);
+
+        if (in_array ($request->user_id,$request->user ()->followers_ids()->toArray())){
+            $id = $request->user_id  ;
+            $path = "$id/friends";
+            $obj = [
+                'id'=>$request->user ()->id,
+            ];
+            Common::fireBaseDatabase ($path,$obj);
+
+            $id = $request->user ()->id ;
+            $path = "$id/friends";
+            $obj = [
+                'id'=>$request->user_id,
+            ];
+            Common::fireBaseDatabase ($path,$obj);
+        }
+
         return Common::apiResponse (true,'follow done',null,201);
     }
     public function unFollow(Request $request){

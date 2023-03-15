@@ -26,7 +26,7 @@ Trait FollowTrait{
     }
 
     public function friends(){
-        return self::query ()->whereIn('id',$this->followeds_ids ())->whereIn('id',$this->followers_ids ())->get ()->sortByDesc(['follow_date','followed_date']);
+        return self::query ()->whereIn('id',$this->followeds_ids ())->whereIn('id',$this->followers_ids ())->get ()->sortByDesc('follow_date');
     }
 
     public function friends_ids(){

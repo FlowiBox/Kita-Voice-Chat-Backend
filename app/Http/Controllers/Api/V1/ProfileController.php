@@ -56,6 +56,13 @@ class ProfileController extends Controller
         if ($me->id != $user->id){
             $user->profileVisits()->attach([$me->id]);
         }
+
+        $path = "$id/visitors";
+        $obj = [
+            'id'=>$request->user ()->id,
+        ];
+        Common::fireBaseDatabase ($path,$obj);
+
         if($user){
             return Common::apiResponse (true,'',new UserResource($user),200);
         }
