@@ -157,11 +157,16 @@ class AgencyController extends MainController
         foreach ($this->getAgencies () as $user){
             $ops[$user->id]=$user->name;
         }
+        $ops2 = [];
+        foreach (User::where('agency_id',0)->get() as $user){
+            $ops2[$user->id] = $user->uuid;
+        }
 
         $form = new Form(new Agency);
 
         $form->display('ID');
         $form->select('owner_id', __('owner id'))->options ($ops);
+        $form->select('app_owner_id', __('app owner id'))->options ($ops2);
         $form->text('name', __('name'));
         $form->text('notice', __('notice'));
         $form->switch('status', __('status'));

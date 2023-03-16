@@ -17,46 +17,58 @@ class FollowController extends Controller
         if (!User::query ()->find ($request->user_id)){
             return Common::apiResponse (false,'this user not found',null,404);
         }
-        Follow::query ()->updateOrCreate (
+        $f = Follow::query ()->where (
             [
                 'user_id'=>$request->user ()->id,
                 'followed_user_id'=>$request->user_id
-            ],
-            [
-                'user_id'=>$request->user ()->id,
-                'followed_user_id'=>$request->user_id,
-                'status'=>1
             ]
-        );
-        $id = $request->user_id ;
-        $path = "$id/followers";
-        $obj = [
-            'id'=>$request->user ()->id,
-        ];
-        Common::fireBaseDatabase ($path,$obj);
+        )->exists ();
+        if (!$f){
+            Follow::query ()->create (
 
-        $id = $request->user ()->id ;
-        $path = "$id/followings";
-        $obj = [
-            'id'=>$request->user_id,
-        ];
-        Common::fireBaseDatabase ($path,$obj);
-
-        if (in_array ($request->user_id,$request->user ()->followers_ids()->toArray())){
-            $id = $request->user_id  ;
-            $path = "$id/friends";
-            $obj = [
-                'id'=>$request->user ()->id,
-            ];
-            Common::fireBaseDatabase ($path,$obj);
-
-            $id = $request->user ()->id ;
-            $path = "$id/friends";
-            $obj = [
-                'id'=>$request->user_id,
-            ];
-            Common::fireBaseDatabase ($path,$obj);
+                [
+                    'user_id'=>$request->user ()->id,
+                    'followed_user_id'=>$request->user_id,
+                    'status'=>1
+                ]
+            );
+            Common::handelFirebase ($request,'follow');
         }
+
+
+//        $id = (integer)$request->user_id ;
+//        $followers_count = @Common::fireBaseDatabase ("$id/followers",'','get')['count']?:0;
+//        $path = "$id/followers";
+//        $obj = [
+//            'count'=>$followers_count + 1,
+//        ];
+//        Common::fireBaseDatabase ($path,$obj);
+//
+//        $id = $request->user ()->id ;
+//        $followings_count = @Common::fireBaseDatabase ("$id/followings",'','get')['count']?:0;
+//        $path = "$id/followings";
+//        $obj = [
+//            'count'=>$followings_count + 1,
+//        ];
+//        Common::fireBaseDatabase ($path,$obj);
+//
+//        if (in_array ($request->user_id,$request->user ()->followers_ids()->toArray())){
+//            $id = (integer)$request->user_id ;
+//            $friends_count = @Common::fireBaseDatabase ("$id/friends",'','get')['count']?:0;
+//            $path = "$id/friends";
+//            $obj = [
+//                'count'=>$friends_count + 1,
+//            ];
+//            Common::fireBaseDatabase ($path,$obj);
+//
+//            $id = $request->user ()->id ;
+//            $friends_count = @Common::fireBaseDatabase ("$id/friends",'','get')['count']?:0;
+//            $path = "$id/friends";
+//            $obj = [
+//                'count'=>$friends_count + 1,
+//            ];
+//            Common::fireBaseDatabase ($path,$obj);
+//        }
 
         return Common::apiResponse (true,'follow done',null,201);
     }

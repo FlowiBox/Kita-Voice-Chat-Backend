@@ -81,7 +81,12 @@ class UserController extends Controller
         if (!$user) return Common::apiResponse (false,'not found',null,404);
         if (in_array ($user->id,Common::getUserBlackList ($me->id))) return Common::apiResponse (0,'in black list',null,403);
         if (in_array ($me->id,Common::getUserBlackList ($user->id))) return Common::apiResponse (0,'in black list',null,403);
+        $request['user_id']=$id;
         if ($me->id != $user->id){
+            if (!$user->profileVisits()->where('users.id',$me->id)->first()){
+                Common::handelFirebase ($request,'visit');
+            }
+
             $user->profileVisits()->syncWithoutDetaching(
                 [
                     $me->id => [
@@ -90,14 +95,10 @@ class UserController extends Controller
                     ]
                 ]
             );
+
+
         }
-        if ($me->id != $user->id){
-            $path = "$id/visitors";
-            $obj = [
-                'id'=>$request->user ()->id,
-            ];
-            Common::fireBaseDatabase ($path,$obj);
-        }
+
         $data = new UserResource($user);
         return Common::apiResponse (true,'',$data,200);
     }

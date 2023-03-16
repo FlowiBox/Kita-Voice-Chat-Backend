@@ -20,23 +20,38 @@ class CommunityController extends Controller
         $ids = DB::table('off_reads')->where('user_id', $user_id)
             ->where('is_read', 1)
             ->pluck('off_id')->toArray ();
-        $data = OfficialMessage::query ()
+        $sys = OfficialMessage::query ()
 //             ->whereNotIn('id',$ids)
             ->whereIn('user_id',  [0, $user_id])
-            ->where ('type',$request->type)
-            ;
-        $data = $data->orderBy('created_at', 'asc')->get();
-        foreach ($data as $k => &$v) {
-            $v->url = $v->url ?: '';
-            $v->is_read = DB::table('off_reads')->where('user_id', $user_id)->where('off_id', $v->id)->value('id') ? 1 : 0;
-            //Mark unread messages as read
-            if ($v->is_read == 0) {
-                $arr['off_id'] = $v->id;
-                $arr['user_id'] = $user_id;
-                $arr['addtime'] = time();
-                DB::table('off_reads')->insert($arr);
-            }
-        }
+            ->where ('type',1)
+            ->orderBy('created_at', 'asc')->get();
+
+        $official = OfficialMessage::query ()
+//             ->whereNotIn('id',$ids)
+            ->whereIn('user_id',  [0, $user_id])
+            ->where ('type',2)
+            ->orderBy('created_at', 'asc')->get();
+
+        $agency = OfficialMessage::query ()
+//             ->whereNotIn('id',$ids)
+            ->whereIn('user_id',  [0, $user_id])
+            ->where ('type',0)
+            ->orderBy('created_at', 'asc')->get();
+
+        $data['sys'] = $sys;
+        $data['official'] = $official;
+        $data['agency'] = $agency;
+//        foreach ($data as $k => &$v) {
+//            $v->url = $v->url ?: '';
+//            $v->is_read = DB::table('off_reads')->where('user_id', $user_id)->where('off_id', $v->id)->value('id') ? 1 : 0;
+//            //Mark unread messages as read
+//            if ($v->is_read == 0) {
+//                $arr['off_id'] = $v->id;
+//                $arr['user_id'] = $user_id;
+//                $arr['addtime'] = time();
+//                DB::table('off_reads')->insert($arr);
+//            }
+//        }
         return Common::apiResponse(1, '', $data);
     }
 

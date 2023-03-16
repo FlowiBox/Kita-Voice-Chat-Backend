@@ -181,9 +181,10 @@ class RoomController extends Controller
             $data = [
                 "messageContent"=>[
                     "message"=>"changeBackground",
-                    "imgbackground"=>$room->room_background,
+                    "imgbackground"=>$room->room_background?:"",
                     "roomIntro"=>$room->room_intro?:"",
-                    "roomImg"=>$room->room_cover?:""
+                    "roomImg"=>$room->room_cover?:"",
+                    "room_type"=>$room->room_type
                 ]
             ];
             $json = json_encode ($data);

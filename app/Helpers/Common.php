@@ -330,10 +330,74 @@ class Common{
             ->withDatabaseUri('https://yay-chat-c2333-default-rtdb.firebaseio.com');
     }
 
-    public static function fireBaseDatabase($path,$obj){
+    public static function fireBaseDatabase($path,$obj,$type = 'set'){
         $factory = self::fireBaseFactory ();
         $database = $factory->createDatabase();
-        $database->getReference($path) ->set($obj);
+        if ($type == 'set'){
+            $database->getReference($path) ->set($obj);
+        }else{
+            return $database->getReference($path)->getSnapshot()->getValue();
+        }
+
+    }
+
+
+    public static function handelFirebase($request,$type = 'follow'){
+        $f_add = 0;
+        $fr_add = 0;
+        $vi_add = 0;
+        $id = (integer)$request->user_id ;
+        $snap = self::fireBaseDatabase ($id,'','get');
+        $followers_count = @(integer)$snap['followers']?:0;
+        $followings_count = @(integer)$snap['followings']?:0;
+        $friends_count = @(integer)$snap['followings']?:0;
+        $visitors_count = @(integer)$snap['visitors']?:0;
+        $path = $id;
+        if (in_array ($request->user_id,$request->user ()->followers_ids()->toArray())){
+            $fr_add = 1;
+        }
+        if ($type == 'follow'){
+            $f_add = 1;
+        }elseif($type == 'visit'){
+            $vi_add = 1;
+        }
+        $obj = [
+            'followers'=>$followers_count + $f_add,
+            'followings'=>$followings_count + $f_add,
+            'friends'=>$friends_count + $fr_add,
+            'visitors'=>$visitors_count + $vi_add
+        ];
+
+        self::fireBaseDatabase ($path,$obj);
+
+
+
+
+
+        $f_add = 0;
+        $fr_add = 0;
+        $vi_add = 0;
+        $id = (integer)$request->user()->id ;
+        $snap = self::fireBaseDatabase ($id,'','get');
+        $followers_count = @(integer)$snap['followers']?:0;
+        $followings_count = @(integer)$snap['followings']?:0;
+        $friends_count = @(integer)$snap['followings']?:0;
+        $visitors_count = @(integer)$snap['visitors']?:0;
+        $path = $id;
+        if (in_array ($request->user_id,$request->user ()->followers_ids()->toArray())){
+            $fr_add = 1;
+        }
+        if ($type == 'follow'){
+            $f_add = 1;
+        }
+        $obj = [
+            'followers'=>$followers_count + $f_add,
+            'followings'=>$followings_count + $f_add,
+            'friends'=>$friends_count + $fr_add,
+            'visitors'=>$visitors_count + $vi_add
+        ];
+
+        self::fireBaseDatabase ($path,$obj);
     }
 
 }

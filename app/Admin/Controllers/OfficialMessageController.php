@@ -28,18 +28,18 @@ class OfficialMessageController extends MainController
     protected function grid()
     {
         $grid = new Grid(new OfficialMessage);
-
+        $grid->model ()->where ('type',2);
         $grid->id('ID');
         $grid->title(trans('title'));
         $grid->column('img',trans ('img'))->image ('',30);
         $grid->column('user_id',trans ('user id'));
         $grid->content(trans('content'));
-        $grid->column('type',trans ('type'))->select (
-            [
-                1=>trans('system message'),
-                2=>trans('system announcement')
-            ]
-        );
+//        $grid->column('type',trans ('type'))->select (
+//            [
+//                1=>trans('system message'),
+//                2=>trans('system announcement')
+//            ]
+//        );
         $grid->url('url');
         $grid->created_at(trans('admin.created_at'));
 
@@ -90,10 +90,9 @@ class OfficialMessageController extends MainController
         $form->text('content', trans('content'));
         $form->select('type', trans('type'))->options (
             [
-                1=>trans('system message'),
-                2=>trans('system announcement')
+                2=>trans('official message')
             ]
-        )->default (1);
+        )->default (2);
         $form->text('url', __('url'));
 
         return $form;
