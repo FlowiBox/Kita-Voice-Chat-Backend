@@ -184,7 +184,7 @@ class RoomController extends Controller
                     "imgbackground"=>$room->room_background?:"",
                     "roomIntro"=>$room->room_intro?:"",
                     "roomImg"=>$room->room_cover?:"",
-                    "room_type"=>$room->room_type
+                    "room_type"=>@$room->myType->name?:""
                 ]
             ];
             $json = json_encode ($data);
