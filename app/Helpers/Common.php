@@ -363,7 +363,7 @@ class Common{
         }
         $obj = [
             'followers'=>$followers_count + $f_add,
-            'followings'=>$followings_count + $f_add,
+            'followings'=>$followings_count,
             'friends'=>$friends_count + $fr_add,
             'visitors'=>$visitors_count + $vi_add
         ];
@@ -391,7 +391,7 @@ class Common{
             $f_add = 1;
         }
         $obj = [
-            'followers'=>$followers_count + $f_add,
+            'followers'=>$followers_count,
             'followings'=>$followings_count + $f_add,
             'friends'=>$friends_count + $fr_add,
             'visitors'=>$visitors_count + $vi_add
