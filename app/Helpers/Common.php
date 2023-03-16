@@ -381,7 +381,7 @@ class Common{
         $snap = self::fireBaseDatabase ($id,'','get');
         $followers_count = @(integer)$snap['followers']?:0;
         $followings_count = @(integer)$snap['followings']?:0;
-        $friends_count = @(integer)$snap['followings']?:0;
+        $friends_count = @(integer)$snap['friends']?:0;
         $visitors_count = @(integer)$snap['visitors']?:0;
         $path = $id;
         if (in_array ($request->user_id,$request->user ()->followers_ids()->toArray())){
