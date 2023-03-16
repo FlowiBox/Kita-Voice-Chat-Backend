@@ -14,4 +14,8 @@ class Agency extends Model
     {
         return $query->where('owner_id', $owner_id);
     }
+
+    public function owner(){
+        return $this->belongsTo (User::class,'app_owner_id','id');
+    }
 }

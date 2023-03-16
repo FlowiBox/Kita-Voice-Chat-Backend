@@ -15,7 +15,6 @@ class AgencyResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'owner'=>new UserResource($this->owner),
             'name'=>$this->name,
             'notice'=>$this->notice,
             'status'=>$this->status,
@@ -23,6 +22,7 @@ class AgencyResource extends JsonResource
             'url'=>$this->url,
             'img'=>$this->img,
             'contents'=>$this->contents,
+            'owner'=>new UserResource($this->owner),
         ];
     }
 }

@@ -249,4 +249,14 @@ class User extends Authenticatable
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
+    public function ownAgency(){
+        return $this->hasOne (Agency::class,'app_owner_id','id');
+    }
+
+    public function getIsAgentAttribute(){
+        return $this->ownAgency ()->exists ();
+    }
+
+
+
 }

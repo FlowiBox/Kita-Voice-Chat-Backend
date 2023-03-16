@@ -159,8 +159,10 @@ class AgencyController extends MainController
         }
         $ops2 = [];
         foreach (User::where('agency_id',0)->get() as $user){
-            $ops2[$user->id] = $user->uuid;
+            $ops2[$user->id] = $user->uuid.'_'.$user->name;
         }
+
+
 
         $form = new Form(new Agency);
 

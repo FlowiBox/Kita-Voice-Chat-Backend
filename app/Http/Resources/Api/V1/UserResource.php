@@ -131,6 +131,8 @@ class UserResource extends JsonResource
             'frame_num'=>$this->frames_count(),
             'bubble_num'=>$this->bubble_count(),
             'statics'=>$this->statics?:$statics,
+            'is_agent'=>$this->is_agent,
+            'my_agency'=>$this->ownAgency()->select('')
         ];
 
 
