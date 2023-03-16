@@ -312,7 +312,7 @@ class Common{
 
     }
 
-    public static function sendOfficialMessage($user_id,$title = '',$content = '',$type = 2){
+    public static function sendOfficialMessage($user_id,$title = '',$content = '',$type = 1){
         OfficialMessage::query ()->create (
             [
                 'title'=>$title,

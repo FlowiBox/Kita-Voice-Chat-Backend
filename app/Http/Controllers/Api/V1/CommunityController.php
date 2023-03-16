@@ -24,19 +24,22 @@ class CommunityController extends Controller
 //             ->whereNotIn('id',$ids)
             ->whereIn('user_id',  [0, $user_id])
             ->where ('type',1)
-            ->orderBy('created_at', 'desc')->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $official = OfficialMessage::query ()
 //             ->whereNotIn('id',$ids)
             ->whereIn('user_id',  [0, $user_id])
             ->where ('type',2)
-            ->orderBy('created_at', 'desc')->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $agency = OfficialMessage::query ()
 //             ->whereNotIn('id',$ids)
             ->whereIn('user_id',  [0, $user_id])
             ->where ('type',0)
-            ->orderBy('created_at', 'desc')->get();
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $data['sys'] = $sys;
         $data['official'] = $official;
