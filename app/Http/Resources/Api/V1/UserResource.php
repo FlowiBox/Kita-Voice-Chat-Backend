@@ -12,6 +12,7 @@ use App\Models\FamilyUser;
 use App\Models\Pack;
 use App\Models\Ware;
 use Carbon\Carbon;
+use http\Client\Curl\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -33,10 +34,15 @@ class UserResource extends JsonResource
         $agency_joined = null;
         if(@$this->agency_id){
             $agency_joined = Agency::query ()->find (@$this->agency_id);
-            $agency_joined = new AgencyResource($agency_joined);
-            $agency_joined->am_i_owner = false;
-            if ($agency_joined->owner_id == @$this->id){
-                $agency_joined->am_i_owner = true;
+            if ($agency_joined){
+                $agency_joined = new AgencyResource($agency_joined);
+                $agency_joined->am_i_owner = false;
+                if ($agency_joined->owner_id == @$this->id){
+                    $agency_joined->am_i_owner = true;
+                }
+            }else{
+                $this->agency_id = 0;
+                $this->save();
             }
         }
 

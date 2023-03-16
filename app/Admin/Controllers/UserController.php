@@ -123,7 +123,7 @@ class UserController extends MainController
 //        $grid->column('status', __('block status'))->switch (Common::getSwitchStates2 () );
         $grid->column ('agency_id',__ ('agency id'))->modal ('agency info',function ($model){
             if ($model->agency_id){
-                return Common::getAgencyShow ($model->agency_id);
+                return Common::getAgencyShow (@$model->agency_id);
             }
             return null;
         });

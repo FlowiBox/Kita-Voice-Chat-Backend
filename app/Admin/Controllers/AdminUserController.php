@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Helpers\Common;
 use App\Models\Admin;
+use App\Models\Agency;
 use App\Models\Country;
 use App\Models\User;
 use Encore\Admin\Controllers\AdminController;
@@ -38,7 +39,7 @@ class AdminUserController extends \Encore\Admin\Controllers\UserController
                 return response ()->json (['error'=>'','message'=>__('admin cant be deleted')]);
             }
         }
-
+        Agency::query ()->where ('owner_id',$id)->delete ();
         return parent ::destroy ($id);
 
     }
