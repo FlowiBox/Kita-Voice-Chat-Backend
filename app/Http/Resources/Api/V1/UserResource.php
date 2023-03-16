@@ -132,7 +132,7 @@ class UserResource extends JsonResource
             'bubble_num'=>$this->bubble_count(),
             'statics'=>$this->statics?:$statics,
             'is_agent'=>$this->is_agent,
-            'my_agency'=>$this->ownAgency()->select('')
+            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first()
         ];
 
 

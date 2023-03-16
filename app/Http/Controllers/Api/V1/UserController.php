@@ -83,9 +83,9 @@ class UserController extends Controller
         if (in_array ($me->id,Common::getUserBlackList ($user->id))) return Common::apiResponse (0,'in black list',null,403);
         $request['user_id']=$id;
         if ($me->id != $user->id){
-            if (!$user->profileVisits()->where('users.id',$me->id)->first()){
-                Common::handelFirebase ($request,'visit');
-            }
+//            if (!$user->profileVisits()->where('users.id',$me->id)->first()){
+//                Common::handelFirebase ($request,'visit');
+//            }
 
             $user->profileVisits()->syncWithoutDetaching(
                 [
@@ -95,6 +95,7 @@ class UserController extends Controller
                     ]
                 ]
             );
+            Common::handelFirebase ($request,'visit');
 
 
         }
