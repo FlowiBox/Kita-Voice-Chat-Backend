@@ -41,6 +41,7 @@ class UserResource extends JsonResource
                     $agency_joined->am_i_owner = true;
                 }
             }else{
+                AgencyJoinRequest::query ()->where ('agency_id',$this->agency_id)->delete();
                 $this->agency_id = 0;
                 $this->save();
             }
