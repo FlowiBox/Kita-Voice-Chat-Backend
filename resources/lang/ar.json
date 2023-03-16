@@ -138,6 +138,17 @@
     "user obtain": "حصل المستخدم على",
     "agency obtain": "حصلت الوكالة على",
     "at time": "وقت الانجاز",
-    "uuid": "معرف مميز"
+    "uuid": "معرف مميز",
+    "you achieve new target": "لقد حققت تارجت جديد",
+    "congratulations": "تهانينا",
+    "you are accepted in family": "تم قبولك في العائلة",
+    "your recharge success": "تم الشحن بنجاح",
+    "your exchange done": "تم الشحن بنجاح",
+    "recharge process": "عملية شحن",
+    "your recharge waiting for payment": "في انتظار اتمام الدفع",
+    "you obtained new vip level": "لقد حصلت على مستوى جيد vip",
+    "your buy process done": "عملية الشراء خاصتك تمت بنجاح",
+    "you normal level up" : "تم ترقية المستوى الخاص بك",
+    "you vip level up" : "تم ترقية المستوى الخاص بك"
 
 }

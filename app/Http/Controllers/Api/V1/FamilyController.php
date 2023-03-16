@@ -295,7 +295,7 @@ class FamilyController extends Controller
             if ($user && $request->status == 1){
                 $user->family_id = $req->family_id;
                 $user->save();
-                Common::sendOfficialMessage ($user->id,'congratulations','you are accepted in family');
+                Common::sendOfficialMessage ($user->id,__('congratulations'),__('you are accepted in family'));
             }
             DB::commit ();
             $reqs = FamilyUserResource::collection (FamilyUser::query ()->where ('family_id',$req->family_id)->where ('user_id','!=',$request->user ()->id)->get ());

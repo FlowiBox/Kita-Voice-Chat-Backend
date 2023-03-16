@@ -132,7 +132,7 @@ class MallController extends Controller
             $user->di -= $silver->coin;
             $user->save();
             DB::commit ();
-            Common::sendOfficialMessage ($user->id,'congratulations','your exchange done');
+            Common::sendOfficialMessage ($user->id,__('congratulations'),__('your exchange done'));
             return Common::apiResponse (1,'',new UserResource($user),200);
         }catch (\Exception $exception){
             DB::rollBack ();
@@ -170,10 +170,10 @@ class MallController extends Controller
                 ]
             );
             if ($log->status == 1){
-                Common::sendOfficialMessage ($user->id,'congratulations','your recharge success');
+                Common::sendOfficialMessage ($user->id,__('congratulations'),__('your recharge success'));
                 $user->increment ('di',$log->obtained_coins);
             }else{
-                Common::sendOfficialMessage ($user->id,'recharge process','your recharge waiting for payment');
+                Common::sendOfficialMessage ($user->id,__('recharge process'),__('your recharge waiting for payment'));
             }
             DB::commit ();
 
@@ -258,7 +258,7 @@ class MallController extends Controller
             );
             Common::handelVip ($vip,$user);
             DB::commit ();
-            Common::sendOfficialMessage ($user_id,'congratulations','you obtained new vip level');
+            Common::sendOfficialMessage ($user_id,__('congratulations'),__('you obtained new vip level'));
             return Common::apiResponse (1,'done',null,201);
         }catch (\Exception $exception){
             DB::rollBack ();

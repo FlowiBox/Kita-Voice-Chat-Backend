@@ -451,7 +451,7 @@ class UserController extends Controller
                         $pack->expire += ($qty * $ware->expire * 86400);
                         $user->decrement('di',$total_price);
                         DB::commit ();
-                        Common::sendOfficialMessage ($user->id,'congratulations','your buy process done');
+                        Common::sendOfficialMessage ($user->id,__('congratulations'),__('your buy process done'));
                         return Common::apiResponse (1,'success process');
                     }catch (\Exception $exception){
                         DB::rollBack ();
