@@ -346,8 +346,9 @@ class FamilyController extends Controller
 
         try {
             DB::beginTransaction ();
-            $user->family_id = null;
+            $user->family_id = 0;
             FamilyUser::query ()->where ('family_id',$family->id)->where ('user_id',$request->user_id)->delete ();
+            $user->save ();
             DB::commit ();
             return Common::apiResponse (1,'success', new FamilyResource(Family::find($family->id)),200);
         }catch (\Exception $exception){
