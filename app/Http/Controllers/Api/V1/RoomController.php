@@ -360,7 +360,7 @@ class RoomController extends Controller
         $room_info['top_user'] = $t_user?new UserResource($t_user):new \stdClass();
 
 
-        if($room_info['room_pass'] &&  $owner_id != $user_id){
+        if($room_info['room_pass'] &&  $owner_id != $user_id && !$request->ignorePassword){
             if(!$room_pass) return Common::apiResponse(false,__('The room is locked, please enter the password'),null,409);
             if($room_info['room_pass'] != $room_pass )  return Common::apiResponse(false,__('Password is incorrect, please re-enter'),null,410);
         }
@@ -526,16 +526,6 @@ class RoomController extends Controller
         $user = $request->user ();
         $user->now_room_uid = $room_info['owner_id'];
         $user->save();
-//        $timer_id = 0;
-//        if($owner_id == $user_id){
-//            $timer = LiveTime::query ()->create (
-//                [
-//                    'uid'=>$owner_id,
-//                    'start_time'=>time ()
-//                ]
-//            );
-//            $timer_id = $timer->id;
-//        }
 
         $d = [
             "messageContent"=>[
@@ -547,10 +537,12 @@ class RoomController extends Controller
         ];
         $json = json_encode ($d);
         if (!$request->is_update){
-            Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
-            Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,' انضم للغرفة');
+            if ($request->sendToZego){
+                Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
+                Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,' انضم للغرفة');
+            }
         }
-//        $room_info['timer_id'] = $timer_id;
+
         $room_info['password_status']=$room_info['room_pass']==""?false:true;
         if ($ia == 0 && $rv == '' && $user->id == $owner_id ){
             $tokens = $user->my_followers()->pluck('notification_id')->toArray();

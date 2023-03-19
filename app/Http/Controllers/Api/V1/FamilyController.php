@@ -181,6 +181,7 @@ class FamilyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
+
     public function update(Request $request, $id)
     {
         $user = $request->user ();
@@ -228,7 +229,6 @@ class FamilyController extends Controller
         }
 
     }
-
 
     public function join(Request $request){
         $user = $request->user ();
@@ -356,7 +356,6 @@ class FamilyController extends Controller
             return Common::apiResponse (0,'failed',null,400);
         }
     }
-
 
     public function getMembersList(Request $request){
         if (!$request->family_id) return Common::apiResponse (0,'missing params',null,422);
