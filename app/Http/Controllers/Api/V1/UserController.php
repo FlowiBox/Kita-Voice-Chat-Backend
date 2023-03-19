@@ -450,6 +450,8 @@ class UserController extends Controller
                     try {
                         $pack->expire += ($qty * $ware->expire * 86400);
                         $user->decrement('di',$total_price);
+                        $pack->save ();
+                        $user->save();
                         DB::commit ();
                         Common::sendOfficialMessage ($user->id,__('congratulations'),__('your buy process done'));
                         return Common::apiResponse (1,'success process');
@@ -461,6 +463,8 @@ class UserController extends Controller
                 }else{
                     return Common::apiResponse (0,'you have this item in your pack no need to buy it',null,405);
                 }
+            }else{
+                $pack->delete ();
             }
         }
 
