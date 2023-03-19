@@ -386,10 +386,11 @@ class Common{
         $friends_count = @(integer)$snap['friends']?:0;
         $visitors_count = @(integer)$snap['visitors']?:0;
         $path = $id;
-        if (in_array ($request->user_id,$request->user ()->followers_ids()->toArray())){
-            $fr_add = 1;
-        }
+
         if ($type == 'follow'){
+            if (in_array ($request->user_id,$request->user ()->followers_ids()->toArray())){
+                $fr_add = 1;
+            }
             $f_add = 1;
         }
         $obj = [
