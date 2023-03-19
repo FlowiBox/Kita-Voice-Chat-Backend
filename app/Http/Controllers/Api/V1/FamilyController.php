@@ -343,8 +343,9 @@ class FamilyController extends Controller
             return Common::apiResponse (0,'not found',null,404);
         }
         if (!$is_admin && ($family->user_id != $me->id)) return Common::apiResponse (0,'not allowed',null,403);
-        DB::beginTransaction ();
+
         try {
+            DB::beginTransaction ();
             $user->family_id = null;
             FamilyUser::query ()->where ('family_id',$family->id)->where ('user_id',$request->user_id)->delete ();
             DB::commit ();

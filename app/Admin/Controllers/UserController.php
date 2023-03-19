@@ -127,6 +127,7 @@ class UserController extends MainController
                 if (!$a){
                     $model->agency_id = 0;
                     $model->save();
+                    return null;
                 }
                 return Common::getAgencyShow (@$model->agency_id);
             }

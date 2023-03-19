@@ -67,11 +67,10 @@ class GiftLogController extends Controller
         $vip_level=Common::getLevel($data['user_id'],3);
         if($vip_level < $gift->vip_level)   return Common::apiResponse(0,'vip '.$gift->vip_level.' to send this gift');
         $to_arr=explode(',', $data['toUid']);
-        foreach ($to_arr as $k1 => &$v1) {
-            if(!in_array($v1,$vis_arr))    return Common::apiResponse(0,'User is not in this room',null,403);
-//            if($data['user_id'] == $v1)    return Common::apiResponse(0,'Can\'t give yourself a gift');
-        }
-        unset($v1);
+//        foreach ($to_arr as $k1 => &$v1) {
+//            if(!in_array($v1,$vis_arr))    return Common::apiResponse(0,'User is not in this room',null,403);
+//        }
+//        unset($v1);
 
 
         //Number of backpacks
