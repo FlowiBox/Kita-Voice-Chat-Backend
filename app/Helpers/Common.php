@@ -341,7 +341,6 @@ class Common{
 
     }
 
-
     public static function handelFirebase($request,$type = 'follow'){
         $f_add = 0;
         $fr_add = 0;

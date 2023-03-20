@@ -794,7 +794,8 @@ class RoomController extends Controller
             $ms = [
                 'messageContent'=>[
                     'message'=>'upMic',
-                    'userId'=>$user_id
+                    'userId'=>$user_id,
+                    'position'=>$position
                 ]
             ];
             $json = json_encode ($ms);
@@ -813,14 +814,14 @@ class RoomController extends Controller
         if (!$room) return Common::apiResponse (0,'room not found',null,404);
         if($result){
             $this->calcTime($data['user_id']);
-            $ms = [
-                "messageContent"=>[
-                    "message"=>"leaveMic",
-                    "userId"=>$data['user_id']
-                ]
-            ];
-            $json = json_encode ($ms);
-            Common::sendToZego ('SendCustomCommand',$room->id,$data['user_id'],$json);
+//            $ms = [
+//                "messageContent"=>[
+//                    "message"=>"leaveMic",
+//                    "userId"=>$data['user_id']
+//                ]
+//            ];
+//            $json = json_encode ($ms);
+//            Common::sendToZego ('SendCustomCommand',$room->id,$data['user_id'],$json);
             return Common::apiResponse(1,__('Success'));
         }else{
             return Common::apiResponse(0,__('Failed'),null,400);

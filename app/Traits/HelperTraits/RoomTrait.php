@@ -4,6 +4,7 @@
 namespace App\Traits\HelperTraits;
 
 
+use App\Helpers\Common;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Mic;
 use App\Models\Pk;
@@ -188,7 +189,15 @@ trait RoomTrait
         }
         //clear timer
         Db::table('time_logs')->where(['uid'=>$uid,'user_id'=>$user_id])->delete();
-
+        $ms = [
+            "messageContent"=>[
+                "message"=>"leaveMic",
+                "userId"=>$user_id,
+                "position"=>$position
+            ]
+        ];
+        $json = json_encode ($ms);
+        Common::sendToZego ('SendCustomCommand',$room->id,$user_id,$json);
         return $result;
     }
 
