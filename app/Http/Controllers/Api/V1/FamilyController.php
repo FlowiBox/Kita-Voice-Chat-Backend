@@ -246,7 +246,7 @@ class FamilyController extends Controller
             $user->save();
             return Common::apiResponse (0,'already joined',null,405);
         }
-        FamilyUser::query ()->where ('user_id',$user->id)->delete ();
+//        FamilyUser::query ()->where ('user_id',$user->id)->delete ();
         try {
             DB::beginTransaction ();
             $fu1 = new FamilyUser();
@@ -288,7 +288,7 @@ class FamilyController extends Controller
         if ($other){
             return Common::apiResponse (0,'user already joined to other family',null,403);
         }
-        FamilyUser::query ()->where ('user_id',$req->user_id)->where ('status',0)->delete ();
+
         $family = Family::query ()->find ($req->family_id);
         if (!$family) return Common::apiResponse (0,'not found',null,404);
         if ($request->status == 1 && $family->members_num >= $family->num) return Common::apiResponse (0,'family is full members',null,444);
@@ -303,6 +303,7 @@ class FamilyController extends Controller
                 Common::sendOfficialMessage ($user->id,__('congratulations'),__('you are accepted in family'));
             }
             DB::commit ();
+            FamilyUser::query ()->where ('user_id',$req->user_id)->where ('status',0)->where ('id','!=',$req->id)->delete ();
             $reqs = FamilyUserResource::collection (FamilyUser::query ()->where ('family_id',$req->family_id)->where ('user_id','!=',$request->user ()->id)->get ());
             return Common::apiResponse (1,'',$reqs,200);
         }catch (\Exception $exception){
