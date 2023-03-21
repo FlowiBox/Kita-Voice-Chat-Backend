@@ -86,8 +86,7 @@ Route::group(
         $router->resource ('tickets','TicketController');
         $router->resource ('pages','PageController');
         $router->resource ('exchanges','ExchangeController');
-
-
+        $router->resource ('boxes','BoxController');
 }
 );
 
