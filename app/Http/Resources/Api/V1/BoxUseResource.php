@@ -14,6 +14,18 @@ class BoxUseResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id'=>$this->id,
+            'user'=>new UserResource($this->user),
+            'coins'=>$this->coins,
+            'end_at'=>$this->end_at,
+            'room_uid'=>$this->room_uid,
+            'room_id'=>$this->room_id,
+            'users_num'=>$this->users_num,
+            'not_used_num'=>$this->not_used_num,
+            'type'=>$this->type == 1?'super':'normal',
+            'label'=>$this->label,
+            'image'=>$this->image,
+        ];
     }
 }

@@ -8,4 +8,8 @@ class BoxUse extends Model
 {
     protected $table = 'box_uses';
     protected $guarded = ['id'];
+
+    public function user(){
+        return $this->belongsTo (User::class,'user_id');
+    }
 }

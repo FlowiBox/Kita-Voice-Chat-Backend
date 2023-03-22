@@ -7,11 +7,13 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\EditRoomRequest;
+use App\Http\Resources\Api\V1\BoxUseResource;
 use App\Http\Resources\Api\V1\FamilyResource;
 use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Background;
+use App\Models\BoxUse;
 use App\Models\Family;
 use App\Models\GiftLog;
 use App\Models\LiveTime;
@@ -290,6 +292,8 @@ class RoomController extends Controller
 
         $room_info['owner_family'] = $family;
 
+        $boxes = BoxUse::query ()->where ('room_uid',$owner_id)->where ('not_used_num','>',0)->get ();
+        $room_info['boxes'] = BoxUseResource::collection ($boxes);
         if($room_info['room_status'] == 3) return Common::apiResponse(false,'The room has been banned, please contact customer service',null,408);
         //enter your room
         if($owner_id == $user_id){
