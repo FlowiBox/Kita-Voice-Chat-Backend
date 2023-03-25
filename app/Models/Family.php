@@ -122,38 +122,38 @@ class Family extends Model
     }
 
 
-//    public function getTodayRankAttribute($val){
-//        $gl = GiftLog::query ()->whereRaw('CAST(created_at AS DATE) = CAST(NOW() AS DATE)')->where (function ($q){
-//            $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
-//        })->sum('giftPrice');
-//        if ($val != $gl){
-//            $this->attributes['today_rank']=$gl;
-//            $this->save ();
-//        }
-//        return $gl;
-//    }
+    public function getTodayRankAttribute($val){
+        $gl = GiftLog::query ()->whereRaw('CAST(created_at AS DATE) = CAST(NOW() AS DATE)')->where (function ($q){
+            $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
+        })->sum('giftPrice');
+        if ($val != $gl){
+            $this->attributes['today_rank']=$gl;
+            $this->save ();
+        }
+        return $gl;
+    }
 
-//    public function getWeekRankAttribute($val){
-//        $gl = GiftLog::query ()->whereRaw('WEEK(CAST(created_at AS DATE)) = WEEK(CAST(NOW() AS DATE))')->where (function ($q){
-//            $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
-//        })->sum('giftPrice');
-//        if ($val != $gl){
-//            $this->attributes['week_rank']=$gl;
-//            $this->save ();
-//        }
-//        return $gl;
-//    }
+    public function getWeekRankAttribute($val){
+        $gl = GiftLog::query ()->whereRaw('WEEK(CAST(created_at AS DATE)) = WEEK(CAST(NOW() AS DATE))')->where (function ($q){
+            $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
+        })->sum('giftPrice');
+        if ($val != $gl){
+            $this->attributes['week_rank']=$gl;
+            $this->save ();
+        }
+        return $gl;
+    }
 
-//    public function getMonthRankAttribute($val){
-//        $gl = GiftLog::query ()->whereRaw('MONTH(CAST(created_at AS DATE)) = MONTH(CAST(NOW() AS DATE))')->where (function ($q){
-//            $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
-//        })->sum('giftPrice');
-//        if ($val != $gl){
-//            $this->attributes['month_rank']=$gl;
-//            $this->save ();
-//        }
-//        return $gl;
-//    }
+    public function getMonthRankAttribute($val){
+        $gl = GiftLog::query ()->whereRaw('MONTH(CAST(created_at AS DATE)) = MONTH(CAST(NOW() AS DATE))')->where (function ($q){
+            $q->where('sender_family_id',$this->id)->orWhere('receiver_family_id',$this->id);
+        })->sum('giftPrice');
+        if ($val != $gl){
+            $this->attributes['month_rank']=$gl;
+            $this->save ();
+        }
+        return $gl;
+    }
 
 
     public function setTodayRankAttribute(){
