@@ -8,6 +8,8 @@ class GiftLog extends Model
 {
     protected $table = 'gift_logs';
 
+    protected $guarded = ['id'];
+
     public function gift(){
         return $this->belongsTo (Gift::class,'giftId','id');
     }

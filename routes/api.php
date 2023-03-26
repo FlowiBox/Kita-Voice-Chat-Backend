@@ -245,6 +245,7 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::prefix ('box')->group (function (){
         Route::get ('list',[\App\Http\Controllers\Api\V1\BoxController::class,'index']);
         Route::post ('send',[\App\Http\Controllers\Api\V1\BoxController::class,'send']);
+        Route::post ('pickup',[\App\Http\Controllers\Api\V1\BoxController::class,'pick']);
     });
 });
 
