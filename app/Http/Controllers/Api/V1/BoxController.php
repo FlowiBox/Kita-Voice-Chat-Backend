@@ -51,7 +51,7 @@ class BoxController extends Controller
                     'end_at'=>now ()->addMinutes ($box->duration)->timestamp,
                     'room_uid'=>$room->uid,
                     'room_id'=>$room->id,
-                    'users_num'=>$box->users,
+                    'users_num'=>$request->users_num,
                     'not_used_num'=>$box->users,
                     'unused_coins'=>$box->coins,
                     'type'=>$box->type,
