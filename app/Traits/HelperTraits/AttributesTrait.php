@@ -35,4 +35,14 @@ trait AttributesTrait
 
         return $dr?:'';
     }
+
+    public static function pack_get($key,$user_id){
+        return Pack::query ()
+            ->where ('user_id',$user_id)
+            ->where ('type',$key)
+            ->where (function ($q){
+                $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
+            })
+            ->exists ();
+    }
 }

@@ -78,6 +78,16 @@ class UserResource extends JsonResource
             'bubble'=>0,
         ];
 
+        $previliges = [
+            'no_kick'=>Common::pack_get (9,$this->id),
+            'intro_animation'=>Common::pack_get (11,$this->id),
+            'wapel'=>Common::pack_get (12,$this->id),
+            'vip_gifts'=>Common::pack_get (14,$this->id),
+            'no_pan'=>Common::pack_get (15,$this->id),
+            'anonymous_man'=>Common::pack_get (17,$this->id),
+            'colored_name'=>Common::pack_get (18,$this->id),
+        ];
+
 
         $data = [
             'id'=>@$this->id,
@@ -139,7 +149,8 @@ class UserResource extends JsonResource
             'bubble_num'=>$this->bubble_count(),
             'statics'=>$this->statics?:$statics,
             'is_agent'=>$this->is_agent,
-            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first()
+            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first(),
+            'prev'=>$previliges
         ];
 
 
