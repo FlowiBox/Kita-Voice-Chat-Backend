@@ -51,13 +51,12 @@ class BoxController extends Controller
                     'end_at'=>now ()->addMinutes ($box->duration)->timestamp,
                     'room_uid'=>$room->uid,
                     'room_id'=>$room->id,
-                    'users_num'=>$request->users_num,
+                    'users_num'=>$box->users,
                     'not_used_num'=>$box->users,
                     'unused_coins'=>$box->coins,
                     'type'=>$box->type,
                     'label'=>$label,
                     'image'=>$box->image,
-
                 ]
             );
             $user->decrement ('di',$box->coins);
