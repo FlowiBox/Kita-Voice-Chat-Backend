@@ -52,6 +52,16 @@ class WareController extends MainController
                 8=>trans ('Badge'),
                 9=>trans ('NoKick'),
                 10=>trans ('Icon'),
+                11=>trans ('no kick '),
+                12=>trans ('intro animaion'),
+                13=>trans ('wapel'),
+                14=>trans ('hide country and last login'),
+                15=>trans ('vip gifts'),
+                16=>trans ('no pan '),
+                17=>trans ('hidden room'),
+                18=>trans ('anonymous man'),
+                19=>trans ('colored name'),
+                20=>trans ('profile visitors hide in'),
             ]
         );
         $grid->column('name',__ ('name'))->editable ();

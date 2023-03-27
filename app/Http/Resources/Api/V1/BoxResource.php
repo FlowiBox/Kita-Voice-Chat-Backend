@@ -22,6 +22,7 @@ class BoxResource extends JsonResource
             'id'=>$this->id,
             'type'=>$this->type == 1 ? 'super':'normal',
             'coins'=>$this->coins,
+            'users_num'=>$this->users,
             'image'=>$this->image,
             'is_label'=>$is_label
         ];
