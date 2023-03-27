@@ -57,6 +57,7 @@ class BoxController extends Controller
                     'type'=>$box->type,
                     'label'=>$label,
                     'image'=>$box->image,
+
                 ]
             );
             $user->decrement ('di',$box->coins);
