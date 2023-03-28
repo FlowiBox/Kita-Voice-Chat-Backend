@@ -262,16 +262,40 @@ class Common{
     public static function handelVip($vip,$user){
         $wares = Ware::query ()->where ('get_type',1)->where ('level',$vip->level)->get ();
         foreach ($wares as $ware){
-            Pack::query ()->create (
-                [
-                    'user_id'=>$user->id,
-                    'get_type'=>$ware->get_type,
-                    'type'=>$ware->type,
-                    'target_id'=>$ware->id,
-                    'num'=>1,
-                    'expire'=>now ()->addDays ($ware->expire)->timestamp
-                ]
-            );
+            Pack::query ()->where ('user_id',$user->id)
+                ->where ('expire','<',now ()->timestamp)
+                ->where ('expire','!=',0)
+                ->delete ();
+            $pack =  Pack::query ()
+                ->where ('user_id',$user->id)
+                ->where ('get_type',1)
+                ->where ('target_id',$ware->id)
+                ->where (function ($q){
+                    $q->where('expire','>=',now ()->timestamp)
+                        ->orWhere('expire',0);
+                })->first ();
+
+            if($pack){
+                if ($pack->expire == 0){
+                    throw new \Exception('already exists');
+                }else{
+                    $pack->expire = $ware->expire ? $pack->expire + ($ware->expire * 86400) : 0;
+                    $pack->save ();
+                }
+            }else{
+                Pack::query ()->create (
+                    [
+                        'user_id'=>$user->id,
+                        'get_type'=>$ware->get_type,
+                        'type'=>$ware->type,
+                        'target_id'=>$ware->id,
+                        'num'=>1,
+                        'expire'=>$ware->expire ? now ()->addDays ($ware->expire)->timestamp:0
+                    ]
+                );
+            }
+
+
         }
         $uvip = UserVip::query ()->where ('user_id',$user->id)->where (function ($q){
             $q->where('expire',0)->orWhere('expire','>',now ()->timestamp);
