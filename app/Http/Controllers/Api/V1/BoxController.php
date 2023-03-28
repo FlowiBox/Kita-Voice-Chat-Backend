@@ -74,6 +74,20 @@ class BoxController extends Controller
                 ]
             );
             DB::commit ();
+            $c = BoxUse::query ()->where ('room_uid',$room->uid)->where ('not_used_num','>',0)->count ();
+            $m = [
+                "messageContent"=>[
+                    "message"=>"showluckybox",
+                    "ownerBoxId"=>$user->id ,
+                    "ownerBoxName" =>$user->name ,
+                    "boxCoins" =>$box->coins,
+                    "boxId"=>$boxU->id,
+                    "boxType" => $box->type == 1 ?'super':'normal',
+                    "numOfBoxes" =>(integer)$c
+                ]
+            ];
+            $json = json_encode ($m);
+            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
             return Common::apiResponse (1,'',new BoxUseResource($boxU),200);
         }catch (\Exception $exception){
             DB::rollBack ();
@@ -94,8 +108,10 @@ class BoxController extends Controller
         $already_used = UserBoxGift::query ()->where('user_id',$user->id)->where ('box_uses_id',$box_use->id)->exists ();
         if ($already_used) return Common::apiResponse (0,'used it before',null,403);
         $coins = rand (0,($box_use->unused_coins/$box_use->not_used_num));
+        $fin = 0;
         if ($box_use->not_used_num == 1){
             $coins = $box_use->unused_coins;
+            $fin = 1;
         }
 
         try {
@@ -119,6 +135,26 @@ class BoxController extends Controller
             $box_use->decrement ('not_used_num',1);
             $user->increment ('di',$coins);
             DB::commit ();
+
+            $room = Room::query ()->where ('uid',$box_use->room_uid)->first ();
+            if ($fin == 1){
+                $c = BoxUse::query ()->where ('room_uid',$box_use->room_uid)->where ('not_used_num','>',0)->count ();
+                $owner = User::query ()->find ($box_use->user_id);
+                $m = [
+                    "messageContent"=>[
+                        "message"=>"hideluckybox",
+                        "ownerBoxId"=>@$owner->id ,
+                        "ownerBoxName" =>@$owner->name ,
+                        "boxCoins" =>$box_use->coins,
+                        "boxId"=>$box_use->id,
+                        "boxType" => $box_use->type == 1 ?'super':'normal',
+                        "numOfBoxes" =>(integer)$c
+                    ]
+                ];
+                $json = json_encode ($m);
+                Common::sendToZego ('SendCustomCommand',@$room->id,$user->id,$json);
+            }
+            Common::sendToZego_2 ('SendBroadcastMessage',@$room->id,$user->id,$user->name,"تهانينا لقد حصلت علي ($coins)");
             return Common::apiResponse (1,'ok',null,201);
         }catch (\Exception $exception){
             DB::rollBack ();
