@@ -82,9 +82,9 @@ Trait ZegoTrait
 
         ];
         try {
-
-        }catch (\Exception $exception){
             Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
+        }catch (\Exception $exception){
+
         }
         return ;
     }
@@ -111,7 +111,12 @@ Trait ZegoTrait
         $headers = [
 
         ];
-        $res = Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
+        try {
+            $res = Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
+        }catch (\Exception $exception){
+
+        }
+
         return $res;
     }
 
@@ -139,7 +144,12 @@ Trait ZegoTrait
         $headers = [
 
         ];
-        $res = Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
+        try {
+            $res = Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
+        }catch (\Exception $exception){
+
+        }
+
         return $res;
     }
 }
