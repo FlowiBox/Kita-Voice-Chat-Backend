@@ -48,7 +48,7 @@ Trait ZegoTrait
 
         ];
         try {
-            Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
+            Http::withHeaders ($headers)->acceptJson ()->timeout (20)->get ($url,$params)->json ();
         }catch (\Exception $exception){
 
         }

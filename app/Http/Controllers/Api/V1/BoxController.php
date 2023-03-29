@@ -87,11 +87,14 @@ class BoxController extends Controller
                 ]
             ];
             $json = json_encode ($m);
-            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+            try {
+                Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+            }catch (\Exception $exception){
+
+            }
             return Common::apiResponse (1,'',new BoxUseResource($boxU),200);
         }catch (\Exception $exception){
             DB::rollBack ();
-            dd ($exception);
             return Common::apiResponse (0,'fail',null,400);
         }
     }
