@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\GiftLogResource;
 use App\Models\Agency;
 use App\Models\GiftLog;
 use App\Models\Pk;
@@ -438,6 +439,19 @@ class GiftLogController extends Controller
     //increase room heat
     protected function addRoomHot($uid,$hot){
         DB::table('rooms')->where('uid',$uid)->increment('hot',$hot);
+    }
+
+
+    public function giftLogsList(Request $request){
+        $user = $request->user ();
+        $gl = GiftLog::select('giftId', DB::raw('SUM(giftNum) as t'))
+            ->where('receiver_id', $user->id)
+            ->where('giftId', '!=', 0)
+            ->groupBy('giftId')
+            ->orderByDesc('t')
+            ->with('gift')
+            ->get();
+        return Common::apiResponse (1,'ok',GiftLogResource::collection ($gl));
     }
 
 

@@ -47,8 +47,13 @@ Trait ZegoTrait
         $headers = [
 
         ];
-        $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params)->json ();
-        return $res;
+        try {
+            Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
+        }catch (\Exception $exception){
+
+        }
+
+        return ;
     }
 
     public static function sendToZego_2($Action,$RoomId,$UserId,$UserName,$MessageContent,$IsTest = 'false'){
@@ -76,8 +81,12 @@ Trait ZegoTrait
         $headers = [
 
         ];
-        $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params)->json ();
-        return $res;
+        try {
+
+        }catch (\Exception $exception){
+            Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
+        }
+        return ;
     }
 
     public static function sendToZego_3($Action,$RoomId,$UserId,$IsTest = 'false'){
@@ -102,7 +111,7 @@ Trait ZegoTrait
         $headers = [
 
         ];
-        $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params)->json ();
+        $res = Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
         return $res;
     }
 
@@ -130,7 +139,7 @@ Trait ZegoTrait
         $headers = [
 
         ];
-        $res = Http::withHeaders ($headers)->acceptJson ()->get ($url,$params)->json ();
+        $res = Http::withHeaders ($headers)->acceptJson ()->timeout (10)->get ($url,$params)->json ();
         return $res;
     }
 }

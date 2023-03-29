@@ -573,14 +573,18 @@ class RoomController extends Controller
     }
 
     public function calcTime($uid){
-        $timer = LiveTime::query ()->where ('uid',$uid)->whereIn ('end_time',[null,'',0])->first ();
+        $timer = LiveTime::query ()->where ('uid',$uid)->where('end_time',null)->first ();
         if ($timer){
             $hours = round((time () - $timer->start_time)/(60*60),2);
             $timer->end_time = time ();
             $timer->hours = $hours;
-            if ($hours >= 1){
-                $timer->days = 1;
+            $d = LiveTime::query ()->where ('uid',$uid)->whereDate ('created_at',today ())->where ('days','>=',1)->exists ();
+            if (!$d){
+                if ($hours >= 1){
+                    $timer->days = 1;
+                }
             }
+
             $timer->save ();
         }
     }
@@ -764,7 +768,7 @@ class RoomController extends Controller
         $i=0;
         foreach ($cp_arr as $k => &$va) {
             if(!$i){
-                $va['cp_xssm']= $va['cp_level'] >=7 ? $cp_xssm : '';
+                $va['cp_xssm']= $va['cp_level'] >= 7 ? $cp_xssm : '';
             }else{
                 $va['cp_xssm']='';
             }
@@ -786,15 +790,30 @@ class RoomController extends Controller
         $user['nick_color']=Common::getNickColorByVip($user_level);
         $res_arr['cp']=$cp_arr;
         $res_arr['user']=$user;
+
         if($res){
+
             //Remove mic sequence
             Common::delMicHand($user_id);
-            $timer = LiveTime::query ()->create (
-                [
-                    'uid'=>$user_id,
-                    'start_time'=>time ()
-                ]
-            );
+            LiveTime::query ()->where ('uid',$user_id)->where('end_time',null)->whereDate ('created_at','!=',today ())->delete ();
+            $t = LiveTime::query ()->where ('uid',$user_id)
+                ->where('end_time',null)
+                ->whereDate ('created_at',today ())
+                ->orderByDesc ('id')
+                ->first ();
+            if($t){
+                LiveTime::query ()->where ('uid',$user_id)->where('end_time',null)->where ('id','!=',$t->id)->delete ();
+            }
+
+            if(!$t){
+                LiveTime::query ()->create (
+                    [
+                        'uid'=>$user_id,
+                        'start_time'=>time ()
+                    ]
+                );
+            }
+
             $ms = [
                 'messageContent'=>[
                     'message'=>'upMic',
