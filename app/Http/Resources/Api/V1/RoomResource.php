@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api\V1;
 
 use App\Helpers\Common;
 use App\Http\Resources\CountryResource;
+use App\Models\BoxUse;
 use App\Models\Pk;
 use App\Models\User;
 use App\Repositories\User\UserRepo;
@@ -23,6 +24,7 @@ class RoomResource extends JsonResource
         $pk = Pk::query ()->where ('room_id',$this->id)->where ('status',1)->first ();
         $owner = $this->is_afk?1:0;
         $num = $this->visitors ()->count () + $owner;
+        $have_luck_box = BoxUse::query ()->where ('room_id',$this->id)->where ('not_used_num','>=',1)->exists ();
         $data = [
             'id'=>$this->id,
             'owner_id'=>$this->uid?:0,
@@ -46,7 +48,8 @@ class RoomResource extends JsonResource
                 'flag'=>'',
                 'lang'=>'',
                 'phone_code'=>''
-            ]
+            ],
+            'have_luck_box'=>$have_luck_box
         ];
         if ($request['show']){
             $data['room_users'] = Common::get_room_users (@$this->owner ()->id,$request->user ()->id);
