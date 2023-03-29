@@ -573,9 +573,9 @@ class RoomController extends Controller
     }
 
     public function calcTime($uid){
-        $timer = LiveTime::query ()->where ('uid',$uid)->where ('end_time','')->first ();
+        $timer = LiveTime::query ()->where ('uid',$uid)->whereIn ('end_time',[null,'',0])->first ();
         if ($timer){
-            $hours = round((time ()-$timer->start_time)/(60*60),2);
+            $hours = round((time () - $timer->start_time)/(60*60),2);
             $timer->end_time = time ();
             $timer->hours = $hours;
             if ($hours >= 1){
