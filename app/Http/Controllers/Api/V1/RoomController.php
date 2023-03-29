@@ -1055,16 +1055,6 @@ class RoomController extends Controller
 
     //kick out of the room
     public function out_room(Request $request){
-        //https://rtc-api.zego.im/?
-        //Action=KickoutUser&
-        //AppId=1381228&
-        //Timestamp=1672673866&
-        //Signature=a5e129db978cdfbd0485c7e3a2db1664&
-        //SignatureVersion=2.0&
-        //SignatureNonce=119a4f216892a749&
-        //IsTest=no&
-        //RoomId=156&
-        //UserId[]=2484dxcx
         $uid = $request->owner_id ? : 0;
         $black_id = $request->user_id ? : 0;
         $duration = $request->minutes ? : 5;
