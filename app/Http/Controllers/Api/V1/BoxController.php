@@ -89,6 +89,21 @@ class BoxController extends Controller
             $json = json_encode ($m);
             try {
                 Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+                if ($box->type == 1){
+                    $rooms = Room::where('room_status',1)->where(function ($q){
+                        $q->where('is_afk',1)->orWhere('room_visitor','!=','');
+                    })->get();
+                    $d2 = [
+                        "messageContent"=>[
+                            "message"=>"bannerSuperBox",
+                            'ownerRoomId'=>$room->uid,
+                        ]
+                    ];
+                    $json2 = json_encode ($d2);
+                    foreach ($rooms as $r){
+                        Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json2);
+                    }
+                }
             }catch (\Exception $exception){
 
             }
