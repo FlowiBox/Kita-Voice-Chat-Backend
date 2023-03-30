@@ -173,7 +173,7 @@ class BoxController extends Controller
                 Common::sendToZego ('SendCustomCommand',@$room->id,$user->id,$json);
             }
             Common::sendToZego_2 ('SendBroadcastMessage',@$room->id,$user->id,$user->name,"تهانينا لقد حصلت علي ($coins)");
-            return Common::apiResponse (1,'ok',null,201);
+            return Common::apiResponse (1,'ok',"$coins",200);
         }catch (\Exception $exception){
             DB::rollBack ();
             return Common::apiResponse (0,'fail',null,400);
