@@ -444,6 +444,10 @@ class GiftLogController extends Controller
 
     public function giftLogsList(Request $request){
         $user = $request->user ();
+        if ($request->user_id){
+            $user = User::query ()->find ($request->user_id);
+            if (!$user) return Common::apiResponse (0,'not found',null,404);
+        }
         $gl = GiftLog::select('giftId', DB::raw('SUM(giftNum) as t'))
             ->where('receiver_id', $user->id)
             ->whereHas('gift')
