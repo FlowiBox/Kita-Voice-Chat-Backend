@@ -446,6 +446,7 @@ class GiftLogController extends Controller
         $user = $request->user ();
         $gl = GiftLog::select('giftId', DB::raw('SUM(giftNum) as t'))
             ->where('receiver_id', $user->id)
+            ->whereHas('gift')
             ->where('giftId', '!=', 0)
             ->groupBy('giftId')
             ->orderByDesc('t')
