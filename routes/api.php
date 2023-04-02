@@ -235,6 +235,7 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::prefix ('exchange')->group (function (){
         Route::get ('/list',[\App\Http\Controllers\Api\V1\HomeController::class,'exchangeList']);
         Route::post ('/make',[\App\Http\Controllers\Api\V1\HomeController::class,'exchangeSave']);
+        Route::get ('/logs',[\App\Http\Controllers\Api\V1\HomeController::class,'exchangeLogs']);
     });
     Route::post ('send_to_zego',[\App\Http\Controllers\Api\V1\HomeController::class,'sendToZego']);
     Route::post ('get_room_mode',[\App\Http\Controllers\Api\V1\RoomController::class,'roomMode']);

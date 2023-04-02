@@ -25,6 +25,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -280,7 +281,8 @@ class HomeController extends Controller
                     'user_id'=>$user->id,
                     'diamonds'=>$ex->diamonds,
                     'value'=>$ex->value,
-                    'type'=>$ex->type
+                    'type'=>$ex->type,
+                    'operation_no'=>rand(11111111, 99999999)
                 ]
             );
             $user->coins -= $ex->diamonds;
@@ -298,6 +300,18 @@ class HomeController extends Controller
             return Common::apiResponse (0,$exception->getMessage (),null,400);
         }
 
+    }
+
+    public function exchangeLogs(Request $request){
+        $user = $request->user ();
+        $type = $request->type?:0;
+        $ex = ExchangeLog::query ()
+            ->where ('user_id',$user->id)
+            ->where ('type',$type)
+            ->selectRaw ('id,user_id,diamonds,value as coins,operation_no,status,created_at as date')
+            ->get ()
+        ;
+        return Common::apiResponse (1,'ok',$ex,200);
     }
 
 
