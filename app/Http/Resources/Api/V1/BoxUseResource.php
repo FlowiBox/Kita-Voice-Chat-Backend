@@ -14,6 +14,10 @@ class BoxUseResource extends JsonResource
      */
     public function toArray($request)
     {
+        $rem_time = now()->diffInSeconds($this->created_at->addSeconds(30));
+        if ($rem_time > 30){
+            $rem_time = 0;
+        }
         return [
             'id'=>$this->id,
             'user'=>new UserResource($this->user),
@@ -26,6 +30,7 @@ class BoxUseResource extends JsonResource
             'type'=>$this->type == 1?'super':'normal',
             'label'=>$this->label,
             'image'=>$this->image,
+            'rem_time'=>$this->type == 1 ? $rem_time : 0
         ];
     }
 }
