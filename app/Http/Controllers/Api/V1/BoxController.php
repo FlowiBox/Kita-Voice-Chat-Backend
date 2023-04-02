@@ -67,7 +67,7 @@ class BoxController extends Controller
                     'roomowner_id'=>$room->uid,
                     'giftName'=>'luck box',
                     'giftNum'=>1,
-                    'giftPrice'=>$box->coins,
+                    'giftPrice'=>$request->coins?:$box->coins,
                     'sender_id'=>$user->id,
                     'receiver_id'=>0,
                     'sender_family_id'=>$user->family_id,
@@ -80,7 +80,7 @@ class BoxController extends Controller
                     "message"=>"showluckybox",
                     "ownerBoxId"=>$user->id ,
                     "ownerBoxName" =>$user->name ,
-                    "boxCoins" =>$box->coins,
+                    "boxCoins" =>$request->coins?:$box->coins,
                     "boxId"=>$boxU->id,
                     "boxType" => $box->type == 1 ?'super':'normal',
                     "numOfBoxes" =>(integer)$c
@@ -97,6 +97,9 @@ class BoxController extends Controller
                         "messageContent"=>[
                             "message"=>"bannerSuperBox",
                             'ownerRoomId'=>$room->uid,
+                            'isRoomPassword'=>$room->room_pass ?true:false,
+                            'ownerBoxid'=>$user->id,
+                            'coins'=>$request->coins?:$box->coins
                         ]
                     ];
                     $json2 = json_encode ($d2);
