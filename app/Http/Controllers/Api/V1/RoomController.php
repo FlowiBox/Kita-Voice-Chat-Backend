@@ -292,7 +292,13 @@ class RoomController extends Controller
 
         $room_info['owner_family'] = $family;
 
-        $boxes = BoxUse::query ()->where ('room_uid',$owner_id)->where ('not_used_num','>',0)->get ();
+        $boxes = BoxUse::query ()
+            ->where ('room_uid',$owner_id)
+            ->where ('not_used_num','>',0)
+            ->whereDoesntHave ('picks',function ($q) use ($user_id){
+                $q->where('user_id',$user_id);
+            })
+            ->get ();
         $room_info['boxes'] = BoxUseResource::collection ($boxes);
         if($room_info['room_status'] == 3) return Common::apiResponse(false,'The room has been banned, please contact customer service',null,408);
         //enter your room

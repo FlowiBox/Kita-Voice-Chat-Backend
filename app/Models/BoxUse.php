@@ -12,4 +12,8 @@ class BoxUse extends Model
     public function user(){
         return $this->belongsTo (User::class,'user_id');
     }
+
+    public function picks(){
+        return $this->hasMany (UserBoxGift::class,'box_uses_id');
+    }
 }
