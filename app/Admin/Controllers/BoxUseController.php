@@ -10,7 +10,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
-class BoxUseController extends Controller
+class BoxUseController extends MainController
 {
     use HasResourceActions;
 
@@ -93,9 +93,7 @@ class BoxUseController extends Controller
         $grid->label('label');
         $grid->used_num('used_num');
         $grid->not_used_num('not_used_num');
-        $grid->created_at(trans('admin.created_at'));
-        $grid->updated_at(trans('admin.updated_at'));
-
+        $grid->disableCreateButton ();
         return $grid;
     }
 

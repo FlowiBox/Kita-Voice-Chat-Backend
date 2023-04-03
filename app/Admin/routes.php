@@ -87,6 +87,7 @@ Route::group(
         $router->resource ('pages','PageController');
         $router->resource ('exchanges','ExchangeController');
         $router->resource ('boxes','BoxController');
+        $router->resource ('thrown_boxes','BoxUseController');
 }
 );
 
