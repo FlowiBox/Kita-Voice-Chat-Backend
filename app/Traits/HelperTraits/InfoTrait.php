@@ -49,7 +49,11 @@ trait InfoTrait
     }
 
     public static function getAgencyShow($id){
-        $show = new Show(Agency::findOrFail($id));
+        $agency = Agency::find($id);
+        if (!$agency){
+            return null;
+        }
+        $show = new Show();
         $show->setResource ('/admin/agencies');
 
         $show->id('ID');
