@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
 use App\Models\Family;
 use App\Models\FamilyUser;
@@ -9,6 +10,7 @@ use App\Models\Pk;
 use App\Models\Room;
 use App\Models\User;
 use App\Observers\Api\V1\AgencyJoinRequestObserver;
+use App\Observers\Api\V1\AgencyObserver;
 use App\Observers\Api\V1\FamilyObserver;
 use App\Observers\Api\V1\FamilyUserObserver;
 use App\Observers\Api\V1\PKObserver;
@@ -41,10 +43,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         User::observe (UserObserver::class);
-        AgencyJoinRequest::observe (AgencyJoinRequestObserver::class);
         Room::observe(RoomObserver::class);
         Family::observe (FamilyObserver::class);
         FamilyUser::observe (FamilyUserObserver::class);
         Pk::observe (PKObserver::class);
+        Agency::observe (AgencyObserver::class);
+        AgencyJoinRequest::observe (AgencyJoinRequestObserver::class);
     }
 }

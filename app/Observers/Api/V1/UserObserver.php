@@ -73,6 +73,7 @@ class UserObserver
     public function deleted(User $user)
     {
         $user->profile ()->delete ();
+        AgencyJoinRequest::query ()->where ('user_id',$user->id)->delete ();
     }
 
     /**
