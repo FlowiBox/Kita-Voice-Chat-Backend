@@ -88,7 +88,9 @@ Route::group(
         $router->resource ('exchanges','ExchangeController');
         $router->resource ('boxes','BoxController');
         $router->resource ('thrown_boxes','BoxUseController');
-}
+        $router->resource ('reports','ReportController');
+        $router->post ('cashing','ReportController@cashing')->name ('cashing');
+    }
 );
 
 

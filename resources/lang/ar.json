@@ -151,6 +151,11 @@
     "you normal level up" : "تم ترقية المستوى الخاص بك",
     "you vip level up" : "تم ترقية المستوى الخاص بك",
     "boxes": "صندوق الحظ",
-    "thrown boxes": "الصناديق الملقاة"
+    "thrown boxes": "الصناديق الملقاة",
+    "target token usd": "تم سحبه من التارجت الحالى",
+    "target usd": "مبلغ التارجت الاجمالي",
+    "old usd": "مبالغ سابقة",
+    "due": "مبالغ مستحقة",
+    "let it empty to pay total": "اتركه فارغا لدفع مجمل المبلغ"
 
 }
