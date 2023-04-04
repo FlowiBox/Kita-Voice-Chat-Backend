@@ -57,6 +57,7 @@ class ReportController extends MainController {
             return (new \App\Admin\Actions\SalaryAction($this->id,'user'))->render () ;
         });
 
+
         return $grid;
     }
 
