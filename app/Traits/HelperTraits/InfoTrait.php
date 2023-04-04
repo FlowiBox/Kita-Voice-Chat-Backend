@@ -81,7 +81,11 @@ trait InfoTrait
     }
 
     public static function getAdminShow($id){
-        $show = new Show(Admin::findOrFail($id));
+        $admin = Admin::find($id);
+        if (!$admin){
+            return null;
+        }
+        $show = new Show($admin);
         $show->setResource ('admin/auth/users');
         $show->field('id', 'ID');
         $show->field('avatar', trans('admin.avatar'))->image ('',200);
