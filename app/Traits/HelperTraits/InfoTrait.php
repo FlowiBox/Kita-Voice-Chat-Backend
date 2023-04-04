@@ -53,7 +53,7 @@ trait InfoTrait
         if (!$agency){
             return null;
         }
-        $show = new Show();
+        $show = new Show($agency);
         $show->setResource ('/admin/agencies');
 
         $show->id('ID');
