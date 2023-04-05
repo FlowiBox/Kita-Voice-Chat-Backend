@@ -150,7 +150,6 @@ class LoginController extends Controller
 
     protected function sendPhoneCode(Request $request){
         $msg = Common::sendSMS ('+201271820459','test');
-        dd ($msg);
         if (!$request->phone){
             return Common::apiResponse (false,'require phone',null,422);
         }
