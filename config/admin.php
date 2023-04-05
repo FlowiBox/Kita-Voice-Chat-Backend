@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => 'Yai-admin',
+    'name' => env('APP_NAME', 'Laravel').'_Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<b>Yai</b> Chat',
+    'logo' => '<b>'.env('APP_NAME', 'Laravel').'</b> Chat',
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini' => '<b>YC</b>',
+    'logo-mini' => '<b>'.env('APP_NAME_F', 'L').'C</b>',
 
     /*
     |--------------------------------------------------------------------------
