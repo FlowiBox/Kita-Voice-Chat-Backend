@@ -253,8 +253,16 @@ class RoomController extends Controller
     {
         $room_pass = $request['room_pass'];
         $owner_id  = $request['owner_id'];
+        if ($request->type == 'random'){
+            $owner_id = Room::query ()
+                ->where('room_status',1)
+                ->where ('room_visitor','!=','')
+                ->orWhere('is_afk',1)
+                ->pluck ('uid')
+                ->random ();
+        }
         $user_id   = $request->user ()->id;
-
+        if (!$owner_id) return Common::apiResponse (0,'not found',null,404);
         $ia = DB::table ('rooms')->where ('uid',$owner_id)->value ('is_afk');
         $rv = DB::table ('rooms')->where ('uid',$owner_id)->value ('room_visitor');
 
@@ -267,7 +275,7 @@ class RoomController extends Controller
         $room_info = (array)DB::table('rooms','rooms')
             ->join('users as users','rooms.uid','=','users.id','left')
             ->join('room_categories as room_categories','rooms.room_type','=','room_categories.id','left')
-            ->where('rooms.uid',$request['owner_id'])
+            ->where('rooms.uid',$owner_id)
             ->select(['rooms.id as id','rooms.numid as room_id_num','rooms.mode as mode','rooms.uid as owner_id','rooms.room_status','rooms.room_name',
                         'rooms.room_cover','room_categories.name','rooms.room_cover','rooms.room_intro',
                         'rooms.room_pass','rooms.room_type','rooms.hot','rooms.room_background','rooms.room_admin',
@@ -455,10 +463,11 @@ class RoomController extends Controller
         $room_info['room_name']=  urldecode($room_info['room_name']);
 
         //homeowner information
-        $user=(array)DB::table('users')->select('id','dress_1','dress_4')->find($owner_id);
+        $user=DB::table('users')->select('id','dress_1','dress_4')->find($owner_id);
         if (!$user){
             return Common::apiResponse (false,'room owner may be deleted',null,404);
         }
+        $user = (array)$user;
         $txk=DB::table('wares')->where(['id'=>$user['dress_1']])->value('img1');
         $room_info['txk']=$txk;
         $room_info['mic_color']=DB::table('wares')->where(['id'=>$user['dress_4']])->value('color') ? : '#ffffff';

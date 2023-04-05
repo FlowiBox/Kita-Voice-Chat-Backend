@@ -33,7 +33,18 @@ class RoomRepo implements RoomRepoInterface {
             if ($req->type){
                 $q->where('room_type',$req->type);
             }
-        })->orderByDesc('hour_hot');
+        });
+
+        if ($req->filter == 'trend'){
+            $result->orderByDesc('session');
+        }
+        elseif ($req->filter == 'popular'){
+            $result->orderByDesc('visitor_count');
+        }
+        else{
+            $result->orderByDesc('hour_hot');
+        }
+
 
         if ($pp = $req->pp){ // pp = perPage
             return $result->paginate($pp);

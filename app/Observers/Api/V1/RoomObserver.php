@@ -43,15 +43,20 @@ class RoomObserver
 
 
     public function updating (Room $room){
+        $this->changeMode ($room);
         $this->resetRoomSession ($room);
+        $v = $room->room_visitor;
+        $av = explode (',',$v);
+        $room->visitor_count = count ($av);
     }
 
 
     public function saving(Room $room){
-
         $this->changeMode ($room);
         $this->resetRoomSession ($room);
-
+        $v = $room->room_visitor;
+        $av = explode (',',$v);
+        $room->visitor_count = count ($av);
     }
 
     public function changeMode($room){

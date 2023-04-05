@@ -25,7 +25,9 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-
+       if(!@$this->id){
+           return ;
+       }
         Pack::query ()
             ->where ('expire','!=',0)
             ->where ('expire','<',Carbon::now ()->timestamp)->delete ();
