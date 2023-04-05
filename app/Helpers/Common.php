@@ -316,12 +316,12 @@ class Common{
 
 
     public static function sendSMS($phone,$message){
-        $account_sid = 'AC70f332b505fea0cf99bdac577deedc33';
-        $auth_token = 'a23e3c14e13793aefb04d99fd0e453fd';
-        $twilio_number = "+15076206776";
-//        try {
+        $account_sid = \config ('twilio.sid');
+        $auth_token = \config ('twilio.api_key');
+        $twilio_number = \config ('twilio.from');
+        try {
             $client = new TwilioClint($account_sid, $auth_token);
-            $client->messages->create(
+            return $client->messages->create(
             // Where to send a text message (your cell phone?)
                 $phone,
                 array(
@@ -329,10 +329,9 @@ class Common{
                     'body' => $message
                 )
             );
-//        }catch (\Exception $exception){
-//
-//        }
-
+        }catch (\Exception $exception){
+            dd ($exception);
+        }
 
     }
 
