@@ -330,7 +330,7 @@ class Common{
                 )
             );
         }catch (\Exception $exception){
-            dd ($exception);
+
         }
 
     }
