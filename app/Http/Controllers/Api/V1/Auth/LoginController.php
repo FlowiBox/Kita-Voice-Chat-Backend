@@ -153,6 +153,10 @@ class LoginController extends Controller
         if (!$request->phone){
             return Common::apiResponse (false,'require phone',null,422);
         }
+        $count = Code::query ()->where ('phone',$request->phone)->count();
+        if ($count >= 5){
+            return Common::apiResponse (0,'too many send',null,444);
+        }
         $code = rand (111111,999999);
         Code::query ()->create (
             [
