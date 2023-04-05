@@ -316,9 +316,9 @@ class Common{
 
 
     public static function sendSMS($phone,$message){
-        $account_sid = \config ('twilio.sid');
-        $auth_token = \config ('twilio.api_key');
-        $twilio_number = \config ('twilio.from');
+        $account_sid = Common::getConf ('twilio_sid')?:\config ('twilio.sid');
+        $auth_token = Common::getConf ('twilio_api_key')?:\config ('twilio.api_key');
+        $twilio_number = Common::getConf ('twilio_from')?:\config ('twilio.from');
         try {
             $client = new TwilioClint($account_sid, $auth_token);
             return $client->messages->create(
