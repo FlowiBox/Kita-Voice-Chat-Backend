@@ -149,7 +149,7 @@ class LoginController extends Controller
     }
 
     protected function sendPhoneCode(Request $request){
-        $msg = Common::sendSMS ('+201271820459','test');
+
         if (!$request->phone){
             return Common::apiResponse (false,'require phone',null,422);
         }
@@ -160,9 +160,7 @@ class LoginController extends Controller
                 'code'=>$code
             ]
         );
-//        $client = new \CMText\TextClient('908ab716-9d9d-4143-a983-b6d74aee7d0e');
-//        $result = $client->SendMessage('Message_Text', 'CM.com', [ '201271820459' ]);
-//        dd ($result);
+        $msg = Common::sendSMS ($request->phone,$code);
         return Common::apiResponse (true,'code is sent to your phone',null,200);
     }
 
