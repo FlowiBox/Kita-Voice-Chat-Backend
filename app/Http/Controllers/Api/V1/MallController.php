@@ -269,4 +269,65 @@ class MallController extends Controller
     }
 
 
+    public function sendWare(Request $request){
+        $user = $request->user ();
+        $to_id = $request->to_id;
+        $to_user = User::query ()->find ($to_id);
+        $ware_id = $request->ware_id;
+        $qty = $request->qty ?:1;
+        if (!$ware_id || !$to_id) return Common::apiResponse (0,'missing params',null,422);
+        $ware = Ware::query()->where('id',$ware_id)
+            ->where ('enable',1)
+            ->whereIn ('get_type',[4,6])
+            ->first ();
+        if(!$ware) return Common::apiResponse (0,'item not found or not for sale',null,404);
+        if(!$to_user) return Common::apiResponse (0,'receiver user not found',null,404);
+        $pack = Pack::query ()->where ('user_id',$to_user->id)->where ('target_id',$ware_id)->first ();
+        $total_price = $ware->price * $qty;
+        if($user->di < $total_price) return Common::apiResponse (0,'Insufficient balance, please go to recharge!',null,407);
+        if($pack){
+            if ($pack->expire == 0) return Common::apiResponse (0,'you have this item in your pack no need to buy it',null,405);
+            if ($pack->expire > now ()->timestamp) {
+                if ($ware->expire != 0){
+                    DB::beginTransaction ();
+                    try {
+                        $pack->expire += ($qty * $ware->expire * 86400);
+                        $user->decrement('di',$total_price);
+                        $pack->save ();
+                        $user->save();
+                        DB::commit ();
+                        Common::sendOfficialMessage ($user->id,__('congratulations'),__('your send process done'));
+                        return Common::apiResponse (1,'success process');
+                    }catch (\Exception $exception){
+                        DB::rollBack ();
+                        return Common::apiResponse (0,'fail',null,400);
+                    }
+
+                }else{
+                    return Common::apiResponse (0,'user has this item in his pack no need to send it',null,405);
+                }
+            }else{
+                $pack->delete ();
+            }
+        }
+
+        DB::beginTransaction ();
+        try {
+            $arr['user_id']=$to_user->id;
+            $arr['type']=$ware->type;
+            $arr['get_type']=$ware->get_type;
+            $arr['target_id']=$ware->id;
+            $arr['num']=1;//$qty;
+            $arr['expire']= $ware->expire ? time()+($qty * $ware->expire * 86400) : 0;
+            $arr['is_read']=1;
+            Pack::query ()->create ($arr);
+            $user->decrement('di',$total_price);
+            DB::commit ();
+            return Common::apiResponse (1,'success process');
+        }catch (\Exception $exception){
+            DB::rollBack ();
+            return Common::apiResponse (0,'an error occurred please try again later!',null,400);
+        }
+    }
+
 }

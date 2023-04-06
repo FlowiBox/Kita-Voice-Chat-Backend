@@ -93,6 +93,7 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::prefix ('mall')->group (function (){
         Route::get ('wares',[\App\Http\Controllers\Api\V1\MallController::class,'index']);
         Route::post ('buy',[\App\Http\Controllers\Api\V1\UserController::class,'buyWare']);
+        Route::post ('send',[\App\Http\Controllers\Api\V1\MallController::class,'sendWare']);
     });
     Route::prefix ('gifts')->group (function (){
         Route::get ('/',[\App\Http\Controllers\Api\V1\GiftController::class,'index']);
