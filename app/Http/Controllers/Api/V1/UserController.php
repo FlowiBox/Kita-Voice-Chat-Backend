@@ -627,13 +627,16 @@ class UserController extends Controller
 
 
     public function chargeTo(Request $request){
-        $to = User::query ()->find ($request->to_id);
+        $to = User::query ()->where('uuid',$request->to_id)->first ();
         $from = $request->user ();
         $usd = $request->usd;
         if (!$usd || !$to){
             return Common::apiResponse (0,'missing params',422);
         }
-        $rate = Common::getConf ('one_usd_value_in_coins')?:100;
+        $rate = Common::getConf ('one_usd_value_in_coins');
+        if (!$rate){
+            return Common::apiResponse (0,'please set usd_value_in_coins in configs',422);
+        }
         $coins = $usd * $rate;
         if (($from->old_usd + $from->target_usd - $from->target_token_usd) < $usd){
             return Common::apiResponse (0,'balance not enough',405);
