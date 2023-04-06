@@ -23,6 +23,7 @@ use App\Traits\HelperTraits\RoomTrait;
 use App\Traits\HelperTraits\ZegoTrait;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Kreait\Firebase\Factory;
 use Twilio\Rest\Client as TwilioClint;
 
@@ -88,7 +89,9 @@ class Common{
     public static function upload($folder,$file){
         $file->store('/',$folder);
         $fileName = $file->hashName();
-        return $folder.DIRECTORY_SEPARATOR.$fileName;
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $shortName = Str::random (10).".$extension";
+        return $folder.DIRECTORY_SEPARATOR.$shortName;
     }
 
 

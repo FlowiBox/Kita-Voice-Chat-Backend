@@ -631,7 +631,7 @@ class UserController extends Controller
         $from = $request->user ();
         $usd = $request->usd;
         if (!$usd || !$to){
-            return Common::apiResponse (0,'missing params',422);
+            return Common::apiResponse (0,'not found',404);
         }
         $rate = Common::getConf ('one_usd_value_in_coins');
         if (!$rate){
