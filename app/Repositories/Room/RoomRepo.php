@@ -41,6 +41,11 @@ class RoomRepo implements RoomRepoInterface {
         elseif ($req->filter == 'popular'){
             $result->orderByDesc('visitor_count');
         }
+        elseif ($req->filter == 'festival'){
+            $result->orderByDesc('session')
+                ->orderByDesc('visitor_count')
+            ;
+        }
         else{
             $result->orderByDesc('hour_hot');
         }
