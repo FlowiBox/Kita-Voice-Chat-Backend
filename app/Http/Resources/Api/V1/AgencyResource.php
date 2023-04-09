@@ -14,7 +14,12 @@ class AgencyResource extends JsonResource
      */
     public function toArray($request)
     {
-
+        $owner = new \stdClass();
+        if ($this->app_owner_id == $request->user ()->id){
+            $owner = new \stdClass();
+        }else{
+            $owner = new UserResource($this->owner);
+        }
         return [
             'id'=>$this->id,
             'name'=>$this->name,
@@ -24,7 +29,7 @@ class AgencyResource extends JsonResource
             'url'=>$this->url,
             'img'=>$this->img,
             'contents'=>$this->contents,
-            'owner'=>new UserResource($this->owner),
+            'owner'=>$owner,
         ];
     }
 }

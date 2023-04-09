@@ -233,6 +233,10 @@ class FamilyController extends Controller
     public function join(Request $request){
         $user = $request->user ();
         $family = Family::query ()->find ($request->family_id);
+        $fw = Family::query ()->where ('app_owner_id',$user->id)->exists ();
+        if ($fw){
+            return Common::apiResponse (0,'already have one',null,405);
+        }
         if(!$family){
             return Common::apiResponse (0,'family not found',null,404);
         }
@@ -287,6 +291,12 @@ class FamilyController extends Controller
         $other = FamilyUser::query ()->where ('user_id',$req->user_id)->where ('status',1)->exists ();
         if ($other){
             return Common::apiResponse (0,'user already joined to other family',null,403);
+        }
+
+        $fw = Family::query ()->where ('app_owner_id',$req->user_id)->exists ();
+        if ($fw){
+            FamilyUser::query ()->where ('user_id',$req->user_id)->delete ();
+            return Common::apiResponse (0,'already have one',null,405);
         }
 
         $family = Family::query ()->find ($req->family_id);

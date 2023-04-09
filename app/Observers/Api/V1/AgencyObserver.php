@@ -16,8 +16,9 @@ class AgencyObserver
      */
     public function created(Agency $agency)
     {
-        //
+        User::query ()->where ('id',$agency->app_owner_id)->update (['agency_id'=>$agency->id]);
     }
+
 
     /**
      * Handle the Agency "updated" event.
@@ -27,7 +28,7 @@ class AgencyObserver
      */
     public function updated(Agency $agency)
     {
-        //
+        User::query ()->where ('id',$agency->app_owner_id)->update (['agency_id'=>$agency->id]);
     }
 
     /**
