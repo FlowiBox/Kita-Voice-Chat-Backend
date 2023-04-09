@@ -83,7 +83,9 @@ class BoxController extends Controller
                     "boxCoins" =>$request->coins?:$box->coins,
                     "boxId"=>$boxU->id,
                     "boxType" => $box->type == 1 ?'super':'normal',
-                    "numOfBoxes" =>(integer)$c
+                    "numOfBoxes" =>(integer)$c,
+                    "ownerBoxImage" =>$boxU->image,
+                    "ownerBoxUId"  =>$user->uuid
                 ]
             ];
             $json = json_encode ($m);
