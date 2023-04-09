@@ -84,7 +84,7 @@ class BoxController extends Controller
                     "boxId"=>$boxU->id,
                     "boxType" => $box->type == 1 ?'super':'normal',
                     "numOfBoxes" =>(integer)$c,
-                    "ownerBoxImage" =>$boxU->image,
+                    "ownerBoxImage" =>$user->avatar,
                     "ownerBoxUId"  =>$user->uuid
                 ]
             ];
@@ -115,6 +115,7 @@ class BoxController extends Controller
             return Common::apiResponse (1,'',new BoxUseResource($boxU),200);
         }catch (\Exception $exception){
             DB::rollBack ();
+            return $exception;
             return Common::apiResponse (0,'fail',null,400);
         }
     }
