@@ -20,7 +20,7 @@ class BoxUseResource extends JsonResource
         }
         return [
             'id'=>$this->id,
-            'user'=>new UserResource($this->user),
+            'uuid'=>@$this->user->uuid,
             'coins'=>$this->coins,
             'end_at'=>$this->end_at,
             'room_uid'=>$this->room_uid,
