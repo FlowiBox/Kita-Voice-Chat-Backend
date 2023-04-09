@@ -18,7 +18,7 @@ class ProfileResource extends JsonResource
         return [
             'image'=>$this->avatar?:'',
             'gender'=>$this->gender == 1 ? __ ('male') : __ ('female'),
-            'birthday'=>$this->birthday?:'',
+            'birthday'=>$this->birthday?Carbon::parse($this->birthday)->format ('Y-m-d'):'',
             'age'=>Carbon::parse ($this->birthday)->age,
             'province'=>$this->province?:'',
             'city'=>$this->city?:'',
