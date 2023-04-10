@@ -27,6 +27,9 @@ class RegisterController extends Controller
         $user = User::query ()->create(
             $request->validated()
         );
+        if (\request ('tags') && is_array (\request ('tags'))){
+            $user->tags()->attach(\request ('tags'));
+        }
         $user->is_points_first = 1;
         $user->save ();
         if (!$request->country_id){

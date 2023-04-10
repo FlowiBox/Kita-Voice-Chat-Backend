@@ -17,13 +17,13 @@ class RealsController extends Controller
         $tags = $user->tags()->pluck('tags.id')->toArray();
         $videos = Video::query ();
 
-            if ($t){
-                $videos = $videos->whereHas ('tags',function ($q) use ($tags){
-                    $q->whereIn('tags.id',$tags);
-                });
-            }
+        if ($t){
+            $videos = $videos->whereHas ('tags',function ($q) use ($tags){
+                $q->whereIn('tags.id',$tags);
+            });
+        }
 
-            $videos = $videos->orderBy('views_num','desc')
+        $videos = $videos->orderBy('views_num','desc')
             ->orderBy('likes_num','desc')
             ->orderBy('comments_num','desc')
             ->orderBy('shares_num','desc')

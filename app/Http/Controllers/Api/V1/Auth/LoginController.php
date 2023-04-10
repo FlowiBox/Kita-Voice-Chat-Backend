@@ -95,6 +95,9 @@ class LoginController extends Controller
                         'device_token'=>@$data['device_token']
                     ]
                 );
+                if (\request ('tags') && is_array (\request ('tags'))){
+                    $user->tags()->attach(\request ('tags'));
+                }
                 $country = Country::query ()->where('phone_code','101')->first ();
                 $user->country_id = @$country->id?:0;
                 $user->is_points_first = 1;
@@ -136,6 +139,9 @@ class LoginController extends Controller
                         'device_token'=>@$data['device_token']
                     ]
                 );
+                if (\request ('tags') && is_array (\request ('tags'))){
+                    $user->tags()->attach(\request ('tags'));
+                }
                 $country = Country::query ()->where('phone_code','101')->first ();
                 $user->country_id = @$country->id?:0;
                 $user->is_points_first = 1;
