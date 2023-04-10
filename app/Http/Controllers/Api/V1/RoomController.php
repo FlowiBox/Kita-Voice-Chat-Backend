@@ -800,7 +800,8 @@ class RoomController extends Controller
         }
 
         $user=(array)DB::table('users')->selectRaw('id,nickname')->find($user_id);
-        $user['avatar']=@User::query ()->find ($user_id)->profile->avatar;
+        $u = User::query ()->find ($user_id);
+        $user['avatar']=@$u->profile->avatar;
         $user_level=Common::getLevel($user_id,3);
         $user['nick_color']=Common::getNickColorByVip($user_level);
         $res_arr['cp']=$cp_arr;
@@ -833,7 +834,8 @@ class RoomController extends Controller
                 'messageContent'=>[
                     'message'=>'upMic',
                     'userId'=>$user_id,
-                    'position'=>$position
+                    'position'=>$position,
+                    'userName'=>@$u->name
                 ]
             ];
             $json = json_encode ($ms);
