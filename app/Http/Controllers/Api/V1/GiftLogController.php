@@ -233,7 +233,7 @@ class GiftLogController extends Controller
 //
 //        }
         $n = $data['num'];
-        $from_name = User::query ()->find ($data['user_id'])->value ('name');
+        $from_name = $request->user ()->name;
         Common::sendToZego_2 ('SendBroadcastMessage',$room->id,$data['user_id'],$from_name,"  $n x ارسل هدية  " ." قيمتها $gift->price ". " الى $to" );
         $return_arr['users']=$res;
         $return_arr['push']=$push;

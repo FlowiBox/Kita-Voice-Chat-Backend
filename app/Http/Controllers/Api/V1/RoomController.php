@@ -556,7 +556,7 @@ class RoomController extends Controller
         ];
         $json = json_encode ($d);
         if (!$request->is_update){
-            if ($request->sendToZego){
+            if ($request->sendToZego != 'no'){
                 Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
                 Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,' انضم للغرفة');
             }
