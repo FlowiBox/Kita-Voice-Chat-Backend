@@ -320,18 +320,28 @@ class Common{
 
 
     public static function sendSMS($phone,$message){
-        $account_sid = Common::getConf ('twilio_sid')?:\config ('twilio.sid');
-        $auth_token = Common::getConf ('twilio_api_key')?:\config ('twilio.api_key');
-        $twilio_number = Common::getConf ('twilio_from')?:\config ('twilio.from');
+        $account_sid = Common::getConf ('twilio_sid');
+        $auth_token = Common::getConf ('twilio_api_key');
+        $twilio_number = Common::getConf ('twilio_from');
+        $twilio_service = Common::getConf ('twilio_service');
         try {
             $client = new TwilioClint($account_sid, $auth_token);
+            if ($twilio_service){
+                $arr = [
+                    'from' => $twilio_number,
+                    "messagingServiceSid" => $twilio_service,
+                    'body' => $message
+                ];
+            }else{
+                $arr = [
+                    'from' => $twilio_number,
+                    'body' => $message
+                ];
+            }
             return $client->messages->create(
             // Where to send a text message (your cell phone?)
                 $phone,
-                array(
-                    'from' => $twilio_number,
-                    'body' => $message
-                )
+                $arr
             );
         }catch (\Exception $exception){
 
