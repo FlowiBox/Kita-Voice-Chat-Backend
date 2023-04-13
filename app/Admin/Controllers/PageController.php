@@ -82,12 +82,11 @@ class PageController extends Controller
         $grid = new Grid(new Page);
 
         $grid->id('ID');
-        $grid->type('type');
-        $grid->name('name');
-        $grid->url('url');
-        $grid->content('content');
-        $grid->created_at(trans('admin.created_at'));
-        $grid->updated_at(trans('admin.updated_at'));
+        $grid->type(__('type'));
+        $grid->name(__('name'));
+        $grid->url(__('url'));
+        $grid->content(__('content'));
+
 
         return $grid;
     }
@@ -123,10 +122,10 @@ class PageController extends Controller
         $form = new Form(new Page);
 
         $form->display('ID');
-        $form->text('type', 'type');
-        $form->text('name', 'name');
-        $form->text('url', 'url');
-        $form->textarea('content', 'content');
+        $form->text('type', __('type'));
+        $form->text('name', __('name'));
+        $form->text('url', __('url'));
+        $form->textarea('content', __('content'));
 
 
         return $form;
