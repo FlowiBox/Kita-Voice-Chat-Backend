@@ -431,8 +431,9 @@ class RoomController extends Controller
         }
 
 
-
-        $room_info['owner_avatar'] = @User::query ()->find($owner_id)->profile->avatar;
+        $owner_user = User::query ()->find($owner_id);
+        $room_info['owner_avatar'] = @$owner_user->profile->avatar;
+        $room_info['country'] = @$owner_user->country;
 
         $mykeep = DB::table('users')->where('id',$user_id)->value('mykeep');
         $mykeep_arr=explode(",", $mykeep);
