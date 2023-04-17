@@ -149,7 +149,7 @@ class UserResource extends JsonResource
             'intro_num'=>$this->intros_count(),
             'frame_num'=>$this->frames_count(),
             'bubble_num'=>$this->bubble_count(),
-            'statics'=>$this->statics?:$statics,
+            'statics'=>$this->handelStatics ($request)?:$statics,
             'is_agent'=>$this->is_agent,
 //            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first(),
             'prev'=>$previliges

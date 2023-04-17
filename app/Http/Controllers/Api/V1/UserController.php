@@ -64,7 +64,7 @@ class UserController extends Controller
     public function my_data(Request $request){
         $user = $request->user ();
         $this->unlock_dress($user->id);
-        $user->statics = $this->handelStatics ($request);
+//        $user->statics = $this->handelStatics ($request);
         $data = new UserResource($user);
         return Common::apiResponse (true,'',$data,200);
     }
