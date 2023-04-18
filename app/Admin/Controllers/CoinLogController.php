@@ -34,6 +34,7 @@ class CoinLogController extends MainController
             $filter->expand ();
             $filter->column(1/2, function ($filter) {
                 $filter->notEqual('user_id',__ ('uuid'));
+                $filter->between('created_at', 'from-to')->date();
             });
             $filter->column(1/2, function ($filter) {
                 $filter->like('method',__ ('method'));
