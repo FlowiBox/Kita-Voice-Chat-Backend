@@ -14,24 +14,22 @@ Trait ZegoTrait
     public static  $appId;
 
     public static function getSignatureNonce(){
-        self::$serverSecret = self::getConf('zego_server_secret');
-        self::$appId = self::getConf ('zego_app_id');
         return bin2hex(random_bytes(8));
     }
 
     public static function GenerateSignature()
     {
-        $str = static::$appId.static::getSignatureNonce ().static::$serverSecret.time();
+        $str = self::getConf ('zego_app_id').static::getSignatureNonce ().self::getConf('zego_server_secret').time();
         $signature = md5($str);
         return $signature;
     }
 
     public static function sendToZego($Action,$RoomId,$FromUserId,$MessageContent,$IsTest = 'false'){
         $url = 'https://rtc-api.zego.im';
-        $AppId = self::$appId;
+        $AppId = self::getConf ('zego_app_id');
         $SignatureNonce = self::getSignatureNonce ();
         $Timestamp = time ();
-        $str = $AppId.$SignatureNonce.static::$serverSecret.$Timestamp;
+        $str = $AppId.$SignatureNonce.self::getConf('zego_server_secret').$Timestamp;
         $signature = md5($str);
         $SignatureVersion = '2.0';
         $params = [
@@ -60,10 +58,10 @@ Trait ZegoTrait
 
     public static function sendToZego_2($Action,$RoomId,$UserId,$UserName,$MessageContent,$IsTest = 'false'){
         $url = 'https://rtc-api.zego.im';
-        $AppId = self::$appId;
+        $AppId = self::getConf ('zego_app_id');
         $SignatureNonce = self::getSignatureNonce ();
         $Timestamp = time ();
-        $str = $AppId.$SignatureNonce.static::$serverSecret.$Timestamp;
+        $str = $AppId.$SignatureNonce.self::getConf('zego_server_secret').$Timestamp;
         $signature = md5($str);
         $SignatureVersion = '2.0';
         $params = [
@@ -93,10 +91,10 @@ Trait ZegoTrait
 
     public static function sendToZego_3($Action,$RoomId,$UserId,$IsTest = 'false'){
         $url = 'https://rtc-api.zego.im';
-        $AppId = self::$appId;
+        $AppId = self::getConf ('zego_app_id');
         $SignatureNonce = self::getSignatureNonce ();
         $Timestamp = time ();
-        $str = $AppId.$SignatureNonce.static::$serverSecret.$Timestamp;
+        $str = $AppId.$SignatureNonce.self::getConf('zego_server_secret').$Timestamp;
         $signature = md5($str);
         $SignatureVersion = '2.0';
         $params = [
@@ -124,10 +122,10 @@ Trait ZegoTrait
 
     public static function sendToZego_4($Action,$RoomId,$fromUserId,$toUserId,$MessageContent,$IsTest = 'false'){
         $url = 'https://rtc-api.zego.im';
-        $AppId = self::$appId;
+        $AppId = self::getConf ('zego_app_id');
         $SignatureNonce = self::getSignatureNonce ();
         $Timestamp = time ();
-        $str = $AppId.$SignatureNonce.static::$serverSecret.$Timestamp;
+        $str = $AppId.$SignatureNonce.self::getConf('zego_server_secret').$Timestamp;
         $signature = md5($str);
         $SignatureVersion = '2.0';
         $params = [
