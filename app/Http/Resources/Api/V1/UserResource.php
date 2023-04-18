@@ -167,4 +167,46 @@ class UserResource extends JsonResource
         }
         return $data;
     }
+
+    public function handelStatics($request){
+        $user = $request->user();
+        $visitor = 0;
+        $fans = 0;
+        $friends = 0;
+        $income = 0;
+        $frame = 0;
+        $enteirs = 0;
+        $bubble = 0;
+        if ($request->visitor != null){
+            $visitor = (integer)$user->profileVisits()->count() - (integer)$request->visitor;
+        }
+        if ($request->fans != null){
+            $fans = (integer)$user->numberOfFans() - (integer)$request->fans;
+        }
+        if ($request->friends != null){
+            $friends = (integer)$user->numberOfFriends() - (integer)$request->friends;
+        }
+        if ($request->income != null){
+            $income = (integer)$user->coins - (integer)$request->income;
+        }
+        if ($request->frame != null){
+            $frame = (integer)$user->frames_count() - (integer)$request->frame;
+        }
+        if ($request->enteirs != null){
+            $enteirs = (integer)$user->intros_count() - (integer)$request->enteirs;
+        }
+        if ($request->bubble != null){
+            $bubble = (integer)$user->bubble_count() - (integer)$request->bubble;
+        }
+
+        return [
+            'visitor' => $visitor,
+            'fans' => $fans,
+            'friends' => $friends,
+            'income' => $income,
+            'frame' => $frame,
+            'enteirs' => $enteirs,
+            'bubble' => $bubble
+        ];
+    }
 }
