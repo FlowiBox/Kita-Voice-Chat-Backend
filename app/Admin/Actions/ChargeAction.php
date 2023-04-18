@@ -74,7 +74,7 @@ class ChargeAction extends Action
                     'donor_id'=> Auth::id (),
                     'donor_type'=>\auth ()->user ()->roles->first()->name,
                     'status'=>1,
-                    'trx'=>$randomString = Str::random(18)
+                    'trx'=>$randomString = rand(111111111111111111,999999999999999999)
                 ]
             );
             DB::commit ();

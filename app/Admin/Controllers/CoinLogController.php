@@ -56,6 +56,7 @@ class CoinLogController extends MainController
         $grid->donor_id(__('donor id'));
         $grid->donor_type(__('donor type'));
         $grid->status(__('status'));
+        $grid->trx(__('trx_no'));
 
         $this->extendGrid ($grid);
         return $grid;
