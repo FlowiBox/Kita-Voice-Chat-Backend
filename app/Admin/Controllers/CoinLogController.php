@@ -34,7 +34,8 @@ class CoinLogController extends MainController
             $filter->expand ();
             $filter->column(1/2, function ($filter) {
                 $filter->notEqual('user_id',__ ('uuid'));
-                $filter->between('created_at', 'from-to')->date();
+                $filter->notEqual('created_at','from')->date();
+                $filter->notEqual('updated_at','to')->date();
             });
             $filter->column(1/2, function ($filter) {
                 $filter->like('method',__ ('method'));
@@ -43,6 +44,12 @@ class CoinLogController extends MainController
         if (request ('user_id')){
             $user = User::query ()->where('uuid',request ('uuid'))->first ();
             $grid->model ()->where ('user_id',$user->id);
+        }
+        if (request ('created_at')){
+            $grid->model ()->where ('created_at','>=',request ('created_at'));
+        }
+        if(request ('updated_at')){
+            $grid->model ()->where ('created_at','<=',request ('updated_at'));
         }
         $grid->id('ID');
         $grid->paid_usd(__('paid usd'));
@@ -57,6 +64,9 @@ class CoinLogController extends MainController
         $grid->donor_type(__('donor type'));
         $grid->status(__('status'));
         $grid->trx(__('trx_no'));
+        $grid->column('created_at',__ ('admin.created_at'))->display (function (){
+            return $this->created_at->format('Y-m-d');
+        });
 
         $this->extendGrid ($grid);
         return $grid;
