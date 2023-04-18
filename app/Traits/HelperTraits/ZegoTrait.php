@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\Http;
 Trait ZegoTrait
 {
 
-    public static  $serverSecret = 'ba8914c16097d73d831f9d0441d13c2e';
-    public static  $appId = 299148760;
+    public static  $serverSecret;
+    public static  $appId;
 
     public static function getSignatureNonce(){
+        self::$serverSecret = self::getConf('zego_server_secret');
+        self::$appId = self::getConf ('zego_app_id');
         return bin2hex(random_bytes(8));
     }
 

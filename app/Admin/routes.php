@@ -90,6 +90,7 @@ Route::group(
         $router->resource ('thrown_boxes','BoxUseController');
         $router->resource ('reports','ReportController');
         $router->post ('cashing','ReportController@cashing')->name ('cashing');
+        $router->resource ('trxs','CoinLogController');
     }
 );
 
