@@ -256,8 +256,10 @@ class RoomController extends Controller
         if ($request->type == 'random'){
             $owner_id = Room::query ()
                 ->where('room_status',1)
-                ->where ('room_visitor','!=','')
-                ->orWhere('is_afk',1)
+                ->where('uid','!=',null)
+                ->where (function ($q){
+                    $q->where ('room_visitor','!=','') ->orWhere('is_afk',1);
+                })
                 ->pluck ('uid')
                 ->random ();
         }
