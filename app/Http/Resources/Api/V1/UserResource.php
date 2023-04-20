@@ -10,6 +10,7 @@ use App\Models\Country;
 use App\Models\Family;
 use App\Models\FamilyUser;
 use App\Models\Pack;
+use App\Models\Room;
 use App\Models\Ware;
 use Carbon\Carbon;
 use http\Client\Curl\User;
@@ -46,6 +47,13 @@ class UserResource extends JsonResource
                 AgencyJoinRequest::query ()->where ('agency_id',$this->agency_id)->delete();
                 $this->agency_id = 0;
                 $this->save();
+            }
+        }
+        $pass_status = false;
+        $now_room = Room::query ()->where ('uid',$this->now_room_uid)->first ();
+        if ($now_room){
+            if($now_room->room_pass){
+                $pass_status = true;
             }
         }
 
@@ -111,7 +119,8 @@ class UserResource extends JsonResource
             'now_room'=>[
                 'is_in_room'=>@$this->now_room_uid != 0,
                 'uid'=>@$this->now_room_uid,
-                'is_mine'=>@$this->id == $this->now_room_uid
+                'is_mine'=>@$this->id == $this->now_room_uid,
+                'password_status'=>$pass_status
             ],
             'agency'=>@$agency_joined,
             'is_agency_request'=>($reqs_count >= 1)?true:false,
