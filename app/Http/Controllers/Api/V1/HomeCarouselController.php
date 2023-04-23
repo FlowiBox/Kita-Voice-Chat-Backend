@@ -12,7 +12,7 @@ class HomeCarouselController extends Controller
 {
     public function index(Request $request){
         $items = HomeCarousel::query ()->where ('enable',1)->orderBy ('sort');
-        if ($request->type){
+        if ($request->type != null){
             $items = $items->where('type',$request->type);
         }
         $items = $items->get ();
