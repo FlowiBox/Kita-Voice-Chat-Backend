@@ -10,8 +10,12 @@ use Illuminate\Http\Request;
 
 class HomeCarouselController extends Controller
 {
-    public function index(){
-        $items = HomeCarousel::query ()->where ('enable',1)->orderBy ('sort')->get ();
+    public function index(Request $request){
+        $items = HomeCarousel::query ()->where ('enable',1)->orderBy ('sort');
+        if ($request->type){
+            $items = $items->where('type',$request->type);
+        }
+        $items = $items->get ();
         $data = HomeCarouselResource::collection ($items);
         return Common::apiResponse (1,'',$data);
     }
