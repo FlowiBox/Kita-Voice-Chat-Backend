@@ -76,7 +76,7 @@ class HomeCarouselController extends MainController
         $form->url('url', trans('url'));
         $form->switch('enable', trans('enable'))->states (Common::getSwitchStates ());
         $form->number('sort', trans('sort'));
-
+        $form->select ('type',trans ('type'))->options([0=>__ ('main'),1=>__ ('left'),2=>trans ('right')]);
         return $form;
     }
 }
