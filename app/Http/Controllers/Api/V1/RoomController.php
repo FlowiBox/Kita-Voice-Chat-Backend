@@ -434,6 +434,7 @@ class RoomController extends Controller
 
 
         $owner_user = User::query ()->find($owner_id);
+        $room_info['owner_name'] = @$owner_user->name;
         $room_info['owner_avatar'] = @$owner_user->profile->avatar;
         $room_info['country'] = @$owner_user->country;
 
