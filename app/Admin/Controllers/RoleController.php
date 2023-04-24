@@ -38,7 +38,7 @@ class RoleController extends AdminController
         $grid->column('updated_at', trans('admin.updated_at'));
 
         $grid->actions(function (Grid\Displayers\Actions $actions) {
-            if ($actions->row->slug == 'administrator') {
+            if ($actions->row->slug == 'administrator' || $actions->row->slug == 'admin' || $actions->row->slug == 'developer' ) {
                 $actions->disableDelete();
             }
         });
@@ -89,9 +89,10 @@ class RoleController extends AdminController
 
         $form = new Form(new $roleModel());
 
-        $form->display('id', 'ID');
-
-        $form->text('slug', trans('admin.slug'))->rules('required');
+//        $form->display('id', 'ID');
+        if (request ()->is ('admin/auth/roles/create')){
+            $form->text('slug', trans('admin.slug'))->rules('required');
+        }
         $form->text('name', trans('admin.name'))->rules('required');
         $form->listbox('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
 
