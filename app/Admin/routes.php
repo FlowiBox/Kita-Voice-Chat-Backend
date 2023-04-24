@@ -21,6 +21,7 @@ Route::group(
     ],
     function (Router $router) {
         $router->resource ('auth/users','AdminUserController');
+        $router->resource ('auth/roles','RoleController');
         //resources
         $router->resource('users', 'UserController',[
             'names'=>[

@@ -328,7 +328,7 @@ class Common{
             $client = new TwilioClint($account_sid, $auth_token);
             if ($twilio_service){
                 $arr = [
-                    'from' => $twilio_number,
+//                    'from' => $twilio_number,
                     "messagingServiceSid" => $twilio_service,
                     'body' => $message
                 ];
