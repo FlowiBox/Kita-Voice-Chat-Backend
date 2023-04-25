@@ -171,8 +171,8 @@ class LoginController extends Controller
             ]
         );
         $msg = Common::sendSMS ($request->phone,$code);
-//        dd ($msg);
         return Common::apiResponse (true,'code is sent to your phone',null,200);
+
     }
 
     protected function loginWithPhoneCode($fields){

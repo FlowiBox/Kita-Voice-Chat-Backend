@@ -20,6 +20,11 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    public function __construct ()
+    {
+
+    }
+
     public function index(Content $content)
     {
 
@@ -74,31 +79,24 @@ class HomeController extends Controller
 
     public function infoBox(Content $content)
     {
-        if (in_array ('admin',Auth::user ()->roles()->pluck('name')->toArray())){
-            $content->title('Info box');
-            $content->description('Description...');
-
-            $content->row(function ($row) {
-                $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route ('admin.users'), User::query ()->count ()));
-                $row->column(3, new InfoBox(__('Rooms'), 'wechat', 'green', route ('admin.rooms'), Room::query ()->count ()));
-                $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route ('admin.gifts'), Gift::query ()->count ()));
-                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
-            });
-
-        }else{
-            $content->title('Info box');
-            $content->description('Description...');
-            $content->row(function ($row) {
-                $users = User::query ()->whereNotNull ('agency_id')->where ('agency_id',@Auth::user ()->agency_id)->count ();
-                $targets = UserTarget::query ()->whereNotNull ('agency_id')->where ('agency_id',@Auth::user ()->agency_id)->count ();
-
-                $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route ('admin.users'), $users));
-                $row->column(3, new InfoBox(__('Targets'), 'wechat', 'green', route ('admin.user_targets'), $targets));
-                $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route ('admin.gifts'), Gift::query ()->count ()));
-                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
-            });
+        if (Auth::check () && !in_array ('admin',Auth::user ()->roles()->pluck('slug')->toArray()) && request ()->is ('admin')) {
+            if (in_array ('agency',Auth::user ()->roles()->pluck('slug')->toArray())){
+                return redirect()->to(config('admin.route.prefix').'/ag');
+            }
+            elseif (in_array ('charger',Auth::user ()->roles()->pluck('slug')->toArray())){
+                return redirect()->to(config('admin.route.prefix').'/ch');
+            }
+            abort (404);
         }
+            $content->title('Info box');
+            $content->description('Description...');
 
+            $content->row(function ($row) {
+                $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route (config('admin.route.prefix').'.users'), User::query ()->count ()));
+                $row->column(3, new InfoBox(__('Rooms'), 'wechat', 'green', route (config('admin.route.prefix').'.rooms'), Room::query ()->count ()));
+                $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route (config('admin.route.prefix').'.gifts'), Gift::query ()->count ()));
+                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route (config('admin.route.prefix').'.wares'), Ware::query ()->count ()));
+            });
         return $content;
     }
 

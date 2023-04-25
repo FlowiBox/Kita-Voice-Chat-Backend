@@ -6,18 +6,19 @@ use Encore\Admin\Facades\Admin;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
-Admin::routes();
+
+agency::routes();
 
 Route::group(
     [
-        'prefix'        => config('admin.route.prefix'),
-        'namespace'     => config('admin.route.namespace'),
+        'prefix'        => config('agency.route.prefix'),
+        'namespace'     => config('agency.route.namespace'),
         'middleware'    => [
             'web',
-            'admin',
+            'agency',
             'multiLanguage',
         ],
-        'as'            => config('admin.route.prefix') . '.',
+        'as'            => config('agency.route.prefix') . '.',
     ],
     function (Router $router) {
         $router->resource ('auth/users','AdminUserController');
@@ -92,21 +93,9 @@ Route::group(
         $router->resource ('reports','ReportController');
         $router->post ('cashing','ReportController@cashing')->name ('cashing');
         $router->resource ('trxs','CoinLogController');
-
-
-        Route::prefix('ag')->name ('agency.')->namespace ('AgencyControllers')->group (function (Router $router){
-            $router->get('/', 'HomeController@infoBox')->name('home');
-            $router->get('/users', 'UserController@index')->name ('users');
-            $router->get('/userTarget','UserTargetController@index')->name ('userTarget');
-            $router->get('/target','AgencyTargetController@index')->name ('targets');
-        });
-
-        Route::prefix('ch')->name ('charger.')->namespace ('ChargerControllers')->group (function (Router $router){
-            $router->get('/', 'HomeController@infoBox')->name('home');
-        });
-
     }
 );
+
 
 
 

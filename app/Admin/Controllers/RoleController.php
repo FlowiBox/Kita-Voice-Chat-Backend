@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
 class RoleController extends AdminController
@@ -15,6 +16,31 @@ class RoleController extends AdminController
     protected function title()
     {
         return trans('admin.roles');
+    }
+
+    public function edit($id, Content $content)
+    {
+        return $content
+            ->title($this->title())
+            ->description($this->description['edit'] ?? trans('admin.edit'))
+            ->body($this->form1()->edit($id));
+    }
+    public function create(Content $content)
+    {
+        return $content
+            ->title($this->title())
+            ->description($this->description['create'] ?? trans('admin.create'))
+            ->body($this->form());
+    }
+
+    public function store()
+    {
+        return $this->form()->store();
+    }
+
+    public function update ( $id )
+    {
+        return $this->form1()->update($id);
     }
 
     /**
@@ -38,7 +64,12 @@ class RoleController extends AdminController
         $grid->column('updated_at', trans('admin.updated_at'));
 
         $grid->actions(function (Grid\Displayers\Actions $actions) {
-            if ($actions->row->slug == 'administrator' || $actions->row->slug == 'admin' || $actions->row->slug == 'developer' ) {
+            if ($actions->row->slug == 'administrator' ||
+                $actions->row->slug == 'admin' ||
+                $actions->row->slug == 'developer' ||
+                $actions->row->slug == 'agency' ||
+                $actions->row->slug == 'charger'
+            ) {
                 $actions->disableDelete();
             }
         });
@@ -89,10 +120,25 @@ class RoleController extends AdminController
 
         $form = new Form(new $roleModel());
 
-//        $form->display('id', 'ID');
-        if (request ()->is ('admin/auth/roles/create')){
-            $form->text('slug', trans('admin.slug'))->rules('required');
-        }
+
+        $form->text('slug', trans('admin.slug'))->rules('required');
+
+        $form->text('name', trans('admin.name'))->rules('required');
+        $form->listbox('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
+
+        $form->display('created_at', trans('admin.created_at'));
+        $form->display('updated_at', trans('admin.updated_at'));
+
+        return $form;
+    }
+
+    public function form1()
+    {
+        $permissionModel = config('admin.database.permissions_model');
+        $roleModel = config('admin.database.roles_model');
+
+        $form = new Form(new $roleModel());
+
         $form->text('name', trans('admin.name'))->rules('required');
         $form->listbox('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
 
