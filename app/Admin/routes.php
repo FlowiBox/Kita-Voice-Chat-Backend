@@ -99,10 +99,12 @@ Route::group(
             $router->get('/users', 'UserController@index')->name ('users');
             $router->get('/userTarget','UserTargetController@index')->name ('userTarget');
             $router->get('/target','AgencyTargetController@index')->name ('targets');
+            $router->get ('/charges','ChargeController@index')->name ('charges');
         });
 
         Route::prefix('ch')->name ('charger.')->namespace ('ChargerControllers')->group (function (Router $router){
             $router->get('/', 'HomeController@infoBox')->name('home');
+            $router->get ('/charges','ChargeController@index')->name ('charges');
         });
 
     }

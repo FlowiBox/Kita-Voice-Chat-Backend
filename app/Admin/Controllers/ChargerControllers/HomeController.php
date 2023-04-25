@@ -60,8 +60,8 @@ class HomeController extends Controller
 
             $row->column(3, new InfoBox(__('balance'), 'dollar', 'aqua', route (config('admin.route.prefix').'.home'), $balance));
             $row->column(3, new InfoBox(__('Targets'), 'wechat', 'green', route (config('admin.route.prefix').'.user_targets'), $targets));
-            $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route (config('admin.route.prefix').'.gifts'), Gift::query ()->count ()));
-            $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route (config('admin.route.prefix').'.wares'), Ware::query ()->count ()));
+//            $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route (config('admin.route.prefix').'.gifts'), Gift::query ()->count ()));
+//            $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route (config('admin.route.prefix').'.wares'), Ware::query ()->count ()));
         });
         return $content;
     }

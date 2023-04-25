@@ -79,12 +79,13 @@ class HomeController extends Controller
         $content->title('Info box');
         $content->description('Description...');
         $content->row(function ($row) {
+            $balance = @Auth::user ()->di;
             $users = User::query ()->whereNotNull ('agency_id')->where ('agency_id',@Auth::user ()->agency_id)->count ();
             $targets = UserTarget::query ()->whereNotNull ('agency_id')->where ('agency_id',@Auth::user ()->agency_id)->count ();
 
             $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route (config('admin.route.prefix').'.agency.users'), $users));
             $row->column(3, new InfoBox(__('Targets'), 'wechat', 'green', route (config('admin.route.prefix').'.agency.userTarget'), $targets));
-//            $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route (config('admin.route.prefix').'.gifts'), Gift::query ()->count ()));
+            $row->column(3, new InfoBox(__('Balance'), 'dollar', 'yellow', route (config('admin.route.prefix').'.home'), $balance));
 //            $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route (config('admin.route.prefix').'.wares'), Ware::query ()->count ()));
         });
         return $content;
