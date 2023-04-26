@@ -84,7 +84,9 @@ class PageController extends Controller
         $grid->id('ID');
         $grid->type(__('type'));
         $grid->name(__('name'));
-        $grid->url(__('url'));
+        $grid->column('link',__('url'))->display (function (){
+            return url ("page/$this->name");
+        });
         $grid->content(__('content'));
 
 
@@ -104,7 +106,6 @@ class PageController extends Controller
         $show->id('ID');
         $show->type('type');
         $show->name('name');
-        $show->url('url');
         $show->content('content');
         $show->created_at(trans('admin.created_at'));
         $show->updated_at(trans('admin.updated_at'));
@@ -124,7 +125,6 @@ class PageController extends Controller
         $form->display('ID');
         $form->text('type', __('type'));
         $form->text('name', __('name'));
-        $form->text('url', __('url'));
         $form->textarea('content', __('content'));
 
 
