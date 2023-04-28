@@ -107,6 +107,9 @@ Route::group(
             $router->get ('/charges','ChargeController@index')->name ('charges');
         });
 
+        $router->get ('/wares_dedicate','DedicateWareController@index');
+        $router->get ('/vips_dedicate','DedicateVipController@index');
+
     }
 );
 
