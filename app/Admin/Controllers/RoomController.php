@@ -131,17 +131,17 @@ class RoomController extends MainController
 
         $form->display('ID');
         $form->text('numid', __('numid'));
-        $form->select ('uid',trans ('owner'))->options (function (){
-            $users = User::query ()->whereDoesntHave ('rooms')->get ();
-            $arr = [];
-            foreach ($users as $user){
-                $arr[$user->id]=($user->nickname?:$user->name).'[id='.$user->id.']';
-            }
-            if (count ($users) < 1){
-                $arr[0]='no users dose not have room found';
-            }
-            return $arr;
-        });
+//        $form->select ('uid',trans ('owner'))->options (function (){
+//            $users = User::query ()->whereDoesntHave ('rooms')->get ();
+//            $arr = [];
+//            foreach ($users as $user){
+//                $arr[$user->id]=($user->nickname?:$user->name).'[id='.$user->id.']';
+//            }
+//            if (count ($users) < 1){
+//                $arr[0]='no users dose not have room found';
+//            }
+//            return $arr;
+//        });
         $form->switch('room_status', __('room_status'))->options (Common::getSwitchStates ());
         $form->text('room_name', trans('room name'));
         $form->image('room_cover', trans('room cover'));
