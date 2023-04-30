@@ -13,6 +13,7 @@ use App\Models\Country;
 use App\Models\Exchange;
 use App\Models\ExchangeLog;
 use App\Models\GiftLog;
+use App\Models\Image;
 use App\Models\LiveTime;
 use App\Models\OVip;
 use App\Models\Room;
@@ -319,6 +320,13 @@ class HomeController extends Controller
         $user = $request->user ();
         $trx = CoinLog::query ()->where ('user_id',$user->id)->orderByDesc ('id')->get ();
         return Common::apiResponse (1,'',TrxResource::collection ($trx),200);
+    }
+
+    public function getImages(){
+        $pk_images = Image::query ()->where ('type',0)->where ('status',1)->select ('id','name','url')->get ();
+        $vip_images = OVip::query ()->select ('id','name','level','img')->get ();
+        $data = ['pk_images'=>$pk_images,'vip_images'=>$vip_images];
+        return Common::apiResponse (1,'ok',$data,200);
     }
 
 }

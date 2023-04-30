@@ -553,7 +553,8 @@ class RoomController extends Controller
         $d = [
             "messageContent"=>[
                 "message"=>"userEntro",
-                "entroImg"=>Common::getUserDress($user->id,$user->dress_3,6,'img2')?:Common::getUserDress($user->id,$user->dress_3,6,'img1'),
+//                "entroImg"=>Common::getUserDress($user->id,$user->dress_3,6,'img2')?:Common::getUserDress($user->id,$user->dress_3,6,'img1'),
+                "entroImg"=>$user->dress_3,
                 'userName'=>$user->name?:$user->nickname,
                 'userImge'=>$user->avatar
             ]

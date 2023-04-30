@@ -92,6 +92,7 @@ Route::group(
         $router->resource ('reports','ReportController');
         $router->post ('cashing','ReportController@cashing')->name ('cashing');
         $router->resource ('trxs','CoinLogController');
+        $router->resource ('images','ImageController');
 
 
         Route::prefix('ag')->name ('agency.')->namespace ('AgencyControllers')->group (function (Router $router){

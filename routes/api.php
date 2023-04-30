@@ -243,6 +243,7 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::post ('change_room_mode',[\App\Http\Controllers\Api\V1\RoomController::class,'changeMode']);
 
     Route::get ('trxs',[\App\Http\Controllers\Api\V1\HomeController::class,'trxLog']);
+    Route::get ('images',[\App\Http\Controllers\Api\V1\HomeController::class,'getImages']);
 
     Route::prefix ('box')->group (function (){
         Route::get ('list',[\App\Http\Controllers\Api\V1\BoxController::class,'index']);
