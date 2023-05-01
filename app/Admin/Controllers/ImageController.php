@@ -87,12 +87,6 @@ class ImageController extends Controller
         $grid->column('url',__('url'))->image ('',30);
         $grid->column('type',__('type'));
         $grid->column('status',__('status'))->switch (Common::getSwitchStates ());
-//        $grid->title('title');
-//        $grid->description('description');
-//        $grid->admin_user_id('admin_user_id');
-//        $grid->user_id('user_id');
-//        $grid->created_at(trans('admin.created_at'));
-//        $grid->updated_at(trans('admin.updated_at'));
 
         return $grid;
     }
@@ -116,7 +110,7 @@ class ImageController extends Controller
 
         $form->display('ID');
         $form->text('name', __('name'));
-        $form->image('url', __('url'));
+        $form->file('url', __('url'));
         $form->select('type', __('type'))->options ([0=>__('pk'),1=>__('other')]);
         $form->switch('status', __('status'))->states (Common::getSwitchStates ());
 
