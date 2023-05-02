@@ -1429,6 +1429,7 @@ class RoomController extends Controller
 //            return Common::apiResponse(0,'not allowed');
 //        }
         $roomVisitor=DB::table('rooms')->where('uid',$uid)->value('room_visitor');
+        $room = Room::query ()->where('uid',$uid)->first();
         $vis_arr= !$roomVisitor ? [] : explode(",", $roomVisitor);
         if(!in_array($user_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room',null,404);
 
@@ -1445,6 +1446,13 @@ class RoomController extends Controller
         $str=implode(",", $spe_arr);
         $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_speak'=>$str]);
         if($res){
+            $ms = [
+                'messageContent'=>[
+                    'message'=>'banFromWriting',
+                    'userId'=>$user_id
+                ]
+            ];
+            Common::sendToZego ('SendCustomCommand',$room->id,$uid,json_encode ($ms));
             return Common::apiResponse(1,'Succeeded adding writing ban for 3 minutes');
         }else{
             return Common::apiResponse(0,'Failed to add writing ban',null,400);
