@@ -157,7 +157,7 @@ class WareController extends MainController
         $form->image('show_img', trans('img'));
         $form->image('img1', trans('img'));
         $form->file('img2', trans('svg'));
-        $form->file('img3', trans('video'));
+//        $form->file('img3', trans('video'));
         $form->color('color', trans('color'));
         $form->number('expire', trans('expire(in days)'))->placeholder (trans ('0 if permanent'));
         $form->switch('enable', trans('enable'))->states (Common::getSwitchStates ());

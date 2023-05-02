@@ -3,6 +3,9 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Actions\ChargeAction;
+use App\Admin\Actions\DeletePackAction;
+use App\Admin\Actions\DeleteUserVipAction;
+use App\Admin\Actions\EditPackExpireAction;
 use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\Charge;
@@ -10,6 +13,7 @@ use App\Models\Country;
 use App\Models\Pack;
 use App\Models\User;
 use App\Models\UserTarget;
+use App\Models\UserVip;
 use App\Models\Ware;
 use App\Traits\AdminTraits\AdminControllersTrait;
 use Carbon\Carbon;
@@ -73,10 +77,12 @@ class UserController extends MainController
                 $user = User::find($id);
                 $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $user->old_usd + $user->target_usd - $user->target_token_usd));
             }
-        )->row (__('pack'))
-            ->row (function ($row) use ($id){
+        )->row ("<h3>".__('pack')."</h3>")->row (function ($row) use ($id){
             $row->column(12, $this->packList($id));
         })
+            ->row ("<h3>".__('vips')."</h3>")->row (function ($row) use ($id){
+                $row->column(12, $this->vipList($id));
+            })
         ;
     }
 
@@ -261,46 +267,46 @@ class UserController extends MainController
         $form->text('google_id', __('google id'));
 //        $form->switch ('is_host',__('is host'))->options (Common::getSwitchStates ());
         $form->switch ('status',__('block status'))->options (Common::getSwitchStates2 ());
-        $form->html(function (){
-            if (!$this->intro){
-                return __('empty');
-            }
-            return "<img width='50' title='intro img' src='".asset ('storage').'/'.$this->intro."'>";
-        });
-        $form->select ('dress_3',__ ('intro'))->options (function (){
-            $arr = [0=>__ ('empty')];
-            $pack = Pack::query ()->where ('user_id',@$this->id)->where ('type',6)->where (function ($q){
-                $q->where ('expire',0)->orWhere ('expire','>',Carbon::now ()->timestamp);
-            })->get ();
-
-            foreach ($pack as $item){
-                $ware = Ware::find(@$item->target_id);
-                if ($ware){
-                    $arr[$ware->id]=$ware->name;
-                }
-            }
-            return $arr;
-        });
-        $form->html(function (){
-            if (!$this->frame){
-                return __('empty');
-            }
-            return "<img width='50' title='intro img' src='".asset ('storage').'/'.$this->frame."'>";
-        });
-        $form->select ('dress_1',__ ('frame'))->options (function (){
-            $arr = [0=>__ ('empty')];
-            $pack = Pack::query ()->where ('user_id',@$this->id)->where ('type',4)->where (function ($q){
-                $q->where ('expire',0)->orWhere ('expire','>',Carbon::now ()->timestamp);
-            })->get ();
-
-            foreach ($pack as $item){
-                $ware = Ware::find(@$item->target_id);
-                if ($ware){
-                    $arr[$ware->id]=$ware->name;
-                }
-            }
-            return $arr;
-        });
+//        $form->html(function (){
+//            if (!$this->intro){
+//                return __('empty');
+//            }
+//            return "<img width='50' title='intro img' src='".asset ('storage').'/'.$this->intro."'>";
+//        });
+//        $form->select ('dress_3',__ ('intro'))->options (function (){
+//            $arr = [0=>__ ('empty')];
+//            $pack = Pack::query ()->where ('user_id',@$this->id)->where ('type',6)->where (function ($q){
+//                $q->where ('expire',0)->orWhere ('expire','>',Carbon::now ()->timestamp);
+//            })->get ();
+//
+//            foreach ($pack as $item){
+//                $ware = Ware::find(@$item->target_id);
+//                if ($ware){
+//                    $arr[$ware->id]=$ware->name;
+//                }
+//            }
+//            return $arr;
+//        });
+//        $form->html(function (){
+//            if (!$this->frame){
+//                return __('empty');
+//            }
+//            return "<img width='50' title='intro img' src='".asset ('storage').'/'.$this->frame."'>";
+//        });
+//        $form->select ('dress_1',__ ('frame'))->options (function (){
+//            $arr = [0=>__ ('empty')];
+//            $pack = Pack::query ()->where ('user_id',@$this->id)->where ('type',4)->where (function ($q){
+//                $q->where ('expire',0)->orWhere ('expire','>',Carbon::now ()->timestamp);
+//            })->get ();
+//
+//            foreach ($pack as $item){
+//                $ware = Ware::find(@$item->target_id);
+//                if ($ware){
+//                    $arr[$ware->id]=$ware->name;
+//                }
+//            }
+//            return $arr;
+//        });
 
         return $form;
     }
@@ -309,7 +315,7 @@ class UserController extends MainController
 
     protected function packList($id){
         $grid = new Grid(new Pack);
-
+        $grid->model ()->where ('user_id',$id);
         $grid->id('ID');
         $grid->column('user_id',__ ('user id'));
         $grid->column('get_type',__ ('get type'))->using (
@@ -345,8 +351,47 @@ class UserController extends MainController
             return __ ('no time');
         });
 
-        $grid->disableActions ();
+        $grid->actions (function ($actions){
+            $actions->disableDelete();
+            $actions->disableEdit();
+            $actions->disableView();
+            $actions->add(new DeletePackAction());
+            $actions->add(new EditPackExpireAction());
+        });
+
         $grid->disableCreateButton ();
+        $grid->disableFilter ();
+        $grid->disableRowSelector ();
+        $grid->disableExport ();
+
+        return $grid;
+    }
+
+    protected function vipList($id){
+        $grid = new Grid(new UserVip());
+        $grid->model ()->where ('user_id',$id);
+        $grid->id('ID');
+        $grid->column('user_id',__ ('user id'));
+        $grid->column ('level',__ ('level'));
+        $grid->column('expire',__ ('expire'))->display (function ($row){
+            if ($this->expire){
+                return Carbon::createFromTimestamp($this->expire)->format('Y-m-d H:i:s');
+            }
+            return __ ('no time');
+        });
+
+        $grid->actions (function ($actions){
+            $actions->disableDelete();
+            $actions->disableEdit();
+            $actions->disableView();
+            $actions->add(new DeleteUserVipAction());
+//            $actions->add(new EditPackExpireAction());
+        });
+
+        $grid->disableCreateButton ();
+        $grid->disableFilter ();
+        $grid->disableRowSelector ();
+        $grid->disableExport ();
 
         return $grid;
     }
