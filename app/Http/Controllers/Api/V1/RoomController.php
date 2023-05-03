@@ -1438,9 +1438,9 @@ class RoomController extends Controller
         $spe_arr= !$roomSpeak ? [] : explode(",", $roomSpeak);
         foreach ($spe_arr as $k => &$v) {
             $arr=explode("#",$v);
-            if($arr[0] == $user_id) return Common::apiResponse(0,'This user is already on the ban list',null,444);
+            if($arr[0] == $user_id) return Common::apiResponse(0,'This user is already on the ban list',null,405);
         }
-        $shic=time() + 180;
+        $shic=time() + 18000;
         $jinyan=$user_id."#".$shic;
         $spe_arr=array_merge($spe_arr,[$jinyan]);
         $str=implode(",", $spe_arr);
@@ -1453,7 +1453,7 @@ class RoomController extends Controller
                 ]
             ];
             Common::sendToZego ('SendCustomCommand',$room->id,$uid,json_encode ($ms));
-            return Common::apiResponse(1,'Succeeded adding writing ban for 3 minutes');
+            return Common::apiResponse(1,'Succeeded adding writing ban for');
         }else{
             return Common::apiResponse(0,'Failed to add writing ban',null,400);
         }

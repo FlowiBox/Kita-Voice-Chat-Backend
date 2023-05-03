@@ -16,11 +16,11 @@ class Stripe
     }
 
     public function view(){
-        if(Session::has('stripe_payment') && Session::get('customer_order_info')){
-            $array=Session::get('customer_order_info');
+        if(Session::has('stripe_payment') && Session::get('order_info')){
+            $array=Session::get('order_info');
             $amount=$array['amount'];
             $user_id= domain_info('user_id');
-            $data=Getway::where('user_id',$user_id)->where('category_id',$array['getway_id'])->first();
+            $data=Gateway::where('user_id',$user_id)->where('category_id',$array['getway_id'])->first();
             $info=json_decode($data->content);
 
             $credentials['stripe_key']=$info->stripe_key;
