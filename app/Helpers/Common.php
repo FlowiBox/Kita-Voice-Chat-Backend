@@ -281,9 +281,9 @@ class Common{
 
             if($pack){
                 if ($pack->expire == 0){
-                    throw new \Exception('already exists');
+//                    throw new \Exception('already exists');
                 }else{
-                    $pack->expire = $ware->expire ? $pack->expire + ($ware->expire * 86400) : 0;
+                    $pack->expire = $vip->expire ? $pack->expire + ($vip->expire * 86400) : time ();
                     $pack->save ();
                 }
             }else{
@@ -294,7 +294,7 @@ class Common{
                         'type'=>$ware->type,
                         'target_id'=>$ware->id,
                         'num'=>1,
-                        'expire'=>$ware->expire ? now ()->addDays ($ware->expire)->timestamp:0
+                        'expire'=>$vip->expire ? now ()->addDays ($vip->expire)->timestamp : time ()
                     ]
                 );
             }
