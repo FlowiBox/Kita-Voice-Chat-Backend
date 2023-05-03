@@ -36,7 +36,7 @@ class UserTargetController extends MainController
         $grid->column('user_id',__('user id'))->modal ('user info',function ($model){
             return Common::getUserShow ($model->user_id);
         });
-        $grid->column ('user_id')->display (function (){
+        $grid->column ('uuid',__('uuid'))->display (function (){
             $user = User::query ()->find ($this->user_id);
             return @$user->uuid;
         });
