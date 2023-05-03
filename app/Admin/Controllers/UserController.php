@@ -314,7 +314,7 @@ class UserController extends MainController
 
 
     protected function packList($id){
-        Pack::query ()->where ('expire','<',time ())->delete();
+        Pack::query ()->where ('expire','!=',0)->where ('expire','<',time ())->delete();
         $grid = new Grid(new Pack);
         $grid->model ()->where ('user_id',$id);
         $grid->id('ID');
@@ -370,7 +370,7 @@ class UserController extends MainController
 
     protected function vipList($id){
 
-        UserVip::query ()->where ('expire','<',time ())->delete ();
+        UserVip::query ()->where ('expire','!=',0)->where ('expire','<',time ())->delete ();
 
         $grid = new Grid(new UserVip());
         $grid->model ()->where ('user_id',$id);
