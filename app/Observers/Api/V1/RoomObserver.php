@@ -77,8 +77,8 @@ class RoomObserver
 
     public function resetRoomSession($room){
         $owner_in = $room->is_afk;
-        $visitors = explode (',',$room->room_visitor);
-        if (count ($visitors) < 1 && $owner_in != 1){
+        if (!$room->room_visitor && $owner_in != 1){
+
             $room->session = 0;
             $room->room_speak = null;
         }

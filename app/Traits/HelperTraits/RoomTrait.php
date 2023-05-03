@@ -142,10 +142,13 @@ trait RoomTrait
     public static function quit_hand($uid,$user_id){
         $Visitor=DB::table('rooms')->where(['uid'=>$uid])->value('room_visitor');
         $room_visitor=explode(',', $Visitor);
+        $room = Room::query ()->where('uid',$uid)->first ();
         //homeowner exits room
         if($uid == $user_id){
-            DB::table('rooms')->where('uid',$uid)->update(['is_afk'=>0]);
-            // return $Visitor;
+            if ($room){
+                $room->update (['is_afk'=>0]);
+            }
+            Room::query ()->where('uid',$uid)->update(['is_afk'=>0]);
         }
         if( $uid != $user_id && !in_array($user_id, $room_visitor)){
             return $Visitor;
@@ -156,7 +159,10 @@ trait RoomTrait
             }
         }
         $new_visitor=trim(implode(',', $room_visitor),',');
-        DB::table('rooms')->where('uid',$uid)->update(['room_visitor'=>$new_visitor]);
+        if ($room){
+            $room->update (['room_visitor'=>$new_visitor]);
+        }
+        Room::query ()->where('uid',$uid)->update(['room_visitor'=>$new_visitor]);
         //mic
         self::go_microphone_hand($uid,$user_id);
         //Remove mic
