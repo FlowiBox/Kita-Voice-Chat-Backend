@@ -80,6 +80,8 @@ class RoomObserver
         $visitors = explode (',',$room->room_visitor);
         if (count ($visitors) < 1 && $owner_in != 1){
             $room->session = 0;
+            $room->room_speak = null;
         }
+
     }
 }
