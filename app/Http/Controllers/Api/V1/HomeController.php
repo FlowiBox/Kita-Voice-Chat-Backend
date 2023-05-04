@@ -328,16 +328,16 @@ class HomeController extends Controller
         $pk_images = Image::query ()->where ('type',0)->where ('status',1)->select ('id','name','url')->get ();
         $vip_images = OVip::query ()->select ('id','name','level','img')->get ();
         foreach ($vip_images as $k=>&$image){
-            $image->frames =  Ware::query ()->where ('get_type',1)
+            $image->frame =  Ware::query ()->where ('get_type',1)
                 ->where ('type',4)
                 ->select ('id','name','level','show_img','img2')
                 ->where ('level',$image->level)
-                ->get ();
-            $image->intros =  Ware::query ()->where ('get_type',1)
+                ->first ();
+            $image->intro =  Ware::query ()->where ('get_type',1)
                 ->where ('type',6)
                 ->select ('id','name','level','show_img','img2')
                 ->where ('level',$image->level)
-                ->get ();
+                ->first ();
         }
 
         $data = [
