@@ -141,7 +141,7 @@ class UserController extends MainController
 //        $grid->column ('is_gold_id',__ ('use Gold id'))->switch (Common::getSwitchStates ());
         $grid->column('name', __('Name'));
         $grid->column('nickname', __('NickName'));
-//        $grid->column('email', __('Email'));
+        $grid->column('profile.avatar', __('image'))->image ('',50);
         $grid->column('phone', __('Phone'));
 //        $grid->column('di', __('coins'));
 //        $grid->column('gold', __('silver coins'));
