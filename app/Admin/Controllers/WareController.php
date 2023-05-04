@@ -164,7 +164,7 @@ class WareController extends MainController
 //        $form->number('score', trans('score'));
         $form->number('level', trans('level'));
         $form->image('show_img', trans('img'));
-        $form->image('img1', trans('img'));
+//        $form->image('img1', trans('img'));
         $form->file('img2', trans('svg'));
 //        $form->file('img3', trans('video'));
         $form->color('color', trans('color'));

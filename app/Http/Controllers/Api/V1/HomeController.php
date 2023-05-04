@@ -327,7 +327,23 @@ class HomeController extends Controller
     public function getImages(){
         $pk_images = Image::query ()->where ('type',0)->where ('status',1)->select ('id','name','url')->get ();
         $vip_images = OVip::query ()->select ('id','name','level','img')->get ();
-        $data = ['pk_images'=>$pk_images,'vip_images'=>$vip_images];
+        foreach ($vip_images as $k=>&$image){
+            $image->frames =  Ware::query ()->where ('get_type',1)
+                ->where ('type',4)
+                ->select ('id','name','level','show_img','img2')
+                ->where ('level',$image->level)
+                ->get ();
+            $image->intros =  Ware::query ()->where ('get_type',1)
+                ->where ('type',6)
+                ->select ('id','name','level','show_img','img2')
+                ->where ('level',$image->level)
+                ->get ();
+        }
+
+        $data = [
+            'pk_images'=>$pk_images,
+            'vip_images'=>$vip_images,
+        ];
         return Common::apiResponse (1,'ok',$data,200);
     }
 
