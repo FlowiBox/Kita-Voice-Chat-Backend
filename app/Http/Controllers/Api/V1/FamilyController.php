@@ -232,7 +232,7 @@ class FamilyController extends Controller
     public function join(Request $request){
         $user = $request->user ();
         $family = Family::query ()->find ($request->family_id);
-        $fw = Family::query ()->where ('app_owner_id',$user->id)->exists ();
+        $fw = Family::query ()->where ('user_id',$user->id)->exists ();
         if ($fw){
             return Common::apiResponse (0,'already have one',null,405);
         }
