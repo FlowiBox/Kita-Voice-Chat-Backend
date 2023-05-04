@@ -625,8 +625,10 @@ class RoomController extends Controller
     public function getRoomUsers(Request $request){
         $uid = $request->owner_id;
         $roomAdmin=Room::query ()->where(['uid'=>$uid])->value('room_admin');
+
         $roomAdmin=explode(',',$roomAdmin);
-        $admins=User::where('id','in', $roomAdmin)->get();
+        $admins=User::whereIn('id', $roomAdmin)->get();
+
         $admin = [];
         foreach($admins as $k=>$v){
             $admin[$k]['id'] = @$v->id;
@@ -638,6 +640,7 @@ class RoomController extends Controller
 
         $roomVisitor=DB::table('rooms')->where(['uid'=>$uid])->value('room_visitor');
         $roomVisitor=explode(',',$roomVisitor);
+
         $roomVisitor=array_values(array_diff($roomVisitor,$roomAdmin));
         $visitors=User::query ()->whereIn('id', $roomVisitor)->get();
         $visitor = [];
