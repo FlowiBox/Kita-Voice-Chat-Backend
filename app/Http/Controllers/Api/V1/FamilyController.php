@@ -142,8 +142,7 @@ class FamilyController extends Controller
             DB::commit ();
         }catch (\Exception $exception){
             DB::rollBack ();
-            dd ($exception);
-            return Common::apiResponse (0,'failed',null,400);
+            return Common::apiResponse (0,'missing params',null,422);
         }
 
 

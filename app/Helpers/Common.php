@@ -439,4 +439,13 @@ class Common{
         self::fireBaseDatabase ($path,$obj);
     }
 
+    public static function hasInPack($user_id,$type){
+       return Pack::query ()
+            ->where ('user_id',$user_id)
+            ->where ('type',$type)
+            ->where (function ($q){
+                $q->where('expire',0)->orWhere('expire','>=',time ());
+            })->exists ();
+    }
+
 }

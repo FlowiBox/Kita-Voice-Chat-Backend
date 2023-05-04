@@ -31,7 +31,7 @@ class UserResource extends JsonResource
        }
         Pack::query ()
             ->where ('expire','!=',0)
-            ->where ('expire','<',Carbon::now ()->timestamp)->delete ();
+            ->where ('expire','<',time ())->delete ();
         $reqs_count = AgencyJoinRequest::query ()->where ('user_id',@$this->id)->where ('status','!=',2)->count ();
 
         $agency_joined = null;
@@ -99,6 +99,8 @@ class UserResource extends JsonResource
         ];
 
 
+
+
         $data = [
             'id'=>@$this->id,
             'uuid'=>@$this->uuid,
@@ -106,6 +108,7 @@ class UserResource extends JsonResource
             'notification_id'=>@$this->notification_id?:"",
             'is_gold'=>@$this->is_gold_id,
             'name'=>@$this->name?:'',
+            'nick_name'=>@$this->nick_name,
             'email'=>@$this->email?:"",
             'phone'=>@$this->phone?:'',
             'number_of_fans'=>$this->numberOfFans(),
@@ -161,7 +164,9 @@ class UserResource extends JsonResource
             'statics'=>$this->handelStatics ($request)?:$statics,
             'is_agent'=>$this->is_agent,
 //            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first(),
-            'prev'=>$previliges
+            'prev'=>$previliges,
+            'has_color_name'=>Common::hasInPack ($this->id,18),
+            'is_country_hidden_and_last_login'=>Common::hasInPack ($this->id,13),
         ];
 
 
