@@ -6,6 +6,8 @@ use App\Admin\Actions\ChargeAction;
 use App\Admin\Actions\DeletePackAction;
 use App\Admin\Actions\DeleteUserVipAction;
 use App\Admin\Actions\EditPackExpireAction;
+use App\Admin\Actions\KickOfAgencyAction;
+use App\Admin\Actions\KickOfFamilyAction;
 use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\Charge;
@@ -189,6 +191,11 @@ class UserController extends MainController
 
 
         $this->extendGrid ($grid);
+
+        $grid->actions (function ($actions){
+            $actions->add(new KickOfAgencyAction());
+            $actions->add(new KickOfFamilyAction());
+        });
 
 
         return $grid;

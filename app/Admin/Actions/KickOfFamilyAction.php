@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class KickOfFamilyAction extends RowAction
 {
-    public $name = 'Kick Of Family';
+    public $name = 'طرد من العائلة';
 
     public function handle(Model $model, Request $request)
     {

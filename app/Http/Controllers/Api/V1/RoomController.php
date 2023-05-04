@@ -395,6 +395,9 @@ class RoomController extends Controller
 
         $room_info['admins'] = UserResource::collection (User::query ()->whereIn ('id',$roomAdmin)->get ());
 
+
+
+
         $roomJudge = explode(',', $room_info['room_judge']);
         for ($i=0; $i < count($roomJudge); $i++) {
             if($roomJudge[$i] == $user_id){
@@ -424,6 +427,10 @@ class RoomController extends Controller
 
         $uid_black = explode(',', $room_info['room_speak']);
 
+        $bans = [];
+
+
+
         for ($i=0; $i < count($uid_black); $i++) {
             if($uid_black[$i] == $owner_id){
                 $room_info['uid_black'] = 2;   //homeowners ban writing
@@ -431,7 +438,11 @@ class RoomController extends Controller
                 $room_info['uid_black'] = 1;   //Homeowner does not ban writing
             }
         }
-
+        foreach ($uid_black as $b){
+            $u = explode ('#',$b);
+            array_push ($bans,$u[0]);
+        }
+        $room_info['ban_users'] = UserResource::collection (User::query ()->whereIn ('id',$bans)->get ());
 
         $owner_user = User::query ()->find($owner_id);
         $room_info['owner_name'] = @$owner_user->name;
@@ -1423,6 +1434,9 @@ class RoomController extends Controller
     public function is_black(Request $request){
         $uid=$request->owner_id;
         $user_id=$request->user_id;
+        if (Common::hasInPack ($user_id,15)){
+            return Common::apiResponse(0,'user cannt baned',null,403);
+        }
         if(!$uid || !$user_id) return Common::apiResponse(0,'invalid data',null,422);
         if($uid == $user_id)    return Common::apiResponse(0,'Illegal operation',null,403);
 //        if ($request->user ()->id != $uid){
