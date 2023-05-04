@@ -150,7 +150,7 @@ class UserResource extends JsonResource
             'bubble_id'=>@$this->dress_2,
             'intro_id'=>@$this->dress_3,
             'mic_halo_id'=>@$this->dress_4,
-            'can_kicked_of_room'=>Common::can_kick (@$this->id),
+            'can_kicked_of_room'=>!Common::hasInPack ($this->id,9),
             'bio'=>@$this->bio?:'',
             'facebook_bind'=>@$this->facebook_id?true:false,
             'google_bind'=>@$this->google_id?true:false,
