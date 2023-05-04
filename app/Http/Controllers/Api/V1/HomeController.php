@@ -16,12 +16,14 @@ use App\Models\GiftLog;
 use App\Models\Image;
 use App\Models\LiveTime;
 use App\Models\OVip;
+use App\Models\Pack;
 use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Vip;
 use App\Models\VipPrivilege;
+use App\Models\Ware;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -327,6 +329,28 @@ class HomeController extends Controller
         $vip_images = OVip::query ()->select ('id','name','level','img')->get ();
         $data = ['pk_images'=>$pk_images,'vip_images'=>$vip_images];
         return Common::apiResponse (1,'ok',$data,200);
+    }
+
+
+    public function check_wapel(Request $request){
+        $room = Room::query ()->where ('uid',$request->owner_id)->first ();
+        $user = $request->user ();
+        $wapel = Pack::query ()->where ('type',12)->where ('expire','>=',time ())->where ('user_id',$user->id)->first ();
+        if ($wapel){
+            $ware = Ware::query ()->select ('id','name','title','show_img','img1')->find ($wapel->target_id);
+            $ms = [
+                'messageContent'=>[
+                    'message'=>'showPobUp',
+                    'userId'=>$user->id,
+                    'messageId'=>$request->messageId
+                ]
+            ];
+            $json = json_encode ($ms);
+            Common::sendToZego ('SendCustomCommand',@$room->id,$user->id,$json);
+            return Common::apiResponse (1,'has wapel',@$ware,200);
+        }else{
+            return Common::apiResponse (0,'no wapel',null,404);
+        }
     }
 
 }
