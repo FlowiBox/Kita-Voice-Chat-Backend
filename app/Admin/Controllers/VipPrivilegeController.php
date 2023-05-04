@@ -32,7 +32,6 @@ class VipPrivilegeController extends MainController
         $grid->column('title',__ ('title'));
         $grid->column('type')->select (
             [
-                0=>trans ('No Type'),
                 1=>trans ('Gemstone'),
                 3=>trans ('Card Scroll'),
                 4=>trans ('Avatar Frame'),
@@ -42,6 +41,15 @@ class VipPrivilegeController extends MainController
                 8=>trans ('Badge'),
                 9=>trans ('NoKick'),
                 10=>trans ('Icon'),
+                11=>trans ('intro animation'),
+                12=>trans ('wapel'),
+                13=>trans ('hide country and last login'),
+                14=>trans ('vip gifts'),
+                15=>trans ('no pan'),
+                16=>trans ('hidden room'),
+                17=>trans ('anonymous man'),
+                18=>trans ('colored name'),
+                19=>trans ('profile visitors hide in'),
             ]
         );
         $grid->column('img1',__ ('img 1'))->image ('',30);
@@ -87,7 +95,6 @@ class VipPrivilegeController extends MainController
         $form->text('title', __('title'));
         $form->select('type', trans('type'))->options (
             [
-                0=>trans ('No Type'),
                 1=>trans ('Gemstone'),
                 3=>trans ('Card Scroll'),
                 4=>trans ('Avatar Frame'),
@@ -97,6 +104,15 @@ class VipPrivilegeController extends MainController
                 8=>trans ('Badge'),
                 9=>trans ('NoKick'),
                 10=>trans ('Icon'),
+                11=>trans ('intro animation'),
+                12=>trans ('wapel'),
+                13=>trans ('hide country and last login'),
+                14=>trans ('vip gifts'),
+                15=>trans ('no pan'),
+                16=>trans ('hidden room'),
+                17=>trans ('anonymous man'),
+                18=>trans ('colored name'),
+                19=>trans ('profile visitors hide in'),
             ]
         );
         $form->image('img1', __('img1'));

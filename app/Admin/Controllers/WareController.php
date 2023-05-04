@@ -151,7 +151,6 @@ class WareController extends MainController
                 17=>trans ('anonymous man'),
                 18=>trans ('colored name'),
                 19=>trans ('profile visitors hide in'),
-                20=>trans ('color')
             ]
         )->rules ('required');
 //        ->rules (function ($form){

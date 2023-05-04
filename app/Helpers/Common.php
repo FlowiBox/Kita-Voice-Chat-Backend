@@ -283,7 +283,7 @@ class Common{
                 if ($pack->expire == 0){
 //                    throw new \Exception('already exists');
                 }else{
-                    $pack->expire = $vip->expire ? $pack->expire + ($vip->expire * 86400) : time ();
+                    $pack->expire = $vip->expire ? $pack->expire + ($vip->expire * 86400) : 0;
                     $pack->save ();
                 }
             }else{
@@ -294,12 +294,10 @@ class Common{
                         'type'=>$ware->type,
                         'target_id'=>$ware->id,
                         'num'=>1,
-                        'expire'=>$vip->expire ? now ()->addDays ($vip->expire)->timestamp : time ()
+                        'expire'=>$vip->expire ? now ()->addDays ($vip->expire)->timestamp : 0
                     ]
                 );
             }
-
-
         }
         $uvip = UserVip::query ()->where ('user_id',$user->id)->where (function ($q){
             $q->where('expire',0)->orWhere('expire','>',now ()->timestamp);
