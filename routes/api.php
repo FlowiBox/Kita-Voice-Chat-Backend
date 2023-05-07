@@ -255,6 +255,8 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::post ('check_wapel',[\App\Http\Controllers\Api\V1\HomeController::class,'check_wapel']);
 
+    Route::post ('check_wapel',[\App\Http\Controllers\Api\V1\HomeController::class,'check_wapel']);
+
     Route::prefix ('reals')->group (function (){
         Route::get ('list',[\App\Http\Controllers\Api\V1\RealsController::class,'index']);
         Route::post ('create',[\App\Http\Controllers\Api\V1\RealsController::class,'store']);

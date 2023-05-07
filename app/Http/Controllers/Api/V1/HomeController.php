@@ -330,12 +330,12 @@ class HomeController extends Controller
         foreach ($vip_images as $k=>&$image){
             $image->frame =  Ware::query ()->where ('get_type',1)
                 ->where ('type',4)
-                ->select ('id','name','level','show_img','img2')
+                ->select ('id','img2')
                 ->where ('level',$image->level)
                 ->first ();
             $image->intro =  Ware::query ()->where ('get_type',1)
                 ->where ('type',6)
-                ->select ('id','name','level','show_img','img2')
+                ->select ('id','img2')
                 ->where ('level',$image->level)
                 ->first ();
         }
@@ -358,7 +358,7 @@ class HomeController extends Controller
                 'messageContent'=>[
                     'message'=>'showPobUp',
                     'userId'=>$user->id,
-                    'messageId'=>$request->messageId
+                    'my_message'=>$request->message
                 ]
             ];
             $json = json_encode ($ms);
