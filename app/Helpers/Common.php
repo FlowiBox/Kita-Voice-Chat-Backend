@@ -437,13 +437,18 @@ class Common{
         self::fireBaseDatabase ($path,$obj);
     }
 
-    public static function hasInPack($user_id,$type){
-       return Pack::query ()
+    public static function hasInPack($user_id,$type,$use_status=false){
+       $ch = Pack::query ()
             ->where ('user_id',$user_id)
             ->where ('type',$type)
             ->where (function ($q){
                 $q->where('expire',0)->orWhere('expire','>=',time ());
-            })->exists ();
+            });
+       if ($use_status){
+           $ch = $ch->where ('is_used',1);
+       }
+
+       return $ch->exists ();
     }
 
     public static function checkPackPrev($user_id,$type){

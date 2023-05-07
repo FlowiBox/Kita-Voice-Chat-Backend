@@ -257,11 +257,13 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::post ('hide',[\App\Http\Controllers\Api\V1\HomeController::class,'hide']);
     Route::post ('un_hide',[\App\Http\Controllers\Api\V1\HomeController::class,'un_hide']);
+    Route::get ('getUserHides',[\App\Http\Controllers\Api\V1\HomeController::class,'getUserHides']);
 
     Route::prefix ('reals')->group (function (){
         Route::get ('list',[\App\Http\Controllers\Api\V1\RealsController::class,'index']);
         Route::post ('create',[\App\Http\Controllers\Api\V1\RealsController::class,'store']);
     });
+
 });
 
 Route::prefix ('tickets')->group (function (){
