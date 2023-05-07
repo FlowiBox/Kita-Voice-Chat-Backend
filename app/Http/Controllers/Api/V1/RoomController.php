@@ -51,7 +51,7 @@ class RoomController extends Controller
         $result = $this->repo->all ($request);
         $user = $request->user ();
         if (!Common::checkPackPrev ($user->id,13)){
-            $user->online_time = now ();
+            $user->online_time = time();
             $user->save();
         }
         return Common::apiResponse (true,'',RoomResource::collection ($result),200,Common::getPaginates ($result));
