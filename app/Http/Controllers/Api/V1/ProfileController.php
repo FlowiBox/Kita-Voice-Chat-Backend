@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Profile\ProfileRequest;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Country;
+use App\Models\Pack;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -54,15 +55,18 @@ class ProfileController extends Controller
         $me = $request->user ();
         $user = User::query ()->find ($id);
         if ($me->id != $user->id){
-            $user->profileVisits()->attach([$me->id]);
+            if (!Common::checkPackPrev ($me->id,19)){
+                $user->profileVisits()->attach([$me->id]);
+            }
         }
 
         $path = "$id/visitors";
         $obj = [
             'id'=>$request->user ()->id,
         ];
-        Common::fireBaseDatabase ($path,$obj);
-
+        if (!Common::checkPackPrev ($me->id,19)){
+            Common::fireBaseDatabase ($path,$obj);
+        }
         if($user){
             return Common::apiResponse (true,'',new UserResource($user),200);
         }

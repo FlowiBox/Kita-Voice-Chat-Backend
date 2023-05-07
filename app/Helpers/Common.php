@@ -446,4 +446,10 @@ class Common{
             })->exists ();
     }
 
+    public static function checkPackPrev($user_id,$type){
+        return Pack::query ()->where ('user_id',$user_id)->where ('type',$type)->where (function ($q){
+            $q->where('expire',0)->orWhere('expire','>=',time ());
+        })->where ('is_used',1)->exists ();
+    }
+
 }

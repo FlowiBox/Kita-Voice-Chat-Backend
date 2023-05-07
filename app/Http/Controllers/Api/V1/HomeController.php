@@ -369,4 +369,38 @@ class HomeController extends Controller
         }
     }
 
+    public function hide(Request $request){
+        $user = $request->user ();
+        if ($request->type == 'country'){
+            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>1]);
+        }
+        if ($request->type == 'last_login'){
+            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>1]);
+        }
+        if ($request->type == 'visit'){
+            Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>1]);
+        }
+        if ($request->type == 'room'){
+            Pack::query ()->where('user_id',$user->id)->where('type',16)->update (['is_used'=>1]);
+            Room::query ()->where ('uid',$user->id)->update (['room_status'=>2]);
+        }
+    }
+
+    public function un_hide(Request $request){
+        $user = $request->user ();
+        if ($request->type == 'country'){
+            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'last_login'){
+            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'visit'){
+            Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'room'){
+            Pack::query ()->where('user_id',$user->id)->where('type',16)->update (['is_used'=>0]);
+            Room::query ()->where ('uid',$user->id)->update (['room_status'=>1]);
+        }
+    }
+
 }
