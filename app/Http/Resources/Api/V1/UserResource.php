@@ -166,7 +166,7 @@ class UserResource extends JsonResource
 //            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first(),
             'prev'=>$previliges,
             'has_color_name'=>Common::hasInPack ($this->id,18),
-            'is_country_hidden_and_last_login'=>Common::hasInPack ($this->id,13),
+            'online_time'=>$this->online_time,
         ];
 
 

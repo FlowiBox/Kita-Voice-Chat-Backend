@@ -373,9 +373,13 @@ class HomeController extends Controller
         $user = $request->user ();
         if ($request->type == 'country'){
             Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>1]);
+            $user->country_id = null;
+            $user->save();
         }
-        if ($request->type == 'last_login'){
+        if ($request->type == 'last_active'){
             Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>1]);
+            $user->online_time = null;
+            $user->save();
         }
         if ($request->type == 'visit'){
             Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>1]);
@@ -391,7 +395,7 @@ class HomeController extends Controller
         if ($request->type == 'country'){
             Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>0]);
         }
-        if ($request->type == 'last_login'){
+        if ($request->type == 'last_active'){
             Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>0]);
         }
         if ($request->type == 'visit'){
