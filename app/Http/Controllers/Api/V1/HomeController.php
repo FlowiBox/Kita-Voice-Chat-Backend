@@ -388,6 +388,7 @@ class HomeController extends Controller
             Pack::query ()->where('user_id',$user->id)->where('type',16)->update (['is_used'=>1]);
             Room::query ()->where ('uid',$user->id)->update (['room_status'=>2]);
         }
+        return Common::apiResponse (1,'ok',null,201);
     }
 
     public function un_hide(Request $request){
@@ -405,6 +406,7 @@ class HomeController extends Controller
             Pack::query ()->where('user_id',$user->id)->where('type',16)->update (['is_used'=>0]);
             Room::query ()->where ('uid',$user->id)->update (['room_status'=>1]);
         }
+        return Common::apiResponse (1,'ok',null,201);
     }
 
 }
