@@ -49,6 +49,11 @@ class RoomController extends Controller
     public function index(Request $request)
     {
         $result = $this->repo->all ($request);
+        $user = $request->user ();
+        if (!Common::checkPackPrev ($user->id,13)){
+            $user->online_time = now ();
+            $user->save();
+        }
         return Common::apiResponse (true,'',RoomResource::collection ($result),200,Common::getPaginates ($result));
     }
 
