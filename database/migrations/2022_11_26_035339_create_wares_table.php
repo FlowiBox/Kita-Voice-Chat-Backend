@@ -22,7 +22,7 @@ class CreateWaresTable extends Migration
             $table->unsignedInteger('price')->comment('سعر')->nullable();
             $table->unsignedInteger('score')->comment('النقاط المطلوبة')->nullable();
             $table->unsignedTinyInteger('level')->comment('المستوى المطلوب لكبار الشخصيات')->nullable();
-            $table->string('show_img');
+            $table->string('show_img')->nullable ();
             $table->string('img1')->nullable();
             $table->string('img2')->nullable();
             $table->string('img3')->nullable();

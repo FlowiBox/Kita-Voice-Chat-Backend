@@ -164,7 +164,7 @@ class WareController extends MainController
         $form->currency('price', trans('price'))->symbol ('💰');
 //        $form->number('score', trans('score'));
         $form->number('level', trans('level'));
-        $form->image('show_img', trans('img'));
+        $form->image('show_img', trans('img'))->default ('1.png');
 //        $form->image('img1', trans('img'));
         $form->file('img2', trans('svg'));
 //        $form->file('img3', trans('video'));
