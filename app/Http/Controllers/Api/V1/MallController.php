@@ -18,6 +18,7 @@ use App\Models\VipPrivilege;
 use App\Models\Ware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class MallController extends Controller
 {
@@ -170,23 +171,29 @@ class MallController extends Controller
                     'status'=>0
                 ]
             );
-
+            DB::commit ();
+            $data = [
+                'name'=>$coin->coin.'_coins',
+                'amount'=>$coin->usd,
+                'trx'=>$log->trx
+            ];
             if ($request->pay_method == 'strip'){
                 $strip = new \App\Classes\PaymentGateways\Stripe();
-                $res = $strip->make ();
+                $res = $strip->make ($data);
                 return Common::apiResponse (1,'ok',$res,200);
             }
 
-            if ($log->status == 1){
-                Common::sendOfficialMessage ($user->id,__('congratulations'),__('your recharge success'));
-                $user->increment ('di',$log->obtained_coins);
-            }else{
-                Common::sendOfficialMessage ($user->id,__('recharge process'),__('your recharge waiting for payment'));
-            }
-            DB::commit ();
+//            if ($log->status == 1){
+//                Common::sendOfficialMessage ($user->id,__('congratulations'),__('your recharge success'));
+//                $user->increment ('di',$log->obtained_coins);
+//            }else{
+//                Common::sendOfficialMessage ($user->id,__('recharge process'),__('your recharge waiting for payment'));
+//            }
+
 
             return Common::apiResponse (1,'done',null,201);
         }catch (\Exception $exception){
+//            dd ($exception->getMessage ());
             DB::rollBack ();
             return Common::apiResponse (0,'fail',null,400);
         }

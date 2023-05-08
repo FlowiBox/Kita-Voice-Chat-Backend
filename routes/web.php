@@ -18,6 +18,7 @@ Route::get('/', function () {
 
 Route::prefix ('payment')->group (function (){
     Route::get ('payment-success',[\App\Http\Controllers\Web\PaymentController::class,'success']);
+    Route::get ('payment-fail',[\App\Http\Controllers\Web\PaymentController::class,'fail']);
 });
 
 Route::get('/page/{name}', function ($name) {
