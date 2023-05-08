@@ -16,6 +16,24 @@ class Stripe
     }
 
     public function view(){
+
+
+        $stripe = new \Stripe\StripeClient('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+
+        $stripe->paymentIntents->create(
+            [
+                'amount' => 1000,
+                'currency' => 'usd',
+                'automatic_payment_methods' => ['enabled' => true],
+            ],
+            ['stripe_account' => '']
+        );
+
+
+
+
+
+
         if(Session::has('stripe_payment') && Session::get('order_info')){
             $array=Session::get('order_info');
             $amount=$array['amount'];
