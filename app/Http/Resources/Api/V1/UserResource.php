@@ -10,6 +10,7 @@ use App\Models\Country;
 use App\Models\Family;
 use App\Models\FamilyUser;
 use App\Models\Pack;
+use App\Models\Room;
 use App\Models\Ware;
 use Carbon\Carbon;
 use http\Client\Curl\User;
@@ -30,7 +31,7 @@ class UserResource extends JsonResource
        }
         Pack::query ()
             ->where ('expire','!=',0)
-            ->where ('expire','<',Carbon::now ()->timestamp)->delete ();
+            ->where ('expire','<',time ())->delete ();
         $reqs_count = AgencyJoinRequest::query ()->where ('user_id',@$this->id)->where ('status','!=',2)->count ();
 
         $agency_joined = null;
@@ -46,6 +47,13 @@ class UserResource extends JsonResource
                 AgencyJoinRequest::query ()->where ('agency_id',$this->agency_id)->delete();
                 $this->agency_id = 0;
                 $this->save();
+            }
+        }
+        $pass_status = false;
+        $now_room = Room::query ()->where ('uid',$this->now_room_uid)->first ();
+        if ($now_room){
+            if($now_room->room_pass){
+                $pass_status = true;
             }
         }
 
@@ -91,6 +99,8 @@ class UserResource extends JsonResource
         ];
 
 
+
+
         $data = [
             'id'=>@$this->id,
             'uuid'=>@$this->uuid,
@@ -98,6 +108,7 @@ class UserResource extends JsonResource
             'notification_id'=>@$this->notification_id?:"",
             'is_gold'=>@$this->is_gold_id,
             'name'=>@$this->name?:'',
+            'nick_name'=>@$this->nick_name,
             'email'=>@$this->email?:"",
             'phone'=>@$this->phone?:'',
             'number_of_fans'=>$this->numberOfFans(),
@@ -111,7 +122,8 @@ class UserResource extends JsonResource
             'now_room'=>[
                 'is_in_room'=>@$this->now_room_uid != 0,
                 'uid'=>@$this->now_room_uid,
-                'is_mine'=>@$this->id == $this->now_room_uid
+                'is_mine'=>@$this->id == $this->now_room_uid,
+                'password_status'=>$pass_status
             ],
             'agency'=>@$agency_joined,
             'is_agency_request'=>($reqs_count >= 1)?true:false,
@@ -138,7 +150,7 @@ class UserResource extends JsonResource
             'bubble_id'=>@$this->dress_2,
             'intro_id'=>@$this->dress_3,
             'mic_halo_id'=>@$this->dress_4,
-            'can_kicked_of_room'=>Common::can_kick (@$this->id),
+            'can_kicked_of_room'=>!Common::hasInPack ($this->id,9),
             'bio'=>@$this->bio?:'',
             'facebook_bind'=>@$this->facebook_id?true:false,
             'google_bind'=>@$this->google_id?true:false,
@@ -152,7 +164,14 @@ class UserResource extends JsonResource
             'statics'=>$this->handelStatics ($request)?:$statics,
             'is_agent'=>$this->is_agent,
 //            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first(),
-            'prev'=>$previliges
+            'prev'=>$previliges,
+            'online_time'=>$this->online_time?date("Y-m-d H:i:s", $this->online_time):'',
+            'has_color_name'=>Common::hasInPack ($this->id,18),
+            'anonymous'=>Common::hasInPack ($this->id,17,true),
+            'country_hidden'=>Common::hasInPack ($this->id,13,true),
+            'last_active_hidden'=>Common::hasInPack ($this->id,20,true),
+            'visit_hidden'=>Common::hasInPack ($this->id,19,true),
+            'room_hidden'=>Common::hasInPack ($this->id,16,true),
         ];
 
 
@@ -166,5 +185,47 @@ class UserResource extends JsonResource
             $data['visit_time']=$this->pivot->updated_at;
         }
         return $data;
+    }
+
+    public function handelStatics($request){
+        $user = $request->user();
+        $visitor = 0;
+        $fans = 0;
+        $friends = 0;
+        $income = 0;
+        $frame = 0;
+        $enteirs = 0;
+        $bubble = 0;
+        if ($request->visitor != null){
+            $visitor = (integer)$user->profileVisits()->count() - (integer)$request->visitor;
+        }
+        if ($request->fans != null){
+            $fans = (integer)$user->numberOfFans() - (integer)$request->fans;
+        }
+        if ($request->friends != null){
+            $friends = (integer)$user->numberOfFriends() - (integer)$request->friends;
+        }
+        if ($request->income != null){
+            $income = (integer)$user->coins - (integer)$request->income;
+        }
+        if ($request->frame != null){
+            $frame = (integer)$user->frames_count() - (integer)$request->frame;
+        }
+        if ($request->enteirs != null){
+            $enteirs = (integer)$user->intros_count() - (integer)$request->enteirs;
+        }
+        if ($request->bubble != null){
+            $bubble = (integer)$user->bubble_count() - (integer)$request->bubble;
+        }
+
+        return [
+            'visitor' => $visitor,
+            'fans' => $fans,
+            'friends' => $friends,
+            'income' => $income,
+            'frame' => $frame,
+            'enteirs' => $enteirs,
+            'bubble' => $bubble
+        ];
     }
 }

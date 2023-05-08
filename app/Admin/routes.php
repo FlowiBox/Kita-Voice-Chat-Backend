@@ -21,6 +21,7 @@ Route::group(
     ],
     function (Router $router) {
         $router->resource ('auth/users','AdminUserController');
+        $router->resource ('auth/roles','RoleController');
         //resources
         $router->resource('users', 'UserController',[
             'names'=>[
@@ -90,8 +91,29 @@ Route::group(
         $router->resource ('thrown_boxes','BoxUseController');
         $router->resource ('reports','ReportController');
         $router->post ('cashing','ReportController@cashing')->name ('cashing');
+        $router->resource ('trxs','CoinLogController');
+        $router->resource ('images','ImageController');
+
+
+        Route::prefix('ag')->name ('agency.')->namespace ('AgencyControllers')->group (function (Router $router){
+            $router->get('/', 'HomeController@infoBox')->name('home');
+            $router->get('/users', 'UserController@index')->name ('users');
+            $router->get('/userTarget','UserTargetController@index')->name ('userTarget');
+            $router->get('/target','AgencyTargetController@index')->name ('targets');
+            $router->get ('/charges','ChargeController@index')->name ('charges');
+        });
+
+        Route::prefix('ch')->name ('charger.')->namespace ('ChargerControllers')->group (function (Router $router){
+            $router->get('/', 'HomeController@infoBox')->name('home');
+            $router->get ('/charges','ChargeController@index')->name ('charges');
+        });
+
+        $router->get ('/wares_dedicate','DedicateWareController@index');
+        $router->get ('/vips_dedicate','DedicateVipController@index');
+
     }
 );
+
 
 
 

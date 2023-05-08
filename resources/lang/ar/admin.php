@@ -63,7 +63,7 @@ return [
     'administrator'         => 'مسئول',
     'roles'                 => 'القواعد',
     'permissions'           => 'الصلاحيات',
-    'slug'                  => 'المعرف',
+    'slug'                  => 'الدليل',
     'created_at'            => 'تاريخ الانشاء',
     'updated_at'            => 'تاريخ التعديل',
     'alert'                 => 'تحذير',

@@ -2,7 +2,9 @@
 
 namespace App\Admin\Actions;
 
+use App\Helpers\Common;
 use App\Models\Admin;
+use App\Models\Agency;
 use App\Models\Charge;
 use App\Models\CoinLog;
 use App\Models\User;
@@ -59,11 +61,32 @@ class ChargeAction extends Action
             $charge->save ();
             $user->save ();
             if (!$charger->isRole('admin') && !$charger->isRole('developer')){
-                if ($charger->di < $request->amount){
-                    return $this->response()->error(__ ('balance not enough'))->refresh();
+                if($charger->isRole('agency')){
+                    $agency = Agency::query ()->where ('owner_id',$charger->id)->first ();
+                    if ($agency){
+                        $agency_balance = $agency->old_usd + $agency->target_usd - $agency->target_token_usd;
+                        $usd_coins = Common::getConf ('one_usd_value_in_coins')?:10;
+                        $agency_balance_coins = $agency_balance * $usd_coins;
+                        if ($agency_balance_coins < $request->amount){
+                            return $this->response()->error(__ ('balance not enough'))->refresh();
+                        }
+                        $amount_usd = $request->amount / $usd_coins;
+                        $agency->target_token_usd += $amount_usd;
+                        $agency->save ();
+                    }else{
+                        if ($charger->di < $request->amount){
+                            return $this->response()->error(__ ('balance not enough'))->refresh();
+                        }
+                        $charger->di -= $request->amount;
+                        $charger->save();
+                    }
+                }else{
+                    if ($charger->di < $request->amount){
+                        return $this->response()->error(__ ('balance not enough'))->refresh();
+                    }
+                    $charger->di -= $request->amount;
+                    $charger->save();
                 }
-                $charger->di -= $request->amount;
-                $charger->save();
             }
             CoinLog::query ()->create (
                 [
@@ -74,7 +97,7 @@ class ChargeAction extends Action
                     'donor_id'=> Auth::id (),
                     'donor_type'=>\auth ()->user ()->roles->first()->name,
                     'status'=>1,
-                    'trx'=>$randomString = Str::random(18)
+                    'trx'=>$randomString = rand(111111111111111111,999999999999999999)
                 ]
             );
             DB::commit ();

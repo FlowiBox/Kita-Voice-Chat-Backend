@@ -33,12 +33,14 @@ class ChargeResource extends JsonResource
         }
         $sender_data = [
             'id'=>$sender->id,
+            'uuid'=>@$sender->uuid?:'',
             'name'=>$sender->name?:"",
             'img'=>$sender->img?:"",
             'type'=>$s_type
         ];
         $receiver_data = [
             'id'=>$receiver->id,
+            'uuid'=>@$receiver->uuid?:'',
             'name'=>$receiver->name?:"",
             'img'=>$receiver->img?:"",
             'type'=>$r_type

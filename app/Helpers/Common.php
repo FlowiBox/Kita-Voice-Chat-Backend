@@ -281,9 +281,9 @@ class Common{
 
             if($pack){
                 if ($pack->expire == 0){
-                    throw new \Exception('already exists');
+//                    throw new \Exception('already exists');
                 }else{
-                    $pack->expire = $ware->expire ? $pack->expire + ($ware->expire * 86400) : 0;
+                    $pack->expire = $vip->expire ? $pack->expire + ($vip->expire * 86400) : 0;
                     $pack->save ();
                 }
             }else{
@@ -294,12 +294,10 @@ class Common{
                         'type'=>$ware->type,
                         'target_id'=>$ware->id,
                         'num'=>1,
-                        'expire'=>$ware->expire ? now ()->addDays ($ware->expire)->timestamp:0
+                        'expire'=>$vip->expire ? now ()->addDays ($vip->expire)->timestamp : 0
                     ]
                 );
             }
-
-
         }
         $uvip = UserVip::query ()->where ('user_id',$user->id)->where (function ($q){
             $q->where('expire',0)->orWhere('expire','>',now ()->timestamp);
@@ -328,7 +326,7 @@ class Common{
             $client = new TwilioClint($account_sid, $auth_token);
             if ($twilio_service){
                 $arr = [
-                    'from' => $twilio_number,
+//                    'from' => $twilio_number,
                     "messagingServiceSid" => $twilio_service,
                     'body' => $message
                 ];
@@ -437,6 +435,26 @@ class Common{
         ];
 
         self::fireBaseDatabase ($path,$obj);
+    }
+
+    public static function hasInPack($user_id,$type,$use_status=false){
+       $ch = Pack::query ()
+            ->where ('user_id',$user_id)
+            ->where ('type',$type)
+            ->where (function ($q){
+                $q->where('expire',0)->orWhere('expire','>=',time ());
+            });
+       if ($use_status){
+           $ch = $ch->where ('is_used',1);
+       }
+
+       return $ch->exists ();
+    }
+
+    public static function checkPackPrev($user_id,$type){
+        return Pack::query ()->where ('user_id',$user_id)->where ('type',$type)->where (function ($q){
+            $q->where('expire',0)->orWhere('expire','>=',time ());
+        })->where ('is_used',1)->exists ();
     }
 
 }

@@ -41,7 +41,4 @@ class RegisterController extends Controller
         $user->auth_token=$token;
         return Common::apiResponse (true,'registered successfully',new UserResource($user),200);
     }
-
-
-
 }

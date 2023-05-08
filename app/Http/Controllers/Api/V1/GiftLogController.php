@@ -289,7 +289,7 @@ class GiftLogController extends Controller
         $info['giftId']=$id;
         $info['roomowner_id']=$uid;
         $info['giftNum']=$num;
-        $info['giftName']=$name;
+        $info['giftName']=$name?:'_';
         $info['giftPrice']=$price * $num;
         $info['sender_id']=$user_id;
         $info['receiver_id']=$toUid;

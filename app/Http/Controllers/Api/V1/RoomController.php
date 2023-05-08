@@ -49,6 +49,11 @@ class RoomController extends Controller
     public function index(Request $request)
     {
         $result = $this->repo->all ($request);
+        $user = $request->user ();
+        if (!Common::checkPackPrev ($user->id,20)){
+            $user->online_time = time();
+            $user->save();
+        }
         return Common::apiResponse (true,'',RoomResource::collection ($result),200,Common::getPaginates ($result));
     }
 
@@ -256,8 +261,10 @@ class RoomController extends Controller
         if ($request->type == 'random'){
             $owner_id = Room::query ()
                 ->where('room_status',1)
-                ->where ('room_visitor','!=','')
-                ->orWhere('is_afk',1)
+                ->where('uid','!=',null)
+                ->where (function ($q){
+                    $q->where ('room_visitor','!=','') ->orWhere('is_afk',1);
+                })
                 ->pluck ('uid')
                 ->random ();
         }
@@ -393,6 +400,9 @@ class RoomController extends Controller
 
         $room_info['admins'] = UserResource::collection (User::query ()->whereIn ('id',$roomAdmin)->get ());
 
+
+
+
         $roomJudge = explode(',', $room_info['room_judge']);
         for ($i=0; $i < count($roomJudge); $i++) {
             if($roomJudge[$i] == $user_id){
@@ -422,6 +432,10 @@ class RoomController extends Controller
 
         $uid_black = explode(',', $room_info['room_speak']);
 
+        $bans = [];
+
+
+
         for ($i=0; $i < count($uid_black); $i++) {
             if($uid_black[$i] == $owner_id){
                 $room_info['uid_black'] = 2;   //homeowners ban writing
@@ -429,9 +443,14 @@ class RoomController extends Controller
                 $room_info['uid_black'] = 1;   //Homeowner does not ban writing
             }
         }
-
+        foreach ($uid_black as $b){
+            $u = explode ('#',$b);
+            array_push ($bans,$u[0]);
+        }
+        $room_info['ban_users'] = UserResource::collection (User::query ()->whereIn ('id',$bans)->get ());
 
         $owner_user = User::query ()->find($owner_id);
+        $room_info['owner_name'] = @$owner_user->name;
         $room_info['owner_avatar'] = @$owner_user->profile->avatar;
         $room_info['country'] = @$owner_user->country;
 
@@ -550,9 +569,11 @@ class RoomController extends Controller
         $d = [
             "messageContent"=>[
                 "message"=>"userEntro",
-                "entroImg"=>Common::getUserDress($user->id,$user->dress_3,6,'img2')?:Common::getUserDress($user->id,$user->dress_3,6,'img1'),
+//                "entroImg"=>Common::getUserDress($user->id,$user->dress_3,6,'img2')?:Common::getUserDress($user->id,$user->dress_3,6,'img1'),
+                "entroImgId"=>$user->dress_3?(string)$user->dress_3:"",
                 'userName'=>$user->name?:$user->nickname,
-                'userImge'=>$user->avatar
+                'userImge'=>$user->avatar,
+                'vip'=>$request->have_vip
             ]
         ];
         $json = json_encode ($d);
@@ -610,8 +631,10 @@ class RoomController extends Controller
     public function getRoomUsers(Request $request){
         $uid = $request->owner_id;
         $roomAdmin=Room::query ()->where(['uid'=>$uid])->value('room_admin');
+
         $roomAdmin=explode(',',$roomAdmin);
-        $admins=User::where('id','in', $roomAdmin)->get();
+        $admins=User::whereIn('id', $roomAdmin)->get();
+
         $admin = [];
         foreach($admins as $k=>$v){
             $admin[$k]['id'] = @$v->id;
@@ -623,6 +646,7 @@ class RoomController extends Controller
 
         $roomVisitor=DB::table('rooms')->where(['uid'=>$uid])->value('room_visitor');
         $roomVisitor=explode(',',$roomVisitor);
+
         $roomVisitor=array_values(array_diff($roomVisitor,$roomAdmin));
         $visitors=User::query ()->whereIn('id', $roomVisitor)->get();
         $visitor = [];
@@ -1419,12 +1443,16 @@ class RoomController extends Controller
     public function is_black(Request $request){
         $uid=$request->owner_id;
         $user_id=$request->user_id;
+        if (Common::hasInPack ($user_id,15)){
+            return Common::apiResponse(0,'user cannt baned',null,403);
+        }
         if(!$uid || !$user_id) return Common::apiResponse(0,'invalid data',null,422);
         if($uid == $user_id)    return Common::apiResponse(0,'Illegal operation',null,403);
 //        if ($request->user ()->id != $uid){
 //            return Common::apiResponse(0,'not allowed');
 //        }
         $roomVisitor=DB::table('rooms')->where('uid',$uid)->value('room_visitor');
+        $room = Room::query ()->where('uid',$uid)->first();
         $vis_arr= !$roomVisitor ? [] : explode(",", $roomVisitor);
         if(!in_array($user_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room',null,404);
 
@@ -1433,15 +1461,22 @@ class RoomController extends Controller
         $spe_arr= !$roomSpeak ? [] : explode(",", $roomSpeak);
         foreach ($spe_arr as $k => &$v) {
             $arr=explode("#",$v);
-            if($arr[0] == $user_id) return Common::apiResponse(0,'This user is already on the ban list',null,444);
+            if($arr[0] == $user_id) return Common::apiResponse(0,'This user is already on the ban list',null,405);
         }
-        $shic=time() + 180;
+        $shic=time() + 18000;
         $jinyan=$user_id."#".$shic;
         $spe_arr=array_merge($spe_arr,[$jinyan]);
         $str=implode(",", $spe_arr);
         $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_speak'=>$str]);
         if($res){
-            return Common::apiResponse(1,'Succeeded adding writing ban for 3 minutes');
+            $ms = [
+                'messageContent'=>[
+                    'message'=>'banFromWriting',
+                    'userId'=>$user_id
+                ]
+            ];
+            Common::sendToZego ('SendCustomCommand',$room->id,$uid,json_encode ($ms));
+            return Common::apiResponse(1,'Succeeded adding writing ban for');
         }else{
             return Common::apiResponse(0,'Failed to add writing ban',null,400);
         }

@@ -6,6 +6,7 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\FamilyResource;
 use App\Http\Resources\Api\V1\FamilyUserResource;
+use App\Http\Resources\Api\V1\FamilyRankResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Family;
@@ -40,34 +41,40 @@ class FamilyController extends Controller
 
 
         $query = Family::query ()->where ('status',1)->whereHas ('owner')->where ($time."_rank",'!=',0);
-        $data = $query->orderByDesc ($time."_rank")->limit(33)->get ();
+        $data = $query->orderByDesc ($time."_rank")->paginate(10);
 
         $em = [
             'id'=>0,
             'name'=>'',
             'introduce'=>'',
             'image'=>'',
-            'notice'=>'',
-            'max_num_of_members'=>0,
-            'max_num_of_admins'=>0,
+            //'notice'=>'',
+            //'max_num_of_members'=>0,
+            //'max_num_of_admins'=>0,
             'rank'=>0,
-            'owner'=>new \stdClass(),
-            'me'=>new \stdClass(),
-            'am_i_member'=>false,
-            'am_i_owner'=>false,
-            'am_i_admin'=>false,
-            'members'=>[],
-            'num_of_requests'=>0,
-            'level'=>0
+            //'am_i_member'=>false,
+            //'am_i_owner'=>false,
+            //'am_i_admin'=>false,
+            //'num_of_requests'=>0,
+            //'num_of_members'=>0,
+            //'today_rank'=>0,
+            //'week_rank'=>0,
+            //'month_rank'=>0,
         ];
 
 
-        $top = $data->slice (0,3);
-        $t[0]=@$top[0]?new FamilyResource($top[0]):$em;
-        $t[1]=@$top[1]?new FamilyResource($top[1]):$em;
-        $t[2]=@$top[2]?new FamilyResource($top[2]):$em;
-        $other = $data->slice (3);
-        $other = FamilyResource::collection ($other);
+        if($request->page == 1 || !isset($request->page))
+        {
+            $top = $data->slice (0,3);
+            $t[0]=@$top[0]?new FamilyRankResource($top[0]):$em;
+            $t[1]=@$top[1]?new FamilyRankResource($top[1]):$em;
+            $t[2]=@$top[2]?new FamilyRankResource($top[2]):$em;
+            $other = $data->slice (3);
+        }else{
+            $t = [];
+            $other = $data;
+        }
+        $other = FamilyRankResource::collection ($other);
         return Common::apiResponse (1,'',[
             'top'=>$t,
             'other'=>$other
@@ -142,8 +149,7 @@ class FamilyController extends Controller
             DB::commit ();
         }catch (\Exception $exception){
             DB::rollBack ();
-            dd ($exception);
-            return Common::apiResponse (0,'failed',null,400);
+            return Common::apiResponse (0,'missing params',null,422);
         }
 
 
@@ -233,7 +239,7 @@ class FamilyController extends Controller
     public function join(Request $request){
         $user = $request->user ();
         $family = Family::query ()->find ($request->family_id);
-        $fw = Family::query ()->where ('app_owner_id',$user->id)->exists ();
+        $fw = Family::query ()->where ('user_id',$user->id)->exists ();
         if ($fw){
             return Common::apiResponse (0,'already have one',null,405);
         }
@@ -293,7 +299,7 @@ class FamilyController extends Controller
             return Common::apiResponse (0,'user already joined to other family',null,403);
         }
 
-        $fw = Family::query ()->where ('app_owner_id',$req->user_id)->exists ();
+        $fw = Family::query ()->where ('user_id',$req->user_id)->exists ();
         if ($fw){
             FamilyUser::query ()->where ('user_id',$req->user_id)->delete ();
             return Common::apiResponse (0,'already have one',null,405);

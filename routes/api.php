@@ -243,6 +243,7 @@ Route::middleware('auth:sanctum')->group (function (){
     Route::post ('change_room_mode',[\App\Http\Controllers\Api\V1\RoomController::class,'changeMode']);
 
     Route::get ('trxs',[\App\Http\Controllers\Api\V1\HomeController::class,'trxLog']);
+    Route::get ('images',[\App\Http\Controllers\Api\V1\HomeController::class,'getImages']);
 
     Route::prefix ('box')->group (function (){
         Route::get ('list',[\App\Http\Controllers\Api\V1\BoxController::class,'index']);
@@ -252,10 +253,17 @@ Route::middleware('auth:sanctum')->group (function (){
 
     Route::get ('my_gifts',[\App\Http\Controllers\Api\V1\GiftLogController::class,'giftLogsList']);
 
+    Route::post ('check_wapel',[\App\Http\Controllers\Api\V1\HomeController::class,'check_wapel']);
+
+    Route::post ('hide',[\App\Http\Controllers\Api\V1\HomeController::class,'hide']);
+    Route::post ('un_hide',[\App\Http\Controllers\Api\V1\HomeController::class,'un_hide']);
+    Route::get ('getUserHides',[\App\Http\Controllers\Api\V1\HomeController::class,'getUserHides']);
+
     Route::prefix ('reals')->group (function (){
         Route::get ('list',[\App\Http\Controllers\Api\V1\RealsController::class,'index']);
         Route::post ('create',[\App\Http\Controllers\Api\V1\RealsController::class,'store']);
     });
+
 });
 
 Route::prefix ('tickets')->group (function (){

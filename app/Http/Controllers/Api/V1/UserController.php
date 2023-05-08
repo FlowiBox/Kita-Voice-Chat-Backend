@@ -6,12 +6,15 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\ChargeResource;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Http\Resources\Api\V1\UserRelationsResource;
+use App\Http\Resources\Api\V1\GetUserDataResource;
 use App\Models\Charge;
 use App\Models\Code;
 use App\Models\GiftLog;
 use App\Models\Pack;
 use App\Models\User;
 use App\Models\Ware;
+use App\Models\Follow;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -100,7 +103,7 @@ class UserController extends Controller
 
         }
 
-        $data = new UserResource($user);
+        $data = new GetUserDataResource($user);
         return Common::apiResponse (true,'',$data,200);
     }
 
@@ -110,13 +113,24 @@ class UserController extends Controller
         switch ($request->type){
             case '1': // they follow me
                 $request['pid'] = $user->id;
-                return Common::apiResponse (true,'',UserResource::collection ($user->followers()),200);
+                $data = User::whereHas('followeds', function($q) use($user){
+                    $q->where('followed_user_id',$user->id);
+                })->paginate(10);
+                return Common::apiResponse (true,'',UserRelationsResource::collection ($data),200);
             case '2': // I follow them
-                return Common::apiResponse (true,'',UserResource::collection ($user->followeds()),200);
+        		$data = User::whereHas('followers', function($q) use($user){
+                    $q->where('user_id',$user->id);
+                })->paginate(10);
+                return Common::apiResponse (true,'',UserRelationsResource::collection ($data),200);
             case '3': // friends [i follow them & they follow me]
-                return Common::apiResponse (true,'',UserResource::collection ($user->friends()),200);
+                $data = User::whereHas('followeds', function($q) use($user){
+                    $q->where('followed_user_id',$user->id);
+                })->whereHas('followers', function($q) use($user){
+                    $q->where('user_id',$user->id);
+                })->paginate(10);
+                return Common::apiResponse (true,'',UserRelationsResource::collection ($data),200);
             case '4':
-                return Common::apiResponse (true,'',UserResource::collection ($user->onRoomFolloweds()),200);
+                return Common::apiResponse (true,'',UserRelationsResource::collection ($user->onRoomFolloweds()),200);
             default: // friends [i follow them & they follow me]
                 return Common::apiResponse (false,'please select type',null,422);
         }

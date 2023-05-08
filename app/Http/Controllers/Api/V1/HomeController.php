@@ -13,14 +13,17 @@ use App\Models\Country;
 use App\Models\Exchange;
 use App\Models\ExchangeLog;
 use App\Models\GiftLog;
+use App\Models\Image;
 use App\Models\LiveTime;
 use App\Models\OVip;
+use App\Models\Pack;
 use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Vip;
 use App\Models\VipPrivilege;
+use App\Models\Ware;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -319,6 +322,138 @@ class HomeController extends Controller
         $user = $request->user ();
         $trx = CoinLog::query ()->where ('user_id',$user->id)->orderByDesc ('id')->get ();
         return Common::apiResponse (1,'',TrxResource::collection ($trx),200);
+    }
+
+    public function getImages(){
+        $pk_images = Image::query ()->where ('type',0)->where ('status',1)->select ('id','name','url')->get ();
+        $vip_images = OVip::query ()->select ('id','name','level','img')->get ();
+        foreach ($vip_images as $k=>&$image){
+            $image->frame =  Ware::query ()->where ('get_type',1)
+                ->where ('type',4)
+                ->select ('id','img2')
+                ->where ('level',$image->level)
+                ->first ();
+            $image->intro =  Ware::query ()->where ('get_type',1)
+                ->where ('type',6)
+                ->select ('id','img2')
+                ->where ('level',$image->level)
+                ->first ();
+        }
+
+        $data = [
+            'pk_images'=>$pk_images,
+            'vip_images'=>$vip_images,
+        ];
+        return Common::apiResponse (1,'ok',$data,200);
+    }
+
+
+    public function check_wapel(Request $request){
+        $room = Room::query ()->where ('uid',$request->owner_id)->first ();
+        $user = $request->user ();
+        $wapel = Pack::query ()->where ('type',12)->where ('expire','>=',time ())->where ('user_id',$user->id)->first ();
+        if ($wapel){
+            $ware = Ware::query ()->select ('id','name','title','show_img','img1')->find ($wapel->target_id);
+            $ms = [
+                'messageContent'=>[
+                    'msg'=>'PobUp',
+                    'uId'=>$user->id,
+                    'my_msg'=>$request->message
+                ]
+            ];
+            $json = json_encode ($ms);
+            Common::sendToZego ('SendCustomCommand',@$room->id,$user->id,$json);
+            return Common::apiResponse (1,'has wapel',@$ware,200);
+        }else{
+            return Common::apiResponse (0,'no wapel',null,404);
+        }
+    }
+
+    public function hide(Request $request){
+        $user = $request->user ();
+        if ($request->type == 'country'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',13)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>1]);
+            $user->country_id = null;
+            $user->save();
+        }
+        if ($request->type == 'last_active'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',20)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',20)->update (['is_used'=>1]);
+            $user->online_time = null;
+            $user->save();
+        }
+        if ($request->type == 'visit'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',19)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>1]);
+        }
+        if ($request->type == 'anonymous'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',17)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',17)->update (['is_used'=>1]);
+        }
+        if ($request->type == 'room'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',16)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',16)->update (['is_used'=>1]);
+            Room::query ()->where ('uid',$user->id)->update (['room_status'=>2]);
+        }
+        return Common::apiResponse (1,'ok',null,201);
+    }
+
+    public function un_hide(Request $request){
+        $user = $request->user ();
+        if ($request->type == 'country'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',13)->where ('is_used',1)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'last_active'){
+            Pack::query ()->where('user_id',$user->id)->where('type',20)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'visit'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',19)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'anonymous'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',17)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',17)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'room'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',16)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',16)->update (['is_used'=>0]);
+            Room::query ()->where ('uid',$user->id)->update (['room_status'=>1]);
+        }
+        return Common::apiResponse (1,'ok',null,201);
+    }
+
+    public function getUserHides(Request $request){
+        $user = $request->user ();
+        $data = [
+            'has_color_name'=>Common::hasInPack ($user->id,18),
+            'anonymous'=>Common::hasInPack ($user->id,17,true),
+            'country_hidden'=>Common::hasInPack ($user->id,13,true),
+            'last_active_hidden'=>Common::hasInPack ($user->id,20,true),
+            'visit_hidden'=>Common::hasInPack ($user->id,19,true),
+            'room_hidden'=>Common::hasInPack ($user->id,16,true),
+        ];
+
+        return Common::apiResponse (1,'ok',$data,200);
     }
 
 }

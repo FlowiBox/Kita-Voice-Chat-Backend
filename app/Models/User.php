@@ -257,6 +257,31 @@ class User extends Authenticatable
         return $this->ownAgency ()->exists ();
     }
 
+    public function UserVip()
+    {
+        return $this->hasOne(UserVip::class, 'user_id');
+    }
 
+    public function countGiftPrice($name)
+    {
+        return $this->hasMany(GiftLog::class, $name, 'id')->sum('giftPrice');
+    }
+
+    public function getImageReceiverOrSender($name,$type)
+    {
+        $exp = $this->countGiftPrice($name);
+        $level = Vip::query()->where('type',$type)->where('exp','<=',$exp)->orderByDesc('exp')->first();
+        return $level;
+    }
+
+    public function followers()
+    {
+        return $this->hasMany(Follow::class, 'followed_user_id', 'id');
+    }
+
+    public function followeds()
+    {
+        return $this->hasMany(Follow::class, 'user_id', 'id');
+    }
 
 }

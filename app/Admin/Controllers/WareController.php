@@ -142,6 +142,16 @@ class WareController extends MainController
                 8=>trans ('Badge'),
                 9=>trans ('NoKick'),
                 10=>trans ('Icon'),
+                11=>trans ('intro animation'),
+                12=>trans ('wapel'),
+                13=>trans ('hide country'),
+                14=>trans ('vip gifts'),
+                15=>trans ('no pan'),
+                16=>trans ('hidden room'),
+                17=>trans ('anonymous man'),
+                18=>trans ('colored name'),
+                19=>trans ('profile visitors hide in'),
+                20=>trans ('hide last active')
             ]
         )->rules ('required');
 //        ->rules (function ($form){
@@ -154,10 +164,10 @@ class WareController extends MainController
         $form->currency('price', trans('price'))->symbol ('💰');
 //        $form->number('score', trans('score'));
         $form->number('level', trans('level'));
-        $form->image('show_img', trans('img'));
-        $form->image('img1', trans('img'));
+        $form->image('show_img', trans('img'))->default ('1.png');
+//        $form->image('img1', trans('img'));
         $form->file('img2', trans('svg'));
-        $form->file('img3', trans('video'));
+//        $form->file('img3', trans('video'));
         $form->color('color', trans('color'));
         $form->number('expire', trans('expire(in days)'))->placeholder (trans ('0 if permanent'));
         $form->switch('enable', trans('enable'))->states (Common::getSwitchStates ());

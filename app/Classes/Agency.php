@@ -3,7 +3,8 @@
 namespace App\Classes;
 
 
-use App\Http\Controllers\Web\AuthController;
+
+use App\Agency\Controllers\AuthController;
 use Closure;
 use Encore\Admin\Auth\Database\Menu;
 use Encore\Admin\Layout\Content;
@@ -253,7 +254,7 @@ class Agency
      */
     public function guard()
     {
-        $guard = config('admin.auth.guard') ?: 'admin';
+        $guard = config('agency.auth.guard') ?: 'agency';
 
         return Auth::guard($guard);
     }
@@ -308,26 +309,26 @@ class Agency
     public function routes()
     {
         $attributes = [
-            'prefix'     => config('admin.agency_route.prefix'),
-            'middleware' => config('admin.agency_route.middleware'),
+            'prefix'     => config('agency.route.prefix'),
+            'middleware' => config('agency.route.middleware'),
         ];
 
         app('router')->group($attributes, function ($router) {
 
             /* @var \Illuminate\Support\Facades\Route $router */
-            $router->namespace('\Encore\Admin\Controllers')->group(function ($router) {
+            $router->namespace('\App\Agency\Controllers')->group(function ($router) {
 
                 /* @var \Illuminate\Routing\Router $router */
-                $router->resource('auth/users', 'UserController')->names('admin.auth.users');
-                $router->resource('auth/roles', 'RoleController')->names('admin.auth.roles');
-                $router->resource('auth/permissions', 'PermissionController')->names('admin.auth.permissions');
-                $router->resource('auth/menu', 'MenuController', ['except' => ['create']])->names('admin.auth.menu');
-                $router->resource('auth/logs', 'LogController', ['only' => ['index', 'destroy']])->names('admin.auth.logs');
+                $router->resource('auth/users', 'UserController')->names('auth.users');
+                $router->resource('auth/roles', 'RoleController')->names('auth.roles');
+                $router->resource('auth/permissions', 'PermissionController')->names('auth.permissions');
+                $router->resource('auth/menu', 'MenuController', ['except' => ['create']])->names('auth.menu');
+                $router->resource('auth/logs', 'LogController', ['only' => ['index', 'destroy']])->names('auth.logs');
 
-                $router->post('_handle_form_', 'HandleController@handleForm')->name('admin.handle-form');
-                $router->post('_handle_action_', 'HandleController@handleAction')->name('admin.handle-action');
-                $router->get('_handle_selectable_', 'HandleController@handleSelectable')->name('admin.handle-selectable');
-                $router->get('_handle_renderable_', 'HandleController@handleRenderable')->name('admin.handle-renderable');
+                $router->post('_handle_form_', 'HandleController@handleForm')->name('handle-form');
+                $router->post('_handle_action_', 'HandleController@handleAction')->name('handle-action');
+                $router->get('_handle_selectable_', 'HandleController@handleSelectable')->name('handle-selectable');
+                $router->get('_handle_renderable_', 'HandleController@handleRenderable')->name('handle-renderable');
             });
 
             $authController =  AuthController::class;
