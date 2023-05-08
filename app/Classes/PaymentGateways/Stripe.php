@@ -15,26 +15,37 @@ class Stripe
      return url('/payment/payment-fail');
     }
 
-    public function view(){
+
+    public function make(){
 
 
-        $stripe = new \Stripe\StripeClient('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
-
-        $stripe->paymentIntents->create(
+        \Stripe\Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+        $checkout_session = \Stripe\Checkout\Session::create(
             [
-                'amount' => 1000,
-                'currency' => 'usd',
-                'automatic_payment_methods' => ['enabled' => true],
-            ],
-            ['stripe_account' => '']
+                'line_items' => [[
+                    # Provide the exact Price ID (e.g. pr_1234) of the product you want to sell
+                    'price_data' => [
+                        'currency'=>'usd',
+                        'product_data'=>[
+                            'name'=>'rest'
+                        ],
+                        'unit_amount'=>1000
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => self::redirect_if_payment_success (),
+                'cancel_url' => self::redirect_if_payment_faild (),
+            ]
         );
 
+        return $checkout_session->url;
 
+    }
 
+    public function view(){
 
-
-
-        if(Session::has('stripe_payment') && Session::get('order_info')){
+	     if(Session::has('stripe_payment') && Session::get('order_info')){
             $array=Session::get('order_info');
             $amount=$array['amount'];
             $user_id= domain_info('user_id');
@@ -120,7 +131,7 @@ class Stripe
     }
      public function __construct()
     {
-        abort_if(!\Route::has('admin.plan.index'),404);
+
     }
 
 }
