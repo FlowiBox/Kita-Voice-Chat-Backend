@@ -58,7 +58,7 @@ class UserRelationsResource extends JsonResource
                 'receiver_img' => $this->getImageReceiverOrSender('receiver_id',1)->img,
                 'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img, 
             ],
-            
+            'has_color_name'=>Common::hasInPack ($this->id,18),
         ];
 
         return $data;
