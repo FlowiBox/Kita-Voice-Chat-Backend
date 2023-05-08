@@ -356,9 +356,9 @@ class HomeController extends Controller
             $ware = Ware::query ()->select ('id','name','title','show_img','img1')->find ($wapel->target_id);
             $ms = [
                 'messageContent'=>[
-                    'message'=>'showPobUp',
-                    'userId'=>$user->id,
-                    'my_message'=>$request->message
+                    'msg'=>'PobUp',
+                    'uId'=>$user->id,
+                    'my_msg'=>$request->message
                 ]
             ];
             $json = json_encode ($ms);
@@ -377,7 +377,7 @@ class HomeController extends Controller
             $user->save();
         }
         if ($request->type == 'last_active'){
-            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>1]);
+            Pack::query ()->where('user_id',$user->id)->where('type',20)->update (['is_used'=>1]);
             $user->online_time = null;
             $user->save();
         }
@@ -400,7 +400,7 @@ class HomeController extends Controller
             Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>0]);
         }
         if ($request->type == 'last_active'){
-            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>0]);
+            Pack::query ()->where('user_id',$user->id)->where('type',20)->update (['is_used'=>0]);
         }
         if ($request->type == 'visit'){
             Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>0]);
@@ -421,7 +421,7 @@ class HomeController extends Controller
             'has_color_name'=>Common::hasInPack ($user->id,18),
             'anonymous'=>Common::hasInPack ($user->id,17,true),
             'country_hidden'=>Common::hasInPack ($user->id,13,true),
-            'last_active_hidden'=>Common::hasInPack ($user->id,13,true),
+            'last_active_hidden'=>Common::hasInPack ($user->id,20,true),
             'visit_hidden'=>Common::hasInPack ($user->id,19,true),
             'room_hidden'=>Common::hasInPack ($user->id,16,true),
         ];

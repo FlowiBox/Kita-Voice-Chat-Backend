@@ -50,7 +50,7 @@ class RoomController extends Controller
     {
         $result = $this->repo->all ($request);
         $user = $request->user ();
-        if (!Common::checkPackPrev ($user->id,13)){
+        if (!Common::checkPackPrev ($user->id,20)){
             $user->online_time = time();
             $user->save();
         }
@@ -572,7 +572,8 @@ class RoomController extends Controller
 //                "entroImg"=>Common::getUserDress($user->id,$user->dress_3,6,'img2')?:Common::getUserDress($user->id,$user->dress_3,6,'img1'),
                 "entroImgId"=>$user->dress_3?(string)$user->dress_3:"",
                 'userName'=>$user->name?:$user->nickname,
-                'userImge'=>$user->avatar
+                'userImge'=>$user->avatar,
+                'vip'=>$request->have_vip
             ]
         ];
         $json = json_encode ($d);

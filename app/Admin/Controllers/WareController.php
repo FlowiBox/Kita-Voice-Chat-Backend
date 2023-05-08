@@ -144,13 +144,14 @@ class WareController extends MainController
                 10=>trans ('Icon'),
                 11=>trans ('intro animation'),
                 12=>trans ('wapel'),
-                13=>trans ('hide country and last login'),
+                13=>trans ('hide country'),
                 14=>trans ('vip gifts'),
                 15=>trans ('no pan'),
                 16=>trans ('hidden room'),
                 17=>trans ('anonymous man'),
                 18=>trans ('colored name'),
                 19=>trans ('profile visitors hide in'),
+                20=>trans ('hide last active')
             ]
         )->rules ('required');
 //        ->rules (function ($form){

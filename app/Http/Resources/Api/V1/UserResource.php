@@ -169,7 +169,7 @@ class UserResource extends JsonResource
             'has_color_name'=>Common::hasInPack ($this->id,18),
             'anonymous'=>Common::hasInPack ($this->id,17,true),
             'country_hidden'=>Common::hasInPack ($this->id,13,true),
-            'last_active_hidden'=>Common::hasInPack ($this->id,13,true),
+            'last_active_hidden'=>Common::hasInPack ($this->id,20,true),
             'visit_hidden'=>Common::hasInPack ($this->id,19,true),
             'room_hidden'=>Common::hasInPack ($this->id,16,true),
         ];
