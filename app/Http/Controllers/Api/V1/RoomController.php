@@ -580,7 +580,9 @@ class RoomController extends Controller
         if (!$request->is_update){
             if ($request->sendToZego != 'no'){
                 Common::sendToZego ('SendCustomCommand',$room_info['id'],$user->id,$json);
-                Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,' انضم للغرفة');
+                if (!Common::hasInPack ($user->id,17,true)){
+                    Common::sendToZego_2 ('SendBroadcastMessage',$room_info['id'],$user->id,$user->name,' انضم للغرفة');
+                }
             }
         }
 
