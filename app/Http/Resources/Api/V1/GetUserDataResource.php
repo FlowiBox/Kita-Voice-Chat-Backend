@@ -48,11 +48,12 @@ class GetUserDataResource extends JsonResource
             'profile'=> [
                 'image' => @$this->profile->avatar,
                 'age' => Carbon::parse (@$this->profile->birthday)->age,
-                'country' => @$this->profile->country,
+//                'country' => @$this->profile->country,//mohammed
+                'country' => !Common::hasInPack ($this->id,13,true)?(@$this->profile->country?:''):'',//milad
             ],
             'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'),
 //            'vip'=> [
-//                'level' => @$this->UserVip->level,// mouhammed
+//                'level' => @$this->UserVip->level, // mohammed
 //            ],
             'vip'=>@Common::ovip_center ($this->id),// milad
             'level'=> [
@@ -67,7 +68,9 @@ class GetUserDataResource extends JsonResource
             'is_family_owner'=> @Family::query ()->where ('user_id',$this->id)->exists (),
             'family_name'=>@$fn,
             'family_data'=>@$f,
-
+//            'online_time'=>$this->online_time?date("Y-m-d H:i:s", $this->online_time):'',// mohammed
+            'online_time'=>!Common::hasInPack ($this->id,20,true)?($this->online_time?date("Y-m-d H:i:s", $this->online_time):''):'',// milad
+            'has_color_name'=>Common::hasInPack ($this->id,18),
         ];
         return $data;
     }
