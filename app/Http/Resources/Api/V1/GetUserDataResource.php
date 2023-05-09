@@ -66,7 +66,8 @@ class GetUserDataResource extends JsonResource
             'is_family_owner'=> @Family::query ()->where ('user_id',$this->id)->exists (),
             'family_name'=>@$fn,
             'family_data'=>@$f,
-            
+            'online_time'=>$this->online_time?date("Y-m-d H:i:s", $this->online_time):'',
+            'has_color_name'=>Common::hasInPack ($this->id,18),
         ];
         return $data;
     }

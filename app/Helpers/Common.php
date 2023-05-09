@@ -443,7 +443,12 @@ class Common{
             ->where ('type',$type)
             ->where (function ($q){
                 $q->where('expire',0)->orWhere('expire','>=',time ());
-            })->exists ();
+            });
+       if ($use_status){
+           $ch = $ch->where ('is_used',1);
+       }
+
+       return $ch->exists ();
     }
 
     public static function checkPackPrev($user_id,$type){

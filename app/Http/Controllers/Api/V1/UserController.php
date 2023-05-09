@@ -309,16 +309,18 @@ class UserController extends Controller
             $i++;
             $v->user_id = @$v->{$keywords};
             $v->exp = ceil($v->exp);
+            $v->name = @$users->name?:'';
             $v->avatar = @$users->profile->avatar?:'';
-            $v->nickname = @$users->nickname?:'';
-            $v->sex = @$users->profile->gender == 1?trans ('male'):trans ('female');
-            $v->stars_img = @Common::getLevel($v->{$keywords}, 1 ,'img')?:"";
-            $v->gold_img = @Common::getLevel($v->{$keywords}, 2 ,'img')?:"";
-            $v->vip_img = @Common::getLevel($v->{$keywords}, 3 ,'img')?:"";
+            $v->frame = Common::getUserDress($users->id,$users->dress_1,4,'img2')?:Common::getUserDress($users->id,$users->dress_1,4,'img1');
+            $v->frame_id = @$users->dress_1;
+            //$v->sex = @$users->profile->gender == 1?trans ('male'):trans ('female');
+            //$v->stars_img = $users->getImageReceiverOrSender('receiver_id',1)->img?:"";
+            //$v->gold_img = $user->getImageReceiverOrSender('sender_id',2)->img?:"";
+            //$v->vip_img = @Common::getLevel($v->{$keywords}, 3 ,'img')?:"";
             if ($users){
-                $v->user = new UserResource($users);
+                //$v->user = $users;
             }else{
-                $v->user = new \stdClass();
+                //$v->user = new \stdClass();
             }
 
             if ($v->{$keywords} == $user_id) $l = $i;
@@ -326,15 +328,17 @@ class UserController extends Controller
         }
         unset($v);
         //empty data
-        $kong['exp']=0;
         $kong['user_id']=0;
-        $kong['sex']="";
+        $kong['exp']=0;
+        $kong['name']='';
         $kong['avatar']='';
-        $kong['nickname']='';
-        $kong['stars_img']='';
-        $kong['gold_img']='';
-        $kong['vip_img']='';
-        $kong['user']=new \stdClass();
+        $kong['frame']='';
+        $kong['frame_id']='';
+        //$kong['sex']="";
+        //$kong['stars_img']='';
+        //$kong['gold_img']='';
+        //$kong['vip_img']='';
+        //$kong['user']=new \stdClass();
         if ($class != 3){
             $data[0] = isset($data[0]) ? $data[0] : $kong;
             $data[1] = isset($data[1]) ? $data[1] : $kong;
@@ -344,9 +348,9 @@ class UserController extends Controller
         //user
         $user->sort = $l ? (string)$l : '99+';
         $user->user_id = $user->id;
-        $user->stars_img = Common::getLevel($user->id, 1 ,'img');
-        $user->gold_img = Common::getLevel($user->id, 2 ,'img');
-        $user->vip_img = Common::getLevel($user->id, 3 ,'img');
+        //$user->stars_img = $user->getImageReceiverOrSender('receiver_id',1)->img;
+        //$user->gold_img = $user->getImageReceiverOrSender('sender_id',2)->img;
+        //$user->vip_img = Common::getLevel($user->id, 3 ,'img');
         if ($type == 1) {
             $q = DB::table('gift_logs')->whereDay('created_at', Carbon::now ()->day);
         } elseif ($type == 2) {
@@ -359,14 +363,16 @@ class UserController extends Controller
         $exp=$q->where($keywords,$user_id)->sum('giftPrice');
         $user->exp = ceil($exp);
         $user->avatar = @$user->profile->avatar;
-        if (@$user->profile->gender == 1){
+        $user->frame = Common::getUserDress($user->id,$user->dress_1,4,'img2')?:Common::getUserDress($user->id,$user->dress_1,4,'img1');
+        $user->frame_id = @$user->dress_1;
+        /*if (@$user->profile->gender == 1){
             $user->sex = 'male';
         }elseif (@$user->profile->gender == 0){
             $user->sex = 'female';
         }else{
             $user->sex = '';
-        }
-        $arr['user'] = $user->only('user_id','exp','nickname','avatar','sex','sort','stars_img','gold_img','vip_img');
+        }*/
+        $arr['user'] = $user->only('user_id','exp','name','avatar','frame','frame_id');
 
         $arr['top'] = array_slice($data->toArray (), 0, 3);
         $arr['other'] = array_slice($data->toArray (), 3);
