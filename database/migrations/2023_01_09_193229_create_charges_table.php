@@ -19,7 +19,7 @@ class CreateChargesTable extends Migration
             $table->string ('charger_type');
             $table->unsignedInteger ('user_id');
             $table->string ('user_type');
-            $table->decimal ('amount')->nullable ()->default (0);
+            $table->decimal ('amount',18,2)->nullable ()->default (0);
             $table->unsignedTinyInteger ('amount_type')->nullable ()->default (1)->comment ('1=diamonds 2=coins 3=gold 4=flowers');
             $table->timestamps();
         });

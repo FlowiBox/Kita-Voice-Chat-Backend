@@ -357,7 +357,7 @@ class HomeController extends Controller
                 'messageContent'=>[
                     'msg'=>'PobUp',
                     'uId'=>$user->id,
-                    'num'=>$ware->use_num,
+//                    'num'=>$ware->use_num,
                     'my_msg'=>$request->message
                 ]
             ];
