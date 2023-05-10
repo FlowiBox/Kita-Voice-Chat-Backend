@@ -436,19 +436,19 @@ class HomeController extends Controller
             Pack::query ()->where('user_id',$user->id)->where('type',20)->update (['is_used'=>0]);
         }
         if ($request->type == 'visit'){
-            if (!Pack::query ()->where('user_id',$user->id)->where('type',19)->where ('is_used',0)->exists ()){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',19)->where ('is_used',1)->exists ()){
                 return Common::apiResponse (0,'not allowed',null,403);
             }
             Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>0]);
         }
         if ($request->type == 'anonymous'){
-            if (!Pack::query ()->where('user_id',$user->id)->where('type',17)->where ('is_used',0)->exists ()){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',17)->where ('is_used',1)->exists ()){
                 return Common::apiResponse (0,'not allowed',null,403);
             }
             Pack::query ()->where('user_id',$user->id)->where('type',17)->update (['is_used'=>0]);
         }
         if ($request->type == 'room'){
-            if (!Pack::query ()->where('user_id',$user->id)->where('type',16)->where ('is_used',0)->exists ()){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',16)->where ('is_used',1)->exists ()){
                 return Common::apiResponse (0,'not allowed',null,403);
             }
             Pack::query ()->where('user_id',$user->id)->where('type',16)->update (['is_used'=>0]);
