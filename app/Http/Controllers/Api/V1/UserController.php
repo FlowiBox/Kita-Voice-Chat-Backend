@@ -335,7 +335,7 @@ class UserController extends Controller
         $kong['name']='';
         $kong['avatar']='';
         $kong['frame']='';
-        $kong['frame_id']='';
+        $kong['frame_id']=0;
         //$kong['sex']="";
         //$kong['stars_img']='';
         //$kong['gold_img']='';
