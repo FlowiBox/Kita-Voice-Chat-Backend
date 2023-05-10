@@ -365,6 +365,9 @@ class HomeController extends Controller
             Common::sendToZego ('SendCustomCommand',@$room->id,$user->id,$json);
             $wapel->use_num -= 1;
             $wapel->save ();
+            if ($wapel->use_num < 1){
+                $wapel->delete ();
+            }
             return Common::apiResponse (1,'has wapel',@$ware,200);
         }else{
             return Common::apiResponse (0,'no wapel',null,404);
