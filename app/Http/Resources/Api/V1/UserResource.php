@@ -29,6 +29,14 @@ class UserResource extends JsonResource
        if(!@$this->id){
            return ;
        }
+
+        $wapel = Pack::query ()
+            ->where ('type',12)
+            ->where ('expire','>=',time ())
+            ->where ('user_id',$this->id)
+            ->where ('use_num','>',0)
+            ->first ();
+
         Pack::query ()
             ->where ('expire','!=',0)
             ->where ('expire','<',time ())->delete ();
@@ -172,6 +180,7 @@ class UserResource extends JsonResource
             'last_active_hidden'=>Common::hasInPack ($this->id,20,true),
             'visit_hidden'=>Common::hasInPack ($this->id,19,true),
             'room_hidden'=>Common::hasInPack ($this->id,16,true),
+            'wapel_num'=>@(integer)$wapel->use_num?:0
         ];
 
 
