@@ -60,6 +60,7 @@ class UserRelationsResource extends JsonResource
             ],
             'online_time'=>$this->online_time?date("Y-m-d H:i:s", $this->online_time):'',
             'has_color_name'=>Common::hasInPack ($this->id,18),
+            'is_follow'=>@(bool)Common::IsFollow (@$request->user ()->id,$this->id),
         ];
 
         return $data;
