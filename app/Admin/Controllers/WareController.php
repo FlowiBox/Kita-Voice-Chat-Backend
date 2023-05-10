@@ -171,7 +171,8 @@ class WareController extends MainController
         $form->color('color', trans('color'));
         $form->number('expire', trans('expire(in days)'))->placeholder (trans ('0 if permanent'));
         $form->switch('enable', trans('enable'))->states (Common::getSwitchStates ());
-        $form->number('sort', 'sort');
+//        $form->number('sort', 'sort');
+        $form->number('num', __('num'));
 
 
         return $form;

@@ -294,7 +294,8 @@ class Common{
                         'type'=>$ware->type,
                         'target_id'=>$ware->id,
                         'num'=>1,
-                        'expire'=>$vip->expire ? now ()->addDays ($vip->expire)->timestamp : 0
+                        'expire'=>$vip->expire ? now ()->addDays ($vip->expire)->timestamp : 0,
+                        'use_num'=>$ware->num
                     ]
                 );
             }
