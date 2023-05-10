@@ -351,18 +351,26 @@ class HomeController extends Controller
     public function check_wapel(Request $request){
         $room = Room::query ()->where ('uid',$request->owner_id)->first ();
         $user = $request->user ();
-        $wapel = Pack::query ()->where ('type',12)->where ('expire','>=',time ())->where ('user_id',$user->id)->first ();
+        $wapel = Pack::query ()
+            ->where ('type',12)
+            ->where ('expire','>=',time ())
+            ->where ('user_id',$user->id)
+            ->where ('use_num','>',0)
+            ->first ();
         if ($wapel){
             $ware = Ware::query ()->select ('id','name','title','show_img','img1')->find ($wapel->target_id);
             $ms = [
                 'messageContent'=>[
                     'msg'=>'PobUp',
                     'uId'=>$user->id,
+                    'num'=>$ware->use_num,
                     'my_msg'=>$request->message
                 ]
             ];
             $json = json_encode ($ms);
             Common::sendToZego ('SendCustomCommand',@$room->id,$user->id,$json);
+            $wapel->use_num -= 1;
+            $wapel->save ();
             return Common::apiResponse (1,'has wapel',@$ware,200);
         }else{
             return Common::apiResponse (0,'no wapel',null,404);

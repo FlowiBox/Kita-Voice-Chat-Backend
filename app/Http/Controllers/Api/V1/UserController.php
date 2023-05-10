@@ -499,6 +499,7 @@ class UserController extends Controller
             $arr['num']=1;//$qty;
             $arr['expire']= $ware->expire ? time()+($qty * $ware->expire * 86400) : 0;
             $arr['is_read']=1;
+            $arr['use_num']=$ware->num;
             Pack::query ()->create ($arr);
             $user->decrement('di',$total_price);
             DB::commit ();
