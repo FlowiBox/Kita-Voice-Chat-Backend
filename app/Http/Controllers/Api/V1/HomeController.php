@@ -36,6 +36,7 @@ class HomeController extends Controller
         $countries = Country::query ()->where ('status',1)->get ();
         return Common::apiResponse (1,'',CountryResource::collection ($countries));
     }
+
     public function getCountry($id){
         $country = Country::find($id);
         if ($country){
@@ -64,7 +65,6 @@ class HomeController extends Controller
         return Common::apiResponse (1,'',Background::query ()->where('enable',1)->select ('id','img')->get (),200);
     }
 
-
     public function generateAgoraToken(Request $request){
         $user_id = $request->user ()->id;
         if ($request->type == 'rtc'){
@@ -80,7 +80,6 @@ class HomeController extends Controller
         }
         return Common::apiResponse (1,'',['rtm_token'=>$token]);
     }
-
 
     public function one_page(Request $request){
         $type = $request->type;
@@ -121,7 +120,6 @@ class HomeController extends Controller
         }
         return Common::apiResponse (1,'does not exists',false);
     }
-
 
     public function getTimes(Request $request){
         $user_id = $request->user_id?:$request->user ()->id;
@@ -209,7 +207,6 @@ class HomeController extends Controller
         return Common::apiResponse (1,'done',null,201);
     }
 
-
     public function openTicket(Request $request){
         if (!$request->contact || !$request->txt){
             return Common::apiResponse (0,'missing params');
@@ -236,7 +233,6 @@ class HomeController extends Controller
         ];
         return Common::apiResponse (1,'done',$out,200);
     }
-
 
     public function sendToZego(Request $request){
         $ms = [
@@ -317,7 +313,6 @@ class HomeController extends Controller
         return Common::apiResponse (1,'ok',$ex,200);
     }
 
-
     public function trxLog(Request $request){
         $user = $request->user ();
         $trx = CoinLog::query ()->where ('user_id',$user->id)->orderByDesc ('id')->get ();
@@ -346,7 +341,6 @@ class HomeController extends Controller
         ];
         return Common::apiResponse (1,'ok',$data,200);
     }
-
 
     public function check_wapel(Request $request){
         $room = Room::query ()->where ('uid',$request->owner_id)->first ();
@@ -398,8 +392,6 @@ class HomeController extends Controller
                 return Common::apiResponse (0,'not allowed',null,403);
             }
             Pack::query ()->where('user_id',$user->id)->where('type',20)->update (['is_used'=>1]);
-            $user->online_time = null;
-            $user->save();
         }
         if ($request->type == 'visit'){
             if (!Ware::query ()->where('type',19)->exists ()){
