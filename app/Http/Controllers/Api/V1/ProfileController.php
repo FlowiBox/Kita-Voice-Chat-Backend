@@ -48,7 +48,7 @@ class ProfileController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(Request $request,$id)
     {
@@ -56,16 +56,16 @@ class ProfileController extends Controller
         $user = User::query ()->find ($id);
         if ($me->id != $user->id){
             if (!Common::checkPackPrev ($me->id,19)){
-                $user->profileVisits()->attach([$me->id]);
+                $user->profileVisits()->syncWithoutDetaching(
+                    [
+                        $me->id => [
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]
+                    ]
+                );
+                Common::handelFirebase ($request,'visit');
             }
-        }
-
-        $path = "$id/visitors";
-        $obj = [
-            'id'=>$request->user ()->id,
-        ];
-        if (!Common::checkPackPrev ($me->id,19)){
-            Common::fireBaseDatabase ($path,$obj);
         }
         if($user){
             return Common::apiResponse (true,'',new UserResource($user),200);

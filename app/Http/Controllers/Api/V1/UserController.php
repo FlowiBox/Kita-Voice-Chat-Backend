@@ -90,17 +90,19 @@ class UserController extends Controller
 //                Common::handelFirebase ($request,'visit');
 //            }
 
-            $user->profileVisits()->syncWithoutDetaching(
-                [
-                    $me->id => [
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]
-                ]
-            );
-            Common::handelFirebase ($request,'visit');
-
-
+            if ($me->id != $user->id){
+                if (!Common::checkPackPrev ($me->id,19)){
+                    $user->profileVisits()->syncWithoutDetaching(
+                        [
+                            $me->id => [
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]
+                        ]
+                    );
+                    Common::handelFirebase ($request,'visit');
+                }
+            }
         }
 
         $data = new GetUserDataResource($user);
