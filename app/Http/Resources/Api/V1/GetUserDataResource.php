@@ -71,6 +71,7 @@ class GetUserDataResource extends JsonResource
 //            'online_time'=>$this->online_time?date("Y-m-d H:i:s", $this->online_time):'',// mohammed
             'online_time'=>!Common::hasInPack ($this->id,20,true)?($this->online_time?date("Y-m-d H:i:s", $this->online_time):''):'',// milad
             'has_color_name'=>Common::hasInPack ($this->id,18),
+            'coins'=>$this->obtained_coins,
         ];
         return $data;
     }
