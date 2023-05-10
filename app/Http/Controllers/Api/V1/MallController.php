@@ -258,6 +258,7 @@ class MallController extends Controller
         DB::beginTransaction ();
         try {
             $from->decrement ('di',$total);
+            UserVip::query ()->where ('user_id',$user_id)->where ('level','<=',$vip->level)->delete ();
             UserVip::query ()->create (
                 [
                     'type'=>$type,
