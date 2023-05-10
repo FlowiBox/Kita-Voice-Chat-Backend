@@ -100,12 +100,14 @@ class UserController extends Controller
                             ]
                         ]
                     );
-                    Common::handelFirebase ($request,'visit');
+                    if($request->send_firebase == true){
+                        Common::handelFirebase ($request,'visit');
+                    }
                 }
             }
         }
 
-        $data = new GetUserDataResource($user);
+        $data = new UserResource($user);
         return Common::apiResponse (true,'',$data,200);
     }
 
