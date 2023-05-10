@@ -358,14 +358,25 @@ class UserController extends MainController
         );
         $grid->column('type',__ ('type'))->using (
             [
-                1=>__ ('gem'),
-                2=>__ ('gift'),
-                3=>__ ('card roll'),
-                4=>__ ('avatar frame'),
-                5=>__ ('bubble frame'),
-                6=>__ ('entry special effects'),
-                7=>__ ('microphone aperture'),
-                8=>__ ('badge'),
+                1=>trans ('Gemstone'),
+                3=>trans ('Card Scroll'),
+                4=>trans ('Avatar Frame'),
+                5=>trans ('Bubble Frame'),
+                6=>trans ('Entering Special Effects'),
+                7=>trans ('Microphone Aperture'),
+                8=>trans ('Badge'),
+                9=>trans ('NoKick'),
+                10=>trans ('Icon'),
+                11=>trans ('intro animation'),
+                12=>trans ('wapel'),
+                13=>trans ('hide country'),
+                14=>trans ('vip gifts'),
+                15=>trans ('no pan'),
+                16=>trans ('hidden room'),
+                17=>trans ('anonymous man'),
+                18=>trans ('colored name'),
+                19=>trans ('profile visitors hide in'),
+                20=>trans ('hide last active')
             ]
         );
         $grid->column('target_id',__ ('img'))->display (function (){
