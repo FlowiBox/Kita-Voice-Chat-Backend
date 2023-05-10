@@ -370,12 +370,90 @@ class HomeController extends Controller
     }
 
     public function hide(Request $request){
+        $user = $request->user ();
+        if ($request->type == 'country'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',13)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>1]);
+            $user->country_id = null;
+            $user->save();
+        }
+        if ($request->type == 'last_active'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',20)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',20)->update (['is_used'=>1]);
+            $user->online_time = null;
+            $user->save();
+        }
+        if ($request->type == 'visit'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',19)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>1]);
+        }
+        if ($request->type == 'anonymous'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',17)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',17)->update (['is_used'=>1]);
+        }
+        if ($request->type == 'room'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',16)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',16)->update (['is_used'=>1]);
+            Room::query ()->where ('uid',$user->id)->update (['room_status'=>2]);
+        }
+        return Common::apiResponse (1,'ok',null,201);
     }
 
     public function un_hide(Request $request){
+        $user = $request->user ();
+        if ($request->type == 'country'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',13)->where ('is_used',1)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'last_active'){
+            Pack::query ()->where('user_id',$user->id)->where('type',20)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'visit'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',19)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'anonymous'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',17)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',17)->update (['is_used'=>0]);
+        }
+        if ($request->type == 'room'){
+            if (!Pack::query ()->where('user_id',$user->id)->where('type',16)->where ('is_used',0)->exists ()){
+                return Common::apiResponse (0,'not allowed',null,403);
+            }
+            Pack::query ()->where('user_id',$user->id)->where('type',16)->update (['is_used'=>0]);
+            Room::query ()->where ('uid',$user->id)->update (['room_status'=>1]);
+        }
+        return Common::apiResponse (1,'ok',null,201);
     }
 
     public function getUserHides(Request $request){
+        $user = $request->user ();
+        $data = [
+            'has_color_name'=>Common::hasInPack ($user->id,18),
+            'anonymous'=>Common::hasInPack ($user->id,17,true),
+            'country_hidden'=>Common::hasInPack ($user->id,13,true),
+            'last_active_hidden'=>Common::hasInPack ($user->id,20,true),
+            'visit_hidden'=>Common::hasInPack ($user->id,19,true),
+            'room_hidden'=>Common::hasInPack ($user->id,16,true),
+        ];
+
+        return Common::apiResponse (1,'ok',$data,200);
     }
 
 }
