@@ -372,6 +372,9 @@ class HomeController extends Controller
     public function hide(Request $request){
         $user = $request->user ();
         if ($request->type == 'country'){
+            if (!Ware::query ()->where('type',13)->exists ()){
+                return Common::apiResponse (0,'not found',null,404);
+            }else
             if (!Pack::query ()->where('user_id',$user->id)->where('type',13)->where ('is_used',0)->exists ()){
                 return Common::apiResponse (0,'not allowed',null,403);
             }
@@ -380,6 +383,9 @@ class HomeController extends Controller
             $user->save();
         }
         if ($request->type == 'last_active'){
+            if (!Ware::query ()->where('type',20)->exists ()){
+                return Common::apiResponse (0,'not found',null,404);
+            }else
             if (!Pack::query ()->where('user_id',$user->id)->where('type',20)->where ('is_used',0)->exists ()){
                 return Common::apiResponse (0,'not allowed',null,403);
             }
@@ -388,18 +394,27 @@ class HomeController extends Controller
             $user->save();
         }
         if ($request->type == 'visit'){
+            if (!Ware::query ()->where('type',19)->exists ()){
+                return Common::apiResponse (0,'not found',null,404);
+            }else
             if (!Pack::query ()->where('user_id',$user->id)->where('type',19)->where ('is_used',0)->exists ()){
                 return Common::apiResponse (0,'not allowed',null,403);
             }
             Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>1]);
         }
         if ($request->type == 'anonymous'){
+            if (!Ware::query ()->where('type',17)->exists ()){
+                return Common::apiResponse (0,'not found',null,404);
+            }else
             if (!Pack::query ()->where('user_id',$user->id)->where('type',17)->where ('is_used',0)->exists ()){
                 return Common::apiResponse (0,'not allowed',null,403);
             }
             Pack::query ()->where('user_id',$user->id)->where('type',17)->update (['is_used'=>1]);
         }
         if ($request->type == 'room'){
+            if (!Ware::query ()->where('type',16)->exists ()){
+                return Common::apiResponse (0,'not found',null,404);
+            }
             if (!Pack::query ()->where('user_id',$user->id)->where('type',16)->where ('is_used',0)->exists ()){
                 return Common::apiResponse (0,'not allowed',null,403);
             }
