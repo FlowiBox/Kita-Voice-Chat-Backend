@@ -6,6 +6,7 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Profile\ProfileRequest;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Http\Resources\Api\V1\UserVisitorResource;
 use App\Models\Country;
 use App\Models\Pack;
 use App\Models\User;
@@ -166,7 +167,7 @@ class ProfileController extends Controller
 
     public function myProfileVisitorsList(Request $request){
         $user = $request->user();
-        $visitors = UserResource::collection ($user->profileVisits);
+        $visitors = UserVisitorResource::collection ($user->profileVisits()->paginate(15));
         return Common::apiResponse (1,'',$visitors);
     }
 }
