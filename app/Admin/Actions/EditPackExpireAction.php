@@ -16,17 +16,20 @@ use Illuminate\Support\Facades\DB;
 
 class EditPackExpireAction extends RowAction
 {
-    public $name = 'Edit';
+    public $name = 'تحرير';
 
 
     public function handle(Model $model, Request $request)
     {
-        $ex = $request->days * 86400;
+        $ex = ($request->days?:0);
+        $num = $request->use_num?:0;
 
         if ($request->type == 0){
-            $model->expire += $ex;
+            $model->expire += $ex * 86400;
+            $model->use_num += $num;
         }else{
-            $model->expire -= $ex;
+            $model->expire -= $ex * 86400;
+            $model->use_num -= $num;
         }
         $model->save ();
         return $this->response()->success ('تم بنجاح')->refresh ();
@@ -35,6 +38,7 @@ class EditPackExpireAction extends RowAction
     public function form()
     {
         $this->radio('type',__ ('type'))->options ([0=>'رفع',1=>'خفض']);
-        $this->integer('days', 'days');
+        $this->integer('days', __('days'));
+        $this->integer('use_num', __('num'));
     }
 }
