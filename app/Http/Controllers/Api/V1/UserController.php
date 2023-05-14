@@ -100,7 +100,7 @@ class UserController extends Controller
                             ]
                         ]
                     );
-                    if($request->send_firebase == true || !is_null($request->send_firebase)){
+                    if($request->send_firebase == true || $request->send_firebase !== null){
                         Common::handelFirebase ($request,'visit');
                     }
                 }
