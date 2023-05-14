@@ -160,7 +160,7 @@ class MallController extends Controller
         if(!$coin) return Common::apiResponse (0,'not found',null,404);
         $trx = rand (111111111111111111,999999999999999999);
         DB::beginTransaction ();
-        try {
+//        try {
             $log = CoinLog::query ()->create (
                 [
                     'paid_usd'=>$coin->usd,
@@ -192,11 +192,11 @@ class MallController extends Controller
 
 
             return Common::apiResponse (1,'done',null,201);
-        }catch (\Exception $exception){
-            DB::rollBack ();
-            dd ($exception->getMessage ());
-            return Common::apiResponse (0,'fail',null,400);
-        }
+//        }catch (\Exception $exception){
+//            DB::rollBack ();
+//            dd ($exception->getMessage ());
+//            return Common::apiResponse (0,'fail',null,400);
+//        }
     }
 
 
