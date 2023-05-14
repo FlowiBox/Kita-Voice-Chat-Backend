@@ -100,7 +100,7 @@ class UserController extends Controller
                             ]
                         ]
                     );
-                    if($request->send_firebase == true){
+                    if($request->send_firebase == true || $request->send_firebase !== null){
                         Common::handelFirebase ($request,'visit');
                     }
                 }
@@ -119,19 +119,19 @@ class UserController extends Controller
                 $request['pid'] = $user->id;
                 $data = User::whereHas('followeds', function($q) use($user){
                     $q->where('followed_user_id',$user->id);
-                })->paginate(10);
+                })->paginate(15);
                 return Common::apiResponse (true,'',UserRelationsResource::collection ($data),200);
             case '2': // I follow them
         		$data = User::whereHas('followers', function($q) use($user){
                     $q->where('user_id',$user->id);
-                })->paginate(10);
+                })->paginate(15);
                 return Common::apiResponse (true,'',UserRelationsResource::collection ($data),200);
             case '3': // friends [i follow them & they follow me]
                 $data = User::whereHas('followeds', function($q) use($user){
                     $q->where('followed_user_id',$user->id);
                 })->whereHas('followers', function($q) use($user){
                     $q->where('user_id',$user->id);
-                })->paginate(10);
+                })->paginate(15);
                 return Common::apiResponse (true,'',UserRelationsResource::collection ($data),200);
             case '4':
                 return Common::apiResponse (true,'',UserRelationsResource::collection ($user->onRoomFolloweds()),200);
