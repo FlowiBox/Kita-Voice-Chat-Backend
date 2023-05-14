@@ -193,8 +193,8 @@ class MallController extends Controller
 
             return Common::apiResponse (1,'done',null,201);
         }catch (\Exception $exception){
-//            dd ($exception->getMessage ());
             DB::rollBack ();
+            dd ($exception->getMessage ());
             return Common::apiResponse (0,'fail',null,400);
         }
     }
