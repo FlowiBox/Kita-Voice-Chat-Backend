@@ -46,7 +46,7 @@ class Stripe
             ]
         );
 
-        CoinLog::query ()->where ('trx',$data['trx'])->where ('status',0)->update (['pid'=>$checkout_session->id]);
+        CoinLog::query ()->where ('trx',$data['trx'])->where ('method','strip')->where ('status',0)->update (['pid'=>$checkout_session->id]);
         return $checkout_session->url;
 
     }
