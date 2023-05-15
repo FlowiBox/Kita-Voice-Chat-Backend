@@ -2,6 +2,7 @@
 
 
 use App\Classes\Facades\Agency;
+use App\Http\Middleware\IpMiddleware;
 use Encore\Admin\Facades\Admin;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,8 @@ Route::group(
         'middleware'    => [
             'web',
             'admin',
+            'adminIp',
+            'adminGeneralBan',
             'multiLanguage',
         ],
         'as'            => config('admin.route.prefix') . '.',
