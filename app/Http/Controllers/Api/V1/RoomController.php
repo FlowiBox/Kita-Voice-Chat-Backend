@@ -636,7 +636,9 @@ class RoomController extends Controller
 
         $roomAdmin=explode(',',$roomAdmin);
         $admins=User::whereIn('id', $roomAdmin)->get();
-
+        $admins = $admins->filter (function ($q){
+            return !Common::hasInPack ($q->id,17,true);
+        });
         $admin = [];
         foreach($admins as $k=>$v){
             $admin[$k]['id'] = @$v->id;
@@ -651,6 +653,9 @@ class RoomController extends Controller
 
         $roomVisitor=array_values(array_diff($roomVisitor,$roomAdmin));
         $visitors=User::query ()->whereIn('id', $roomVisitor)->get();
+        $visitors = $visitors->filter (function ($q){
+            return !Common::hasInPack ($q->id,17,true);
+        });
         $visitor = [];
         foreach($visitors as $k=>$v){
             $visitor[$k]['id'] = @$v->id;
