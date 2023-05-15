@@ -17,7 +17,7 @@ Route::group(
             'web',
             'admin',
             'adminIp',
-            'adminGeneralBan',
+//            'adminGeneralBan',
             'multiLanguage',
         ],
         'as'            => config('admin.route.prefix') . '.',
@@ -113,7 +113,7 @@ Route::group(
 
         $router->get ('/wares_dedicate','DedicateWareController@index');
         $router->get ('/vips_dedicate','DedicateVipController@index');
-
+        $router->resource ('/bans','BanController');
     }
 );
 

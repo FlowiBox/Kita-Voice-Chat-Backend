@@ -58,6 +58,10 @@ class User extends Authenticatable
         'frame'
     ];
 
+    public function ips(){
+        return $this->hasMany (Ip::class,'uid');
+    }
+
 
     public function profile(){
         return $this->hasOne (Profile::class);
