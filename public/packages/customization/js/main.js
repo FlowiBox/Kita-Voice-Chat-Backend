@@ -1,4 +1,4 @@
-$('footer strong a').html('Yai Chat');
+$('footer strong a').html('R-STAR');
 $('footer strong a').attr('href','#');
 $(document).ready(function () {
     $('.treeview').removeClass('active');
