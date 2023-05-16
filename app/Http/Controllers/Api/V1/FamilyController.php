@@ -110,7 +110,7 @@ class FamilyController extends Controller
     public function store(Request $request)
     {
         $user = $request->user ();
-        if($user->coins < 15000){
+        if($user->di < 15000){
             return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
         }
         $ex = Family::query ()->where ('user_id',$user->id)->exists ();
@@ -148,7 +148,7 @@ class FamilyController extends Controller
             $family_user->status = 1;
             $family_user->save ();
             $user->family_id = $family->id;
-            $user->coins = ($user->coins - 15000);
+            $user->di = ($user->di - 15000);
             $user->save();
             DB::commit ();
         }catch (\Exception $exception){
