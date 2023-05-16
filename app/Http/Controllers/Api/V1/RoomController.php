@@ -398,7 +398,8 @@ class RoomController extends Controller
             }
         }
 
-        $room_info['admins'] = UserResource::collection (User::query ()->whereIn ('id',$roomAdmin)->get ());
+        $room_info['admins'] = $roomAdmin;
+//            UserResource::collection (User::query ()->whereIn ('id',$roomAdmin)->get ());
 
 
 
@@ -447,7 +448,8 @@ class RoomController extends Controller
             $u = explode ('#',$b);
             array_push ($bans,$u[0]);
         }
-        $room_info['ban_users'] = UserResource::collection (User::query ()->whereIn ('id',$bans)->get ());
+        $room_info['ban_users'] = $bans;
+//            UserResource::collection (User::query ()->whereIn ('id',$bans)->get ());
 
         $owner_user = User::query ()->find($owner_id);
         $room_info['owner_name'] = @$owner_user->name;
@@ -555,7 +557,8 @@ class RoomController extends Controller
             }elseif ($mic == '-2'){
                 $arr[$key]='muted';
             }else{
-                $arr[$key]=new UserResource(User::query ()->find ($mic));
+                $arr[$key]= User::query ()->select ('id','name')->first ();
+//                $arr[$key]=new UserResource(User::query ()->find ($mic));
             }
         }
         $room_info['microphones'] = $arr;
