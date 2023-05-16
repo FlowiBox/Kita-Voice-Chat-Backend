@@ -454,6 +454,7 @@ class RoomController extends Controller
         if (@$bans[0] == ""){
             unset($bans[0]);
         }
+
         $room_info['ban_users'] = $bans;
 //            UserResource::collection (User::query ()->whereIn ('id',$bans)->get ());
 
@@ -528,7 +529,7 @@ class RoomController extends Controller
             if (!$v){
                 if (in_array ($k,['is_afk','gap','exp','sort','num','audio_sort','audio_num','strto_time','is_pk','mode','session'])){
                     $v = 0;
-                }elseif (in_array ($k,['admins'])){
+                }elseif (in_array ($k,['admins','ban_users'])){
                     $v=[];
                 }elseif (in_array ($k,['giftPrice'])){
                     $v="0";
