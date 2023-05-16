@@ -55,6 +55,7 @@ Trait CalcsTrait
 
     public static function getLevel ( $user_id = null , $type = null , $is_image = false )
     {
+        $user = User::query ()->find($user_id);
         $star_num = GiftLog ::where ( 'receiver_id' , $user_id ) -> sum ( 'giftPrice' );
         $gold_num = GiftLog ::where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
         $vip_num  = GiftLog ::where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' ); //count by purchased coins
@@ -83,6 +84,14 @@ Trait CalcsTrait
         }
 
         $level = Vip ::query () -> where ( ['type' => $type] ) -> where ( 'exp' , '<=' , $exp ) -> orderByDesc ( 'exp' ) -> limit ( 1 ) -> value ( 'level' );
+
+        //------------------------------------------------
+        if ($type == 1){
+            $level += @$user->sub_receiver_level;
+        }elseif ($type == 2){
+            $level += @$user->sub_sender_level;
+        }
+        //--------------------------------------------------------
 
         if ( $is_image != false ) {
             if ( $level > 0 ) {
@@ -252,16 +261,26 @@ Trait CalcsTrait
     //مركز الصف
     public static function level_center ( $user_id )
     {
+        $user = User::query ()->find ($user_id);
         $star_num = DB ::table ( 'gift_logs' ) -> where ( 'receiver_id' , $user_id ) -> sum ( 'giftPrice' );
         $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
 
+        //--------------------------------------
+        $star_num += $user->sub_receiver_num;
+        $gold_num += $user->sub_sender_num;
+        //--------------------------------------
+
         $star_level      = self ::getLevel ( $user_id , 1 );
+
+
         $star_level_img      = self ::getLevel ( $user_id , 1 ,true);
         $current_star_num = self::getCurrentLevel (1,$star_level,'exp');
         $next_star_num   = self ::getNextLevel ( 1 , $star_level , 'exp' );
         $next_star_level = self ::getNextLevel ( 1 , $star_level , 'level' );
 
         $gold_level      = self ::getLevel ( $user_id , 2 );
+
+
         $gold_level_img      = self ::getLevel ( $user_id , 2 ,true);
         $current_gold_num = self::getCurrentLevel (2,$gold_level,'exp');
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
@@ -274,11 +293,11 @@ Trait CalcsTrait
         $data['receiver_rem']        = (integer)($next_star_num-($star_num - $current_star_num));
         $data['sender_img']          = $gold_level_img;
 
-        $data['receiver_level']      = (integer)$star_level?:0;
+        $data['receiver_level']      = (integer)$star_level;
         $data['next_receiver_num']   = (integer)$next_star_num?:0;
         $data['next_receiver_level'] = (integer)$next_star_level?:0;
 
-        $data['sender_level']      = (integer)$gold_level?:0;
+        $data['sender_level']      = (integer)$gold_level;
         $data['next_sender_num']   = (integer)($next_gold_num);
         $data['next_sender_level'] = (integer)$next_gold_level?:0;
 
