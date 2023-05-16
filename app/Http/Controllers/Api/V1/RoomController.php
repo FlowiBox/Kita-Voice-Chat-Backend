@@ -398,6 +398,9 @@ class RoomController extends Controller
             }
         }
 
+        if ($roomAdmin[0] == ""){
+            unset($roomAdmin[0]);
+        }
         $room_info['admins'] = $roomAdmin;
 //            UserResource::collection (User::query ()->whereIn ('id',$roomAdmin)->get ());
 
@@ -446,9 +449,12 @@ class RoomController extends Controller
         }
         foreach ($uid_black as $b){
             $u = explode ('#',$b);
-            if ($u[0]){
+            if ($u[0] != ""){
                 array_push ($bans,$u[0]);
             }
+        }
+        if ($bans[0] == ""){
+            unset($bans[0]);
         }
         $room_info['ban_users'] = $bans;
 //            UserResource::collection (User::query ()->whereIn ('id',$bans)->get ());
