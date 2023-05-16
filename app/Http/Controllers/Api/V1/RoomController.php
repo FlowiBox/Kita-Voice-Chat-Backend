@@ -557,7 +557,8 @@ class RoomController extends Controller
             }elseif ($mic == '-2'){
                 $arr[$key]='muted';
             }else{
-                $arr[$key]= User::query ()->select ('id','name')->find ($mic);
+                $user = User::query ()->find ($mic);
+                $arr[$key]= ['id'=>@$user->id,'name'=>@$user->name];
 //                $arr[$key]=new UserResource(User::query ()->find ($mic));
             }
         }
