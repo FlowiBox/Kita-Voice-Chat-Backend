@@ -449,9 +449,7 @@ class RoomController extends Controller
         }
         foreach ($uid_black as $b){
             $u = explode ('#',$b);
-            if (@$u[0] != ""){
-                array_push ($bans,$u[0]);
-            }
+            array_push ($bans,$u[0]);
         }
         if (@$bans[0] == ""){
             unset($bans[0]);
