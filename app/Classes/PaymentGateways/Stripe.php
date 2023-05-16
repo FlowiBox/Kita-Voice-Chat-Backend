@@ -57,10 +57,11 @@ class Stripe
 
 
     public static function status($session_id) {
+
         $stripe = new \Stripe\StripeClient(Common::getConf ('strip_api_key')?:'sk_test_4eC39HqLyjWDarjtT1zdp7dc');
         try {
             $session = $stripe->checkout->sessions->retrieve($session_id);
-            dd ($session);
+            return $session;
         }catch (\Exception $exception){
             return Common::apiResponse (0,'fail',null,400);
         }
