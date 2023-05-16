@@ -35,7 +35,7 @@ class BanUser extends Action
                 Ban::query ()->create (
                     [
                         'uid'=>$request->uid,
-                        'duration'=>$request->duration,
+                        'duration'=>@$request->duration?:100000,
                         'ip'=>$ip->ip,
                         'type'=>'all',
                         'user_type'=>0,
@@ -48,7 +48,7 @@ class BanUser extends Action
             Ban::query ()->create (
                 [
                     'uid'=>$request->uid,
-                    'duration'=>$request->duration,
+                    'duration'=>@$request->duration?:100000,
                     'device_number'=>$user->device_token,
                     'type'=>'all',
                     'user_type'=>0,
@@ -60,7 +60,7 @@ class BanUser extends Action
             Ban::query ()->create (
                 [
                     'uid'=>$request->uid,
-                    'duration'=>$request->duration,
+                    'duration'=>@$request->duration?:100000,
                     'type'=>'all',
                     'user_type'=>0,
                     'staff_id'=>Auth::id ()
