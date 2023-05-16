@@ -51,6 +51,7 @@ class CoinLogController extends MainController
         if(request ('updated_at')){
             $grid->model ()->where ('created_at','<=',request ('updated_at'));
         }
+        $grid->model ()->where ('method','strip');
         $grid->id('ID');
         $grid->paid_usd(__('paid usd'));
         $grid->obtained_coins(__('obtained coins'));
@@ -60,14 +61,16 @@ class CoinLogController extends MainController
             return @$user->uuid;
         });
         $grid->method(__('method'));
-        $grid->donor_id(__('donor id'));
-        $grid->donor_type(__('donor type'));
-        $grid->status(__('status'));
+//        $grid->donor_id(__('donor id'));
+//        $grid->donor_type(__('donor type'));
+        $grid->column('status',__('status'))->using ([0=>__ ('unpaid'),1=>__ ('paid')]);
         $grid->trx(__('trx_no'));
+        $grid->pid(__('payment id'));
         $grid->column('created_at',__ ('admin.created_at'))->display (function (){
             return $this->created_at->format('Y-m-d');
         });
-
+        $grid->disableCreateButton ();
+        $grid->disableActions ();
         $this->extendGrid ($grid);
         return $grid;
     }
