@@ -1569,7 +1569,7 @@ class RoomController extends Controller
                 ]
             ];
             $json = json_encode ($mc);
-            Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
+            Common::sendToZego ('SendCustomCommand',$pk->room_id,$request->user ()->id,$json);
         }
         return Common::apiResponse (1,'closed',null,201);
     }
