@@ -16,7 +16,7 @@ class RoomRepo implements RoomRepoInterface {
 
     public function all ( $req )
     {
-        $result = $this->model->where('room_status',1)->where(function ($q){
+        $result = $this->model->orderBy('top_room','DESC')->where('room_status',1)->where(function ($q){
             $q->where('is_afk',1)->orWhere('room_visitor','!=','');
         })->where(function ($q) use ($req){
             if ($search = $req->search){
