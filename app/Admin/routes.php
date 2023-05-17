@@ -104,6 +104,7 @@ Route::group(
             $router->get('/userTarget','UserTargetController@index')->name ('userTarget');
             $router->get('/target','AgencyTargetController@index')->name ('targets');
             $router->get ('/charges','ChargeController@index')->name ('charges');
+            $router->get ('/ag-req','AgencyJoinRequestController@index')->name ('ag-req');
         });
 
         Route::prefix('ch')->name ('charger.')->namespace ('ChargerControllers')->group (function (Router $router){

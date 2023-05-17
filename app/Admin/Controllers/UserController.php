@@ -92,10 +92,15 @@ class UserController extends MainController
 
     public function show ( $id , Content $content )
     {
+
         return $content->row(
             function ($row) use ($id){
                 $user = User::find($id);
+
                 $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $user->old_usd + $user->target_usd - $user->target_token_usd));
+                $row->column(3, new InfoBox(__('Level'), 'dollar', 'orange', '?type=balance_details', Common::level_center ($user->id)['sender_level']));
+                $row->column(3, new InfoBox(__('worth'), 'dollar', 'blue', '?type=balance_details', Common::level_center ($user->id)['receiver_level']));
+                $row->column(3, new InfoBox(__('diamonds'), 'dollar', 'red', '?type=balance_details', $user->coins));
             }
         )->row ("<h3>".__('pack')."</h3>")->row (function ($row) use ($id){
             $row->column(12, $this->packList($id));
@@ -109,6 +114,36 @@ class UserController extends MainController
 
     public function update ( $id )
     {
+        $user = User::query ()->findOrFail ($id);
+        $lev = Common::level_center ($id)['sender_level'];
+        $levl1 = request ('level');
+        $user->sub_sender_level += ($levl1 - $lev);
+
+        $worth = Common::level_center ($id)['receiver_level'];
+        $levl2 = request ('worth');
+        $user->sub_receiver_level += ($levl2 - $worth);
+
+
+
+
+        $expr = Common::getCurrentLevel (1,$levl2,'exp');
+        $exps = Common::getCurrentLevel (2,$levl1,'exp');
+
+        $rexp = Common::level_center($id)['receiver_num'];
+        $sexp = Common::level_center($id)['sender_num'];
+
+        $rt = $expr - $rexp;
+        $st = $exps - $sexp;
+
+        $user->sub_sender_num += $st;
+        $user->sub_receiver_num += $rt;
+
+        $user->save ();
+
+        unset(request ()['level']);
+        unset(request ()['worth']);
+
+
         return $this->form()->update($id);
     }
 
@@ -286,8 +321,23 @@ class UserController extends MainController
         });
 //        $form->date('profile.birthday',__ ('birthday'));
         $form->select ('profile.gender',__ ('gender'))->options ([0=>__ ('female'),1=>__ ('male')]);
+        $form->number ('coins',__('diamonds'));
         $form->number ('di',__('coins'));
         $form->number ('gold',__('silver coins'));
+        $form->number ('level',__('sender_level'))->default (function ($form){
+            $lev = Common::level_center ($form->model()->id);
+            return $lev['sender_level'];
+
+        })->min (0);
+        $form->number ('worth',__('worth'))->default (function ($form){
+            $lev = Common::level_center ($form->model()->id);
+            return $lev['receiver_level'];
+
+        })->min (0);
+//        $form->hidden ('sub_sender_level');
+//        $form->hidden ('sub_receiver_level');
+//        $form->hidden ('sub_sender_num');
+//        $form->hidden ('sub_receiver_num');
         $form->email('email', __('Email'))->attribute ('onfocus',"this.removeAttribute('readonly');")->attribute ('readonly');
         $form->password('password', __('Password'))->attribute ('onfocus',"this.removeAttribute('readonly');")->attribute ('readonly');
         $form->text('phone', __('phone'));
@@ -335,6 +385,10 @@ class UserController extends MainController
 //            }
 //            return $arr;
 //        });
+
+
+
+
 
         return $form;
     }
