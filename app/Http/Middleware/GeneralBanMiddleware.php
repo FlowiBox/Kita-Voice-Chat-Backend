@@ -26,7 +26,7 @@ class GeneralBanMiddleware
             ->whereRaw("created_at + INTERVAL duration HOUR > '$now'")
             ->where ('type','all')
             ->exists ();
-        $ip_ban = Ban::query ()->where ('ip',$request->ip)
+        $ip_ban = Ban::query ()->where ('ip',$request->ip())
             ->whereRaw("created_at + INTERVAL duration HOUR > '$now'")
             ->exists ();
         $device_ban = Ban::query ()
