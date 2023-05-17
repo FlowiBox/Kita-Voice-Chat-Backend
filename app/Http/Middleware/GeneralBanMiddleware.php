@@ -34,7 +34,7 @@ class GeneralBanMiddleware
 //            ->where ('device_number',$request->header ('device'))
 //            ->whereRaw("created_at + INTERVAL duration HOUR > '$now'")
 //            ->exists ();
-        if ($is_user_ban || $ip_ban || $device_ban){
+        if ($is_user_ban){
             return Common::apiResponse (0,'ban reason',null,501);
         }
         return $next($request);
