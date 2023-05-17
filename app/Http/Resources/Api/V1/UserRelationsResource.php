@@ -36,7 +36,7 @@ class UserRelationsResource extends JsonResource
         
         $data = [
             'id'=>@$this->id,
-            //'uuid'=>@$this->uuid,
+            'uuid'=>@$this->uuid,
             'name'=>@$this->name?:'',
             'profile'=> [ 
                 'image' => @$this->profile->avatar,
