@@ -105,13 +105,13 @@ class AgencyJoinRequestController extends AdminController
     {
         $show = new Show(AgencyJoinRequest::findOrFail($id));
 
-//        $show->id('ID');
-//        $show->user_id('user_id');
-//        $show->agency_id('agency_id');
-//        $show->status('status');
-//        $show->change_status_admin_id('change_status_admin_id');
-//        $show->created_at(trans('admin.created_at'));
-//        $show->updated_at(trans('admin.updated_at'));
+        $show->id('ID');
+        $show->user_id('user_id');
+        $show->agency_id('agency_id');
+        $show->status('status');
+        $show->change_status_admin_id('change_status_admin_id');
+        $show->created_at(trans('admin.created_at'));
+        $show->updated_at(trans('admin.updated_at'));
 
 
 
@@ -126,41 +126,41 @@ class AgencyJoinRequestController extends AdminController
     protected function form()
     {
 
-//        $form = new Form(new AgencyJoinRequest);
-//        $form->display('ID');
-//        $form->text('user_id', 'user_id');
+        $form = new Form(new AgencyJoinRequest);
+        $form->display('ID');
+        $form->text('user_id', 'user_id');
 //        $form->text('agency_id', 'agency_id');
-//        $form->select('status', 'status')->options (
-//            [
-//                0=>__('pending'),
-//                1=>__ ('accepted'),
-//                2=>__ ('denied')
-//            ]
-//        );;
-//        $form->hidden('change_status_admin_id', 'change_status_admin_id');
-//        $form->display(trans('admin.created_at'));
-//        $form->display(trans('admin.updated_at'));
-//        $form->saving(function (Form $form) {
+        $form->select('status', 'status')->options (
+            [
+                0=>__('pending'),
+                1=>__ ('accepted'),
+                2=>__ ('denied')
+            ]
+        );;
+        $form->hidden('change_status_admin_id', 'change_status_admin_id');
+        $form->display(trans('admin.created_at'));
+        $form->display(trans('admin.updated_at'));
+        $form->saving(function (Form $form) {
+            $user = User::query ()->where ('id',$form->model ()->user_id)->first ();
+            if ($user->agency_id){
+                $error = new MessageBag(
+                    [
+                        'title'   => 'forbidden',
+                        'message' => 'user already in agency',
+                    ]
+                );
+
+                return back()->with(compact('error'));
+            }
+        });
+
+//        $form->deleting (function (Form $form) {
 //            $user = User::query ()->where ('id',$form->model ()->user_id)->first ();
-//            if ($user->agency_id){
-//                $error = new MessageBag(
-//                    [
-//                        'title'   => 'forbidden',
-//                        'message' => 'user already in agency',
-//                    ]
-//                );
-//
-//                return back()->with(compact('error'));
+//            if ($form->model ()->status == 1 && $user->agency_id == $form->model ()->id){
+//                $user->agency_id = 0;
+//                $user->save();
 //            }
 //        });
-//
-////        $form->deleting (function (Form $form) {
-////            $user = User::query ()->where ('id',$form->model ()->user_id)->first ();
-////            if ($form->model ()->status == 1 && $user->agency_id == $form->model ()->id){
-////                $user->agency_id = 0;
-////                $user->save();
-////            }
-////        });
-//        return $form;
+        return $form;
     }
 }

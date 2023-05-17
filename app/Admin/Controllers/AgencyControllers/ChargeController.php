@@ -115,7 +115,7 @@ class ChargeController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Charge::findOrFail($id));
+        $show = new Show(Charge::find($id));
 
 //        $show->id('ID');
 //        $show->charger_id('charger_id');
