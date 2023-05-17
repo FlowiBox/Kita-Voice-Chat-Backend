@@ -321,19 +321,23 @@ class UserController extends MainController
         });
 //        $form->date('profile.birthday',__ ('birthday'));
         $form->select ('profile.gender',__ ('gender'))->options ([0=>__ ('female'),1=>__ ('male')]);
-        $form->number ('coins',__('diamonds'));
-        $form->number ('di',__('coins'));
-        $form->number ('gold',__('silver coins'));
-        $form->number ('level',__('sender_level'))->default (function ($form){
-            $lev = Common::level_center ($form->model()->id);
-            return $lev['sender_level'];
 
-        })->min (0);
-        $form->number ('worth',__('worth'))->default (function ($form){
-            $lev = Common::level_center ($form->model()->id);
-            return $lev['receiver_level'];
+        if ($form->isEditing ()){
+            $form->number ('coins',__('diamonds'));
+            $form->number ('di',__('coins'));
+            $form->number ('gold',__('silver coins'));
+            $form->number ('level',__('sender_level'))->default (function ($form){
+                $lev = @Common::level_center ($form->model()->id);
+                return @$lev['sender_level'];
 
-        })->min (0);
+            })->min (0);
+            $form->number ('worth',__('worth'))->default (function ($form){
+                $lev = @Common::level_center ($form->model()->id);
+                return @$lev['receiver_level'];
+
+            })->min (0);
+        }
+
 //        $form->hidden ('sub_sender_level');
 //        $form->hidden ('sub_receiver_level');
 //        $form->hidden ('sub_sender_num');
