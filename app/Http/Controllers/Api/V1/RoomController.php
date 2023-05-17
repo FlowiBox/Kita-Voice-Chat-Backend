@@ -1544,10 +1544,9 @@ class RoomController extends Controller
         if(!empty($request->owner_id)){
             $rooms = $rooms->where ('uid',$request->owner_id);
         }
-        foreach($rooms as $room){
-            if (!$room) return Common::apiResponse (0,'not found',null,404);
-            $pk = Pk::query ()->where ('room_id',$room->id)->where ('status',1)->first ();
-            if (!$pk) return Common::apiResponse (0,'not found',null,404);
+        $roomsIds = $rooms->pluck('id');
+        $pks = Pk::query ()->whereIn('room_id',$roomsIds)->where ('status',1)->get();
+        foreach($pks as $pk){
             Pk::query ()->where ('room_id',$room->id)->where ('status',1)->update (['status'=>0]);
             if ($pk->t1_score > $pk->t2_score){
                 $winner = 1;
