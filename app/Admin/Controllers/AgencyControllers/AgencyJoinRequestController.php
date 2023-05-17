@@ -129,7 +129,7 @@ class AgencyJoinRequestController extends AdminController
         $form = new Form(new AgencyJoinRequest);
         $form->display('ID');
         $form->text('user_id', 'user_id');
-        $form->text('agency_id', 'agency_id');
+//        $form->text('agency_id', 'agency_id');
         $form->select('status', 'status')->options (
             [
                 0=>__('pending'),
