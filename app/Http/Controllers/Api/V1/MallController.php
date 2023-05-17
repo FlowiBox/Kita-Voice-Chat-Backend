@@ -241,6 +241,7 @@ class MallController extends Controller
             $user_id = $request->to_user;
             $user = User::query ()->where ('uuid',$user_id)->first ();
             if (!$user) return Common::apiResponse (0,'not found',null,404);
+            $user_id = $user->id;
             $sender= $request->user ();
             $sender_id = $sender->id;
             if ($sender->di < $total) return Common::apiResponse (0,'balance low',null,407);
