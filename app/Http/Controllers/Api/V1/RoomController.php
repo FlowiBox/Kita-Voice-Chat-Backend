@@ -1547,7 +1547,7 @@ class RoomController extends Controller
         $roomsIds = $rooms->pluck('id');
         $pks = Pk::query ()->whereIn('room_id',$roomsIds)->where ('status',1)->get();
         foreach($pks as $pk){
-            Pk::query ()->where ('room_id',$room->id)->where ('status',1)->update (['status'=>0]);
+            Pk::query ()->where ('id',$pk->id)->where ('status',1)->update (['status'=>0]);
             if ($pk->t1_score > $pk->t2_score){
                 $winner = 1;
             }elseif ($pk->t2_score > $pk->t1_score){
