@@ -79,24 +79,26 @@ class HomeController extends Controller
 
     public function infoBox(Content $content)
     {
-        if (Auth::check () && !in_array ('admin',Auth::user ()->roles()->pluck('slug')->toArray()) && request ()->is ('admin')) {
-            if (in_array ('agency',Auth::user ()->roles()->pluck('slug')->toArray())){
+        $roles = Auth::user ()->roles()->pluck('slug')->toArray();
+        if (Auth::check () && !in_array ('admin',$roles) && request ()->is ('admin')) {
+            if (in_array ('agency',$roles)){
                 return redirect()->to(config('admin.route.prefix').'/ag');
             }
-            elseif (in_array ('charger',Auth::user ()->roles()->pluck('slug')->toArray())){
+            elseif (in_array ('charger',$roles)){
                 return redirect()->to(config('admin.route.prefix').'/ch');
-            }
-            abort (404);
-        }
-            $content->title('Info box');
-            $content->description('Description...');
+            }elseif (Auth::check () && in_array ('admin',$roles) && request ()->is ('admin')) {
+          
+                $content->title('Info box');
+                $content->description('Description...');
 
-            $content->row(function ($row) {
-                $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route (config('admin.route.prefix').'.users'), User::query ()->count ()));
-                $row->column(3, new InfoBox(__('Rooms'), 'wechat', 'green', route (config('admin.route.prefix').'.rooms'), Room::query ()->count ()));
-                $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route (config('admin.route.prefix').'.gifts'), Gift::query ()->count ()));
-                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route (config('admin.route.prefix').'.wares'), Ware::query ()->count ()));
-            });
+                $content->row(function ($row) {
+                    $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route (config('admin.route.prefix').'.users'), User::query ()->count ()));
+                    $row->column(3, new InfoBox(__('Rooms'), 'wechat', 'green', route (config('admin.route.prefix').'.rooms'), Room::query ()->count ()));
+                    $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route (config('admin.route.prefix').'.gifts'), Gift::query ()->count ()));
+                    $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route (config('admin.route.prefix').'.wares'), Ware::query ()->count ()));
+                });
+            }
+        }
         return $content;
     }
 
