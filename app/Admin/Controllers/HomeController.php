@@ -79,6 +79,7 @@ class HomeController extends Controller
 
     public function infoBox(Content $content)
     {
+
         $roles = Auth::user ()->roles()->pluck('slug')->toArray();
         if (Auth::check () && !in_array ('admin',$roles) && request ()->is ('admin')) {
             if (in_array ('agency',$roles)){
@@ -87,7 +88,7 @@ class HomeController extends Controller
             elseif (in_array ('charger',$roles)){
                 return redirect()->to(config('admin.route.prefix').'/ch');
             }elseif (Auth::check () && in_array ('admin',$roles) && request ()->is ('admin')) {
-          
+
                 $content->title('Info box');
                 $content->description('Description...');
 
@@ -97,6 +98,7 @@ class HomeController extends Controller
                     $row->column(3, new InfoBox(__('Gifts'), 'gift', 'yellow', route (config('admin.route.prefix').'.gifts'), Gift::query ()->count ()));
                     $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route (config('admin.route.prefix').'.wares'), Ware::query ()->count ()));
                 });
+
             }
         }
         return $content;
