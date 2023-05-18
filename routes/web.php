@@ -25,3 +25,14 @@ Route::get('/page/{name}', function ($name) {
     $page =  \App\Models\Page::query ()->where ('name',$name)->firstOrFail ();
     return $page->content;
 });
+
+Route::get('/clear', function() {
+
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+ 
+    return "Cleared!";
+ 
+ });
