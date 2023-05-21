@@ -91,6 +91,7 @@ Trait CalcsTrait
         }elseif ($type == 2){
             $level += @$user->sub_sender_level;
         }
+
         //--------------------------------------------------------
 
         if ( $is_image != false ) {
@@ -289,8 +290,8 @@ Trait CalcsTrait
         $data['receiver_num']        = (integer)$star_num;
         $data['receiver_img']        = $star_level_img;
         $data['sender_num']          = (integer)$gold_num;
-        $data['sender_rem']          = (integer)($next_gold_num-($gold_num - $current_gold_num));
-        $data['receiver_rem']        = (integer)($next_star_num-($star_num - $current_star_num));
+        $data['sender_rem']          = (integer)(($next_gold_num - $current_gold_num) -($gold_num - $current_gold_num));
+        $data['receiver_rem']        = (integer)(($next_star_num - $current_star_num) - ($star_num - $current_star_num));
         $data['sender_img']          = $gold_level_img;
 
         $data['receiver_level']      = (integer)$star_level;
@@ -303,6 +304,8 @@ Trait CalcsTrait
 
         $data['prev_receiver_num'] = (integer)$current_star_num?:0;
         $data['prev_sender_num'] = (integer)($current_gold_num);
+        $data['current_receiver_num'] = $current_star_num;
+        $data['current_sender_num'] = $current_gold_num;
 
         $rt = $data['next_receiver_num']-$data['prev_receiver_num'];
         $st = $data['next_sender_num']-$data['prev_sender_num'];
