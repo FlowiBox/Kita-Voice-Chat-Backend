@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\OfficialMessage;
 use App\Models\User;
@@ -88,7 +89,7 @@ class CommunityController extends Controller
 //        $arr['gmskill'] = $gmskill;
 
         $arr['user'] = UserResource::collection ($this->user_search_hand($user_id, $keywords));//$user;
-//        $arr['rooms'] = $rooms;
+        $arr['rooms'] = $rooms;//rooms
 //        $arr['dynamics'] = $dynamics;
         return Common::apiResponse(1, '', $arr);
 
