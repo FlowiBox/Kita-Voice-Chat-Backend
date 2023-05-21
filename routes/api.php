@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::prefix ('auth')->group (function (){
     Route::post ('register',[\App\Http\Controllers\Api\V1\Auth\RegisterController::class,'register']);
@@ -272,4 +273,19 @@ Route::middleware('auth:sanctum')->group (
 
 Route::prefix ('tickets')->group (function (){
     Route::post ('open',[\App\Http\Controllers\Api\V1\HomeController::class,'openTicket']);
+});
+
+Route::get('/keyword-bad/{lang}', function($lang){
+    app()->setLocale($lang);
+    $array = \Lang::get('bad-word');
+    return response()->json(['data' => $array]);
+});
+
+
+Route::get('/send-msg/{msg}', function($msg){
+    $message = [
+        $msg
+    ];
+    event(new \App\Events\NewTrade([$message]));
+    return response()->json(['data' => 'send successfuly!']);
 });
