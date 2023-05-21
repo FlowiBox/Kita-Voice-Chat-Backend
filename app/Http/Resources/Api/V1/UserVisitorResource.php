@@ -33,13 +33,13 @@ class UserVisitorResource extends JsonResource
                 $pass_status = true;
             }
         }
-        
+
         $data = [
             'id'=>@$this->id,
-            //'uuid'=>@$this->uuid,
+            'uuid'=>@$this->uuid,
             'name'=>@$this->name?:'',
             'visit_time' => $this->pivot->updated_at,
-            'profile'=> [ 
+            'profile'=> [
                 'image' => @$this->profile->avatar,
                 'age' => Carbon::parse (@$this->profile->birthday)->age,
                 'gender'=>$this->gender == 1 ? __ ('male') : __ ('female'),
@@ -57,9 +57,9 @@ class UserVisitorResource extends JsonResource
             ],
             'level'=> [
                 'receiver_img' => $this->getImageReceiverOrSender('receiver_id',1)->img,
-                'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img, 
+                'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img,
             ],
-            
+
         ];
 
         return $data;
