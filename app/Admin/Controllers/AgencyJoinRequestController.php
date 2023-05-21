@@ -146,7 +146,6 @@ class AgencyJoinRequestController extends MainController
                         'message' => 'user already in agency',
                     ]
                 );
-
                 return back()->with(compact('error'));
             }
         });

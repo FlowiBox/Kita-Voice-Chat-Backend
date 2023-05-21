@@ -112,7 +112,7 @@ Route::group(
             $router->get ('/charges','ChargeController@index')->name ('charges');
         });
 
-        $router->get ('/wares_dedicate','DedicateWareController@index');
+        $router->resource('/wares_dedicate','DedicateWareController')->only('index','create','store');
         $router->get ('/vips_dedicate','DedicateVipController@index');
         $router->resource ('/bans','BanController');
     }
