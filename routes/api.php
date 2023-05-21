@@ -275,6 +275,11 @@ Route::prefix ('tickets')->group (function (){
     Route::post ('open',[\App\Http\Controllers\Api\V1\HomeController::class,'openTicket']);
 });
 
+//http://127.0.0.1:8000/api/games?token=21|ZSQDcgx0ktAG0J8Y29Th1vKxZQA1r3GkGJ00AjgN&game_id=xx&lang=xx&sign=c1ecccfa8ff75c90ea62b3b386aecb
+Route::get ('games',[\App\Http\Controllers\Api\V1\GameController::class,'playerInfo']);
+//http://127.0.0.1:8000/api/games
+Route::post ('games',[\App\Http\Controllers\Api\V1\GameController::class,'updatePlayerCoins']);
+
 Route::get('/keyword-bad/{lang}', function($lang){
     app()->setLocale($lang);
     $array = \Lang::get('bad-word');

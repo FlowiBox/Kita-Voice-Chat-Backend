@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -35,7 +36,31 @@ class GameController extends Controller
         return $res;
     }
 
-    public function updatePlayerCoins(){
+    public function updatePlayerCoins(Request $request){
+        $payload = $request->payload['payload'];
+        try {
+            foreach ($payload as $item){
+                $user = User::query ()->find($item['uid']);
+                if ($item['up'] == 1){
+                    $user->increment ('di',$item['amount']);
+                }else{
+                    $user->decrement ('di',$item['amount']);
+                }
+            }
+            $round = $request->round_number;
+
+            $res = [
+                'error_code'=>0,
+                'error_message'=>null,
+            ];
+        }catch (\Exception $exception){
+            $res = [
+                'error_code'=>1,
+                'error_message'=>"Cannot update coins due to ".$exception->getMessage (),
+            ];
+        }
+
+        return $res;
 
     }
 }

@@ -170,6 +170,7 @@ class CommunityController extends Controller
                  'rooms.room_cover',
                  'rooms.room_intro',
                  'rooms.room_welcome',
+                 'rooms.room_pass',
                  'users.nickname',
                  'users.name'])
             ->orWhere(function ($query) use ($whereOr) {
@@ -182,6 +183,7 @@ class CommunityController extends Controller
             $vr->hot = Common::room_hot($vr->hot);
             $vr->nickname = $vr->nickname?:'';
             $vr->room_cover = $vr->room_cover?:'';
+            $vr->room_pass = $vr->room_pass == '' ? false : true;
         }
         unset($vr);
         //return json_decode($rooms,true);
