@@ -2171,7 +2171,7 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   wsHost: window.location.hostname,
   wsPort: 6001,
   disableStats: true,
-  enabledTransports: ['ws'],
+  enabledTransports: ['ws', 'wss'],
   authEndpoint: '/broadcasting/auth'
 });
 
