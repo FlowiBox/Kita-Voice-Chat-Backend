@@ -38,7 +38,7 @@ return [
             'options' => [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'encrypted' => true,
-                'host' => '198.177.124.229',
+                'host' => 'dragon-chat-app.com',
                 'port' => 6001,
                 'scheme' => 'https'
             ],
