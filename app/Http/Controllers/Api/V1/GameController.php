@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Game;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,12 +27,22 @@ class GameController extends Controller
                 'avatar'=>asset ("storage/$user->avatar"),
                 'coins'=>(integer)$user->di
             ];
+            Game::query ()
+                ->create (
+                    [
+                        'game_id'=>$request['game_id'],
+                        'uid'=>$uid,
+                        'lang'=>$request['lang'],
+                        'sign'=>$request['sign']
+                    ]
+                );
             $res = [
                 'error_code'=>0,
                 'error_message'=>null,
                 'data'=>$data
             ];
         }
+
 
         return $res;
     }
@@ -43,11 +54,22 @@ class GameController extends Controller
                 $user = User::query ()->find($item['uid']);
                 if ($item['up'] == 1){
                     $user->increment ('di',$item['amount']);
+                    $am = 0 + $item['amount'];
                 }else{
                     $user->decrement ('di',$item['amount']);
+                    $am = 0 - $item['amount'];
                 }
+                Game::query ()
+                    ->where ('game_id',$item['game_id'])
+                    ->where ('uid',$item['uid'])
+                    ->update (
+                        [
+                            'round'=>$request->round_number,
+                            'amount'=>$am
+                        ]
+                    );
+
             }
-            $round = $request->round_number;
 
             $res = [
                 'error_code'=>0,
