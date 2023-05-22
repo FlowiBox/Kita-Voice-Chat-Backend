@@ -2168,7 +2168,7 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   key: "9bfa0b56e375267a8f59",
   cluster: "mt1",
   forceTLS: false,
-  wsHost: '198.177.124.229',
+  wsHost: window.location.hostname,
   wsPort: 6001,
   disableStats: true,
   enabledTransports: ['ws'],
