@@ -77,7 +77,6 @@ class RoomController extends Controller
     {
         $request['show']=true;
         $request['numid']=rand (111111,999999);
-        $request['room_name']=rand (111111,999999);
         try {
             $room = Room::query ()->where('uid',$request->user ()->id)->first ();
             if ($room){
@@ -191,7 +190,8 @@ class RoomController extends Controller
                     "imgbackground"=>$room->room_background?:"",
                     "roomIntro"=>$room->room_intro?:"",
                     "roomImg"=>$room->room_cover?:"",
-                    "room_type"=>@$room->myType->name?:""
+                    "room_type"=>@$room->myType->name?:"",
+                    "room_name"=>@$room->room_name?:""
                 ]
             ];
             $json = json_encode ($data);
@@ -1557,7 +1557,7 @@ class RoomController extends Controller
             }
             $pk->winner = $winner;
             $pk->save ();
-            
+
             $mc = [
                 'messageContent'=>[
                     'message'=>'closePk',
