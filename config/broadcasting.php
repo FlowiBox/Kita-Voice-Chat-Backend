@@ -31,16 +31,17 @@ return [
     'connections' => [
 
         'pusher' => [
-            'driver' => 'pusher',
+            'driver' => env('BROADCAST_DRIVER', 'pusher'),
             'key' => env('PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
-                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'cluster' => env('PUSHER_APP_CLUSTER', 'mt1'),
                 'encrypted' => true,
-                'host' => 'dragon-chat-app.com',
-                'port' => 6001,
-                'scheme' => 'https'
+                'useTLS' => true,
+                'host' => env('PUSHER_HOST', '127.0.0.1'),
+                'port' => env('PUSHER_PORT', '6001'),
+                'scheme' => env('PUSHER_SCHEME', 'http'),
             ],
         ],
 
