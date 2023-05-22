@@ -77,6 +77,7 @@ class AgencyJoinRequestObserver
                         ->whereMonth ('created_at',Carbon::now ()->month)
                         ->whereYear ('created_at',Carbon::now ()->year)
                         ->delete ();
+                    $user->coins = 0;
                 }
                 Common::sendOfficialMessage ($user->id,'congratulations','you are accepted in agency');
             }
