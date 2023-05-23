@@ -664,7 +664,7 @@ class UserController extends Controller
         }
         $coins = $usd * $rate;
         if (($from->old_usd + $from->target_usd - $from->target_token_usd) < $usd){
-            return Common::apiResponse (0,'balance not enough',405);
+            return Common::apiResponse (0,'balance not enough',407);
         }
         DB::beginTransaction ();
         try {
@@ -679,6 +679,10 @@ class UserController extends Controller
                     'balance_before'=>$to->di
                 ]
             );
+            if ($from->target_token_usd == null){
+                $from->target_token_usd = 0;
+                $from->save();
+            }
             $from->increment('target_token_usd',$usd);
             $to->increment ('di',$coins);
             DB::commit ();

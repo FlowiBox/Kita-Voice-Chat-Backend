@@ -14,6 +14,7 @@ use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Background;
 use App\Models\BoxUse;
+use App\Models\EnteredRoom;
 use App\Models\Family;
 use App\Models\GiftLog;
 use App\Models\LiveTime;
@@ -269,6 +270,7 @@ class RoomController extends Controller
                 ->random ();
         }
         $user_id   = $request->user ()->id;
+
         if (!$owner_id) return Common::apiResponse (0,'not found',null,404);
         $ia = DB::table ('rooms')->where ('uid',$owner_id)->value ('is_afk');
         $rv = DB::table ('rooms')->where ('uid',$owner_id)->value ('room_visitor');
@@ -292,7 +294,19 @@ class RoomController extends Controller
 
         if(!$room_info) return Common::apiResponse (false,'No room yet, please create first',null,404);
 
-
+        EnteredRoom::query ()->updateOrCreate (
+            [
+                'uid'=>$user_id,
+                'ruid'=>$owner_id,
+                'rid'=>$room_info['id']
+            ],
+            [
+                'uid'=>$user_id,
+                'ruid'=>$owner_id,
+                'rid'=>$room_info['id'],
+                'entered_at'=>now ()
+            ]
+        );
 
         //exit the original room
         $room_id=Common::userNowRoom($user_id);

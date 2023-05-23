@@ -16,10 +16,10 @@ class CreateGamesTable extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
-            $table->unsignedBigInteger('game_id')->nullable();
+            $table->string('game_id')->nullable();
             $table->string('lang')->nullable();
             $table->string('sign')->nullable();
-            $table->unsignedBigInteger('uid')->nullable();
+            $table->string('uid')->nullable();
             $table->integer('amount')->nullable();
             $table->integer('round')->nullable();
             $table->timestamps();

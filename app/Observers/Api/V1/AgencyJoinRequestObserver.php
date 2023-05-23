@@ -4,7 +4,9 @@ namespace App\Observers\Api\V1;
 
 use App\Helpers\Common;
 use App\Models\AgencyJoinRequest;
+use App\Models\GiftLog;
 use App\Models\User;
+use Carbon\Carbon;
 
 class AgencyJoinRequestObserver
 {
@@ -66,9 +68,18 @@ class AgencyJoinRequestObserver
     public function updating(AgencyJoinRequest $agencyJoinRequest){
         if ($agencyJoinRequest->status == 1){
             $user = User::query ()->find ($agencyJoinRequest->user_id);
+            $agid = $user->agency_id;
             if ($user){
                 $user->agency_id = $agencyJoinRequest->agency_id;
                 $user->save ();
+                if ($agid == '' || $agid == null || $agid == 0){
+                    GiftLog::query ()->where ('receiver_id',$user->id)
+                        ->whereMonth ('created_at',Carbon::now ()->month)
+                        ->whereYear ('created_at',Carbon::now ()->year)
+                        ->delete ();
+                    $user->coins = 0;
+                    $user->save ();
+                }
                 Common::sendOfficialMessage ($user->id,'congratulations','you are accepted in agency');
             }
         }

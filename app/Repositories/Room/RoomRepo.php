@@ -2,6 +2,7 @@
 namespace App\Repositories\Room;
 use App\Helpers\CacheHelper;
 use App\Helpers\Common;
+use App\Models\EnteredRoom;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -16,9 +17,14 @@ class RoomRepo implements RoomRepoInterface {
 
     public function all ( $req )
     {
-        $result = $this->model->orderBy('top_room','DESC')->where('room_status',1)->where(function ($q){
+
+        $result = $this->model
+            ->orderBy('top_room','DESC')
+            ->where('room_status',1)
+            ->where(function ($q){
             $q->where('is_afk',1)->orWhere('room_visitor','!=','');
-        })->where(function ($q) use ($req){
+        })
+            ->where(function ($q) use ($req){
             if ($search = $req->search){
                 $q->where('room_name',$search)->orWhere('numid',$search)->orWhere('uid',$search);
             }
@@ -35,7 +41,15 @@ class RoomRepo implements RoomRepoInterface {
             }
         });
 
-        if ($req->filter == 'trend'){
+        if ($req->filter == 'boss'){
+            $arr = EnteredRoom::query ()
+                ->where ('uid',Common::getConf ('boss_id'))
+                ->orderByDesc ('entered_at')
+                ->pluck ('rid')
+                ->toArray ();
+            $result->whereIn('id',$arr)->orderByRaw(DB::raw("FIELD(id, " . implode(',', $arr) . ")"));
+        }
+        elseif ($req->filter == 'trend'){
             $result->orderByDesc('session');
         }
         elseif ($req->filter == 'popular'){
@@ -46,9 +60,12 @@ class RoomRepo implements RoomRepoInterface {
                 ->orderByDesc('visitor_count')
             ;
         }
+
         else{
             $result->orderByDesc('hour_hot');
         }
+
+
 
 
         if ($pp = $req->pp){ // pp = perPage
