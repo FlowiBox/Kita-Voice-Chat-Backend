@@ -12,7 +12,14 @@ use Laravel\Sanctum\PersonalAccessToken;
 class GameController extends Controller
 {
     public function playerInfo(Request $request){
-        $uid = PersonalAccessToken::findToken ($request->token)->tokenable->id;
+        $uid = @PersonalAccessToken::findToken ($request->token)->tokenable->id;
+        if (!$uid){
+            $res = [
+                'error_code'=>1,
+                'error_message'=>'please inter valid token',
+                'data'=>''
+            ];
+        }
         $user = \App\Models\User::query ()->find ($uid);
         if (!$user){
             $res = [
