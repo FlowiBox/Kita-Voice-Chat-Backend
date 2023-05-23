@@ -48,7 +48,7 @@ class GameController extends Controller
     }
 
     public function updatePlayerCoins(Request $request){
-        $payload = $request->payload['payload'];
+        $payload = json_decode ($request->payload,true)['payload'];
         try {
             foreach ($payload as $item){
                 $user = User::query ()->find($item['uid']);
