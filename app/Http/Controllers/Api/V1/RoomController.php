@@ -13,7 +13,6 @@ use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Background;
-use App\Models\RequestBackgroundImage;
 use App\Models\BoxUse;
 use App\Models\EnteredRoom;
 use App\Models\Family;
