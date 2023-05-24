@@ -590,7 +590,7 @@ class RoomController extends Controller
 
 
         $user = $request->user ();
-        $user->now_room_uid = $owner_id;
+        $user->now_room_uid = (integer)$owner_id;
         $user->save();
 
         $d = [
