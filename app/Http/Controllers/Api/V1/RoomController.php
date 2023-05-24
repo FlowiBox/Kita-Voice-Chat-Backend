@@ -1414,11 +1414,11 @@ class RoomController extends Controller
 
 
         $roomAdmin=DB::table('rooms')->where('uid',$uid)->value('room_admin');
-        $maxAdmin=DB::table('rooms')->where('uid',$uid)->value('max_admin');
+        $roomMax =DB::table('rooms')->where('uid',$uid)->first();
         $adm_arr= !$roomAdmin ? [] : explode(",", $roomAdmin);
         if(in_array($admin_id, $adm_arr))   return Common::apiResponse(0,'This user is already an administrator, please do not repeat the settings',null,444);
         if(count($adm_arr) >= 15)    return Common::apiResponse(0,'room manager is full',null,403);
-        if(count($adm_arr) > $maxAdmin)    return Common::apiResponse(0,'room manager is full',null,403);
+        if(count($adm_arr) > $roomMax->max_admin)    return Common::apiResponse(0,'room manager is full',null,403);
         $adm_arr=array_merge($adm_arr,[$admin_id]);
         $str=implode(",",$adm_arr);
 
