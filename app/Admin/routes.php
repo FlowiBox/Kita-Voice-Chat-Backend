@@ -116,6 +116,7 @@ Route::group(
         $router->get ('/vips_dedicate','DedicateVipController@index');
         $router->resource ('/bans','BanController');
         $router->resource('/request-background-image','RequestBackgroundImageController');
+        $router->resource('/group-chat','GroupChatController');
     }
 );
 
