@@ -8,6 +8,7 @@ use App\Models\Agency;
 use App\Models\Ban;
 use App\Models\Charge;
 use App\Models\CoinLog;
+use App\Models\Room;
 use App\Models\User;
 use Encore\Admin\Actions\Action;
 use Encore\Admin\Form;
@@ -26,6 +27,7 @@ class BanUser extends Action
     {
 
         $user = User::query ()->where ('uuid',$request->uid)->first ();
+        $room = Room::query ()->where('uid',  $user->now_room_uid)->first();
         if (!$user){
             return $this->response()->error(__('user not found'))->refresh();
         }
@@ -66,6 +68,18 @@ class BanUser extends Action
                     'staff_id'=>Auth::id ()
                 ]
             );
+        }
+
+        if($room){
+            $d = [
+                "messageContent"=>[
+                    "message"=>"banDevice",
+                    "userId"=>$user->id
+                ]
+            ];
+            $json = json_encode ($d);
+
+            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
         }
 
         return $this->response()->success('success')->refresh();
