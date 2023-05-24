@@ -13,6 +13,7 @@ use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Background;
+use App\Models\RequestBackgroundImage;
 use App\Models\BoxUse;
 use App\Models\EnteredRoom;
 use App\Models\Family;
@@ -561,12 +562,12 @@ class RoomController extends Controller
         }else{
             $room_info['room_type'] = $type->name;
         }
-
+        $requestBackground = RequestBackgroundImage::where('status',1)->where('owner_room_id',$owner_id)->first();
         $bg = Background::find($room_info['room_background']);
         if (!$bg){
             $room_info['room_background'] = '';
         }else{
-            $room_info['room_background'] = $bg->img;
+            $room_info['room_background'] = ($requestBackground) ? $requestBackground->img : $bg->img;
         }
 
         $mics=explode (',',$room_info['microphone']);
