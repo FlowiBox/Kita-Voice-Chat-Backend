@@ -80,8 +80,6 @@ class BanUser extends Action
             $json = json_encode ($d);
 
             Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
-        }else{
-            dd ('no room');
         }
 
         return $this->response()->success('success')->refresh();
