@@ -7,7 +7,8 @@ use App\Http\Resources\CountryResource;
 use App\Models\BoxUse;
 use App\Models\Pk;
 use App\Models\User;
-use App\Models\Request
+use App\Models\Request;
+use App\Models\RequestBackgroundImage;
 use App\Repositories\User\UserRepo;
 use Illuminate\Http\Resources\Json\JsonResource;
 
