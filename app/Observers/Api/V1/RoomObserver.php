@@ -62,12 +62,21 @@ class RoomObserver
     public function changeMode($room){
         $mics = explode (',',$room->microphone);
 
-        if ($room->mode == '1'){
+        if ($room->mode == '1'){//16 seats
             if (count ($mics) <= 10){
                 $m = array_merge ($mics,['0','0','0','0','0','0','0','0']);
                 $room->microphone = implode (',',$m);
             }
-        }else{
+        }elseif ($room->mode == '2'){//12 seats
+            if (count ($mics) <= 10){
+                $m = array_merge ($mics,['0','0','0','0']);
+                $room->microphone = implode (',',$m);
+            }else{
+                $m = array_slice ($mics,0,14);
+                $room->microphone = implode (',',$m);
+            }
+        }
+        else{// 8 seats
             if (count ($mics) > 10){
                 $m = array_slice ($mics,0,10);
                 $room->microphone = implode (',',$m);

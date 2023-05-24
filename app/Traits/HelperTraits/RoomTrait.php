@@ -103,11 +103,15 @@ trait RoomTrait
         if (!$user_id) {
             return false;
         }
+        $user = User::query ()->find ($user_id);
+        if (!$user){
+            return false;
+        }
         $is_afk = DB::table('rooms')->where('uid', $user_id)->value('is_afk');
         if ($is_afk) {
             return $user_id;
         }
-        $uid = DB::table('rooms')->where('room_visitor', 'like', '%' . $user_id . '%')->value('uid');
+        $uid = DB::table('rooms')->where('uid',  $user->now_room_uid)->value('uid');
         return $uid ?: 0;
     }
 

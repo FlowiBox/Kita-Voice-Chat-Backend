@@ -153,6 +153,11 @@ class UserObserver
                 if ($target->days <= $days){
                     $per += 0.30;
                 }
+                if (Common::getConf ('all_target_or_nothing') == 'true'){
+                    if ($per < 1){
+                        $per = 0;
+                    }
+                }
                 $t = $target->usd * $per;
                 $ap = $target->agency_share/100;
                 $user->target_usd = $t;
@@ -165,31 +170,34 @@ class UserObserver
                 if (!$tar){
                     Common::sendOfficialMessage ($user->id,__ ('congratulations'),__ ('you achieve new target'));
                 }
-                UserTarget::query ()->updateOrCreate (
-                    [
-                        'user_id'=>$user->id,
-                        'add_month'=>Carbon::now ()->month,
-                        'add_year'=>Carbon::now ()->year
-                    ],
-                    [
-                        'user_id'=>$user->id,
-                        'add_month'=>Carbon::now ()->month,
-                        'add_year'=>Carbon::now ()->year,
-                        'agency_id'=>$user->agency_id,
-                        'family_id'=>$user->family_id,
-                        'target_id'=>$target->id,
-                        'target_diamonds'=>$target->diamonds,
-                        'target_usd'=>$target->usd,
-                        'target_hours'=>$target->hours,
-                        'target_days'=>$target->days,
-                        'target_agency_share'=>$target->agency_share,
-                        'user_diamonds'=>$month_received,
-                        'user_hours'=>$hours,
-                        'user_days'=>$days,
-                        'user_obtain'=>$t,
-                        'agency_obtain'=>$t * $ap
-                    ]
-                );
+                if ($per > 0){
+                    UserTarget::query ()->updateOrCreate (
+                        [
+                            'user_id'=>$user->id,
+                            'add_month'=>Carbon::now ()->month,
+                            'add_year'=>Carbon::now ()->year
+                        ],
+                        [
+                            'user_id'=>$user->id,
+                            'add_month'=>Carbon::now ()->month,
+                            'add_year'=>Carbon::now ()->year,
+                            'agency_id'=>$user->agency_id,
+                            'family_id'=>$user->family_id,
+                            'target_id'=>$target->id,
+                            'target_diamonds'=>$target->diamonds,
+                            'target_usd'=>$target->usd,
+                            'target_hours'=>$target->hours,
+                            'target_days'=>$target->days,
+                            'target_agency_share'=>$target->agency_share,
+                            'user_diamonds'=>$month_received,
+                            'user_hours'=>$hours,
+                            'user_days'=>$days,
+                            'user_obtain'=>$t,
+                            'agency_obtain'=>$t * $ap
+                        ]
+                    );
+                }
+
             }
         }
 
