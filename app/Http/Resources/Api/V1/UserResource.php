@@ -129,7 +129,7 @@ class UserResource extends JsonResource
             'is_first'=>@(bool)$this->is_points_first,
             'now_room'=>[
                 'is_in_room'=>@$this->now_room_uid != 0,
-                'uid'=>@$this->now_room_uid,
+                'uid'=>@(integer)$this->now_room_uid,
                 'is_mine'=>@$this->id == $this->now_room_uid,
                 'password_status'=>$pass_status
             ],
