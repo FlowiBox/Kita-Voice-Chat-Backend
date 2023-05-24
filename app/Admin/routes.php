@@ -115,6 +115,7 @@ Route::group(
         $router->resource('/wares_dedicate','DedicateWareController')->only('index','create','store');
         $router->get ('/vips_dedicate','DedicateVipController@index');
         $router->resource ('/bans','BanController');
+        $router->resource('/request-background-image','RequestBackgroundImageController');
     }
 );
 

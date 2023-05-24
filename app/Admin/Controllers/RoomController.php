@@ -53,6 +53,7 @@ class RoomController extends MainController
 
         $grid->column('room_status')->switch (Common::getSwitchStates ());
         $grid->column('top_room')->switch (Common::getSwitchStates ());
+        $grid->column('max_admin'), trans('max admin'));
         $grid->column('room_name',trans ('room name'));
         $grid->column('room_cover',trans ('room cover'))->image ('',30);
         $grid->column('room_intro',trans ('room_intro'));
@@ -145,6 +146,7 @@ class RoomController extends MainController
 //        });
         $form->switch('room_status', __('room_status'))->options (Common::getSwitchStates ());
         $form->switch('top_room', __('top_room'))->options (Common::getSwitchStates ());
+        $form->text('max_admin', trans('max admin'));
         $form->text('room_name', trans('room name'));
         $form->image('room_cover', trans('room cover'));
         $form->text('room_intro', trans('room intro'));

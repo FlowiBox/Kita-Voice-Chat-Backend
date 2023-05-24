@@ -7,6 +7,7 @@ use App\Http\Resources\CountryResource;
 use App\Models\BoxUse;
 use App\Models\Pk;
 use App\Models\User;
+use App\Models\Request
 use App\Repositories\User\UserRepo;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -39,6 +40,7 @@ class RoomResource extends JsonResource
             'room_status'=>$this->room_status,
             'password_status'=>$this->room_pass ?true:false,
             'room_intro'=>$this->room_intro?:'',
+            'max_admin' => $this->max_admin?:'',
             'is_recommended'=>$this->is_recommended?:0,
             'lang'=>$this->lang?:'',
             'is_pk'=>$pk?true:false,
@@ -52,8 +54,10 @@ class RoomResource extends JsonResource
             'have_luck_box'=>$have_luck_box
         ];
         if ($request['show']){
+            $requestBackground = RequestBackgroundImage::where('status',1)->where('owner_room_id',@$this->owner ()->id)->first();
             $data['room_users'] = Common::get_room_users (@$this->owner ()->id,$request->user ()->id);
             $data['background'] = $this->room_background?:'';
+            $data['background2'] = $requestBackground;
             $data['mics'] = explode (',',$this->microphone)?:[];
             $data['is_mics_free']=$this->free_mic?:0;
             $data['owner'] = $this->owner ();

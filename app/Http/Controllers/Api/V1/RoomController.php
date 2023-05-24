@@ -23,6 +23,7 @@ use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\RoomView;
 use App\Models\User;
+use App\Models\RequestBackgroundImage;
 use App\Repositories\Room\RoomRepo;
 use App\Repositories\Room\RoomRepoInterface;
 use App\Traits\HelperTraits\RoomTrait;
@@ -1674,6 +1675,24 @@ class RoomController extends Controller
         ];
         $json = json_encode ($ms);
         Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
+        return Common::apiResponse (1,'done',null,201);
+    }
+
+    public function RequestBackgroundImage(Request $request)
+    {
+        $user = $request->user();
+        $room = Room::query ()->where ('uid',$request->owner_id)->first ();
+        if (!$room) //return Common::apiResponse (0,'not found',null,404);
+        if ($request->image == null) return Common::apiResponse (0,'missing param',null,422);
+        if ($request->hasFile ('image')){
+            $img = $request->file ('image');
+            $image = Common::upload ('images',$img);
+        }
+        $RequestBackgroundImage = new RequestBackgroundImage();
+        $RequestBackgroundImage->owner_room_id = $user->id;
+        $RequestBackgroundImage->img = $image;
+        $RequestBackgroundImage->status = 0;
+        $RequestBackgroundImage->save();
         return Common::apiResponse (1,'done',null,201);
     }
 }
