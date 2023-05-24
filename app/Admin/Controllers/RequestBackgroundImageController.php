@@ -134,7 +134,7 @@ class RequestBackgroundImageController extends Controller
     {
         $form = new Form(new RequestBackgroundImage);
 
-        if($form->ststus == 1){
+        if($form->status == 1){
             $room = Room::where('uid',$form->owner_room_id)->first();
             $data = [
                 "messageContent"=>[
