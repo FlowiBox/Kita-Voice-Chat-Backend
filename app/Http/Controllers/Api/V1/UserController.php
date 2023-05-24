@@ -92,15 +92,15 @@ class UserController extends Controller
 
             if ($me->id != $user->id){
                 if (!Common::checkPackPrev ($me->id,19)){
-                    $user->profileVisits()->syncWithoutDetaching(
-                        [
-                            $me->id => [
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ]
-                        ]
-                    );
                     if($request->send_firebase == true || $request->send_firebase !== null){
+                        $user->profileVisits()->syncWithoutDetaching(
+                            [
+                                $me->id => [
+                                    'created_at' => now(),
+                                    'updated_at' => now(),
+                                ]
+                            ]
+                        );
                         Common::handelFirebase ($request,'visit');
                     }
                 }
