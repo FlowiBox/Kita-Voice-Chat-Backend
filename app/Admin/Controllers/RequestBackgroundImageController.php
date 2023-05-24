@@ -133,22 +133,6 @@ class RequestBackgroundImageController extends Controller
     protected function form()
     {
         $form = new Form(new RequestBackgroundImage);
-
-        if($form->status == 1){
-            $room = Room::where('uid',$form->owner_room_id)->first();
-            $data = [
-                "messageContent"=>[
-                    "message"=>"changeBackground",
-                    "imgbackground"=>$form->img?:"",
-                    "roomIntro"=>$room->room_intro?:"",
-                    "roomImg"=>$room->room_cover?:"",
-                    "room_type"=>@$room->myType->name?:"",
-                    "room_name"=>@$room->room_name?:""
-                ]
-            ];
-            $json = json_encode ($data);
-            $res = Common::sendToZego ('SendCustomCommand',$room->id,$form->owner_room_id,$json);
-        }
         $form->display('ID');
         $form->display('owner_room_id', 'owner_room_id');
         $form->image('img', 'img');
