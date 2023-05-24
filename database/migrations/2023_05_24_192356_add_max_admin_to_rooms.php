@@ -14,7 +14,7 @@ class AddMaxAdminToRooms extends Migration
     public function up()
     {
         Schema::table('rooms', function (Blueprint $table) {
-            $table->unsignedTinyInteger ('max_admin')->nullable ()->default (100);
+            $table->integer ('max_admin')->nullable ()->default (100);
         });
     }
 
