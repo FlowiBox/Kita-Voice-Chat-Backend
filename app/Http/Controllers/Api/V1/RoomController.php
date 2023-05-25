@@ -1666,7 +1666,10 @@ class RoomController extends Controller
         $room->save ();
         if ($request->mode == '1'){
             $mode = 'party';
-        }else{
+        }elseif ($request->mode == '2'){
+            $mode = 'seats12';
+        }
+        else{
             $mode = 'topCenter';
         }
         $ms = [
