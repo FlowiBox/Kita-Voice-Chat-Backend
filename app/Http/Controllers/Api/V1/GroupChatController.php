@@ -19,10 +19,8 @@ class GroupChatController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user ();
-        $data = GroupChat::paginate();
-
-        return Common::apiResponse (true,'',GroupChatResource::collection ($data),200);
+        $data = GroupChat::with('user')->paginate(10);
+        return GroupChatResource::collection($data,200);
     }
 
     /**
