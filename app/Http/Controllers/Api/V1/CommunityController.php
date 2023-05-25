@@ -131,7 +131,7 @@ class CommunityController extends Controller
             'uuid' => $keywords,
         ];
         $user = User::query ()
-            ->where('id', 'like', '%' . $keywords . '%')
+            ->where('uuid', 'like', '%' . $keywords . '%')
             ->where(['status' => 1])
             ->orWhere(function ($query) use ($whereOr) {
                 $query->where($whereOr);
@@ -156,6 +156,11 @@ class CommunityController extends Controller
         $whereOr = [
             'rooms.uid' => $keywords,
         ];
+        $user = User::where('uuid',$keywords)->first();
+        if(!$user){
+            return [];
+        }
+        $keywords = $user->id;
         $rooms = DB::table('rooms')
             ->where('rooms.uid', 'like', '%' . $keywords . '%')
             ->where(['users.status' => 1])
