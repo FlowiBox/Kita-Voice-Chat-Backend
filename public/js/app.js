@@ -2167,12 +2167,12 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "9bfa0b56e375267a8f59",
   cluster: "mt1",
-  forceTLS: true,
+  forceTLS: false,
   wsHost: window.location.hostname,
   wsPort: 6001,
-  wssPort: 6001,
+  //wssPort: 6001,
   disableStats: true,
-  enabledTransports: ['ws', 'wss'],
+  enabledTransports: ['ws'],
   authEndpoint: '/broadcasting/auth'
 });
 
