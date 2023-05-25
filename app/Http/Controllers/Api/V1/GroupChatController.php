@@ -19,7 +19,7 @@ class GroupChatController extends Controller
      */
     public function index(Request $request)
     {
-        $data = GroupChat::with('user')->paginate(10);
+        $data = GroupChat::with('user')->orderBy('created_at','DESC')->paginate(10);
         return GroupChatResource::collection($data,200);
     }
 

@@ -81,14 +81,14 @@ class CommunityController extends Controller
         //user
 //        $user = array_slice($this->user_search_hand($user_id, $keywords), 0, 2);
         //Room
-        $rooms = array_slice($this->room_search_hand($user_id, $keywords), 0, 2);
+        $rooms = array_slice($this->room_search_hand($user_id, (int)$keywords), 0, 2);
         //dynamic
 //        $dynamics = array_slice($this->dynamics_search_hand($user_id, $keywords), 0, 2);
         //Game Category
 //        $gmskill = array_slice($this->gmskill_search_hand($user_id, $keywords), 0, 2);
 //        $arr['gmskill'] = $gmskill;
 
-        $arr['user'] = UserResource::collection ($this->user_search_hand($user_id, $keywords));//$user;
+        $arr['user'] = UserResource::collection ($this->user_search_hand($user_id, (int)$keywords));//$user;
         $arr['rooms'] = $rooms;//rooms
 //        $arr['dynamics'] = $dynamics;
         return Common::apiResponse(1, '', $arr);
@@ -131,7 +131,7 @@ class CommunityController extends Controller
             'uuid' => $keywords,
         ];
         $user = User::query ()
-            ->where('nickname', 'like', '%' . $keywords . '%')
+            ->where('id', 'like', '%' . $keywords . '%')
             ->where(['status' => 1])
             ->orWhere(function ($query) use ($whereOr) {
                 $query->where($whereOr);
@@ -157,10 +157,10 @@ class CommunityController extends Controller
             'rooms.uid' => $keywords,
         ];
         $rooms = DB::table('rooms')
-            ->where('rooms.room_intro', 'like', '%' . $keywords . '%')
+            ->where('rooms.uid', 'like', '%' . $keywords . '%')
             ->where(['users.status' => 1])
-            ->where('rooms.is_afk',1)
-            ->orWhere ('rooms.room_visitor','!=','')
+            /*->where('rooms.is_afk',1)
+            ->orWhere ('rooms.room_visitor','!=','')*/
             ->join('users', 'rooms.uid','=','users.id', 'left')
             ->select([
                 'rooms.room_name',
