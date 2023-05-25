@@ -374,11 +374,11 @@ class RoomController extends Controller
         $pk = Pk::query ()->where ('room_id',$room_info['id'])->where ('status',1)->first ();
         $room_info['pk'] = new \stdClass();
         $room_info['is_pk'] = 0;
+
         if ($pk){
             $room_info['pk'] = new PkResource($pk);
             $room_info['is_pk'] = 1;
         }
-
 
         $gl = GiftLog::query()
             ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')

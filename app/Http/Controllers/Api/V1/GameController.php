@@ -54,8 +54,8 @@ class GameController extends Controller
         return $res;
     }
 
-    public function updatePlayerCoins(Request $request){
-        $payload = json_decode ($request->payload,true)['payload'];
+    public function updatePlayerCoins_(Request $request){
+        $payload = $request->payload;
         try {
             foreach ($payload as $item){
                 $user = User::query ()->find($item['uid']);
@@ -91,5 +91,26 @@ class GameController extends Controller
 
         return $res;
 
+    }
+
+
+    public function updatePlayerCoins()
+    {
+        $payload = request('payload');
+
+        foreach ($payload as $i =>  $item) {
+            $user = User::query ()->where('id', $item['uid'])->first();
+
+            if ($item['up'] == 1) {
+                $user->increment('diamonds', $item['amount']);
+            } else {
+                $user->decrement('diamonds', $item['amount']);
+            }
+        }
+
+        return [
+            'error_code'=>0,
+            'error_message'=>null,
+        ];
     }
 }
