@@ -46,7 +46,7 @@ class GroupChatResource extends JsonResource
             ],
             'has_color_name'=>Common::hasInPack (@$this->user->id,18),
             'group_message' => $this->text,
-            'created_at' => $this->created_at,
+            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
         ];
 
         return $data;
