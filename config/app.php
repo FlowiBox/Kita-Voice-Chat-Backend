@@ -31,6 +31,8 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'api_prefix' =>env('API_PREFIX',''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
