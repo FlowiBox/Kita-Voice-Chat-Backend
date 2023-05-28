@@ -71,6 +71,7 @@ return [
     'middleware' => [
         'web',
         Authorize::class,
+        'api',
     ],
 
     'statistics' => [
