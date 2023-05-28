@@ -288,4 +288,8 @@ class User extends Authenticatable
         return $this->hasMany(Follow::class, 'user_id', 'id');
     }
 
+    public function canJoinRoom(int $roomId): bool
+    {
+        return $this->id == $roomId;
+    }
 }

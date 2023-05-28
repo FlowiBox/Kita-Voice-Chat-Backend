@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Auth;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -266,7 +266,12 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::get ('list',[\App\Http\Controllers\Api\V1\RealsController::class,'index']);
                         Route::post ('create',[\App\Http\Controllers\Api\V1\RealsController::class,'store']);
                     });
+
+                    Route::post('/broadcasting/auth', function () {
+                        return response()->json(Auth::user());
+                    });
                 });
+
         }
     );
 
@@ -278,4 +283,20 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
     Route::get ('games',[\App\Http\Controllers\Api\V1\GameController::class,'playerInfo']);
 //http://127.0.0.1:8000/api/games
     Route::post ('games',[\App\Http\Controllers\Api\V1\GameController::class,'updatePlayerCoins']);
+});
+
+
+Route::get('/keyword-bad/{lang}', function($lang){
+    app()->setLocale($lang);
+    $array = \Lang::get('bad-word');
+    return response()->json(['data' => $array]);
+});
+
+
+Route::get('/send-msg/{msg}', function($msg){
+    $message = [
+        $msg
+    ];
+    event(new \App\Events\NewTrade([$message]));
+    return response()->json(['data' => 'send successfuly!']);
 });
