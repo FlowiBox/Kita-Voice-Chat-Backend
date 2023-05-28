@@ -102,9 +102,9 @@ class GameController extends Controller
             $user = User::query ()->where('id', $item['uid'])->first();
 
             if ($item['up'] == 1) {
-                $user->increment('gold', $item['amount']);
+                $user->increment('di', $item['amount']);
             } else {
-                $user->decrement('gold', $item['amount']);
+                $user->decrement('di', $item['amount']);
             }
         }
 
