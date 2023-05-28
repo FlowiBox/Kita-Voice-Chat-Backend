@@ -31,6 +31,10 @@ return [
 
     'env' => env('APP_ENV', 'production'),
 
+    'api_prefix' =>env('API_PREFIX',''),
+
+    'app_origin_name'=>env('APP_ORIGIN_NAME', 'r-star'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
