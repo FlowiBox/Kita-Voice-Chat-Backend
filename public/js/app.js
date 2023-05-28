@@ -2079,7 +2079,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(e.trade[0][0]);
       _this.msg = e.trade[0][0];
     });
-    window.Echo.join('trades-1').here(function (e) {
+    window.Echo.join('user-2702').here(function (e) {
       _this.usersCount = e.length;
     }).joining(function (e) {
       _this.usersCount = _this.usersCount + 1;
@@ -2173,7 +2173,13 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   //wssPort: 6001,
   disableStats: true,
   enabledTransports: ['ws'],
-  authEndpoint: '/broadcasting/auth'
+  authEndpoint: 'api/broadcasting/auth',
+  auth: {
+    headers: {
+      Authorization: "Bearer " + "11355|qyZEl6tD6box99ETWSrncjMWi7q9xpLa4p5WmicM",
+      Accept: "application/json"
+    }
+  }
 });
 
 /***/ }),
