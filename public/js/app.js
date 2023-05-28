@@ -2089,7 +2089,7 @@ __webpack_require__.r(__webpack_exports__);
       //this.usersCount = this.usersCount-1;
       console.log("Leaving: :" + e);
     }).error(function (e) {
-      console.log("error: " + e);
+      console.log("error: " + JSON.stringify(e));
     });
   }
 });
