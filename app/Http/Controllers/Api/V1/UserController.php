@@ -298,10 +298,12 @@ class UserController extends Controller
         } elseif ($type == 3) {
             $query = $query->whereMonth('created_at', Carbon::now()->month);
         }
+
         if (!in_array ($class,[1,2])){
-            $query = $query->where ('receiver_id',$room_uid);
+            $query = $query->where ('roomowner_id',$room_uid);
             $limit = 1000;
         }
+
         $data=$query->selectRaw("sum(giftPrice) as exp ,". $keywords)
             ->groupBy($keywords)->orderByRaw("exp desc")
             ->limit($limit)->get()->reject(function ($q){

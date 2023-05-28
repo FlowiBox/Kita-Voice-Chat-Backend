@@ -9,6 +9,7 @@ use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\EditRoomRequest;
 use App\Http\Resources\Api\V1\BoxUseResource;
 use App\Http\Resources\Api\V1\FamilyResource;
+use App\Http\Resources\Api\V1\MiniUserResource;
 use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
@@ -399,7 +400,7 @@ class RoomController extends Controller
 
 
 
-        $room_info['top_user'] = $t_user?new UserResource($t_user):new \stdClass();
+        $room_info['top_user'] = $t_user?new MiniUserResource($t_user):new \stdClass();
 
 
         if($room_info['room_pass'] &&  $owner_id != $user_id && !$request->ignorePassword){

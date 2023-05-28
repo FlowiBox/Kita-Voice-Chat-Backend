@@ -99,7 +99,20 @@ class GameController extends Controller
         $payload = request('payload');
 
         foreach ($payload as $i =>  $item) {
-            $user = User::query ()->where('id', $item['uid'])->first();
+            $uid = @PersonalAccessToken::findToken ($item['token'])->tokenable->id;
+            if (!$uid){
+                return [
+                    'error_code'=>1,
+                    'error_message'=>'please inter valid token',
+                ];
+            }
+            $user = \App\Models\User::query ()->find ($uid);
+            if (!$user) {
+                $res = [
+                    'error_code' => 1 ,
+                    'error_message' => 'Cannot find user',
+                ];
+            }
 
             if ($item['up'] == 1) {
                 $user->increment('di', $item['amount']);
