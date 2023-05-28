@@ -2088,6 +2088,8 @@ __webpack_require__.r(__webpack_exports__);
     }).leaving(function (e) {
       //this.usersCount = this.usersCount-1;
       console.log("Leaving: :" + e);
+    }).error(function (e) {
+      console.log("error: " + e);
     });
   }
 });
