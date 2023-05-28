@@ -302,5 +302,5 @@ Route::get('/send-msg/{msg}', function($msg){
 });
 
 Route::post('/broadcasting/auth', function () {
-    return Auth::user();
+    return response()->json(Auth::user());
 });
