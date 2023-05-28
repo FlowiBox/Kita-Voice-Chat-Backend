@@ -2182,7 +2182,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   auth: {
     headers: {
       Authorization: "Bearer " + "11355|qyZEl6tD6box99ETWSrncjMWi7q9xpLa4p5WmicM",
-      Accept: "application/json"
+      Accept: "application/json",
+      'X-App-ID': 1582038
     }
   }
 });
