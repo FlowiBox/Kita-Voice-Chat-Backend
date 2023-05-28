@@ -300,3 +300,7 @@ Route::get('/send-msg/{msg}', function($msg){
     event(new \App\Events\NewTrade([$message]));
     return response()->json(['data' => 'send successfuly!']);
 });
+
+Route::post('/broadcasting/auth', function () {
+    return Auth::user();
+});
