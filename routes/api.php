@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Auth;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -268,7 +267,7 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                     });
 
                     Route::post('/broadcasting/auth', function () {
-                        return response()->json(Auth::user());
+                        return response()->json(auth()->user());
                     });
                 });
 
