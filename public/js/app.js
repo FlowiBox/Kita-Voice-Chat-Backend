@@ -2081,10 +2081,13 @@ __webpack_require__.r(__webpack_exports__);
     });
     window.Echo.join('user-2702').here(function (e) {
       _this.usersCount = e.length;
+      console.log("Me: :" + e);
     }).joining(function (e) {
       _this.usersCount = _this.usersCount + 1;
+      console.log("Joining: :" + e);
     }).leaving(function (e) {
       _this.usersCount = _this.usersCount - 1;
+      console.log("Leaving: :" + e);
     });
   }
 });
