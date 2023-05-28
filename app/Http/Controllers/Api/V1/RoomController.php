@@ -28,6 +28,7 @@ use App\Repositories\Room\RoomRepoInterface;
 use App\Traits\HelperTraits\RoomTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
@@ -477,10 +478,10 @@ class RoomController extends Controller
         $room_info['owner_avatar'] = @$owner_user->profile->avatar;
         $room_info['country'] = @$owner_user->country;
 
-        $mykeep = DB::table('users')->where('id',$user_id)->value('mykeep');
-        $mykeep_arr=explode(",", $mykeep);
-        //1 has been collected 2 has not been collected
-        $room_info['is_favorite'] = in_array($owner_id, $mykeep_arr)  ? 1 : 2; // stopped here
+//        $mykeep = DB::table('users')->where('id',$user_id)->value('mykeep');
+//        $mykeep_arr=explode(",", $mykeep);
+//        //1 has been collected 2 has not been collected
+//        $room_info['is_favorite'] = in_array($owner_id, $mykeep_arr)  ? 1 : 2; // stopped here
 
         //room number added
         if($room_info['user_type'] != 1){
@@ -511,13 +512,13 @@ class RoomController extends Controller
             return Common::apiResponse (false,'room owner may be deleted',null,404);
         }
         $user = (array)$user;
-        $txk=DB::table('wares')->where(['id'=>$user['dress_1']])->value('img1');
-        $room_info['txk']=$txk;
-        $room_info['mic_color']=DB::table('wares')->where(['id'=>$user['dress_4']])->value('color') ? : '#ffffff';
+//        $txk=DB::table('wares')->where(['id'=>$user['dress_1']])->value('img1');
+//        $room_info['txk']=$txk;
+//        $room_info['mic_color']=DB::table('wares')->where(['id'=>$user['dress_4']])->value('color') ? : '#ffffff';
         //difference from the previous one
-        $res_gap = Common::check_gap_hand($owner_id);
-        $room_info['gap'] = $res_gap['gap'];
-        $room_info['exp'] = $res_gap['exp'];
+//        $res_gap = Common::check_gap_hand($owner_id);
+//        $room_info['gap'] = $res_gap['gap'];
+//        $room_info['exp'] = $res_gap['exp'];
         $room_info['hot'] = Common::room_hot($room_info['hot']);
 
         //Is it in the mic position
@@ -525,19 +526,19 @@ class RoomController extends Controller
         $room_info['phase']= !in_array($user_id, $mic_arr) ? 0 : array_search($user_id,$mic_arr)+1 ;
 
         //sorting number
-        $micSortHand = Common::micSortHand($user_id,$owner_id);
-        $room_info['sort'] = $micSortHand['sort'];
-        $room_info['num']  = $micSortHand['num'];
-        $room_info['audio_sort'] = $micSortHand['audio_sort'];
-        $room_info['audio_num']  = $micSortHand['audio_num'];
+//        $micSortHand = Common::micSortHand($user_id,$owner_id);
+//        $room_info['sort'] = $micSortHand['sort'];
+//        $room_info['num']  = $micSortHand['num'];
+//        $room_info['audio_sort'] = $micSortHand['audio_sort'];
+//        $room_info['audio_num']  = $micSortHand['audio_num'];
 
         //Dispatch has started time
-        $room_info['strto_time'] = 0;
-        $wap = "status = '1' and uid = '$owner_id' and endtime is null";
-        $monadsInfo = (array)Db::table('monads')->selectRaw('id,addtime')->whereRaw($wap)->first();
-        if (!empty($monadsInfo) && !empty($monadsInfo['addtime'])){
-            $room_info['strto_time'] = (time() - $monadsInfo['addtime']);
-        }
+//        $room_info['strto_time'] = 0;
+//        $wap = "status = '1' and uid = '$owner_id' and endtime is null";
+//        $monadsInfo = (array)Db::table('monads')->selectRaw('id,addtime')->whereRaw($wap)->first();
+//        if (!empty($monadsInfo) && !empty($monadsInfo['addtime'])){
+//            $room_info['strto_time'] = (time() - $monadsInfo['addtime']);
+//        }
 
         foreach ($room_info as $k => &$v){
             if (!$v){
@@ -619,6 +620,33 @@ class RoomController extends Controller
             $res = Common::send_firebase_notification ($tokens,"لقد قام $un بفتح غرفته",$room_info['room_intro']);
 //            dd ($res);
         }
+        $remove = [
+            'room_admin',
+            'room_judge',
+            'room_speak',
+            'is_afk',
+            'room_sound',
+            'nickname',
+            'room_visitor',
+            'free_mic',
+            'play_num',
+            'user_type',
+            'is_sound',
+            'uid_black',
+            'country',
+            'is_favorite',
+            'txk',
+            'mic_color',
+            'gap',
+            'exp',
+            'sort',
+            'num',
+            'audio_num',
+            'strto_time',
+        ];
+
+        $room_info = array_diff_key($room_info, array_flip($remove));
+
         return Common::apiResponse (true,'',$room_info);
     }
 

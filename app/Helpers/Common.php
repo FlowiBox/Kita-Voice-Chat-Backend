@@ -41,6 +41,12 @@ class Common{
             $statusCode = 200;
         }
 
+        $arr = ['yai'];
+        $countries = [];
+        if (in_array (\config ('app.app_origin_name'),$arr)){
+            $countries = CountryResource::collection (Country::query ()->where ('status',1)->get ());
+        }
+
         return response ()->json (
             [
                 'success'   => $success,
@@ -51,8 +57,9 @@ class Common{
 
                 'extra_data'=> [
                     'storage_base_url'=>self::getConf ('storage_base_url') ?:asset ('storage'),
-                    'countries'=>CountryResource::collection (Country::query ()->where ('status',1)->get ())
+                    'countries'=>$countries
                 ],
+
 
                 'paginates' =>$paginates
             ],
