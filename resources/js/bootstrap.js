@@ -35,10 +35,10 @@ window.Echo = new Echo({
     disableStats: true,
     enabledTransports: ['ws'],
     authEndpoint: '/api/broadcasting/auth',
-    httpDriver: 'axios',
+    /* httpDriver: 'axios',
     httpHost: window.location.hostname,
     httpPort: 8000,
-    httpPath: '',
+    httpPath: '', */
     httpUseHttps: false,
     auth: {
         headers: {

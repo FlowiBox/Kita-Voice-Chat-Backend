@@ -2083,7 +2083,7 @@ __webpack_require__.r(__webpack_exports__);
     var url = new URL(url_string);
     var room_id = url.searchParams.get("room_id");
     var channel = window.Echo.join("room-".concat(room_id));
-    console.log(channel);
+    //console.log(channel);
     channel.here(function (e) {
       console.log("here: ", e);
       _this.usersCount = 10;
@@ -2177,7 +2177,6 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
 var url_string = window.location;
 var url = new URL(url_string);
 var token = url.searchParams.get("token");
-var room_id = url.searchParams.get("room_id");
 console.log('token:', token);
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
@@ -2190,10 +2189,10 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   disableStats: true,
   enabledTransports: ['ws'],
   authEndpoint: '/api/broadcasting/auth',
-  httpDriver: 'axios',
+  /* httpDriver: 'axios',
   httpHost: window.location.hostname,
   httpPort: 8000,
-  httpPath: '',
+  httpPath: '', */
   httpUseHttps: false,
   auth: {
     headers: {

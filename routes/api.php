@@ -307,7 +307,7 @@ Route::get('/send-msg/{msg}', function($msg){
 });
 
 
-Route::get('/pusher', function(){
+Route::get('/pusher', function(Request $request){
 
 $connection = config( 'broadcasting.connections.pusher' );
 
@@ -318,14 +318,20 @@ $connection = config( 'broadcasting.connections.pusher' );
         [
             'cluster' => $connection['options']['cluster'],
             'useTLS'  => TRUE,
-            'host'    => '127.0.0.1',
+            'host'    => 'dragon-chat-app.com',
             'port'    => '6001',
             'scheme'  => 'http',
             'debug'   => TRUE,
         ]
     );
-   
-    $channels = $pusher->get_channels();
-   dd($channels); // i get false
+    if(!empty($request->room_id)){
+        $info = $pusher->get_channel_info('presence-room-'+$request->room_id, ['info' => 'user_count']);
+        $user_count = $info->user_count;
+        return $user_count; // i get false
+    }else{
+        $channels = $pusher->get_channels();
+        return $channels;
+    }
+
 
 });

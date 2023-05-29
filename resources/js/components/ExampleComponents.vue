@@ -23,7 +23,7 @@
             var url = new URL(url_string);
             let room_id = url.searchParams.get("room_id");
             let channel = window.Echo.join(`room-${room_id}`);
-            console.log(channel);
+            //console.log(channel);
             channel
                 .here((e) => {
                     console.log("here: ",e);
