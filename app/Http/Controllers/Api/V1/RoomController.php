@@ -318,10 +318,14 @@ class RoomController extends Controller
         $f = Family::query ()->where ('user_id',$owner_id)->first ();
         $family = new \stdClass();
         if ($f){
-            $family = new FamilyResource($f);
+            $family = [
+                'family_id'=>$f->id,
+                'family_name'=>$f->name,
+                'family_level'=>$f->level
+            ];;
         }
 
-        $room_info['owner_family'] = $family;
+        $room_info['room_family'] = $family;
 
         $boxes = BoxUse::query ()
             ->where ('room_uid',$owner_id)
