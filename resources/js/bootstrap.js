@@ -16,13 +16,29 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from 'laravel-echo';
+import Echo from "laravel-echo"
 
-// window.Pusher = require('pusher-js');
+window.Pusher = require('pusher-js');
+var url_string = window.location;
+var url = new URL(url_string);
+var token = url.searchParams.get("token");
+console.log('token:', token);
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    forceTLS: false,
+    wsHost:  window.location.hostname,
+    wsPort: 6001,
+    //wssPort: 6001,
+    disableStats: true,
+    enabledTransports: ['ws'],
+    authEndpoint: '/api/broadcasting/auth',
+    auth: {
+        headers: {
+          Authorization: "Bearer " + token,
+          Accept: "application/json"
+        },
+    },
+});
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     forceTLS: true
-// });

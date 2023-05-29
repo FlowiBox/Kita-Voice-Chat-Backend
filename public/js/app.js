@@ -2073,33 +2073,22 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    var _this = this;
     console.log('Component mounted.');
-    window.Echo.channel('trades').listen('NewTrade', function (e) {
-      console.log(e.trade[0][0]);
-      _this.msg = e.trade[0][0];
-    });
-    var channel = window.Echo.join("presence.1129");
+    /*window.Echo.channel('trades')
+    .listen('NewTrade', (e) => {
+        console.log(e.trade[0][0]);
+        this.msg = e.trade[0][0];
+    });*/
+
+    var channel = window.Echo.join("presence.2702");
     channel.here(function (users) {
       console.log("here: ", users);
     }).joining(function (user) {
       console.log("joining: ", user);
     }).leaving(function (user) {
       console.log("leaving: ", user);
-    }).authorize(function (user, authorizeCallback) {
-      // يجب على Laravel Echo إرسال طلب تحقق الصلاحية إلى الخادم Laravel
-      axios.post("/api/broadcasting/auth", {
-        channel_name: "presence.1129"
-        // يمكنك إضافة المزيد من البيانات المستخدمة في التحقق من الصلاحية هنا
-      }).then(function (response) {
-        console.log(response);
-        // إذا تم تمرير التحقق من الصلاحية بنجاح، سيتم استدعاء الدالة authorizeCallback بقيمة true
-        authorizeCallback(true);
-      })["catch"](function (error) {
-        console.log(error);
-        // إذا حدث خطأ، سيتم استدعاء الدالة authorizeCallback بقيمة false
-        authorizeCallback(false);
-      });
+    }).error(function (error) {
+      console.log("error: ", error);
     });
   }
 });
@@ -2115,8 +2104,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* binding */ render),
-/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function render() {
   var _vm = this,
@@ -2178,6 +2167,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
+var url_string = window.location;
+var url = new URL(url_string);
+var token = url.searchParams.get("token");
+console.log('token:', token);
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "9bfa0b56e375267a8f59",
@@ -2191,9 +2184,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   authEndpoint: '/api/broadcasting/auth',
   auth: {
     headers: {
-      Authorization: "Bearer " + "3764|aXXhKTS9Us9HEGTwi2tTQR1SkEXC0eGy4am2Ev0Y",
-      Accept: "application/json",
-      'X-App-ID': 1582038
+      Authorization: "Bearer " + token,
+      Accept: "application/json"
     }
   }
 });
@@ -2209,7 +2201,7 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Channel": () => (/* binding */ Channel),
+/* harmony export */   Channel: () => (/* binding */ Channel),
 /* harmony export */   "default": () => (/* binding */ Echo)
 /* harmony export */ });
 function _typeof(obj) {
@@ -26371,8 +26363,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponents_vue_vue_type_template_id_0dd1f145___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponents_vue_vue_type_template_id_0dd1f145___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponents_vue_vue_type_template_id_0dd1f145___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponents_vue_vue_type_template_id_0dd1f145___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponents_vue_vue_type_template_id_0dd1f145___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ExampleComponents.vue?vue&type=template&id=0dd1f145& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ExampleComponents.vue?vue&type=template&id=0dd1f145&");
 
@@ -26499,63 +26491,63 @@ function normalizeComponent(
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "EffectScope": () => (/* binding */ EffectScope),
-/* harmony export */   "computed": () => (/* binding */ computed),
-/* harmony export */   "customRef": () => (/* binding */ customRef),
+/* harmony export */   EffectScope: () => (/* binding */ EffectScope),
+/* harmony export */   computed: () => (/* binding */ computed),
+/* harmony export */   customRef: () => (/* binding */ customRef),
 /* harmony export */   "default": () => (/* binding */ Vue),
-/* harmony export */   "defineAsyncComponent": () => (/* binding */ defineAsyncComponent),
-/* harmony export */   "defineComponent": () => (/* binding */ defineComponent),
-/* harmony export */   "del": () => (/* binding */ del),
-/* harmony export */   "effectScope": () => (/* binding */ effectScope),
-/* harmony export */   "getCurrentInstance": () => (/* binding */ getCurrentInstance),
-/* harmony export */   "getCurrentScope": () => (/* binding */ getCurrentScope),
-/* harmony export */   "h": () => (/* binding */ h),
-/* harmony export */   "inject": () => (/* binding */ inject),
-/* harmony export */   "isProxy": () => (/* binding */ isProxy),
-/* harmony export */   "isReactive": () => (/* binding */ isReactive),
-/* harmony export */   "isReadonly": () => (/* binding */ isReadonly),
-/* harmony export */   "isRef": () => (/* binding */ isRef),
-/* harmony export */   "isShallow": () => (/* binding */ isShallow),
-/* harmony export */   "markRaw": () => (/* binding */ markRaw),
-/* harmony export */   "mergeDefaults": () => (/* binding */ mergeDefaults),
-/* harmony export */   "nextTick": () => (/* binding */ nextTick),
-/* harmony export */   "onActivated": () => (/* binding */ onActivated),
-/* harmony export */   "onBeforeMount": () => (/* binding */ onBeforeMount),
-/* harmony export */   "onBeforeUnmount": () => (/* binding */ onBeforeUnmount),
-/* harmony export */   "onBeforeUpdate": () => (/* binding */ onBeforeUpdate),
-/* harmony export */   "onDeactivated": () => (/* binding */ onDeactivated),
-/* harmony export */   "onErrorCaptured": () => (/* binding */ onErrorCaptured),
-/* harmony export */   "onMounted": () => (/* binding */ onMounted),
-/* harmony export */   "onRenderTracked": () => (/* binding */ onRenderTracked),
-/* harmony export */   "onRenderTriggered": () => (/* binding */ onRenderTriggered),
-/* harmony export */   "onScopeDispose": () => (/* binding */ onScopeDispose),
-/* harmony export */   "onServerPrefetch": () => (/* binding */ onServerPrefetch),
-/* harmony export */   "onUnmounted": () => (/* binding */ onUnmounted),
-/* harmony export */   "onUpdated": () => (/* binding */ onUpdated),
-/* harmony export */   "provide": () => (/* binding */ provide),
-/* harmony export */   "proxyRefs": () => (/* binding */ proxyRefs),
-/* harmony export */   "reactive": () => (/* binding */ reactive),
-/* harmony export */   "readonly": () => (/* binding */ readonly),
-/* harmony export */   "ref": () => (/* binding */ ref$1),
-/* harmony export */   "set": () => (/* binding */ set),
-/* harmony export */   "shallowReactive": () => (/* binding */ shallowReactive),
-/* harmony export */   "shallowReadonly": () => (/* binding */ shallowReadonly),
-/* harmony export */   "shallowRef": () => (/* binding */ shallowRef),
-/* harmony export */   "toRaw": () => (/* binding */ toRaw),
-/* harmony export */   "toRef": () => (/* binding */ toRef),
-/* harmony export */   "toRefs": () => (/* binding */ toRefs),
-/* harmony export */   "triggerRef": () => (/* binding */ triggerRef),
-/* harmony export */   "unref": () => (/* binding */ unref),
-/* harmony export */   "useAttrs": () => (/* binding */ useAttrs),
-/* harmony export */   "useCssModule": () => (/* binding */ useCssModule),
-/* harmony export */   "useCssVars": () => (/* binding */ useCssVars),
-/* harmony export */   "useListeners": () => (/* binding */ useListeners),
-/* harmony export */   "useSlots": () => (/* binding */ useSlots),
-/* harmony export */   "version": () => (/* binding */ version),
-/* harmony export */   "watch": () => (/* binding */ watch),
-/* harmony export */   "watchEffect": () => (/* binding */ watchEffect),
-/* harmony export */   "watchPostEffect": () => (/* binding */ watchPostEffect),
-/* harmony export */   "watchSyncEffect": () => (/* binding */ watchSyncEffect)
+/* harmony export */   defineAsyncComponent: () => (/* binding */ defineAsyncComponent),
+/* harmony export */   defineComponent: () => (/* binding */ defineComponent),
+/* harmony export */   del: () => (/* binding */ del),
+/* harmony export */   effectScope: () => (/* binding */ effectScope),
+/* harmony export */   getCurrentInstance: () => (/* binding */ getCurrentInstance),
+/* harmony export */   getCurrentScope: () => (/* binding */ getCurrentScope),
+/* harmony export */   h: () => (/* binding */ h),
+/* harmony export */   inject: () => (/* binding */ inject),
+/* harmony export */   isProxy: () => (/* binding */ isProxy),
+/* harmony export */   isReactive: () => (/* binding */ isReactive),
+/* harmony export */   isReadonly: () => (/* binding */ isReadonly),
+/* harmony export */   isRef: () => (/* binding */ isRef),
+/* harmony export */   isShallow: () => (/* binding */ isShallow),
+/* harmony export */   markRaw: () => (/* binding */ markRaw),
+/* harmony export */   mergeDefaults: () => (/* binding */ mergeDefaults),
+/* harmony export */   nextTick: () => (/* binding */ nextTick),
+/* harmony export */   onActivated: () => (/* binding */ onActivated),
+/* harmony export */   onBeforeMount: () => (/* binding */ onBeforeMount),
+/* harmony export */   onBeforeUnmount: () => (/* binding */ onBeforeUnmount),
+/* harmony export */   onBeforeUpdate: () => (/* binding */ onBeforeUpdate),
+/* harmony export */   onDeactivated: () => (/* binding */ onDeactivated),
+/* harmony export */   onErrorCaptured: () => (/* binding */ onErrorCaptured),
+/* harmony export */   onMounted: () => (/* binding */ onMounted),
+/* harmony export */   onRenderTracked: () => (/* binding */ onRenderTracked),
+/* harmony export */   onRenderTriggered: () => (/* binding */ onRenderTriggered),
+/* harmony export */   onScopeDispose: () => (/* binding */ onScopeDispose),
+/* harmony export */   onServerPrefetch: () => (/* binding */ onServerPrefetch),
+/* harmony export */   onUnmounted: () => (/* binding */ onUnmounted),
+/* harmony export */   onUpdated: () => (/* binding */ onUpdated),
+/* harmony export */   provide: () => (/* binding */ provide),
+/* harmony export */   proxyRefs: () => (/* binding */ proxyRefs),
+/* harmony export */   reactive: () => (/* binding */ reactive),
+/* harmony export */   readonly: () => (/* binding */ readonly),
+/* harmony export */   ref: () => (/* binding */ ref$1),
+/* harmony export */   set: () => (/* binding */ set),
+/* harmony export */   shallowReactive: () => (/* binding */ shallowReactive),
+/* harmony export */   shallowReadonly: () => (/* binding */ shallowReadonly),
+/* harmony export */   shallowRef: () => (/* binding */ shallowRef),
+/* harmony export */   toRaw: () => (/* binding */ toRaw),
+/* harmony export */   toRef: () => (/* binding */ toRef),
+/* harmony export */   toRefs: () => (/* binding */ toRefs),
+/* harmony export */   triggerRef: () => (/* binding */ triggerRef),
+/* harmony export */   unref: () => (/* binding */ unref),
+/* harmony export */   useAttrs: () => (/* binding */ useAttrs),
+/* harmony export */   useCssModule: () => (/* binding */ useCssModule),
+/* harmony export */   useCssVars: () => (/* binding */ useCssVars),
+/* harmony export */   useListeners: () => (/* binding */ useListeners),
+/* harmony export */   useSlots: () => (/* binding */ useSlots),
+/* harmony export */   version: () => (/* binding */ version),
+/* harmony export */   watch: () => (/* binding */ watch),
+/* harmony export */   watchEffect: () => (/* binding */ watchEffect),
+/* harmony export */   watchPostEffect: () => (/* binding */ watchPostEffect),
+/* harmony export */   watchSyncEffect: () => (/* binding */ watchSyncEffect)
 /* harmony export */ });
 /*!
  * Vue.js v2.7.14
