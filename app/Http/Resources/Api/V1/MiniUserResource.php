@@ -33,7 +33,9 @@ class MiniUserResource extends JsonResource
             'id'=>@$this->id,
             'uuid'=>@$this->uuid,
             'name'=>@$this->name?:'',
-            'image'=>@$this->profile->avatar?:'',
+            'profile' => [
+                'image' =>@ $this->profile->avatar?:'',
+            ],
             'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'),
             'frame_id'=>@$this->dress_1,
             'has_color_name'=>Common::hasInPack ($this->id,18),
