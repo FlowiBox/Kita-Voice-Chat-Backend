@@ -2079,7 +2079,10 @@ __webpack_require__.r(__webpack_exports__);
       console.log(e.trade[0][0]);
       _this.msg = e.trade[0][0];
     });
-    var channel = window.Echo.join("room-1129");
+    var url_string = window.location;
+    var url = new URL(url_string);
+    var room_id = url.searchParams.get("room_id");
+    var channel = window.Echo.join("room-".concat(room_id));
     console.log(channel);
     channel.here(function (e) {
       console.log("here: ", e);
@@ -2174,6 +2177,7 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
 var url_string = window.location;
 var url = new URL(url_string);
 var token = url.searchParams.get("token");
+var room_id = url.searchParams.get("room_id");
 console.log('token:', token);
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',

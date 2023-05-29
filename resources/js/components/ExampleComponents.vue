@@ -18,7 +18,11 @@
                 this.msg = e.trade[0][0];
             });
 
-            let channel = window.Echo.join(`room-1129`);
+
+            var url_string = window.location;
+            var url = new URL(url_string);
+            let room_id = url.searchParams.get("room_id");
+            let channel = window.Echo.join(`room-${room_id}`);
             console.log(channel);
             channel
                 .here((e) => {
