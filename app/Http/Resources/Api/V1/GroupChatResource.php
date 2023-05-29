@@ -26,31 +26,28 @@ class GroupChatResource extends JsonResource
      */
     public function toArray($request)
     {  
-        $costGroupChat = Common::getConfig('group_chat');
+
         $data = [
-            'price_message' => $costGroupChat ?:0,
-            'data' => [
-                'id'=>@$this->user->id,
-                'uuid'=>@$this->user->uuid,
-                'name'=>@$this->user->name?:'',
-                'profile'=> [ 
-                    'image' => @$this->user->profile->avatar,
-                    'age' => Carbon::parse (@$this->user->profile->birthday)->age,
-                    'gender'=>$this->user->gender == 1 ? __ ('male') : __ ('female'),
-                ],
-                'frame'=>Common::getUserDress($this->user->id,$this->user->dress_1,4,'img2')?:Common::getUserDress($this->user->id,$this->user->dress_1,4,'img1'),
-                'frame_id'=>@$this->user->dress_1,
-                'vip'=> [
-                    'level' => @$this->user->UserVip->level,
-                ],
-                'level'=> [
-                    'receiver_img' => @$this->user->getImageReceiverOrSender('receiver_id',1)->img,
-                    'sender_img' => @$this->user->getImageReceiverOrSender('sender_id',2)->img, 
-                ],
-                'has_color_name'=>Common::hasInPack (@$this->user->id,18),
-                'group_message' => $this->text,
-                'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
+            'id'=>@$this->user->id,
+            'uuid'=>@$this->user->uuid,
+            'name'=>@$this->user->name?:'',
+            'profile'=> [ 
+                'image' => @$this->user->profile->avatar,
+                'age' => Carbon::parse (@$this->user->profile->birthday)->age,
+                'gender'=>$this->user->gender == 1 ? __ ('male') : __ ('female'),
             ],
+            'frame'=>Common::getUserDress($this->user->id,$this->user->dress_1,4,'img2')?:Common::getUserDress($this->user->id,$this->user->dress_1,4,'img1'),
+            'frame_id'=>@$this->user->dress_1,
+            'vip'=> [
+                'level' => @$this->user->UserVip->level,
+            ],
+            'level'=> [
+                'receiver_img' => @$this->user->getImageReceiverOrSender('receiver_id',1)->img,
+                'sender_img' => @$this->user->getImageReceiverOrSender('sender_id',2)->img, 
+            ],
+            'has_color_name'=>Common::hasInPack (@$this->user->id,18),
+            'group_message' => $this->text,
+            'created_at' => Carbon::parse($this->created_at)->toDateTimeString(),
         ];
 
         return $data;

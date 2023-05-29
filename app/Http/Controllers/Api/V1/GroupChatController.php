@@ -20,7 +20,8 @@ class GroupChatController extends Controller
     public function index(Request $request)
     {
         $data = GroupChat::with('user')->orderBy('created_at','DESC')->paginate(10);
-        return GroupChatResource::collection($data,200);
+        $costGroupChat = Common::getConfig('group_chat');
+        return response()->json(['price_message'=> $costGroupChat , 'data' => GroupChatResource::collection($data,200),$data]);
     }
 
     /**
