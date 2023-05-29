@@ -12,11 +12,11 @@
         },
         mounted(){
             console.log('Component mounted.');
-            /*window.Echo.channel('trades')
+            window.Echo.channel('trades')
             .listen('NewTrade', (e) => {
                 console.log(e.trade[0][0]);
                 this.msg = e.trade[0][0];
-            });*/
+            });
 
             let channel = window.Echo.join(`presence.2702`)
 
