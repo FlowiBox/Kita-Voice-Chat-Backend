@@ -34,6 +34,11 @@ window.Echo = new Echo({
     disableStats: true,
     enabledTransports: ['ws'],
     authEndpoint: '/api/broadcasting/auth',
+    httpDriver: 'axios',
+    httpHost: window.location.hostname,
+    httpPort: 80,
+    httpPath: '',
+    httpUseHttps: false,
     auth: {
         headers: {
           Authorization: "Bearer " + token,

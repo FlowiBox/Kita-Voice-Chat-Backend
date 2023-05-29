@@ -102,6 +102,11 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::post ('/send',[\App\Http\Controllers\Api\V1\GiftLogController::class,'gift_queue_six']);
                     });
 
+                    Route::prefix ('group-chat')->group (function (){
+                        Route::get ('/',[\App\Http\Controllers\Api\V1\GroupChatController::class,'index']);
+                        Route::post ('/send',[\App\Http\Controllers\Api\V1\GroupChatController::class,'store']);
+                    });
+                    
                     Route::prefix ('countries')->group (function (){
                         Route::get ('/',[\App\Http\Controllers\Api\V1\HomeController::class,'allCountries']);
                         Route::get ('/{id}',[\App\Http\Controllers\Api\V1\HomeController::class,'getCountry']);

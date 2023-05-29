@@ -19,7 +19,7 @@
             });
 
             let channel = window.Echo.join(`presence.2702`)
-
+            console.log(channel);
             channel
                 .here((users) => {
                     console.log("here: ",users);
