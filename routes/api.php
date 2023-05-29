@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -106,7 +107,7 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::get ('/',[\App\Http\Controllers\Api\V1\GroupChatController::class,'index']);
                         Route::post ('/send',[\App\Http\Controllers\Api\V1\GroupChatController::class,'store']);
                     });
-                    
+
                     Route::prefix ('countries')->group (function (){
                         Route::get ('/',[\App\Http\Controllers\Api\V1\HomeController::class,'allCountries']);
                         Route::get ('/{id}',[\App\Http\Controllers\Api\V1\HomeController::class,'getCountry']);
@@ -271,8 +272,8 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::post ('create',[\App\Http\Controllers\Api\V1\RealsController::class,'store']);
                     });
 
-                    Route::post('/broadcasting/auth', function () {
-                        return response()->json(auth()->user());
+                    Route::post('/broadcasting/auth', function (Request $request) {
+                        return Broadcast::auth($request);
                     });
                 });
 
@@ -303,4 +304,28 @@ Route::get('/send-msg/{msg}', function($msg){
     ];
     event(new \App\Events\NewTrade([$message]));
     return response()->json(['data' => 'send successfuly!']);
+});
+
+
+Route::get('/pusher', function(){
+
+$connection = config( 'broadcasting.connections.pusher' );
+
+    $pusher = new Pusher\Pusher(
+        $connection['key'],
+        $connection['secret'],
+        $connection['app_id'],
+        [
+            'cluster' => $connection['options']['cluster'],
+            'useTLS'  => TRUE,
+            'host'    => '127.0.0.1',
+            'port'    => '6001',
+            'scheme'  => 'http',
+            'debug'   => TRUE,
+        ]
+    );
+   
+    $channels = $pusher->get_channels();
+   dd($channels); // i get false
+
 });

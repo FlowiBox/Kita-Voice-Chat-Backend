@@ -18,20 +18,24 @@
                 this.msg = e.trade[0][0];
             });
 
-            let channel = window.Echo.join(`presence.2702`)
+            let channel = window.Echo.join(`room-1129`);
             console.log(channel);
             channel
-                .here((users) => {
-                    console.log("here: ",users);
+                .here((e) => {
+                    console.log("here: ",e);
+                    this.usersCount = 10;
                 })
-                .joining((user) => {
-                    console.log("joining: ",user);
+                .joining((e) => {
+                    console.log("joining: ",e);
+                    this.usersCount = 11;
                 })
-                .leaving((user) => {
-                    console.log("leaving: ",user);
+                .leaving((e) => {
+                    console.log("leaving: ",e);
+                    this.usersCount = 12;
                 })
-                .error((error) => {
-                    console.log("error: ",error);
+                .error((e) => {
+                    console.log("error: ",e);
+                    this.usersCount = 1;
                 });
         }
     }

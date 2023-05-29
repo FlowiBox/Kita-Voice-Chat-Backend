@@ -23,6 +23,7 @@ var url_string = window.location;
 var url = new URL(url_string);
 var token = url.searchParams.get("token");
 console.log('token:', token);
+
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
@@ -36,7 +37,7 @@ window.Echo = new Echo({
     authEndpoint: '/api/broadcasting/auth',
     httpDriver: 'axios',
     httpHost: window.location.hostname,
-    httpPort: 80,
+    httpPort: 8000,
     httpPath: '',
     httpUseHttps: false,
     auth: {

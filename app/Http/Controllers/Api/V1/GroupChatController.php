@@ -21,7 +21,7 @@ class GroupChatController extends Controller
     {
         $data = GroupChat::with('user')->orderBy('created_at','DESC')->paginate(10);
         $costGroupChat = Common::getConfig('group_chat');
-        return response()->json(['price_message'=> $costGroupChat , 'data' => GroupChatResource::collection($data,200),$data]);
+        return response()->json(['price_message'=> $costGroupChat , 'data' => GroupChatResource::collection($data,200)]);
     }
 
     /**
