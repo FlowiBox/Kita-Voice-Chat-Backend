@@ -329,8 +329,14 @@ $connection = config( 'broadcasting.connections.pusher' );
         $user_count = $info->user_count;
         return $user_count; // i get false
     }else{
-        $channels = $pusher->get_channels_info();
-        return $channels;
+        $subscription_counts = [];
+        foreach ($pusher->getChannels()->channels as $channel => $v) {
+        $subscription_counts[$channel] =
+            $pusher->getChannelInfo(
+            $channel, ['info' => 'subscription_count']
+            )->subscription_count;
+        }
+        return $subscription_counts;
     }
 
 
