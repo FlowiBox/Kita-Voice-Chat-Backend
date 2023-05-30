@@ -25,7 +25,8 @@ class RoomRepo implements RoomRepoInterface {
         //dd($rooms_now_live);    
         $rooms_owner_ids = collect($rooms_now_live)->pluck('owner_room_id');
         //dd($rooms_owner_ids);
-        $roomUpdate = Room::whereIn('uid',$rooms_owner_ids)->where('room_status',1)->orderBy('uid')->get();
+        $roomUpdate = Room::whereIn('uid',$rooms_owner_ids)->orderBy('uid')->get();
+        //dd($roomUpdate);
         //dd($roomUpdate);
         foreach($roomUpdate as $key => $room)
         {
