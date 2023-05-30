@@ -323,7 +323,7 @@ class RoomController extends Controller
             $family = new FamilyResource($f);
         }
 
-        $room_info['owner_family'] = $family;
+        //$room_info['owner_family'] = $family;
 
         $boxes = BoxUse::query ()
             ->where ('room_uid',$owner_id)
