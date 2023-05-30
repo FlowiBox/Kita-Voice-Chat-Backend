@@ -20,9 +20,23 @@ class RoomRepo implements RoomRepoInterface {
     {
         $rooms_now_live = PusherTrait::getIdRoomCountUserFromPresenceChannel();
         $rooms_owner_ids = collect($rooms_now_live)->pluck('owner_room_id');
+        $roomUpdate = Room::whereIn('uid',$rooms_owner_ids)->where('room_status',1)->get();
+        foreach($roomUpdate as $key => $room)
+        {
+            $room->update([
+                'count_room_socket' => $rooms_now_live[$key]['count_user']
+            ]);
+        }
+        $roomUpdate2 = Room::whereNotIn('uid',$rooms_owner_ids)->where('room_status',1)->get();
+        foreach($roomUpdate2 as $key => $room)
+        {
+            $room->update([
+                'count_room_socket' => 0
+            ]);
+        }
 
         $result = $this->model
-            ->orderBy('top_room','DESC')->whereIn('uid',$rooms_owner_ids)
+            ->orderBy('top_room','DESC')->where('count_room_socket','!=',0)
             ->where('room_status',1)
             /*->where(function ($q){
                 $q->where('is_afk',1);
@@ -56,11 +70,11 @@ class RoomRepo implements RoomRepoInterface {
             $result->orderByDesc('session');
         }
         elseif ($req->filter == 'popular'){
-            $result->orderByDesc('visitor_count');
+            $result->orderByDesc('count_room_socket');
         }
         elseif ($req->filter == 'festival'){
             $result->orderByDesc('session')
-                ->orderByDesc('visitor_count')
+                ->orderByDesc('count_room_socket')
             ;
         }
 
