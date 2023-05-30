@@ -24,9 +24,9 @@ class RoomRepo implements RoomRepoInterface {
         $result = $this->model
             ->orderBy('top_room','DESC')->whereIn('uid',$rooms_owner_ids)
             ->where('room_status',1)
-            ->where(function ($q){
-            $q->where('is_afk',1);
-        })
+            /*->where(function ($q){
+                $q->where('is_afk',1);
+            })*/
             ->where(function ($q) use ($req){
             if ($search = $req->search){
                 $q->where('room_name',$search)->orWhere('numid',$search)->orWhere('uid',$search);
