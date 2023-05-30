@@ -318,25 +318,36 @@ $connection = config( 'broadcasting.connections.pusher' );
         [
             'cluster' => $connection['options']['cluster'],
             'useTLS'  => TRUE,
-            'host'    => config( 'app.url' ),
+            'host'    => $connection['options']['host'],
             'port'    => '6001',
             'scheme'  => 'http',
             'debug'   => TRUE,
         ]
     );
-    if(!empty($request->room_id)){
-        $info = $pusher->get_channel_info('presence-room-'+$request->room_id, ['info' => 'user_count']);
-        $user_count = $info->user_count;
-        return $user_count; // i get false
-    }else{
-        $subscription_counts = [];
-        foreach ($pusher->getChannels()->channels as $channel => $v) {
-        $subscription_counts[$channel] =
-            $pusher->getChannelInfo(
-            $channel, ['info' => 'subscription_count']
-            )->subscription_count;
+    $channels = $pusher->get_channels();
+    if(count($channels->channels) > 0)
+    {
+        if(!empty($request->room_id)){
+            $channel_name = 'presence-room-'+$request->room_id;
+            if(in_array($channel_name, $channels->channels)){
+                $info = $pusher->get_channel_info($channel_name, ['info' => 'user_count']);
+                $user_count = $info->user_count;
+                return $user_count;
+            }else{
+                return false;
+            }
+        }else{
+            $subscription_counts = [];
+            foreach ($channels->channels as $channel => $v) {
+            $subscription_counts[$channel] =
+                $pusher->get_channel_info(
+                $channel, ['info' => 'subscription_count']
+                )->subscription_count;
+            }
+            return $subscription_counts;
         }
-        return $subscription_counts;
+    }else{
+        return false;
     }
 
 
