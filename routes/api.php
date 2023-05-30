@@ -312,6 +312,6 @@ Route::get('/pusher', function(Request $request){
     {
         return App\Traits\HelperTraits\PusherTrait::getInfoRoomPresenceChannel($request->room_id);
     }else{
-        return App\Traits\HelperTraits\PusherTrait::getInfoRooms();
+        return App\Traits\HelperTraits\PusherTrait::getIdRoomCountUserFromPresenceChannel();
     }
 });

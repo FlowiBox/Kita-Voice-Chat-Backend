@@ -44,11 +44,11 @@ trait PusherTrait
         }
     }
 
-    public static function getInfoRooms()
+    public static function getInfoRoomsPresenceChannel()
     {
         $pusher = self::getConfigPusher();
 
-        $channels = $pusher->get_channels();
+        $channels = $pusher->get_channels(['filter_by_prefix' => 'presence-']);
         if(count($channels->channels) > 0)
         {
             $subscription_counts = [];
@@ -62,5 +62,22 @@ trait PusherTrait
         }else{
             return [];
         }
+    }
+
+    public static function getIdRoomCountUserFromPresenceChannel()
+    {
+        $rooms = self::getInfoRoomsPresenceChannel();  
+        $arr = [];
+        if(count($rooms) > 0)
+        {
+            $ar = [];
+            foreach($rooms as $key => $countroom)
+            {
+                $ar['owner_room_id'] = (int)preg_replace('/[^0-9]/', '',$key);
+                $ar['count_user'] = $countroom;
+                array_push($arr, $ar);
+            }
+        }
+        return $arr;
     }
 }

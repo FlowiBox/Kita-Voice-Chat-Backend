@@ -6,6 +6,7 @@ use App\Models\EnteredRoom;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Traits\HelperTraits\PusherTrait;
 
 class RoomRepo implements RoomRepoInterface {
 
@@ -17,12 +18,14 @@ class RoomRepo implements RoomRepoInterface {
 
     public function all ( $req )
     {
+        $rooms_now_live = PusherTrait::getIdRoomCountUserFromPresenceChannel();
+        $rooms_owner_ids = collect($rooms_now_live)->pluck('owner_room_id');
 
         $result = $this->model
-            ->orderBy('top_room','DESC')
+            ->orderBy('top_room','DESC')->whereIn('uid',$rooms_owner_ids)
             ->where('room_status',1)
             ->where(function ($q){
-            $q->where('is_afk',1)->orWhere('room_visitor','!=','');
+            $q->where('is_afk',1);
         })
             ->where(function ($q) use ($req){
             if ($search = $req->search){
@@ -71,7 +74,9 @@ class RoomRepo implements RoomRepoInterface {
         if ($pp = $req->pp){ // pp = perPage
             return $result->paginate($pp);
         }
+        
         return $result->paginate(10);
+        
     }
 
     public function find ( $id )
