@@ -33,7 +33,8 @@ Artisan::command ('monthly_update',function (){
         [
             'old_usd' => DB::raw('old_usd + target_usd - target_token_usd'),
             'target_usd' => 0,
-            'target_token_usd' => 0
+            'target_token_usd' => 0,
+            'coins'=>0
         ]
     );
     $this->comment('updated');
