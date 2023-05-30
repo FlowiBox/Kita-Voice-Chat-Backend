@@ -329,13 +329,9 @@ $connection = config( 'broadcasting.connections.pusher' );
     {
         if(!empty($request->room_id)){
             $channel_name = 'presence-room-'.$request->room_id;
-            if(in_array($channel_name, $channels->channels)){
-                $info = $pusher->get_channel_info($channel_name, ['info' => 'user_count']);
-                $user_count = $info->user_count;
-                return $user_count;
-            }else{
-                return false;
-            }
+            $info = $pusher->get_channel_info($channel_name, ['info' => 'user_count']);
+            $user_count = $info->user_count;
+            return $user_count;
         }else{
             $subscription_counts = [];
             foreach ($channels->channels as $channel => $v) {
