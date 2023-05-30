@@ -318,7 +318,7 @@ $connection = config( 'broadcasting.connections.pusher' );
         [
             'cluster' => $connection['options']['cluster'],
             'useTLS'  => TRUE,
-            'host'    => config( 'app.url' );
+            'host'    => config( 'app.url' ),
             'port'    => '6001',
             'scheme'  => 'http',
             'debug'   => TRUE,
