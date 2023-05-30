@@ -318,7 +318,7 @@ $connection = config( 'broadcasting.connections.pusher' );
         [
             'cluster' => $connection['options']['cluster'],
             'useTLS'  => TRUE,
-            'host'    => 'dragon-chat-app.com',
+            'host'    => config( 'app.url' );
             'port'    => '6001',
             'scheme'  => 'http',
             'debug'   => TRUE,
@@ -329,7 +329,7 @@ $connection = config( 'broadcasting.connections.pusher' );
         $user_count = $info->user_count;
         return $user_count; // i get false
     }else{
-        $channels = $pusher->get_channels();
+        $channels = $pusher->get_channels_info();
         return $channels;
     }
 
