@@ -19,18 +19,24 @@ class RoomRepo implements RoomRepoInterface {
     public function all ( $req )
     {
         $rooms_now_live = PusherTrait::getIdRoomCountUserFromPresenceChannel();
+        $rooms_now_live = collect($rooms_now_live)->sortBy(function($item, $key) {
+            return $item['owner_room_id'];
+        });
+        //dd($rooms_now_live);    
         $rooms_owner_ids = collect($rooms_now_live)->pluck('owner_room_id');
-        $roomUpdate = Room::whereIn('uid',$rooms_owner_ids)->where('room_status',1)->get();
+        //dd($rooms_owner_ids);
+        $roomUpdate = Room::whereIn('uid',$rooms_owner_ids)->where('room_status',1)->orderBy('uid')->get();
+        //dd($roomUpdate);
         foreach($roomUpdate as $key => $room)
         {
-            $room->update([
+            Room::where('id',$room->id)->first()->update([
                 'count_room_socket' => $rooms_now_live[$key]['count_user']
             ]);
         }
         $roomUpdate2 = Room::whereNotIn('uid',$rooms_owner_ids)->where('room_status',1)->get();
         foreach($roomUpdate2 as $key => $room)
         {
-            $room->update([
+            Room::where('id',$room->id)->first()->update([
                 'count_room_socket' => 0
             ]);
         }
