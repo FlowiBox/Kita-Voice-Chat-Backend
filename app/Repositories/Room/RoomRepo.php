@@ -43,7 +43,7 @@ class RoomRepo implements RoomRepoInterface {
         }
 
         $result = $this->model
-            ->orderBy('top_room','DESC')
+            ->orderBy('top_room','DESC')->where('count_room_socket','!=',0);
             ->where('room_status',1)
             /*->where(function ($q){
                 $q->where('is_afk',1);
