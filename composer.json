@@ -6,7 +6,9 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "beyondcode/laravel-websockets": "^1.14",
         "cmdotcom/text-sdk-php": "^2.2",
+        "dflydev/apache-mime-types": "^1.0",
         "encore/laravel-admin": "^1.8",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -21,9 +23,8 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "stripe/stripe-php": "^9.9",
-        "beyondcode/laravel-websockets": "^1.14",
         "pusher/pusher-php-server": "~3.0",
+        "stripe/stripe-php": "^9.9",
         "twilio/sdk": "^7.0"
     },
     "require-dev": {

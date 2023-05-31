@@ -4,26 +4,23 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewTrade implements ShouldBroadcast
+class NewConversationCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $trade;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($trade)
+    public function __construct()
     {
-        $this->trade = $trade;
+        //
     }
 
     /**
@@ -33,6 +30,6 @@ class NewTrade implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('trades');
+        return new PrivateChannel('channel-name');
     }
 }

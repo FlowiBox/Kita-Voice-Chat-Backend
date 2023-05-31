@@ -275,6 +275,17 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                     Route::post('/broadcasting/auth', function (Request $request) {
                         return Broadcast::auth($request);
                     });
+
+                    Route::prefix('conversations')->group(function (){
+                        Route::get('/', [\App\Http\Controllers\Api\V1\ConversationController::class,'index']);
+                        Route::get('/chat/{id}', [\App\Http\Controllers\Api\V1\ConversationController::class,'chat']);
+                        Route::post('/chat/message/send', [\App\Http\Controllers\Api\V1\ConversationController::class,'send']);
+                        Route::post('/chat/message/send/file', [\App\Http\Controllers\Api\V1\ConversationController::class,'sendFilesInConversation']);
+                        Route::get('/accept/message/request/{id}' , function ($id){
+                            Chat::acceptMessageRequest($id);
+                            return redirect()->back();
+                        });
+                    });
                 });
 
         }
