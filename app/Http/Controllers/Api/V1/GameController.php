@@ -116,9 +116,28 @@ class GameController extends Controller
 
             if ($item['up'] == 1) {
                 $user->increment('di', $item['amount']);
+                Game::query ()
+                    ->where ('game_id',$item['game_id'])
+                    ->where ('uid',$item['uid'])
+                    ->update (
+                        [
+//                            'round'=>$request->round_number,
+                            'amount'=>$item['amount'] * 1
+                        ]
+                    );
             } else {
                 $user->decrement('di', $item['amount']);
+                Game::query ()
+                    ->where ('game_id',$item['game_id'])
+                    ->where ('uid',$item['uid'])
+                    ->update (
+                        [
+//                            'round'=>$request->round_number,
+                            'amount'=> 0 - $item['amount']
+                        ]
+                    );
             }
+
         }
 
         return [
