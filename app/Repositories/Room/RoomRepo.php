@@ -43,7 +43,7 @@ class RoomRepo implements RoomRepoInterface {
         }
 
         $result = $this->model
-            ->orderBy('top_room','DESC')->where('count_room_socket','!=',0)
+            ->orderBy('top_room','DESC')
             ->where('room_status',1)
             /*->where(function ($q){
                 $q->where('is_afk',1);
@@ -51,6 +51,10 @@ class RoomRepo implements RoomRepoInterface {
             ->where(function ($q) use ($req){
             if ($search = $req->search){
                 $q->where('room_name',$search)->orWhere('numid',$search)->orWhere('uid',$search);
+            }
+            if($req->socket == true)
+            {
+                $q->where('count_room_socket','!=',0);
             }
             if ($req->country_id){
                 $q->whereHas('owner',function ($q) use ($req){
