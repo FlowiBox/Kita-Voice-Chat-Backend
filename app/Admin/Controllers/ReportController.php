@@ -1,5 +1,6 @@
 <?php
 namespace App\Admin\Controllers;
+use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\Gift;
 use App\Models\Room;
@@ -39,9 +40,18 @@ class ReportController extends MainController {
 
     protected function users_grid(){
         $grid = new Grid(new User());
-        if (request ('aid')){
-            $grid->model ()->where ('agency_id',request ('aid'));
-        }
+        $grid->model ()->where ('target_usd','>',0)
+            ->whereNotIn ('agency_id',['',null,0])
+        ;
+        $grid->filter (function (Grid\Filter $filter){
+            $filter->expand ();
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('uuid',__ ('uuid'));
+            });
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('agency_id',__('agency'))->select(Common::by_agency_filter ());
+            });
+        });
         $grid->column ('id',__ ('id'));
         $grid->column ('agency',__ ('agency'))->display (function (){return @$this->agency->name;});
         $grid->column ('uuid',__ ('uuid'));
@@ -57,14 +67,21 @@ class ReportController extends MainController {
             return (new \App\Admin\Actions\SalaryAction($this->id,'user'))->render () ;
         });
 
+        $grid->export (function ($export) {
+            $export->filename('report.csv');
+            $export->originalValue(['uuid','name','target_usd','target_token_usd']);
+            $export->column('column_5', function ($value, $original) {
+                return $value;
+            });
+        });
+
 
         return $grid;
     }
 
-
     protected function agencies_grid(){
         $grid = new Grid(new Agency());
-
+        $grid->model ()->where ('target_usd','>',0);
         $grid->column ('id',__ ('id'));
         $grid->column ('name',__ ('name'));
         $grid->column ('phone',__ ('phone'));
@@ -83,7 +100,6 @@ class ReportController extends MainController {
 
         return $grid;
     }
-
 
     public function cashing(){
         $amount = \request ('amount');
