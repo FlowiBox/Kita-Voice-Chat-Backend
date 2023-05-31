@@ -268,7 +268,7 @@ class RoomController extends Controller
                 ->where('room_status',1)
                 ->where('uid','!=',null)
                 ->where (function ($q){
-                    $q->where ('room_visitor','!=','') ->orWhere('is_afk',1);
+                    $q->where ('count_room_socket','!=',0) ->orWhere('is_afk',1);
                 })
                 ->pluck ('uid')
                 ->random ();
@@ -277,7 +277,7 @@ class RoomController extends Controller
 
         if (!$owner_id) return Common::apiResponse (0,'not found',null,404);
         $ia = DB::table ('rooms')->where ('uid',$owner_id)->value ('is_afk');
-        $rv = DB::table ('rooms')->where ('uid',$owner_id)->value ('room_visitor');
+        $rv = DB::table ('rooms')->where ('uid',$owner_id)->value ('count_room_socket');
 
 //        if($owner_id == $user_id){
 //            $res=DB::table('users')->where('id',$user_id)->value('is_idcard');
@@ -620,7 +620,7 @@ class RoomController extends Controller
         }
 
         $room_info['password_status']=$room_info['room_pass']==""?false:true;
-        if ($ia == 0 && $rv == '' && $user->id == $owner_id ){
+        if ($ia == 0 && $rv == 0 && $user->id == $owner_id ){
             $tokens = $user->my_followers()->pluck('notification_id')->toArray();
             $un = $user->name;
 //            $tokens=['djKn0TyMQ-qeDWSXKCB7VS:APA91bHmuuRATZqQCDz1LhwyaN4_FuZ-T33bCIOZPh51A3HAzQQ_SwD9wNIgJC9My_0dTCgA2ka50boXRzndp3saa9nqT1Mlnmkldm6lNdjoLiJ6S_UUnGCkV-DShvBFfltXL2AhfxiW'];
