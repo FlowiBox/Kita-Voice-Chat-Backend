@@ -296,9 +296,9 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
     });
 
 
-//    Route::get ('games',[\App\Http\Controllers\Api\V1\GameController::class,'playerInfo']);
+    Route::get ('games',[\App\Http\Controllers\Api\V1\GameController::class,'playerInfo']);
 
-//    Route::post ('games',[\App\Http\Controllers\Api\V1\GameController::class,'updatePlayerCoins']);
+    Route::post ('games',[\App\Http\Controllers\Api\V1\GameController::class,'updatePlayerCoins']);
 });
 
 

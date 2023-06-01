@@ -5,7 +5,6 @@ namespace App\Repositories\Conversation;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use App\Events\NewConversationMessage;
-use App\Events\VideoChatStart;
 use App\Models\Conversation\Conversation;
 use App\Repositories\BaseRepository;
 use App\Services\UploadManager;
@@ -103,15 +102,6 @@ class ConversationRepository extends BaseRepository
     public function sendConversationMessage($conversationId, array $data)
     {
         return $this->sendMessage($conversationId, $data);
-    }
-
-    /**
-     * @param array $data
-     * @param $channel
-     */
-    public function startVideoCall(array $data, $channel)
-    {
-        broadcast(new VideoChatStart($data, $channel));
     }
 
     /**

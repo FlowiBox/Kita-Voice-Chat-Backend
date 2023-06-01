@@ -13,8 +13,6 @@ class Chat
 
     protected $userId;
 
-    protected $group;
-
     /**
      * Chat constructor.
      *
@@ -28,7 +26,6 @@ class Chat
         $this->config = $config;
         $this->conversation = $conversation;
         $this->userId = check() ? check()->user()->id : null;
-        $this->group = $group;
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Facades\Chat;
+use App\Services\Chat;
 use App\Models\File\File;
 
 class ConversationController extends Controller
@@ -27,7 +27,7 @@ class ConversationController extends Controller
         $threads = Chat::getAllConversations();
 
         return response()->json([
-            'threads' => $threads,
+            'threads' => $threads
         ]);
     }
 

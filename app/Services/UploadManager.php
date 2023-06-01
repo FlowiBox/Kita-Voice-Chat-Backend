@@ -21,7 +21,7 @@ class UploadManager
     {
         $this->config = $config;
         $this->mime = $mime;
-        $this->disk = Storage::disk($this->config->get('laravel-video-chat.upload.storage'));
+        $this->disk = Storage::disk($this->config->get('chat.upload.storage'));
     }
 
     /**
