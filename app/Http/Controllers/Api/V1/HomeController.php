@@ -197,6 +197,7 @@ class HomeController extends Controller
         $user = $request->user ();
         $room = Room::query ()->where ('uid',$request->owner_id)->first ();
         if (!$room) return Common::apiResponse (0,'not found',null,404);
+        Pk::query ()->where ('room_id',$room->id)->update (['show_status'=>0]);
         $d = [
             "messageContent"=>[
                 "message"=>"hidePK",

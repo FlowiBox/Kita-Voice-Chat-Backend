@@ -40,8 +40,8 @@ class ReportController extends MainController {
 
     protected function users_grid(){
         $grid = new Grid(new User());
-        $grid->model ()->where ('target_usd','>',0)
-            ->whereNotIn ('agency_id',['',null,0])
+//        $grid->model ()->where ('target_usd','>',0)
+//            ->whereNotIn ('agency_id',['',null,0])
         ;
         $grid->filter (function (Grid\Filter $filter){
             $filter->expand ();
@@ -68,9 +68,9 @@ class ReportController extends MainController {
         });
 
         $grid->export (function ($export) {
-            $export->filename('report.csv');
+            $export->filename('report');
             $export->originalValue(['uuid','name','target_usd','target_token_usd']);
-            $export->column('column_5', function ($value, $original) {
+            $export->column('uuid', function ($value, $original) {
                 return $value;
             });
         });
@@ -142,6 +142,7 @@ class ReportController extends MainController {
                         $user->old_usd -= $amount;
                     }else{
                         $user->old_usd = 0;
+                        $user->coins = 0;
                     }
                     $user->save ();
                     if ($m > 0){
@@ -186,6 +187,7 @@ class ReportController extends MainController {
                     foreach ($users as $user){
                         $m = $user->old_usd ;
                         $user->old_usd = 0;
+                        $user->coins = 0;
                         if ($m > 0){
                             SalaryTrx::query ()->create (
                                 [

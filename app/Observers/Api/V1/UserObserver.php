@@ -124,13 +124,15 @@ class UserObserver
         if (!$user->uuid){
             $user->uuid = (string)rand (1000000,9999999);
         }
-
+        $month_received = GiftLog::query ()
+            ->where ('receiver_id',$user->id)
+            ->whereYear ('created_at',Carbon::now ()->year)
+            ->whereMonth ('created_at',Carbon::now ()->month)
+            ->sum ('receiver_obtain');
+        if($month_received < 1){
+            $user->coins = 0;
+        }
         if ($user->is_host == 1){
-            $month_received = GiftLog::query ()
-                ->where ('receiver_id',$user->id)
-                ->whereYear ('created_at',Carbon::now ()->year)
-                ->whereMonth ('created_at',Carbon::now ()->month)
-                ->sum ('receiver_obtain');
             $target = Target::query ()->where ('diamonds','<=',$month_received)->orderBy ('diamonds','desc')->first ();
             if ($target){
                 $hours = 0;
@@ -218,12 +220,16 @@ class UserObserver
             $user->uuid = (string)rand (1000000,9999999);
         }
 
+        $month_received = GiftLog::query ()
+            ->where ('receiver_id',$user->id)
+            ->whereYear ('created_at',Carbon::now ()->year)
+            ->whereMonth ('created_at',Carbon::now ()->month)
+            ->sum ('receiver_obtain');
+        if($month_received < 1){
+            $user->coins = 0;
+        }
+
         if ($user->is_host == 1){
-            $month_received = GiftLog::query ()
-                ->where ('receiver_id',$user->id)
-                ->whereYear ('created_at',Carbon::now ()->year)
-                ->whereMonth ('created_at',Carbon::now ()->month)
-                ->sum ('receiver_obtain');
             $target = Target::query ()->where ('diamonds','<=',$month_received)->orderBy ('diamonds','desc')->first ();
             if ($target){
                 $hours = 0;

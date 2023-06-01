@@ -322,7 +322,7 @@ class RoomController extends Controller
                 'family_id'=>$f->id,
                 'family_name'=>$f->name,
                 'family_level'=>$f->level
-            ];;
+            ];
         }
 
         $room_info['room_family'] = $family;
@@ -378,13 +378,19 @@ class RoomController extends Controller
         $room_info['giftPrice'] = $room_info['session']?:"0";//(integer)DB::table('gift_logs')->where('roomowner_id',$owner_id)->sum('giftPrice');
 
         $pk = Pk::query ()->where ('room_id',$room_info['id'])->where ('status',1)->first ();
+        $s_pk = Pk::query ()->where ('room_id',$room_info['id'])->where ('show_status',1)->first ();
         $room_info['pk'] = new \stdClass();
         $room_info['is_pk'] = 0;
+        $room_info['show_pk'] = 0;
 
         if ($pk){
             $room_info['pk'] = new PkResource($pk);
             $room_info['is_pk'] = 1;
         }
+        if($s_pk){
+            $room_info['show_pk'] = 1;
+        }
+
 
         $gl = GiftLog::query()
             ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
@@ -1635,7 +1641,7 @@ class RoomController extends Controller
 //            $t1p = $pk->t1_score/($pk->t1_score+$pk->t2_score);
 //            $t2p = $pk->t2_score/($pk->t1_score+$pk->t2_score);
 //        }
-
+        Pk::query ()->where ('room_id',$room->id)->update (['show_status'=>1]);
         $mc = [
             'messageContent'=>[
                 'message'=>'showPK'
