@@ -69,7 +69,7 @@ class ReportController extends MainController {
 
         $grid->export (function ($export) {
             $export->filename('report');
-            $export->originalValue(['uuid','name','target_usd','target_token_usd']);
+//            $export->originalValue(['uuid','name','target_usd','target_token_usd']);
             $export->column('uuid', function ($value, $original) {
                 return $value;
             });
