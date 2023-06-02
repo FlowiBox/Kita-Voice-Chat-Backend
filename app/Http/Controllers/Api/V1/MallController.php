@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Classes\PaymentGateways\Fawry;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\UserResource;
@@ -181,19 +182,18 @@ class MallController extends Controller
                 $strip = new \App\Classes\PaymentGateways\Stripe();
                 $res = $strip->make ($data);
                 return Common::apiResponse (1,'ok',$res,200);
+            }elseif ($request->pay_method == 'fawry'){
+                $fawry = new Fawry();
+                $res = $fawry->make ($data);
+                return Common::apiResponse (1,'ok',$res,200);
+            }else{
+                return Common::apiResponse (0,'un supported payment gateway',null,400);
             }
 
-//            if ($log->status == 1){
-//                Common::sendOfficialMessage ($user->id,__('congratulations'),__('your recharge success'));
-//                $user->increment ('di',$log->obtained_coins);
-//            }else{
-//                Common::sendOfficialMessage ($user->id,__('recharge process'),__('your recharge waiting for payment'));
-//            }
-
-
-            return Common::apiResponse (1,'done',null,201);
+//            return Common::apiResponse (1,'done',null,201);
         }catch (\Exception $exception){
             DB::rollBack ();
+            dd ($exception);
             return Common::apiResponse (0,'fail',null,400);
         }
     }
