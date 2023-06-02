@@ -126,8 +126,11 @@ class GameController extends Controller
                         ]
                     );
             } else {
-                if ($user->di - $item['amount'] > 0){
+                if (($user->di - $item['amount']) > 0){
                     $user->decrement('di', $item['amount']);
+                }else{
+                    $user->di = 0;
+                    $user->save ();
                 }
                 Game::query ()
                     ->where ('game_id',$item['game_id'])
