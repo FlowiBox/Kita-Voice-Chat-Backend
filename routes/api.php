@@ -91,7 +91,7 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
 
                         Route::post ('admins',[\App\Http\Controllers\Api\V1\RoomController::class,'getAdmins']);
                         Route::post ('firstOfRoom',[\App\Http\Controllers\Api\V1\RoomController::class,'firstOfRoom']);
-
+                        Route::post('request-background-image',[\App\Http\Controllers\Api\V1\RoomController::class, 'RequestBackgroundImage']);
                     });
                     Route::prefix ('mall')->group (function (){
                         Route::get ('wares',[\App\Http\Controllers\Api\V1\MallController::class,'index']);
@@ -286,6 +286,8 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                             return redirect()->back();
                         });
                     });
+
+
                 });
 
         }
