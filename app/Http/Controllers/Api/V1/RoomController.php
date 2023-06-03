@@ -176,11 +176,13 @@ class RoomController extends Controller
             }
 
             if ($request->room_background){
-                if (!Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
+                if ($request->change == 'app' && !Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
                     return Common::apiResponse (0,'background not found',null,404);
                 }
-                RequestBackgroundImage::query()->where('owner_room_id',$room->uid)->where('status',1)->update(['status' => 3]);
-                $room->room_background = $request->room_background;
+                if($request->change == 'me'){
+                    RequestBackgroundImage::query()->where('owner_room_id',$room->uid)->where('status',1)->update(['status' => 3]);
+                    $room->room_background = $request->room_background;
+                }
 
             }
 

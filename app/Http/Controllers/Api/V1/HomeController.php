@@ -25,6 +25,7 @@ use App\Models\Vip;
 use App\Models\PK;
 use App\Models\VipPrivilege;
 use App\Models\Ware;
+use App\Models\RequestBackgroundImage;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,8 +63,15 @@ class HomeController extends Controller
         return Common::apiResponse (1,'',RoomCategory::query ()->whereHas ('parent')->select ('id','name','img')->get ());
     }
 
-    public function allBackgrounds(){
-        return Common::apiResponse (1,'',Background::query ()->where('enable',1)->select ('id','img')->get (),200);
+    public function allBackgrounds(Request $request){
+        $data = Background::query ()->where('enable',1)->select ('id','img')->get ();
+        return Common::apiResponse (1,'',$data,200);
+    }
+
+    public function allMyBackgrounds(Request $request){
+        $user = $request->user ();
+        $data = RequestBackgroundImage::query()->where('owner_room_id',$user->id)->whereIn('status',[1,3])->select('id','img')->get();
+        return Common::apiResponse (1,'',$data,200);
     }
 
     public function generateAgoraToken(Request $request){

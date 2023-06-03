@@ -121,6 +121,7 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
 
                     Route::prefix ('backgrounds')->group (function (){
                         Route::get ('/',[\App\Http\Controllers\Api\V1\HomeController::class,'allBackgrounds']);
+                        Route::get ('/me',[\App\Http\Controllers\Api\V1\HomeController::class,'allMyBackgrounds']);
                     });
 
 
