@@ -57,7 +57,7 @@ class RoomResource extends JsonResource
         if ($request['show']){
             $requestBackground = RequestBackgroundImage::where('status',1)->where('owner_room_id',@$this->owner ()->id)->first();
             $data['room_users'] = Common::get_room_users (@$this->owner ()->id,$request->user ()->id);
-            $data['background'] = ($requestBackground) ? $requestBackground->img : $this->room_background?:'';
+            $data['background'] = ($requestBackground) ? $requestBackground->img : $this->room_background;
             $data['mics'] = explode (',',$this->microphone)?:[];
             $data['is_mics_free']=$this->free_mic?:0;
             $data['owner'] = $this->owner ();
