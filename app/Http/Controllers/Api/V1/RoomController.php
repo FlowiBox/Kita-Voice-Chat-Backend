@@ -176,9 +176,9 @@ class RoomController extends Controller
             }
             $background_me = '';
             if ($request->room_background){
-                if (!Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
+                /*if (!Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
                     return Common::apiResponse (0,'background not found',null,404);
-                }
+                }*/
                 if($request->change == 'app'){
                     $room->room_background = $request->room_background;
                     RequestBackgroundImage::query()->where('owner_room_id',$room->uid)->where('status',1)->update(['status' => 3]);
