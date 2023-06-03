@@ -22,6 +22,7 @@ use App\Models\RoomCategory;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Vip;
+use App\Models\PK;
 use App\Models\VipPrivilege;
 use App\Models\Ware;
 use Carbon\Carbon;
