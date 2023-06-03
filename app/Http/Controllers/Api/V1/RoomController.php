@@ -1725,6 +1725,9 @@ class RoomController extends Controller
     public function RequestBackgroundImage(Request $request)
     {
         $user = $request->user();
+        if($user->di < 2000){
+            return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
+        }
         $room = Room::query ()->where ('uid',$request->owner_id)->first ();
         if (!$room) //return Common::apiResponse (0,'not found',null,404);
         if ($request->image == null) return Common::apiResponse (0,'missing param',null,422);
@@ -1737,6 +1740,8 @@ class RoomController extends Controller
         $RequestBackgroundImage->img = $image;
         $RequestBackgroundImage->status = 0;
         $RequestBackgroundImage->save();
+        $user->di = ($user->di - 2000);
+        $user->save();
         return Common::apiResponse (1,'done',null,201);
     }
 }
