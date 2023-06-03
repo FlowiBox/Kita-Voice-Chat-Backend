@@ -185,7 +185,8 @@ class RoomController extends Controller
                 }
                 if($request->change == 'me'){
                     $room->room_background = null;
-                    $background_update = RequestBackgroundImage::where('id',$request->room_background)->first()->update(['status' => 1]);
+                    $background_update = RequestBackgroundImage::where('id',$request->room_background)->first();
+                    $background_update2 = $background_update->update(['status' => 1]);
                     $background_me = $background_update->img;
                 }
 
