@@ -18,7 +18,7 @@ class RoomRepo implements RoomRepoInterface {
 
     public function all ( $req )
     {
-        $rooms_now_live = PusherTrait::getIdRoomCountUserFromPresenceChannel();
+        /*$rooms_now_live = PusherTrait::getIdRoomCountUserFromPresenceChannel();
         $rooms_now_live = collect($rooms_now_live)->sortBy(function($item, $key) {
             return $item['owner_room_id'];
         });
@@ -40,7 +40,7 @@ class RoomRepo implements RoomRepoInterface {
             Room::where('id',$room->id)->first()->update([
                 'count_room_socket' => 0
             ]);
-        }
+        }*/
 
         $result = $this->model
             ->orderBy('top_room','DESC')
