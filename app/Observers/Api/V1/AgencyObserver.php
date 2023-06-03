@@ -31,6 +31,7 @@ class AgencyObserver
         User::query ()->where ('id',$agency->app_owner_id)->update (['agency_id'=>$agency->id]);
     }
 
+
     /**
      * Handle the Agency "deleted" event.
      *

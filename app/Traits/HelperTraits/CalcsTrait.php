@@ -369,7 +369,6 @@ Trait CalcsTrait
     public static function my_store ( $user_id )
     {
         $user     = User ::query () -> find ( $user_id );
-        $coins    = bcadd ( $user -> coins , $user -> room_coins , 2 );
         $cou_list = Db ::table ( 'user_coupons' ) -> where ( ['user_id' => $user_id , 'status' => 1] ) -> get ();
         foreach ($cou_list as $k => $va) {
             if ( $va['expire'] <= time () ) {
@@ -380,10 +379,8 @@ Trait CalcsTrait
             'id'=>$user->id,
             'coins'=>$user->di,
             'diamonds'=>$user->coins,
-//            'room_diamonds'=>$user->room_coins,
             'silver_coins'=>$user->gold,
-            'usd' => (double)$user->usd ,
-//            'coupons' => Db ::table ( 'user_coupons' ) -> join ( 'wares' , 'user_coupons.ware_id' , '=' , 'wares.id' ) -> where ( ['user_coupons.user_id' => $user_id , 'wares.enable' => 1] ) -> count ()
+            'usd' => (double)$user->sallary ,
         ];
     }
 
@@ -440,14 +437,6 @@ Trait CalcsTrait
             }
 
         }
-
-        //Update reading status
-        // $redisMod  = RedisCli();
-        // $cacheKey  = sprintf(Rediskey::getKey('pack'), $user_id);
-        // $v = $redisMod->get($cacheKey);
-        // if ($v == $type){
-        //     $redisMod->delete($cacheKey);
-        // }
         $this->ApiReturn(1,'',$data);
     }
 

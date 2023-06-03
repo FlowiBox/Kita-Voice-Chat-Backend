@@ -41,24 +41,26 @@ class SalaryAction extends Action
             if (\request ('id') && \request ('type') == 'agency'){
                 $agency = Agency::query ()->find (\request ('id'));
                 if ($agency){
-                    $prev = $agency->old_usd;
-                    if ($amount){
-                        $agency->old_usd -= $amount;
-                    }else{
-                        $agency->old_usd = 0;
+                    if ($agency->salary < $amount){
+                        return $this->response()->error(__ ('un known error'))->refresh();
                     }
-                    $agency->save ();
-                    $m = $amount?:$agency->old_usd ;
+                    $ta = $agency->target($request->month);
+                    if ($amount){
+                        $ta->increment ('cut_amount',$amount);
+                    }else{
+                        $ta->is_paid = 1;
+                        $ta->save ();
+                    }
+
+                    $m = $amount?:$agency->salary ;
                     if ($m > 0){
                         SalaryTrx::query ()->create (
                             [
                                 'type'=>1,
                                 'oid'=>$agency->id,
-                                'amount'=>$amount?:$agency->old_usd,
+                                'amount'=>$m,
                                 't_no'=>rand (11111111,99999999),
                                 'note'=>'paid via admin',
-                                'before_pay'=>$prev,
-                                'after_pay'=>$prev - $m,
                                 'payer_id'=>auth ()->id (),
                                 'payer_type'=>0
                             ]
@@ -69,24 +71,25 @@ class SalaryAction extends Action
             elseif (\request ('id') && \request ('type') == 'user'){
                 $user = User::query ()->find (\request ('id'));
                 if ($user){
-                    $prev = $user->old_usd;
-                    $m = $amount?:$user->old_usd ;
-                    if ($amount){
-                        $user->old_usd -= $amount;
-                    }else{
-                        $user->old_usd = 0;
+                    if ($user->salary < $amount){
+                        return $this->response()->error(__ ('un known error'))->refresh();
                     }
-                    $user->save ();
+                    $m = $amount?:$user->salary ;
+                    $ta = $user->target($request->month);
+                    if ($amount){
+                        $ta->increment ('cut_amount',$amount);
+                    }else{
+                        $ta->is_paid = 1;
+                        $ta->save ();
+                    }
                     if ($m > 0){
                         SalaryTrx::query ()->create (
                             [
                                 'type'=>0,
                                 'oid'=>$user->id,
-                                'amount'=>$amount?:$user->old_usd,
+                                'amount'=>$amount?:$user->dalary,
                                 't_no'=>rand (11111111,99999999),
                                 'note'=>'paid via admin',
-                                'before_pay'=>$prev,
-                                'after_pay'=>$prev - $m,
                                 'payer_id'=>auth ()->id (),
                                 'payer_type'=>0
                             ]
@@ -97,9 +100,18 @@ class SalaryAction extends Action
             elseif (\request ('id') && \request ('type') == 'agency_users'){
                 $agency = Agency::query ()->find (\request ('id'));
                 if ($agency){
-                    $prev = $agency->old_usd;
-                    $m = $agency->old_usd ;
-                    $agency->old_usd = 0;
+                    if ($agency->salary < $amount){
+                        return $this->response()->error(__ ('un known error'))->refresh();
+                    }
+                    $ta = $agency->target($request->month);
+                    if ($amount){
+                        $ta->increment ('cut_amount',$amount);
+                    }else{
+                        $ta->is_paid = 1;
+                        $ta->save ();
+                    }
+
+                    $m = $amount?:$agency->salary ;
                     if ($m > 0){
                         SalaryTrx::query ()->create (
                             [
@@ -108,8 +120,6 @@ class SalaryAction extends Action
                                 'amount'=>$agency->old_usd,
                                 't_no'=>rand (11111111,99999999),
                                 'note'=>'paid via admin',
-                                'before_pay'=>$prev,
-                                'after_pay'=>$prev - $m,
                                 'payer_id'=>auth ()->id (),
                                 'payer_type'=>0
                             ]
@@ -117,8 +127,17 @@ class SalaryAction extends Action
                     }
                     $users = $agency->users;
                     foreach ($users as $user){
-                        $m = $user->old_usd ;
-                        $user->old_usd = 0;
+                        if ($user->salary < $amount){
+                            continue;
+                        }
+                        $m = $amount?:$user->salary ;
+                        $ta = $user->target($request->month);
+                        if ($amount){
+                            $ta->increment ('cut_amount',$amount);
+                        }else{
+                            $ta->is_paid = 1;
+                            $ta->save ();
+                        }
                         if ($m > 0){
                             SalaryTrx::query ()->create (
                                 [
@@ -127,16 +146,12 @@ class SalaryAction extends Action
                                     'amount'=>$user->old_usd,
                                     't_no'=>rand (11111111,99999999),
                                     'note'=>'paid via admin for agency , contact your agent for your salary',
-                                    'before_pay'=>$prev,
-                                    'after_pay'=>$prev - $m,
                                     'payer_id'=>auth ()->id (),
                                     'payer_type'=>0
                                 ]
                             );
                         }
-                        $user->save();
                     }
-                    $agency->save ();
                 }
             }
             DB::commit ();

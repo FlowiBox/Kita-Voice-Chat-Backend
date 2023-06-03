@@ -55,7 +55,8 @@ class User extends Authenticatable
         'is_family_admin',
         'is_family_owner',
         'intro',
-        'frame'
+        'frame',
+        'salary'
     ];
 
     public function ips(){
@@ -291,19 +292,42 @@ class User extends Authenticatable
     public function getSalaryAttribute(){
         if ($this->agency_id){
             $salary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
+            $this->attributes['salary'] = $salary;
             return $salary;
         }else{
             return 0;
         }
     }
 
-    public function getOldUsdAttribute(){
-        $salary = UserSallary::query ()->where ('user_id',$this->id)
-            ->where ('month','!=',Carbon::now ()->month)
-            ->where ('year','!=',Carbon::now ()->year)
+    public function getOldAttribute(){
+        $currentYear = date ('Y');
+        $currentMonth = date ('m');
+        $old = UserSallary::query ()->where ('user_id',$this->id)
+            ->whereRaw("CONCAT(year, LPAD(month, 2, '0')) != CONCAT('$currentYear', LPAD('$currentMonth', 2, '0'))")
             ->where ('is_paid',0)
             ->sum (\DB::raw('sallary - cut_amount'));
-        return $salary;
+        return $old;
     }
+
+    public function setOldUsdAttribute(){
+        $currentYear = date ('Y');
+        $currentMonth = date ('m');
+        $old = UserSallary::query ()->where ('user_id',$this->id)
+            ->whereRaw("CONCAT(year, LPAD(month, 2, '0')) != CONCAT('$currentYear', LPAD('$currentMonth', 2, '0'))")
+            ->where ('is_paid',0)
+            ->sum (\DB::raw('sallary - cut_amount'));
+        $this->attributes['old_usd'] = $old;
+    }
+
+    public function target($month = null,$year = null){
+        if (!$month){
+            $month = date ('m');
+        }
+        if (!$year){
+            $year = date ('Y');
+        }
+        return $this->hasMany (UserSallary::class)->where ('month',$month)->where ('year',$year)->first ();
+    }
+
 
 }

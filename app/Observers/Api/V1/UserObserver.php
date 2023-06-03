@@ -217,24 +217,24 @@ class UserObserver
                             'days'=>"$days / $target->days"
                         ]
                     );
-
-//                    AgencySallary::query ()->updateOrCreate (
-//                        [
-//                            'agency_id'=>$user->agency_id,
-//                            'month'=>Carbon::now ()->month,
-//                            'year'=>Carbon::now ()->year
-//                        ],
-//                        [
-//                            'agency_id'=>$user->agency_id,
-//                            'month'=>Carbon::now ()->month,
-//                            'year'=>Carbon::now ()->year,
-//                            'sallary'=>UserSallary::query ()
-//                                ->where ('month',Carbon::now ()->month)
-//                                ->where ('year',Carbon::now ()->year)
-//                                ->where ('user_agency_id',$user->agency_id)
-//                                ->sum ('agency_sallary')
-//                        ]
-//                    );
+                    $user->salary;
+                    AgencySallary::query ()->updateOrCreate (
+                        [
+                            'agency_id'=>$user->agency_id,
+                            'month'=>Carbon::now ()->month,
+                            'year'=>Carbon::now ()->year
+                        ],
+                        [
+                            'agency_id'=>$user->agency_id,
+                            'month'=>Carbon::now ()->month,
+                            'year'=>Carbon::now ()->year,
+                            'sallary'=>UserSallary::query ()
+                                ->where ('month',Carbon::now ()->month)
+                                ->where ('year',Carbon::now ()->year)
+                                ->where ('user_agency_id',$user->agency_id)
+                                ->sum ('agency_sallary')
+                        ]
+                    );
                 }
 
             }
@@ -262,6 +262,7 @@ class UserObserver
             ->whereYear ('created_at',Carbon::now ()->year)
             ->whereMonth ('created_at',Carbon::now ()->month)
             ->sum ('receiver_obtain');
+
         if($month_received < 1){
             $user->coins = 0;
         }

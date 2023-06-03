@@ -182,7 +182,7 @@ class UserResource extends JsonResource
             'room_hidden'=>Common::hasInPack ($this->id,16,true),
             'wapel_num'=>@(integer)$wapel->use_num?:0,
             'salary'=>$this->salary,
-            'old'=>$this->old_usd
+            'old'=>$this->old
         ];
 
 

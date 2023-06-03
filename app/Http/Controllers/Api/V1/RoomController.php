@@ -13,6 +13,8 @@ use App\Http\Resources\Api\V1\MiniUserResource;
 use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Agency;
+use App\Models\AgencySallary;
 use App\Models\Background;
 use App\Models\BoxUse;
 use App\Models\EnteredRoom;
@@ -24,6 +26,7 @@ use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\RoomView;
 use App\Models\User;
+use App\Models\UserSallary;
 use App\Repositories\Room\RoomRepo;
 use App\Repositories\Room\RoomRepoInterface;
 use App\Traits\HelperTraits\RoomTrait;
@@ -57,6 +60,27 @@ class RoomController extends Controller
             $user->online_time = time();
             $user->save();
         }
+        foreach (Agency::all () as $agency){
+            AgencySallary::query ()->updateOrCreate (
+                [
+                    'agency_id'=>$agency->id,
+                    'month'=>Carbon::now ()->month,
+                    'year'=>Carbon::now ()->year
+                ],
+                [
+                    'agency_id'=>$agency->id,
+                    'month'=>Carbon::now ()->month,
+                    'year'=>Carbon::now ()->year,
+                    'sallary'=>UserSallary::query ()
+                        ->where ('month',Carbon::now ()->month)
+                        ->where ('year',Carbon::now ()->year)
+                        ->where ('user_agency_id',$agency->id)
+                        ->sum ('agency_sallary')
+                ]
+            );
+            $agency->salary;
+        }
+
         return Common::apiResponse (true,'',RoomResource::collection ($result),200,Common::getPaginates ($result));
     }
 
