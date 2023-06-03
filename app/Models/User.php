@@ -288,4 +288,22 @@ class User extends Authenticatable
         return $this->hasMany(Follow::class, 'user_id', 'id');
     }
 
+    public function getSalaryAttribute(){
+        if ($this->agency_id){
+            $salary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
+            return $salary;
+        }else{
+            return 0;
+        }
+    }
+
+    public function getOldUsdAttribute(){
+        $salary = UserSallary::query ()->where ('user_id',$this->id)
+            ->where ('month','!=',Carbon::now ()->month)
+            ->where ('year','!=',Carbon::now ()->year)
+            ->where ('is_paid',0)
+            ->sum (\DB::raw('sallary - cut_amount'));
+        return $salary;
+    }
+
 }

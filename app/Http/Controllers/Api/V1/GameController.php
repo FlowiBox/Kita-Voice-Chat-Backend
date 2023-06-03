@@ -97,21 +97,24 @@ class GameController extends Controller
     public function updatePlayerCoins()
     {
         $payload = request('payload');
-
+        $errors = [];
         foreach ($payload as $i =>  $item) {
             $uid = @PersonalAccessToken::findToken ($item['token'])->tokenable->id;
             if (!$uid){
-                return [
+                array_push ($errors ,[
                     'error_code'=>1,
+                    'token'=>$item['token'],
                     'error_message'=>'please inter valid token',
-                ];
+                ]) ;
             }
             $user = \App\Models\User::query ()->find ($uid);
             if (!$user) {
-                $res = [
+                array_push ($errors , [
                     'error_code' => 1 ,
+                    'user_id'=>$uid,
                     'error_message' => 'Cannot find user',
-                ];
+                ]);
+                continue;
             }
 
             if ($item['up'] == 1) {
@@ -121,7 +124,6 @@ class GameController extends Controller
                     ->where ('uid',$item['uid'])
                     ->update (
                         [
-//                            'round'=>$request->round_number,
                             'amount'=>$item['amount'] * 1
                         ]
                     );
@@ -129,22 +131,26 @@ class GameController extends Controller
                 if (($user->di - $item['amount']) > 0){
                     $user->decrement('di', $item['amount']);
                 }else{
-                    $user->di = 0;
-                    $user->save ();
+                    array_push ($errors , [
+                        'error_code'=>0,
+                        'user_id'=>$user->id,
+                        'error_message'=>'low balance',
+                    ]);
                 }
                 Game::query ()
                     ->where ('game_id',$item['game_id'])
                     ->where ('uid',$item['uid'])
                     ->update (
                         [
-//                            'round'=>$request->round_number,
                             'amount'=> 0 - $item['amount']
                         ]
                     );
             }
 
         }
-
+        if ($errors){
+            return $errors;
+        }
         return [
             'error_code'=>0,
             'error_message'=>null,
