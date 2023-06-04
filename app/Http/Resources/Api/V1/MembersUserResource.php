@@ -36,7 +36,7 @@ class MembersUserResource extends JsonResource
             'profile'=> [ 
                 'image' => @$this->profile->avatar,
                 'age' => Carbon::parse (@$this->profile->birthday)->age,
-                'gender'=> @$this->gender == 1 ? __ ('male') : __ ('female'),
+                'gender'=> @$this->profile->gender == 1 ? __ ('male') : __ ('female'),
             ],
             'level'=> [
                 'receiver_img' => @$this->getImageReceiverOrSender('receiver_id',1)->img,

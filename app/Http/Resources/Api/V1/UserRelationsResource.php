@@ -41,7 +41,7 @@ class UserRelationsResource extends JsonResource
             'profile'=> [ 
                 'image' => @$this->profile->avatar,
                 'age' => Carbon::parse (@$this->profile->birthday)->age,
-                'gender'=>$this->gender == 1 ? __ ('male') : __ ('female'),
+                'gender'=> @$this->profile->gender == 1 ? __ ('male') : __ ('female'),
             ],
             'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'),
             'frame_id'=>@$this->dress_1,
