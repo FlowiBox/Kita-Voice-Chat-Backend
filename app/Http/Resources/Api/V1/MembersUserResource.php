@@ -33,8 +33,15 @@ class MembersUserResource extends JsonResource
         $data = [
             'id'=>@$this->id,
             'name'=>@$this->name?:'',
-            'profile'=>new ProfileResource(@$this->profile),
-            'level'=>Common::level_center (@$this->id),
+            'profile'=> [ 
+                'image' => @$this->profile->avatar,
+                'age' => Carbon::parse (@$this->profile->birthday)->age,
+                'gender'=>$this->gender == 1 ? __ ('male') : __ ('female'),
+            ],
+            'level'=> [
+                'receiver_img' => $this->getImageReceiverOrSender('receiver_id',1)->img,
+                'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img, 
+            ],
             'frame_id'=>@$this->dress_1,
             'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'),
         ];
