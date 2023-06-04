@@ -94,7 +94,7 @@ class GameController extends Controller
     }
 
 
-    public function updatePlayerCoins()
+    public function updatePlayerCoins000()
     {
         $payload = request('payload');
         $errors = [];
@@ -154,6 +154,44 @@ class GameController extends Controller
         return [
             'error_code'=>0,
             'error_message'=>null,
+        ];
+    }
+
+
+    public function updatePlayerCoins()
+    {
+        $payload = request('payload');
+        $users = User::whereIn('id', array_column($payload, 'uid'))->get();
+
+        foreach ($payload as $i => $item) {
+            $user = $users->where('id', $item['uid'])->first(); // change "id" to the col name that you place player  uid. (The player number)
+            if (!$user) continue;
+            if ($item['up'] == 0 && $user->di < $item['amount']) continue;
+            $method = $item['up'] ? "increment" : "decrement";
+            $user->{$method}('di', $item['amount']);
+
+            try {
+                $gameQuery = Game::where('game_id', $item['game_id'])->where('uid', $item['uid']);
+                if ($gameRecord = $gameQuery->first()) {
+                    $gameRecord->$method('amount', $item['amount']);
+                } else {
+                    $gameQuery->create([
+                                           'game_id' => $item['game_id'],
+                                           'uid' => $item['uid'],
+                                           'amount' => $item['up'] ? $item['amount'] : -$item['amount'],
+                                       ]);
+                }
+            } catch (\Exception $ex) {
+                // Update it if you need.
+                \Log::critical('Invalid Game Query', [
+                    'exception' => $ex,
+                ]);
+            }
+
+        }
+
+        return [
+            'errorCode' => 0,
         ];
     }
 }
