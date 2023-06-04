@@ -25,7 +25,7 @@ class UserTargetController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new UserTarget);
-        $grid->model ()->ofAgency();
+        $grid->model ()->ofAgency()->where('agency_obtain','>',0);
         $grid->id('ID');
         $grid->column('user_id',__('user id'))->modal ('user info',function ($model){
             return Common::getUserShow ($model->user_id);

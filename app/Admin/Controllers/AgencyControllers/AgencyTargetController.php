@@ -26,7 +26,7 @@ class AgencyTargetController extends AdminController
     {
         $grid = new Grid(new UserTarget);
         $grid->model ()->ofAgency();
-        $grid->model ()->selectRaw ('add_month,add_year,SUM(agency_obtain) as tar')->groupBy ('add_month','add_year');
+        $grid->model ()->where ('agency_obtain','>',0)->selectRaw ('add_month,add_year,SUM(agency_obtain) as tar')->groupBy ('add_month','add_year');
         $grid->column('add_month',__ ('month'));
         $grid->column('add_year',__ ('year'));
         $grid->column('tar',__ ('tar'));

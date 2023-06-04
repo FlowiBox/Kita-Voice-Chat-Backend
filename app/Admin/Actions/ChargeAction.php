@@ -64,14 +64,16 @@ class ChargeAction extends Action
                 if($charger->isRole('agency')){
                     $agency = Agency::query ()->where ('owner_id',$charger->id)->first ();
                     if ($agency){
-                        $agency_balance = $agency->old_usd + $agency->target_usd - $agency->target_token_usd;
+                        $agency_balance = $agency->salary;
                         $usd_coins = Common::getConf ('one_usd_value_in_coins')?:10;
                         $agency_balance_coins = $agency_balance * $usd_coins;
                         if ($agency_balance_coins < $request->amount){
                             return $this->response()->error(__ ('balance not enough'))->refresh();
                         }
                         $amount_usd = $request->amount / $usd_coins;
-                        $agency->target_token_usd += $amount_usd;
+                        $ta = $agency->target();
+                        $ta->cut_amount += $amount_usd;
+                        $ta->save();
                         $agency->save ();
                     }else{
                         if ($charger->di < $request->amount){

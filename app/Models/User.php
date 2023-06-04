@@ -56,7 +56,7 @@ class User extends Authenticatable
         'is_family_owner',
         'intro',
         'frame',
-        'salary'
+
     ];
 
     public function ips(){
@@ -292,10 +292,20 @@ class User extends Authenticatable
     public function getSalaryAttribute(){
         if ($this->agency_id){
             $salary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
-            $this->attributes['salary'] = $salary;
+//            $this->attributes['salary'] = $salary;
+//            $this->save ();
             return $salary;
         }else{
             return 0;
+        }
+    }
+
+    public function setSalaryAttribute(){
+        if ($this->agency_id){
+            $salary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
+            $this->attributes['salary'] = $salary;
+        }else{
+            $this->attributes['salary'] = 0;
         }
     }
 

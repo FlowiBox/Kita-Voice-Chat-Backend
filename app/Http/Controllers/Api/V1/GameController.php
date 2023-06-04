@@ -7,6 +7,7 @@ use App\Models\Game;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class GameController extends Controller
@@ -175,15 +176,17 @@ class GameController extends Controller
                 if ($gameRecord = $gameQuery->first()) {
                     $gameRecord->$method('amount', $item['amount']);
                 } else {
-                    $gameQuery->create([
-                                           'game_id' => $item['game_id'],
-                                           'uid' => $item['uid'],
-                                           'amount' => $item['up'] ? $item['amount'] : -$item['amount'],
-                                       ]);
+                    $gameQuery->create(
+                        [
+                            'game_id' => $item['game_id'],
+                            'uid' => $item['uid'],
+                            'amount' => $item['up'] ? $item['amount'] : -$item['amount'],
+                        ]
+                    );
                 }
             } catch (\Exception $ex) {
                 // Update it if you need.
-                \Log::critical('Invalid Game Query', [
+                Log::critical('Invalid Game Query', [
                     'exception' => $ex,
                 ]);
             }
