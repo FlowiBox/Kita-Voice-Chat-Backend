@@ -36,26 +36,16 @@ class MembersUserResource extends JsonResource
             'profile'=> [ 
                 'image' => @$this->profile->avatar,
                 'age' => Carbon::parse (@$this->profile->birthday)->age,
-                'gender'=>$this->gender == 1 ? __ ('male') : __ ('female'),
+                'gender'=> @$this->gender == 1 ? __ ('male') : __ ('female'),
             ],
             'level'=> [
-                'receiver_img' => $this->getImageReceiverOrSender('receiver_id',1)->img,
-                'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img, 
+                'receiver_img' => @$this->getImageReceiverOrSender('receiver_id',1)->img,
+                'sender_img' => @$this->getImageReceiverOrSender('sender_id',2)->img, 
             ],
             'frame_id'=>@$this->dress_1,
-            'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'),
+            'frame'=>Common::getUserDress(@$this->id,@$this->dress_1,4,'img2')?:Common::getUserDress(@$this->id,@$this->dress_1,4,'img1'),
         ];
 
         return $data;
-    }
-
-    public function handelStatics($request){
-        $user = $request->user();
-        $frame = 0;
-        
-
-        return [
-            'frame' => $frame,
-        ];
     }
 }
