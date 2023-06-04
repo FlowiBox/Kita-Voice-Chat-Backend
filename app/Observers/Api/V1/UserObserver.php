@@ -5,10 +5,12 @@ namespace App\Observers\Api\V1;
 use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
+use App\Models\AgencySallary;
 use App\Models\GiftLog;
 use App\Models\LiveTime;
 use App\Models\Target;
 use App\Models\User;
+use App\Models\UserSallary;
 use App\Models\UserTarget;
 use Carbon\Carbon;
 
@@ -198,6 +200,41 @@ class UserObserver
                             'agency_obtain'=>$t * $ap
                         ]
                     );
+                    UserSallary::query ()->updateOrCreate (
+                        [
+                            'user_id'=>$user->id,
+                            'month'=>Carbon::now ()->month,
+                            'year'=>Carbon::now ()->year
+                        ],
+                        [
+                            'user_id'=>$user->id,
+                            'month'=>Carbon::now ()->month,
+                            'year'=>Carbon::now ()->year,
+                            'sallary'=>$t,
+                            'agency_sallary'=>$t * $ap,
+                            'user_agency_id'=>$user->agency_id,
+                            'hours'=>"$hours / $target->hours",
+                            'days'=>"$days / $target->days"
+                        ]
+                    );
+                    $user->salary;
+                    AgencySallary::query ()->updateOrCreate (
+                        [
+                            'agency_id'=>$user->agency_id,
+                            'month'=>Carbon::now ()->month,
+                            'year'=>Carbon::now ()->year
+                        ],
+                        [
+                            'agency_id'=>$user->agency_id,
+                            'month'=>Carbon::now ()->month,
+                            'year'=>Carbon::now ()->year,
+                            'sallary'=>UserSallary::query ()
+                                ->where ('month',Carbon::now ()->month)
+                                ->where ('year',Carbon::now ()->year)
+                                ->where ('user_agency_id',$user->agency_id)
+                                ->sum ('agency_sallary')
+                        ]
+                    );
                 }
 
             }
@@ -225,6 +262,7 @@ class UserObserver
             ->whereYear ('created_at',Carbon::now ()->year)
             ->whereMonth ('created_at',Carbon::now ()->month)
             ->sum ('receiver_obtain');
+
         if($month_received < 1){
             $user->coins = 0;
         }
@@ -278,6 +316,24 @@ class UserObserver
                         'user_days'=>$days,
                         'user_obtain'=>$t,
                         'agency_obtain'=>$t * $ap
+                    ]
+                );
+
+                UserSallary::query ()->updateOrCreate (
+                    [
+                        'user_id'=>$user->id,
+                        'month'=>Carbon::now ()->month,
+                        'year'=>Carbon::now ()->year
+                    ],
+                    [
+                        'user_id'=>$user->id,
+                        'month'=>Carbon::now ()->month,
+                        'year'=>Carbon::now ()->year,
+                        'sallary'=>$t,
+                        'agency_sallary'=>$t * $ap,
+                        'user_agency_id'=>$user->agency_id,
+                        'hours'=>"$hours / $target->hours",
+                        'days'=>"$days / $target->days"
                     ]
                 );
 

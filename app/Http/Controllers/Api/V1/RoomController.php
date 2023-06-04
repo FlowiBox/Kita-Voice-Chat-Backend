@@ -13,6 +13,8 @@ use App\Http\Resources\Api\V1\MiniUserResource;
 use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Agency;
+use App\Models\AgencySallary;
 use App\Models\Background;
 use App\Models\BoxUse;
 use App\Models\EnteredRoom;
@@ -25,6 +27,7 @@ use App\Models\RoomCategory;
 use App\Models\RoomView;
 use App\Models\User;
 use App\Models\RequestBackgroundImage;
+use App\Models\UserSallary;
 use App\Repositories\Room\RoomRepo;
 use App\Repositories\Room\RoomRepoInterface;
 use App\Traits\HelperTraits\RoomTrait;
@@ -58,6 +61,27 @@ class RoomController extends Controller
             $user->online_time = time();
             $user->save();
         }
+        foreach (Agency::all () as $agency){
+            AgencySallary::query ()->updateOrCreate (
+                [
+                    'agency_id'=>$agency->id,
+                    'month'=>Carbon::now ()->month,
+                    'year'=>Carbon::now ()->year
+                ],
+                [
+                    'agency_id'=>$agency->id,
+                    'month'=>Carbon::now ()->month,
+                    'year'=>Carbon::now ()->year,
+                    'sallary'=>UserSallary::query ()
+                        ->where ('month',Carbon::now ()->month)
+                        ->where ('year',Carbon::now ()->year)
+                        ->where ('user_agency_id',$agency->id)
+                        ->sum ('agency_sallary')
+                ]
+            );
+            $agency->salary;
+        }
+
         return Common::apiResponse (true,'',RoomResource::collection ($result),200,Common::getPaginates ($result));
     }
 
@@ -564,7 +588,7 @@ class RoomController extends Controller
 
         foreach ($room_info as $k => &$v){
             if (!$v){
-                if (in_array ($k,['is_afk','gap','exp','sort','num','audio_sort','audio_num','strto_time','is_pk','mode','session'])){
+                if (in_array ($k,['is_afk','gap','exp','sort','num','audio_sort','audio_num','strto_time','is_pk','mode','session','show_pk'])){
                     $v = 0;
                 }elseif (in_array ($k,['admins','ban_users'])){
                     $v=[];

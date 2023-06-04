@@ -31,7 +31,7 @@ class ReportController extends MainController {
 
     protected function grid(){
         $name = request ('name')?:'users';
-        $grid = $name.'_grid';
+        $grid = $name;
         $grid = $this->{$grid}();
         $grid->disableActions ();
         $grid->disableCreateButton ();
@@ -101,7 +101,7 @@ class ReportController extends MainController {
         return $grid;
     }
 
-    public function cashing(){
+    public function cashing000(){
         $amount = \request ('amount');
         try {
             DB::beginTransaction ();
@@ -218,5 +218,58 @@ class ReportController extends MainController {
         return $this->response()->success('success')->refresh();
 
     }
+
+    protected function users(){
+        $grid = new Grid(new User());
+        $grid->filter (function (Grid\Filter $filter){
+            $filter->expand ();
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('uuid',__ ('uuid'));
+            });
+            $filter->column(1/2, function ($filter) {
+                $filter->equal('agency_id',__('agency'))->select(Common::by_agency_filter ());
+            });
+        });
+        $grid->column ('id',__ ('id'));
+        $grid->column ('agency',__ ('agency'))->display (function (){return @$this->agency->name;});
+        $grid->column ('uuid',__ ('uuid'));
+        $grid->column ('name',__ ('name'));
+        $grid->column ('salary',__ ('salary'))->display (function (){return $this->salary;});
+        $grid->column ('cashing',__ ('cashing'))->display (function (){
+            $options = ['user'=>__('user')];
+            return (new \App\Admin\Actions\SalaryAction($this->id,'user'))->render () ;
+        });
+
+        $grid->export (function ($export) {
+            $export->filename('report');
+        });
+
+
+        return $grid;
+    }
+
+    protected function agencies(){
+        $grid = new Grid(new Agency());
+        $grid->model ()->where ('target_usd','>',0);
+        $grid->column ('id',__ ('id'));
+        $grid->column ('name',__ ('name'));
+        $grid->column ('phone',__ ('phone'));
+        $grid->column ('old_usd',__ ('old usd'));
+        $grid->column ('target_usd',__ ('target usd'));
+        $grid->column ('target_token_usd',__ ('target token usd'));
+        $grid->column ('due',__ ('due'))->display (function (){
+            return $this->old_usd + $this->target_usd - $this->target_token_usd;
+        });
+        $grid->column ('users',__ ('users'))->display (function (){
+            return '<a href="?name=users&desc='.$this->name.'&aid='.$this->id.'">'.$this->users()->count().'</a>';
+        });
+        $grid->column ('cashing',__ ('cashing'))->display (function (){
+            return (new \App\Admin\Actions\SalaryAction($this->id,'agency'))->render () ;
+        });
+
+        return $grid;
+    }
+
+
 
 }

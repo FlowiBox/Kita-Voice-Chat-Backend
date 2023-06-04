@@ -180,7 +180,9 @@ class UserResource extends JsonResource
             'last_active_hidden'=>Common::hasInPack ($this->id,20,true),
             'visit_hidden'=>Common::hasInPack ($this->id,19,true),
             'room_hidden'=>Common::hasInPack ($this->id,16,true),
-            'wapel_num'=>@(integer)$wapel->use_num?:0
+            'wapel_num'=>@(integer)$wapel->use_num?:0,
+            'salary'=>$this->salary,
+            'old'=>$this->old
         ];
 
 

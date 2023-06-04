@@ -32,4 +32,20 @@ class Agency extends Model
         }
         return $val;
     }
+
+    public function target($month = null,$year = null){
+        if (!$month){
+            $month = date ('m');
+        }
+        if (!$year){
+            $year = date ('Y');
+        }
+        return $this->hasMany (AgencySallary::class)->where ('month',$month)->where ('year',$year)->first ();
+    }
+
+    public function getSalaryAttribute(){
+        $salary = AgencySallary::query ()->where ('agency_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
+        $this->attributes['salary'] = $salary;
+        return $salary;
+    }
 }
