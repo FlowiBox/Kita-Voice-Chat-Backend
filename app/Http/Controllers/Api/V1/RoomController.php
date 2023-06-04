@@ -189,7 +189,7 @@ class RoomController extends Controller
                     $background_update->status = 1;
                     $background_update->save();
                     $background_me = $background_update->img;
-                    $room->room_background = '';
+                    $room->room_background = null;
                 }
 
             }
