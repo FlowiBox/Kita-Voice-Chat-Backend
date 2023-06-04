@@ -399,7 +399,7 @@ class FamilyController extends Controller
             ->where ('user_type',0)
             ->pluck ('user_id');
         $admins = User::query ()->whereIn ('id',$admin_ids)->get();
-        $members = User::query ()->whereIn ('id',$member_ids)->paginate(5);
+        $members = User::query ()->whereIn ('id',$member_ids)->paginate(15);
         $data = [
             'owner'=>new UserResource($owner),
             'admins'=> UserResource::collection ($admins),

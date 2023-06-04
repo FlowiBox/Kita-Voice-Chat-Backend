@@ -70,7 +70,7 @@ class HomeController extends Controller
 
     public function allMyBackgrounds(Request $request){
         $user = $request->user ();
-        $data = [];//RequestBackgroundImage::query()->where('owner_room_id',$user->id)->whereIn('status',[1,3])->select('id','img')->get();
+        $data = RequestBackgroundImage::query()->where('owner_room_id',$user->id)->whereIn('status',[1,3])->select('id','img')->get();
         return Common::apiResponse (1,'',$data,200);
     }
 
