@@ -9,6 +9,7 @@ use App\Http\Resources\Api\V1\FamilyUserResource;
 use App\Http\Resources\Api\V1\FamilyRankResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Http\Resources\Api\V1\MembersUserResource;
 use App\Models\Family;
 use App\Models\FamilyUser;
 use App\Models\Room;
@@ -401,9 +402,9 @@ class FamilyController extends Controller
         $admins = User::query ()->whereIn ('id',$admin_ids)->get();
         $members = User::query ()->whereIn ('id',$member_ids)->paginate(15);
         $data = [
-            'owner'=>new UserResource($owner),
-            'admins'=> UserResource::collection ($admins),
-            'members'=>UserResource::collection ($members)
+            'owner'=>new MembersUserResource($owner),
+            'admins'=> MembersUserResource::collection ($admins),
+            'members'=> MembersUserResource::collection ($members)
         ];
         return Common::apiResponse (1,'',$data,200);
     }
