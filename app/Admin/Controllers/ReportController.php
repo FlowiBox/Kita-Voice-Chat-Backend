@@ -1,6 +1,7 @@
 <?php
 namespace App\Admin\Controllers;
 use App\Admin\Extensions\UserExporter;
+use App\Exports\StoreExport;
 use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\SalaryTrx;
@@ -9,6 +10,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends MainController {
 
@@ -233,12 +235,11 @@ class ReportController extends MainController {
             $options = ['user'=>__('user')];
             return (new \App\Admin\Actions\SalaryAction($this->id,'user'))->render () ;
         });
+//        $grid->exporter(new UserExporter());
+
         $grid->export(function ($export) {
-            $export->only(['id']);
+            return Excel::download(new UserExporter(), 'users000.xlsx');
         });
-        $grid->exporter(new UserExporter());
-
-
 
         return $grid;
     }

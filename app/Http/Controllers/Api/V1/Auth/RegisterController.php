@@ -27,6 +27,8 @@ class RegisterController extends Controller
         $user = User::query ()->create(
             $request->validated()
         );
+        $user=User::find($user->id);
+
         if (\request ('tags') && is_array (\request ('tags'))){
             $user->tags()->attach(\request ('tags'));
         }

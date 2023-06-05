@@ -10,13 +10,11 @@ class UserExporter implements FromCollection,WithHeadings
 {
 
     public $agency_id;
-//    protected $fileName = 'users list.xlsx';
 
 
     public function __construct ($agency_id = null)
     {
         $this->agency_id = $agency_id;
-//        $this->columns = ['id'];
     }
 
     /**
