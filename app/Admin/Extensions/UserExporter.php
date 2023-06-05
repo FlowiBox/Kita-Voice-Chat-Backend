@@ -10,10 +10,13 @@ class UserExporter implements FromCollection,WithHeadings
 {
 
     public $agency_id;
+//    protected $fileName = 'users list.xlsx';
+
 
     public function __construct ($agency_id = null)
     {
         $this->agency_id = $agency_id;
+//        $this->columns = ['id'];
     }
 
     /**
@@ -26,10 +29,12 @@ class UserExporter implements FromCollection,WithHeadings
             $users = $users->where ('agency_id',$this->agency_id);
         }
         $users = $users->get ();
-
+        $arr = [];
         foreach ($users as $user){
-
+            $item['id']=$user->id;
+            $arr[]=$item;
         }
+        return collect ([$arr]);
     }
 
     /**
@@ -37,6 +42,8 @@ class UserExporter implements FromCollection,WithHeadings
      */
     public function headings (): array
     {
-        // TODO: Implement headings() method.
+        return [
+            'id'
+        ];
     }
 }
