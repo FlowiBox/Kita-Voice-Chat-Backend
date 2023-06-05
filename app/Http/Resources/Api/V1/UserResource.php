@@ -106,7 +106,7 @@ class UserResource extends JsonResource
             'colored_name'=>Common::pack_get (18,$this->id),
         ];
 
-
+        $auth_token = null;
         if ($this->auth_token){
             $auth_token = $this->auth_token;
         }
