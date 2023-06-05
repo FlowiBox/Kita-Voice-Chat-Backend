@@ -235,7 +235,7 @@ class ReportController extends MainController {
         $grid->column ('id',__ ('id'));
         $grid->column ('uuid',__ ('uuid'));
         $grid->column ('name',__ ('name'));
-        $grid->column ('target',__ ('target'))->display (function (){return @$this->target()->salary?:0;});
+        $grid->column ('target',__ ('target'))->display (function (){return @$this->target()->sallary?:0;});
         $grid->column ('expenses',__ ('expenses'))->display (function (){return @$this->target()->cut_amount?:0;});
         $grid->column ('old',__ ('old'))->display (function (){return $this->old?:0;});
         $grid->column ('total',__ ('salary'))->display (function (){return $this->salary?:0;});
@@ -253,7 +253,7 @@ class ReportController extends MainController {
 //        $grid->model ()->where ('salary','>',0);
         $grid->column ('id',__ ('id'));
         $grid->column ('name',__ ('name'));
-        $grid->column ('target',__ ('target'))->display (function (){return @$this->target()->salary?:0;});
+        $grid->column ('target',__ ('target'))->display (function (){return @$this->target()->sallary?:0;});
         $grid->column ('expenses',__ ('expenses'))->display (function (){return @$this->target()->cut_amount?:0;});
         $grid->column ('old',__ ('old'))->display (function (){return $this->old?:0;});
         $grid->column ('total',__ ('salary'))->display (function (){return $this->salary?:0;});
