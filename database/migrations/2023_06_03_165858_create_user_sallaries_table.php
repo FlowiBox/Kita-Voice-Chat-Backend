@@ -15,7 +15,7 @@ class CreateUserSallariesTable extends Migration
     {
         Schema::create('user_sallaries', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedTinyInteger('user_id')->default (0);
+            $table->unsignedBigInteger('user_id')->default (0);
             $table->string  ('hours')->default ('0/0');
             $table->string ('days')->default ('0/0');
             $table->float('sallary',20,2)->default (0);
