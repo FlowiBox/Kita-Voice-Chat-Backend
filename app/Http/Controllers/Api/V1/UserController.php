@@ -646,7 +646,7 @@ class UserController extends Controller
             ->sum ('receiver_obtain');
         $data = [
             'diamonds'=>(string)$month_received,
-            'usd'=>(double)$user->old_usd+$user->target_usd-$user->target_token_usd,
+            'usd'=>(double)$user->salary,
             'usd_coin'=>(integer)Common::getConf ('one_usd_value_in_coins')?:10
         ];
         return Common::apiResponse (1,'',$data,200);
