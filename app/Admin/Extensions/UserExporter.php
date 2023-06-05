@@ -58,7 +58,7 @@ class UserExporter extends ExportExcel
             $item['salary']=@$target->salary?:'0';
             $item['expenses']=@$target->cut_amount?:'0';
             $item['net_salary']=$user->salary?:'0';
-            $item['agency']=$user->agency->name;
+            $item['agency']=@$user->agency->name;
             $item['month']=@$target->month;
             $item['year']=@$target->year;
             array_push ($arr,$item);
