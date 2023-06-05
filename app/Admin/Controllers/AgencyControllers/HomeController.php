@@ -4,6 +4,7 @@ namespace App\Admin\Controllers\AgencyControllers;
 
 use App\Admin\Customization\Dashboard\CustomDashboard;
 use App\Http\Controllers\Controller;
+use App\Models\Agency;
 use App\Models\Gift;
 use App\Models\Room;
 use App\Models\User;
@@ -79,13 +80,14 @@ class HomeController extends Controller
         $content->title('Info box');
         $content->description('Description...');
         $content->row(function ($row) {
-            $balance = @Auth::user ()->di;
+            $agency = Agency::query ()->where ('owner_id',@Auth::user ()->id)->first();
+            $balance = @$agency->salary?:0;
             $users = User::query ()->whereNotNull ('agency_id')->where ('agency_id',@Auth::user ()->agency_id)->count ();
-            $targets = UserTarget::query ()->whereNotNull ('agency_id')->where ('agency_id',@Auth::user ()->agency_id)->count ();
+            $targets = UserTarget::query ()->whereNotNull ('agency_id')->where ('agency_id',@Auth::user ()->agency_id)->where ('agency_obtain','>',0)->count ();
 
             $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', route (config('admin.route.prefix').'.agency.users'), $users));
             $row->column(3, new InfoBox(__('Targets'), 'wechat', 'green', route (config('admin.route.prefix').'.agency.userTarget'), $targets));
-            $row->column(3, new InfoBox(__('Balance'), 'dollar', 'yellow', route (config('admin.route.prefix').'.home'), $balance));
+            $row->column(3, new InfoBox(__('salary'), 'dollar', 'yellow', route (config('admin.route.prefix').'.home'), $balance));
 //            $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route (config('admin.route.prefix').'.wares'), Ware::query ()->count ()));
         });
         return $content;

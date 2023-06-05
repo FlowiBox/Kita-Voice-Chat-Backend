@@ -96,8 +96,9 @@ class UserController extends MainController
         return $content->row(
             function ($row) use ($id){
                 $user = User::find($id);
-
-                $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $user->old_usd + $user->target_usd - $user->target_token_usd));
+                $user->flowers = 0;
+                $user->save();
+                $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $user->salary));
                 $row->column(3, new InfoBox(__('Level'), 'dollar', 'orange', '?type=balance_details', Common::level_center ($user->id)['sender_level']));
                 $row->column(3, new InfoBox(__('worth'), 'dollar', 'blue', '?type=balance_details', Common::level_center ($user->id)['receiver_level']));
                 $row->column(3, new InfoBox(__('diamonds'), 'dollar', 'red', '?type=balance_details', $user->coins));

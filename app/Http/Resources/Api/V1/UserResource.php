@@ -106,7 +106,7 @@ class UserResource extends JsonResource
             'colored_name'=>Common::pack_get (18,$this->id),
         ];
 
-
+        $this->update(['flowers'=>0]);
 
 
         $data = [
@@ -144,7 +144,7 @@ class UserResource extends JsonResource
             'profile'=>new ProfileResource(@$this->profile),
             'level'=>Common::level_center (@$this->id),
             'diamonds'=>@$this->coins?:0,
-            'usd'=>@$this->old_usd+$this->target_usd-$this->target_token_usd,
+            'usd'=>@$this->salary,
             'vip'=>@Common::ovip_center ($this->id),
             'income'=>@Common::user_income ($this->id),
             'my_store'=>@$this->my_store,
@@ -181,8 +181,8 @@ class UserResource extends JsonResource
             'visit_hidden'=>Common::hasInPack ($this->id,19,true),
             'room_hidden'=>Common::hasInPack ($this->id,16,true),
             'wapel_num'=>@(integer)$wapel->use_num?:0,
-            'salary'=>$this->salary,
-            'old'=>$this->old
+//            'salary'=>$this->salary,
+//            'old'=>$this->old
         ];
 
 

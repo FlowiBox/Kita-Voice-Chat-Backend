@@ -41,8 +41,8 @@ class AgencyController extends MainController
             ->row(function ($row) use ($id){
                 $agency = Agency::find($id);
                 $row->column(3, new InfoBox(__('Users'), 'users', 'aqua', '?type=users', User::query ()->where ('agency_id',$id)->count ()));
-                $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $agency->old_usd + $agency->target_usd - $agency->target_token_usd));
-                $row->column(3, new InfoBox(__('Targets'), 'gift', 'yellow', '?type=target', UserTarget::query ()->where ('agency_id',$id)->selectRaw ('agency_id,add_month,add_year,ROUND(SUM(agency_obtain), 2) as tot')
+                $row->column(3, new InfoBox(__('Balance'), 'dollar', 'green', '?type=balance_details', $agency->salary));
+                $row->column(3, new InfoBox(__('Targets'), 'gift', 'yellow', '?type=target', UserTarget::query ()->where ('agency_id',$id)->where ('agency_obtain','>',0)->selectRaw ('agency_id,add_month,add_year,ROUND(SUM(agency_obtain), 2) as tot')
                     ->groupByRaw ('agency_id,add_month,add_year')->get ()->count ()));
 //                $row->column(3, new InfoBox(__('Store'), 'shopping-cart', 'red', route ('admin.wares'), Ware::query ()->count ()));
             })
@@ -118,9 +118,7 @@ class AgencyController extends MainController
             return Common::getAdminShow ($model->owner_id);
         });
         $grid->column('name',trans ('name'));
-        $grid->column('old_usd',trans ('old'));
-        $grid->column('target_usd',trans ('target'));
-        $grid->column('target_token_usd',trans ('token'));
+        $grid->column('salary',trans ('salary'));
         $grid->column('img',trans ('img'))->image ('',30);
         $grid->disableActions ();
         $grid->disableCreateButton ();
@@ -206,13 +204,8 @@ class AgencyController extends MainController
 
         $grid->column('name', __('Name'));
 
-        $grid->column('target_usd', __('target usd'));
 
-        $grid->column('target_token_usd', __('target token usd'));
-
-        $grid->column('current', __('current usd'))->display (function (){
-            return $this->target_usd - $this->target_token_usd;
-        });
+        $grid->column('salary', __('salary'));
 
         $grid->column('coins', __('diamonds'));
 
@@ -271,6 +264,7 @@ class AgencyController extends MainController
 
     public function targetGrid($id){
         $grid = new Grid(new UserTarget);
+        $grid->model ()->where('agency_obtain','>',0);
         $grid->filter (function (Grid\Filter $filter){
             $filter->expand ();
             $filter->column(1/2, function ($filter) {
