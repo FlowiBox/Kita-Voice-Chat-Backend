@@ -218,7 +218,7 @@ class ReportController extends MainController {
     protected function users(){
         $grid = new Grid(new User());
         $grid->model ()
-            ->where ('salary','>',0)
+//            ->where ('salary','>',0)
             ->where ('agency_id','!=',0)
             ->where ('agency_id','!=','')
             ->where ('agency_id','!=',null)
@@ -250,7 +250,7 @@ class ReportController extends MainController {
 
     protected function agencies(){
         $grid = new Grid(new Agency());
-        $grid->model ()->where ('salary','>',0);
+//        $grid->model ()->where ('salary','>',0);
         $grid->column ('id',__ ('id'));
         $grid->column ('name',__ ('name'));
         $grid->column ('target',__ ('target'))->display (function (){return @$this->target()->salary?:0;});
