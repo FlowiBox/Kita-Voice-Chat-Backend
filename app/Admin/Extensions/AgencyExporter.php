@@ -1,11 +1,12 @@
 <?php
 namespace App\Admin\Extensions;
+use App\Models\Agency;
 use App\Models\User;
 use Encore\Admin\Grid\Exporters\ExcelExporter;
 use Maatwebsite\Excel\Facades\Excel;
 
 
-class UserExporter extends ExportExcel
+class AgencyExporter extends ExportExcel
 {
 
 
@@ -13,13 +14,12 @@ class UserExporter extends ExportExcel
     public $agency_id;
     protected $fileName = 'users_list.csv';
     protected $headings = [
-        "uuid",
+        "id",
         "name",
-        'diamonds',
         'salary',
         'expenses',
         'net salary',
-        'agency',
+        'agent',
         'month',
         'year'
     ];
@@ -39,26 +39,18 @@ class UserExporter extends ExportExcel
      */
     public function collection ()
     {
-        $users = User::query ()
-            ->where ('agency_id','!=',0)
-            ->where ('agency_id','!=','')
-            ->where ('agency_id','!=',null)
-        ;
-        if ($this->agency_id){
-            $users = $users->where ('agency_id',$this->agency_id);
-        }
-        $users = $users->get ();
+        $agencies = Agency::query ();
+        $agencies = $agencies->get ();
         $arr = [];
 
-        foreach ($users as $user){
-            $target = @$user->target($this->month,$this->year);
-            $item['uuid']=$user->uuid;
-            $item['name']=$user->name;
-            $item['diamonds']=$user->coins?:'0';
+        foreach ($agencies as $agency){
+            $target = @$agency->target($this->month,$this->year);
+            $item['id']=$agency->id;
+            $item['name']=$agency->name;
             $item['salary']=@$target->salary?:'0';
             $item['expenses']=@$target->cut_amount?:'0';
-            $item['net_salary']=$user->salary?:'0';
-            $item['agency']=$user->agency->name;
+            $item['net_salary']=$agency->salary?:'0';
+            $item['agent']=@$agency->owner->name?:@$agency->dashOwner->name;
             $item['month']=@$target->month;
             $item['year']=@$target->year;
             array_push ($arr,$item);

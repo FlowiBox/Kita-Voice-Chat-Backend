@@ -1,7 +1,7 @@
 <?php
 namespace App\Admin\Controllers;
+use App\Admin\Extensions\AgencyExporter;
 use App\Admin\Extensions\UserExporter;
-use App\Exports\StoreExport;
 use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\SalaryTrx;
@@ -217,6 +217,12 @@ class ReportController extends MainController {
 
     protected function users(){
         $grid = new Grid(new User());
+        $grid->model ()
+            ->where ('salary','>',0)
+            ->where ('agency_id','!=',0)
+            ->where ('agency_id','!=','')
+            ->where ('agency_id','!=',null)
+        ;
         $grid->filter (function (Grid\Filter $filter){
             $filter->expand ();
             $filter->column(1/2, function ($filter) {
@@ -227,41 +233,39 @@ class ReportController extends MainController {
             });
         });
         $grid->column ('id',__ ('id'));
-        $grid->column ('agency',__ ('agency'))->display (function (){return @$this->agency->name;});
         $grid->column ('uuid',__ ('uuid'));
         $grid->column ('name',__ ('name'));
-        $grid->column ('salary',__ ('salary'))->display (function (){return $this->salary;});
+        $grid->column ('target',__ ('target'))->display (function (){return @$this->target()->salary?:0;});
+        $grid->column ('expenses',__ ('expenses'))->display (function (){return @$this->target()->cut_amount?:0;});
+        $grid->column ('old',__ ('old'))->display (function (){return $this->old?:0;});
+        $grid->column ('total',__ ('salary'))->display (function (){return $this->salary?:0;});
+        $grid->column ('agency',__ ('agency'))->display (function (){return @$this->agency->name;});
         $grid->column ('cashing',__ ('cashing'))->display (function (){
             $options = ['user'=>__('user')];
             return (new \App\Admin\Actions\SalaryAction($this->id,'user'))->render () ;
         });
-//        $grid->exporter(new UserExporter());
-
-        $grid->export(function ($export) {
-            return Excel::download(new UserExporter(), 'users000.xlsx');
-        });
-
+        $grid->exporter(new UserExporter(request ('agency_id'),request ('month'),request ('year')));
         return $grid;
     }
 
     protected function agencies(){
         $grid = new Grid(new Agency());
-        $grid->model ()->where ('target_usd','>',0);
+        $grid->model ()->where ('salary','>',0);
         $grid->column ('id',__ ('id'));
         $grid->column ('name',__ ('name'));
-        $grid->column ('phone',__ ('phone'));
-        $grid->column ('old_usd',__ ('old usd'));
-        $grid->column ('target_usd',__ ('target usd'));
-        $grid->column ('target_token_usd',__ ('target token usd'));
-        $grid->column ('due',__ ('due'))->display (function (){
-            return $this->old_usd + $this->target_usd - $this->target_token_usd;
-        });
+        $grid->column ('target',__ ('target'))->display (function (){return @$this->target()->salary?:0;});
+        $grid->column ('expenses',__ ('expenses'))->display (function (){return @$this->target()->cut_amount?:0;});
+        $grid->column ('old',__ ('old'))->display (function (){return $this->old?:0;});
+        $grid->column ('total',__ ('salary'))->display (function (){return $this->salary?:0;});
+        $grid->column ('agent',__ ('agent'))->display (function (){return @$this->owner->name?:@$this->dashOwner->name;;});
         $grid->column ('users',__ ('users'))->display (function (){
             return '<a href="?name=users&desc='.$this->name.'&aid='.$this->id.'">'.$this->users()->count().'</a>';
         });
         $grid->column ('cashing',__ ('cashing'))->display (function (){
             return (new \App\Admin\Actions\SalaryAction($this->id,'agency'))->render () ;
         });
+
+        $grid->exporter(new AgencyExporter(request ('month'),request ('year')));
 
         return $grid;
     }

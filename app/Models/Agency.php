@@ -20,6 +20,10 @@ class Agency extends Model
         return $this->belongsTo (User::class,'app_owner_id','id');
     }
 
+    public function dashOwner(){
+        return $this->belongsTo (Admin::class,'owner_id','id');
+    }
+
     public function getUrlAttribute($val){
         if (!$val) {
             return "";
