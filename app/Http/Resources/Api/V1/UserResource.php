@@ -106,7 +106,14 @@ class UserResource extends JsonResource
             'colored_name'=>Common::pack_get (18,$this->id),
         ];
 
+
+        if ($this->auth_token){
+            $auth_token = $this->auth_token;
+        }
+        unset($this->auth_token);
+
         $this->update(['flowers'=>0]);
+
 
 
         $data = [
@@ -186,8 +193,8 @@ class UserResource extends JsonResource
         ];
 
 
-        if ($this->auth_token){
-            $data['auth_token'] = $this->auth_token;
+        if ($auth_token){
+            $data['auth_token'] = $auth_token;
         }
         if (@$this->is_mic == '0' || @$this->is_mic == '1'){
             $data['is_mic'] = $this->is_mic;
