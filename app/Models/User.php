@@ -131,7 +131,7 @@ class User extends Authenticatable
     }
 
     public function getUsdAttribute(){
-        return $this->attributes['old_usd'] + $this->attributes['target_usd'] - $this->attributes['target_token_usd'];
+        return $this->old_usd + $this->target_usd - $this->target_token_usd;
     }
 
 

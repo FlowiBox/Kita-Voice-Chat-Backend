@@ -1,19 +1,13 @@
 <?php
 namespace App\Admin\Controllers;
+use App\Admin\Extensions\UserExporter;
 use App\Helpers\Common;
 use App\Models\Agency;
-use App\Models\Gift;
-use App\Models\Room;
 use App\Models\SalaryTrx;
 use App\Models\User;
-use App\Models\Ware;
-use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
-use Encore\Admin\Widgets\InfoBox;
-use Encore\Admin\Widgets\Tab;
-use Encore\Admin\Widgets\Table;
-use http\Env\Request;
+
 use Illuminate\Support\Facades\DB;
 
 class ReportController extends MainController {
@@ -240,9 +234,7 @@ class ReportController extends MainController {
             return (new \App\Admin\Actions\SalaryAction($this->id,'user'))->render () ;
         });
 
-        $grid->export (function ($export) {
-            $export->filename('report');
-        });
+        $grid->exporter(new UserExporter());
 
 
         return $grid;
