@@ -39,7 +39,7 @@ class AgencyExporter extends ExportExcel
      */
     public function collection ()
     {
-        $agencies = Agency::query ();
+        $agencies = Agency::query ()->where ('salary','>',0);
         $agencies = $agencies->get ();
         $arr = [];
 

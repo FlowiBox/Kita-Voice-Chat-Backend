@@ -43,6 +43,7 @@ class UserExporter extends ExportExcel
             ->where ('agency_id','!=',0)
             ->where ('agency_id','!=','')
             ->where ('agency_id','!=',null)
+            ->where ('salary','>',0)
         ;
         if ($this->agency_id){
             $users = $users->where ('agency_id',$this->agency_id);
