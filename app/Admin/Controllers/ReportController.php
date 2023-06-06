@@ -223,7 +223,7 @@ class ReportController extends MainController {
                 ->where ('agency_id','!=',null)
                 ->get ();
             foreach ($users as $user){
-                $user->flowers = 0;
+                $user->salary = 0;
                 $user->save();
             }
         }
