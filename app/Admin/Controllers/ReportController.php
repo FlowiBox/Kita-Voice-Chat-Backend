@@ -216,7 +216,7 @@ class ReportController extends MainController {
     }
 
     protected function users(){
-        if (request ('update_salary') == 'yes'){
+//        if (request ('update_salary') == 'yes'){
             $users = User::query ()
                 ->where ('agency_id','!=',0)
                 ->where ('agency_id','!=','')
@@ -226,7 +226,7 @@ class ReportController extends MainController {
                 $user->salary = 0;
                 $user->save();
             }
-        }
+//        }
 
         $grid = new Grid(new User());
         $grid->model ()
