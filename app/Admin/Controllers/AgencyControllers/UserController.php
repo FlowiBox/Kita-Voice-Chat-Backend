@@ -44,8 +44,8 @@ class UserController extends AdminController
         return $content
             ->title(__($this->title))
             ->row(function($row) {
-                $row->column(10, $this->grid());
-                $row->column(2, view('admin.grid.users.actions'));
+                $row->column(12, $this->grid());
+                //$row->column(2, view('admin.grid.users.actions'));
             });
     }
 
