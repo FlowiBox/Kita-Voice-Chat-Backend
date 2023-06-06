@@ -47,7 +47,7 @@ class AgencyExporter extends ExportExcel
             $target = @$agency->target($this->month,$this->year);
             $item['id']=$agency->id;
             $item['name']=$agency->name;
-            $item['salary']=@$target->salary?:'0';
+            $item['salary']=@$target->sallary?:'0';
             $item['expenses']=@$target->cut_amount?:'0';
             $item['net_salary']=$agency->salary?:'0';
             $item['agent']=@$agency->owner->name?:@$agency->dashOwner->name;

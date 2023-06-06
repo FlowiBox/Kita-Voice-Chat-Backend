@@ -55,7 +55,7 @@ class UserExporter extends ExportExcel
             $item['uuid']=$user->uuid;
             $item['name']=$user->name;
             $item['diamonds']=$user->coins?:'0';
-            $item['salary']=@$target->salary?:'0';
+            $item['salary']=@$target->sallary?:'0';
             $item['expenses']=@$target->cut_amount?:'0';
             $item['net_salary']=$user->salary?:'0';
             $item['agency']=@$user->agency->name;
