@@ -20,6 +20,10 @@ class Agency extends Model
         return $this->belongsTo (User::class,'app_owner_id','id');
     }
 
+    public function dashOwner(){
+        return $this->belongsTo (Admin::class,'owner_id','id');
+    }
+
     public function getUrlAttribute($val){
         if (!$val) {
             return "";
@@ -44,6 +48,10 @@ class Agency extends Model
     }
 
     public function getSalaryAttribute(){
+        $salary = AgencySallary::query ()->where ('agency_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
+        return $salary;
+    }
+    public function setSalaryAttribute(){
         $salary = AgencySallary::query ()->where ('agency_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
         $this->attributes['salary'] = $salary;
         return $salary;

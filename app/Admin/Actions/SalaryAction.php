@@ -42,7 +42,7 @@ class SalaryAction extends Action
                 $agency = Agency::query ()->find (\request ('id'));
                 if ($agency){
                     if ($agency->salary < $amount){
-                        return $this->response()->error(__ ('un known error'))->refresh();
+                        return $this->response()->error(__ ('low balance'))->refresh();
                     }
                     $ta = $agency->target($request->month);
                     if ($amount){
@@ -72,7 +72,7 @@ class SalaryAction extends Action
                 $user = User::query ()->find (\request ('id'));
                 if ($user){
                     if ($user->salary < $amount){
-                        return $this->response()->error(__ ('un known error'))->refresh();
+                        return $this->response()->error(__ ('low balance'))->refresh();
                     }
                     $m = $amount?:$user->salary ;
                     $ta = $user->target($request->month);
@@ -101,7 +101,7 @@ class SalaryAction extends Action
                 $agency = Agency::query ()->find (\request ('id'));
                 if ($agency){
                     if ($agency->salary < $amount){
-                        return $this->response()->error(__ ('un known error'))->refresh();
+                        return $this->response()->error(__ ('low balance'))->refresh();
                     }
                     $ta = $agency->target($request->month);
                     if ($amount){
