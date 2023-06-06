@@ -117,6 +117,9 @@ class UserObserver
             $user->is_host = 1;
         }
         if (!$user->agency_id){
+            if ($user->is_host == 1){
+                $user->coins = 0;
+            }
             $user->is_host = 0;
         }
         if ($user->status == 0){
