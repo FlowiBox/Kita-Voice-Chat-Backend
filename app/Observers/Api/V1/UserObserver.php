@@ -114,6 +114,14 @@ class UserObserver
      */
     public function updating (User $user){
         if ($user->agency_id){
+            if ($user->is_host == 0){
+                $user->coins = 0;
+                GiftLog::query ()
+                    ->where ('receiver_id',$user->id)
+                    ->whereYear ('created_at',Carbon::now ()->year)
+                    ->whereMonth ('created_at',Carbon::now ()->month)
+                    ->delete ();
+            }
             $user->is_host = 1;
         }
         if (!$user->agency_id){
