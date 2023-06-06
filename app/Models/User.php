@@ -292,8 +292,6 @@ class User extends Authenticatable
     public function getSalaryAttribute(){
         if ($this->agency_id){
             $salary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
-//            $this->attributes['salary'] = $salary;
-//            $this->save ();
             return $salary;
         }else{
             return 0;
