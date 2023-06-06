@@ -124,7 +124,7 @@ class UserObserver
             }
             $user->is_host = 1;
         }
-        if (!$user->agency_id){
+        if ($user->agency_id == 0 || $user->agency_id == null){
             if ($user->is_host == 1){
                 $user->coins = 0;
             }
@@ -256,9 +256,20 @@ class UserObserver
 
     public function saving(User $user){
         if ($user->agency_id){
+            if ($user->is_host == 0){
+                $user->coins = 0;
+                GiftLog::query ()
+                    ->where ('receiver_id',$user->id)
+                    ->whereYear ('created_at',Carbon::now ()->year)
+                    ->whereMonth ('created_at',Carbon::now ()->month)
+                    ->delete ();
+            }
             $user->is_host = 1;
         }
-        if (!$user->agency_id){
+        if ($user->agency_id == 0 || $user->agency_id == null){
+            if ($user->is_host == 1){
+                $user->coins = 0;
+            }
             $user->is_host = 0;
         }
         if ($user->status == 0){
