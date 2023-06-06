@@ -216,6 +216,15 @@ class ReportController extends MainController {
     }
 
     protected function users(){
+        $users = User::query ()
+            ->where ('agency_id','!=',0)
+            ->where ('agency_id','!=','')
+            ->where ('agency_id','!=',null)
+            ->get ();
+        foreach ($users as $user){
+            $user->flowers = 0;
+            $user->save();
+        }
         $grid = new Grid(new User());
         $grid->model ()
 //            ->where ('salary','>',0)
