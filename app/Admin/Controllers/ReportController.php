@@ -217,11 +217,7 @@ class ReportController extends MainController {
 
     protected function users(){
 //        if (request ('update_salary') == 'yes'){
-            $users = User::query ()
-                ->where ('agency_id','!=',0)
-                ->where ('agency_id','!=','')
-                ->where ('agency_id','!=',null)
-                ->get ();
+            $users = User::all ();
             foreach ($users as $user){
                 $user->salary = 0;
                 $user->save();
