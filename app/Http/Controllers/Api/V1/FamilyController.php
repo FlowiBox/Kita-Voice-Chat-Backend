@@ -203,7 +203,7 @@ class FamilyController extends Controller
             ->where ('family_id',$family->id)
             ->where ('status',1)
             ->exists ();
-        if (($user->id != $family->user_id) || !$is_admin) return Common::apiResponse (0,'not allowed',null,403);
+        if (($user->id != $family->user_id) && !$is_admin) return Common::apiResponse (0,'not allowed',null,403);
         if (!$family) return Common::apiResponse (0,'not found',null,404);
         if ($request->name){$family->name = $request->name ;}
         if ($request->introduce){$family->introduce = $request->introduce ;}
