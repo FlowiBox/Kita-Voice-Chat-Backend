@@ -113,6 +113,7 @@ class UserObserver
      * @return void
      */
     public function updating (User $user){
+        unset($user->is_follow);
         if ($user->agency_id){
             if ($user->is_host == 0){
                 $user->coins = 0;
