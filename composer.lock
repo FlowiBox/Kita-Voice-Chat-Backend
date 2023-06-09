@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d3b0afd98c081c27db7aa98bf64e56f",
+    "content-hash": "0615d46c66b3b64c6fb44685aa5526c2",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -2584,6 +2584,63 @@
                 "source": "https://github.com/laravel-admin-extensions/helpers/tree/v2.0.2"
             },
             "time": "2021-10-11T09:41:51+00:00"
+        },
+        {
+            "name": "laravel-admin-ext/log-viewer",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-admin-extensions/log-viewer.git",
+                "reference": "4852ea06345a82594afd9810fbbe7e32ba5d4ab3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-admin-extensions/log-viewer/zipball/4852ea06345a82594afd9810fbbe7e32ba5d4ab3",
+                "reference": "4852ea06345a82594afd9810fbbe7e32ba5d4ab3",
+                "shasum": ""
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\Admin\\LogViewer\\LogViewerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Encore\\Admin\\LogViewer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "z-song",
+                    "email": "zosong@126.com"
+                }
+            ],
+            "description": "Log viewer for laravel",
+            "homepage": "https://github.com/laravel-admin-extensions/log-viewer",
+            "keywords": [
+                "Viewer",
+                "laravel-admin",
+                "log"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel-admin-extensions/log-viewer/issues",
+                "source": "https://github.com/laravel-admin-extensions/log-viewer/tree/v1.0.4"
+            },
+            "time": "2021-10-11T09:34:30+00:00"
         },
         {
             "name": "laravel-admin-ext/media-player",
