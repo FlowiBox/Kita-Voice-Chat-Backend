@@ -14,6 +14,22 @@ use Laravel\Sanctum\PersonalAccessToken;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/t1', function () {
+//    $i = 0;
+//    while ($i < 100000000){
+//        $i++;
+//        echo $i;
+//        echo '<br>';
+//    }
+});
+
+Route::get('/t2', function () {
+    return gethostname();
+});
+
+
+
 Route::get('/', function () {
     return view ('welcome');
 });
