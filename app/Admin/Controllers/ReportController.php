@@ -230,7 +230,7 @@ class ReportController extends MainController {
 
         $grid = new Grid(new User());
         $grid->model ()
-            ->where ('salary','>',0)
+//            ->where ('salary','>',0)
             ->where ('agency_id','!=',0)
             ->where ('agency_id','!=','')
             ->where ('agency_id','!=',null)
