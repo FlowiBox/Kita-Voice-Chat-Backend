@@ -188,7 +188,10 @@ trait RoomTrait
                 $position = $i;
             }
         }
-        $microphone[$position] = 0;
+        if (@$microphone[$position]){
+            $microphone[$position] = 0;
+        }
+
         $microphone = implode(',', $microphone);
         $result = DB::table('rooms')->where('uid',$uid)->update(['microphone'=>$microphone]);
         $room = Room::query ()->where ('uid',$uid)->first ();

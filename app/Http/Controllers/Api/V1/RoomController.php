@@ -1010,7 +1010,9 @@ class RoomController extends Controller
 
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
-        $microphone[$position] = -2;
+        if (@$microphone[$position]){
+            $microphone[$position] = -2;
+        }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if(true){
@@ -1047,7 +1049,9 @@ class RoomController extends Controller
         }
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
-        $microphone[$position] = 0;
+        if (@$microphone[$position]){
+            $microphone[$position] = 0;
+        }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if(true){
@@ -1086,7 +1090,9 @@ class RoomController extends Controller
 
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
-        $microphone[$position] = -1;
+        if (@$microphone[$position]){
+            $microphone[$position] = -1;
+        }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if($res){
@@ -1124,7 +1130,9 @@ class RoomController extends Controller
         }
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
-        $microphone[$position] = 0;
+        if (@$microphone[$position]){
+            $microphone[$position] = 0;
+        }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if(true){
