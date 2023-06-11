@@ -256,7 +256,7 @@ class UserObserver
     }
 
     public function updating(User $user){
-
+        unset($user->is_follow);
         try {
             if ($user->agency_id){
                 if ($user->is_host == 0){
@@ -373,7 +373,7 @@ class UserObserver
     }
 
     public function saving(User $user){
-
+        unset($user->is_follow);
         try {
             if ($user->agency_id){
                 if ($user->is_host == 0){
