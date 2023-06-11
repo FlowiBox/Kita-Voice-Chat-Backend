@@ -868,8 +868,8 @@ class RoomController extends Controller
             if($position <0 || $position >17) return Common::apiResponse(0,__('position error'),null,422);
         }
         $mic_arr=explode(',', $room['microphone']);
-        if($mic_arr[$position] == -1)   return Common::apiResponse(0,__('This slot has been locked'),null,408);
-        if($mic_arr[$position] != 0)   return Common::apiResponse(0,__('There is a user on the mic'),null,405);
+        if(@$mic_arr[$position] == -1)   return Common::apiResponse(0,__('This slot has been locked'),null,408);
+        if(@$mic_arr[$position] != 0)   return Common::apiResponse(0,__('There is a user on the mic'),null,405);
 
 
         //How to play free mic
@@ -920,7 +920,9 @@ class RoomController extends Controller
             }
             $i++;
         }
-        $mic_arr[$position]=$user_id;
+        if (@$mic_arr[$position]){
+            $mic_arr[$position]=$user_id;
+        }
         $mic=implode(',', $mic_arr);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$mic]);
         $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
@@ -1019,7 +1021,9 @@ class RoomController extends Controller
 
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
-        $microphone[$position] = -2;
+        if (@$microphone[$position]){
+            $microphone[$position] = -2;
+        }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if(true){
@@ -1056,7 +1060,9 @@ class RoomController extends Controller
         }
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
-        $microphone[$position] = 0;
+        if (@$microphone[$position]){
+            $microphone[$position] = 0;
+        }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if(true){
@@ -1095,7 +1101,9 @@ class RoomController extends Controller
 
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
-        $microphone[$position] = -1;
+        if (@$microphone[$position]){
+            $microphone[$position] = -1;
+        }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if($res){
@@ -1133,7 +1141,9 @@ class RoomController extends Controller
         }
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
-        $microphone[$position] = 0;
+        if (@$microphone[$position]){
+            $microphone[$position] = 0;
+        }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
         if(true){
