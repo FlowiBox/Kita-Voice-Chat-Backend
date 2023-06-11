@@ -17,6 +17,7 @@ use App\Models\Image;
 use App\Models\LiveTime;
 use App\Models\OVip;
 use App\Models\Pack;
+use App\Models\Pk;
 use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\Ticket;
