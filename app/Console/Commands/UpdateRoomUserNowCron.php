@@ -40,7 +40,7 @@ class UpdateRoomUserNowCron extends Command
     public function handle()
     {
         
-        \Log::info("Testing Cron is Running ... !");
+        //\Log::info("Testing Cron is Running ... !");
      
         $rooms_now_live = PusherTrait::getIdRoomCountUserFromPresenceChannel();
         $rooms_now_live = collect($rooms_now_live)->sortBy(function($item, $key) {
@@ -58,6 +58,6 @@ class UpdateRoomUserNowCron extends Command
             'count_room_socket' => 0
         ]);
       
-        $this->info('update-room-user-now:cron Command Run Successfully !');
+        //$this->info('update-room-user-now:cron Command Run Successfully !');
     }
 }

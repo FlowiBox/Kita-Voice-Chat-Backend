@@ -14,3 +14,9 @@ yarn-error.log
 /.idea
 /.vscode
 .htaccess.swp
+/.htaccess
+docker-compose.yml
+Dockerfile
+/nginx
+/data
+php.ini
