@@ -34,13 +34,15 @@ class RoomRepo implements RoomRepoInterface {
                 'count_room_socket' => $rooms_now_live[$key]['count_user']
             ]);
         }
-        $roomUpdate2 = Room::whereNotIn('uid',$rooms_owner_ids)->where('room_status',1)->get();
-        foreach($roomUpdate2 as $key => $room)
+        $roomUpdate2 = Room::whereNotIn('uid',$rooms_owner_ids)->where('count_room_socket','>=',1)->where('room_status',1)->update([
+            'count_room_socket' => 0
+        ]);
+        /*foreach($roomUpdate2 as $key => $room)
         {
             Room::where('id',$room->id)->first()->update([
                 'count_room_socket' => 0
             ]);
-        }
+        }*/
 
         $result = $this->model
             ->orderBy('top_room','DESC')->where('count_room_socket','!=',0)
