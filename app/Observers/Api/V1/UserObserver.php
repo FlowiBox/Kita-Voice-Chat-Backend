@@ -316,6 +316,11 @@ class UserObserver
                     if ($target->days <= $days){
                         $per += 0.30;
                     }
+                    if (Common::getConf ('all_target_or_nothing') == 'true'){
+                        if ($per < 1){
+                            $per = 0;
+                        }
+                    }
                     $t = $target->usd * $per;
                     $ap = $target->agency_share/100;
                     $user->target_usd = $t;
@@ -432,6 +437,11 @@ class UserObserver
                     }
                     if ($target->days <= $days){
                         $per += 0.30;
+                    }
+                    if (Common::getConf ('all_target_or_nothing') == 'true'){
+                        if ($per < 1){
+                            $per = 0;
+                        }
                     }
                     $t = $target->usd * $per;
                     $ap = $target->agency_share/100;
