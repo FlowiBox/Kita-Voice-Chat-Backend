@@ -38,7 +38,7 @@ class ChatServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //$this->mergeConfigFrom($this->configPath(), 'chat');
+        $this->mergeConfigFrom($this->configPath(), 'chat');
         $this->registerFacade();
         $this->registerChat();
         $this->registerUploadManager();
