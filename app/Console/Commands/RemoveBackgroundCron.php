@@ -46,7 +46,7 @@ class RemoveBackgroundCron extends Command
         $bgfirst = Background::first();
         $RequestBackgroundImage = RequestBackgroundImage::whereIn('status',[1,3])->where('created_at', '>', now()->subDays(30)->endOfDay())->get();
         $owner_ids =  $RequestBackgroundImage->pluck('owner_room_id');
-        $rooms = Room::whereIn('id',$owner_ids)->update([
+        $rooms = Room::whereIn('uid',$owner_ids)->update([
             'room_background' => $bgfirst ? $bgfirst->id : null
         ]);
         $RequestBackgroundImage->delete();
