@@ -25,8 +25,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 //       $schedule->command('monthly_update')->everyMinute();
-         $schedule->command('monthly_update')->monthly ();
+         //$schedule->command('monthly_update')->monthly ();
          $schedule->command('update-room-user-now:cron')->everyMinute();
+         $schedule->command('remove-background:cron')->daily();
     }
 
     /**
@@ -39,5 +40,15 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__.'/Commands');
 
         require base_path('routes/console.php');
+    }
+
+    /**
+     * Get the timezone that should be used by default for scheduled events.
+     *
+     * @return \DateTimeZone|string|null
+    */
+    protected function scheduleTimezone()
+    {
+        return 'Africa/Cairo';
     }
 }

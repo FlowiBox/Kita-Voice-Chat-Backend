@@ -20,7 +20,7 @@ class UpdateRoomUserNowCron extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'update user in room after 60 seconds';
 
     /**
      * Create a new command instance.
