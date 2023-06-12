@@ -49,7 +49,8 @@ class Chat
             return $this->conversation->getConversationMessageById($conversationId, $this->userId, $channel);
         }
 
-        abort(404);
+        return response()->json(['message' => 'Not found'], 404);
+
     }
 
     /**

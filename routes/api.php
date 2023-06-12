@@ -279,6 +279,7 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
 
                     Route::prefix('conversations')->group(function (){
                         Route::get('/', [\App\Http\Controllers\Api\V1\ConversationController::class,'index']);
+                        Route::post('/start', [\App\Http\Controllers\Api\V1\ConversationController::class,'startConversationWith']);
                         Route::get('/chat/{id}', [\App\Http\Controllers\Api\V1\ConversationController::class,'chat']);
                         Route::post('/chat/message/send', [\App\Http\Controllers\Api\V1\ConversationController::class,'send']);
                         Route::post('/chat/message/send/file', [\App\Http\Controllers\Api\V1\ConversationController::class,'sendFilesInConversation']);

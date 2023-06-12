@@ -30,6 +30,11 @@ class ConversationController extends Controller
             'threads' => $threads
         ]);
     }
+    
+    public function startConversationWith(Request $request)
+    {
+        return Chat::startConversationWith($request->input('user_id'));
+    }
 
     public function chat($id)
     {
