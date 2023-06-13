@@ -695,7 +695,7 @@ class RoomController extends Controller
 
         $room_info = array_diff_key($room_info, array_flip($remove));
 
-        return Common::apiResponse (true,'',);
+        return Common::apiResponse (true,'',$room_info);
     }
 
 
