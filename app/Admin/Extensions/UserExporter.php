@@ -10,7 +10,6 @@ class UserExporter extends ExportExcel
 
 
 
-    public $agency_id;
     protected $fileName = 'users_list.csv';
     protected $headings = [
         "uuid",
@@ -23,16 +22,10 @@ class UserExporter extends ExportExcel
         'month',
         'year'
     ];
-    public $month;
-    public $year;
 
 
-    public function __construct ($agency_id = null,$month=null,$year=null)
-    {
-        $this->agency_id = $agency_id;
-        $this->month = $month;
-        $this->year = $year;
-    }
+
+
 
     /**
      * @inheritDoc
@@ -45,14 +38,14 @@ class UserExporter extends ExportExcel
             ->where ('agency_id','!=',null)
 //            ->where ('salary','>',0)
         ;
-        if ($this->agency_id){
-            $users = $users->where ('agency_id',$this->agency_id);
+        if (request ('agency_id')){
+            $users = $users->where ('agency_id',request ('agency_id'));
         }
         $users = $users->get ();
         $arr = [];
 
         foreach ($users as $user){
-            $target = @$user->target($this->month,$this->year);
+            $target = @$user->target(request ('month'),request ('year'));
             $item['uuid']=$user->uuid;
             $item['name']=$user->name;
             $item['diamonds']=$user->coins?:'0';

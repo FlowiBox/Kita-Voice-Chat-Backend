@@ -256,7 +256,7 @@ class ReportController extends MainController {
             $options = ['user'=>__('user')];
             return (new \App\Admin\Actions\SalaryAction($this->id,'user'))->render () ;
         });
-        $grid->exporter(new UserExporter(request ('agency_id'),request ('month'),request ('year')));
+        $grid->exporter(new UserExporter());
         return $grid;
     }
 
