@@ -40,7 +40,7 @@ class RoomRepo implements RoomRepoInterface {
                 'count_room_socket' => 0
             ]);
         }*/
-
+        $user_id   = $req->user()->id;
         $result = $this->model
             ->orderBy('top_room','DESC')->where('count_room_socket','!=',0)
             ->where('room_status',1)
@@ -71,7 +71,7 @@ class RoomRepo implements RoomRepoInterface {
         if ($req->filter == 'boss'){
             $arr = EnteredRoom::query ()
                 /*->where ('uid',Common::getConf ('boss_id'))*/
-                ->where ('uid',auth::id())
+                ->where ('uid',$user_id)
                 ->orderByDesc ('entered_at')
                 ->pluck ('rid')
                 ->toArray ();
