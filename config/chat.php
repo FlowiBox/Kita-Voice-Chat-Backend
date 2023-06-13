@@ -18,6 +18,6 @@ return [
         'chat_room'                => 'chat-room',
     ],
     'upload' => [
-        'storage' => 'public',
+        'storage' => 'conversation',
     ],
 ];

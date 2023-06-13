@@ -8,6 +8,7 @@ use App\Events\NewConversationMessage;
 use App\Models\Conversation\Conversation;
 use App\Repositories\BaseRepository;
 use App\Services\UploadManager;
+use Illuminate\Support\Str;
 
 class ConversationRepository extends BaseRepository
 {
@@ -42,15 +43,19 @@ class ConversationRepository extends BaseRepository
         }, 'firstUser', 'secondUser'])->where('first_user_id', $user)->orWhere('second_user_id', $user)->get();
 
         $threads = [];
+        if(count($conversations) > 0)
+        {
+            foreach ($conversations as $conversation) {
+                $collection = (object) null;
+                $collection->message = $conversation->messages->first();
+                $collection->user = ($conversation->firstUser->id == $user) ? $conversation->secondUser : $conversation->firstUser;
+                $threads[] = $collection;
+            }
 
-        foreach ($conversations as $conversation) {
-            $collection = (object) null;
-            $collection->message = $conversation->messages->first();
-            $collection->user = ($conversation->firstUser->id == $user) ? $conversation->secondUser : $conversation->firstUser;
-            $threads[] = $collection;
+            return collect($threads);
+        }else{
+            return response()->json(['message' => 'Not found'], 404);
         }
-
-        return collect($threads);
     }
 
     /**
@@ -187,17 +192,18 @@ class ConversationRepository extends BaseRepository
             if (array_key_exists('file', $data)) {
                 foreach ($data['file'] as $file) {
                     $fileName = Carbon::now()->format('YmdHis').'-'.$file->getClientOriginalName();
-                    $path = str_finish('', '/').$fileName;
+                    $path = Str::finish('', '/').$fileName;
+                    
                     $content = File::get($file->getRealPath());
                     $result = $this->manager->saveFile($path, $content);
 
-                    if ($result === true) {
+                    /*if ($result === true) {
                         $conversation->files()->create([
                             'message_id' => $created->id,
                             'name'       => $fileName,
                             'user_id'    => $data['user_id'],
                         ]);
-                    }
+                    }*/
                 }
             }
 

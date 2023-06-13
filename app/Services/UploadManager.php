@@ -74,7 +74,7 @@ class UploadManager
     {
         $path = $this->cleanFolder($path);
 
-        return $this->disk->put($path, $content, 'public/conversation/chat');
+        return $this->disk->put($path, $content);
     }
 
     /**
