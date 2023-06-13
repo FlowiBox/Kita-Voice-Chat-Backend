@@ -55,8 +55,8 @@ trait PusherTrait
             foreach ($channels->channels as $channel => $v) {
             $subscription_counts[$channel] =
                 $pusher->get_channel_info(
-                $channel, ['info' => 'subscription_count']
-                )->subscription_count;
+                $channel, ['info' => 'user_count']
+                )->user_count;
             }
             return $subscription_counts;
         }else{
