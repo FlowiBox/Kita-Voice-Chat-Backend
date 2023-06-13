@@ -197,13 +197,13 @@ class ConversationRepository extends BaseRepository
                     $content = File::get($file->getRealPath());
                     $result = $this->manager->saveFile($path, $content);
 
-                    /*if ($result === true) {
+                    if ($result === true) {
                         $conversation->files()->create([
                             'message_id' => $created->id,
                             'name'       => $fileName,
                             'user_id'    => $data['user_id'],
                         ]);
-                    }*/
+                    }
                 }
             }
 
