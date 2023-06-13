@@ -20,7 +20,7 @@ class UpdateRoomUserNowCron extends Command
      *
      * @var string
      */
-    protected $description = 'update user in room after 60 seconds';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -54,13 +54,9 @@ class UpdateRoomUserNowCron extends Command
                 'count_room_socket' => $rooms_now_live[$key]['count_user']
             ]);
         }
-        $roomUpdate2 = Room::whereNotIn('uid',$rooms_owner_ids)->where('room_status',1)->get();
-        foreach($roomUpdate2 as $key => $room)
-        {
-            Room::where('id',$room->id)->first()->update([
-                'count_room_socket' => 0
-            ]);
-        }
+        $roomUpdate2 = Room::whereNotIn('uid',$rooms_owner_ids)->where('count_room_socket','>=',1)->where('room_status',1)->update([
+            'count_room_socket' => 0
+        ]);
       
         //$this->info('update-room-user-now:cron Command Run Successfully !');
     }
