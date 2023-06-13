@@ -1587,6 +1587,38 @@ class RoomController extends Controller
         }
     }
 
+    public function removeBan(Request $request){
+        $uid=$request->owner_id;
+        $user_id=$request->user_id;
+
+        if(!$uid || !$user_id) return Common::apiResponse(0,'invalid data',null,422);
+        if($uid == $user_id)    return Common::apiResponse(0,'Illegal operation',null,403);
+
+        $room = Room::query ()->where('uid',$uid)->first();
+
+        $roomSpeak=DB::table('rooms')->where('uid',$uid)->value('room_speak');
+        $spe_arr= !$roomSpeak ? [] : explode(",", $roomSpeak);
+        foreach ($spe_arr as $k => &$v) {
+            $arr=explode("#",$v);
+            if($arr[0] == $user_id) {
+                unset($spe_arr[$k]);
+            }
+        }
+        $str=implode(",", $spe_arr);
+        $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_speak'=>$str]);
+        if($res){
+            $ms = [
+                'messageContent'=>[
+                    'message'=>'removeBanFromWriting',
+                    'userId'=>$user_id
+                ]
+            ];
+            Common::sendToZego ('SendCustomCommand',$room->id,$uid,json_encode ($ms));
+            return Common::apiResponse(1,'Succeeded remove writing ban for');
+        }else{
+            return Common::apiResponse(0,'Failed to remove writing ban',null,400);
+        }
+    }
 
     public function removeRoomPass(Request $request){
         $room = Room::query ()->where ('uid',$request->owner_id)->first ();
