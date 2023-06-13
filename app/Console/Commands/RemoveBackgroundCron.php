@@ -7,6 +7,7 @@ use App\Models\Room;
 use App\Models\Background;
 use App\Models\RequestBackgroundImage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class RemoveBackgroundCron extends Command
 {
@@ -49,7 +50,14 @@ class RemoveBackgroundCron extends Command
         $rooms = Room::whereIn('uid',$owner_ids)->update([
             'room_background' => $bgfirst ? $bgfirst->id : null
         ]);
-        $RequestBackgroundImage->delete();
+        foreach($RequestBackgroundImage as $img){
+            $path = $img->img;
+            if(Storage::exists(Storage::disk('images')->path($path))){
+                unlink(Storage::disk('images')->path($path));
+            }
+            $img->delete();
+        }
+        
         //$this->info('update-room-user-now:cron Command Run Successfully !');
     }
 }
