@@ -691,11 +691,11 @@ class RoomController extends Controller
             'strto_time',
         ];
         $roomRule = Common::getConfig('room_rule');
-        $room['room_rule'] = $roomRule ? $roomRule : '';
+        $room_info['room_rule'] = $roomRule ? $roomRule : '';
 
         $room_info = array_diff_key($room_info, array_flip($remove));
 
-        return Common::apiResponse (true,'',$room_info);
+        return Common::apiResponse (true,'',);
     }
 
 
