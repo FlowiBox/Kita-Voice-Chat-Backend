@@ -71,6 +71,7 @@ class RoomRepo implements RoomRepoInterface {
         if ($req->filter == 'boss'){
             $arr = EnteredRoom::query ()
                 /*->where ('uid',Common::getConf ('boss_id'))*/
+                ->where ('uid',auth::id())
                 ->orderByDesc ('entered_at')
                 ->pluck ('rid')
                 ->toArray ();
