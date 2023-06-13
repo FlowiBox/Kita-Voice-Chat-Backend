@@ -690,6 +690,8 @@ class RoomController extends Controller
             'audio_num',
             'strto_time',
         ];
+        $roomRule = Common::getConfig('room_rule');
+        $room['room_rule'] = $roomRule ? $roomRule : '';
 
         $room_info = array_diff_key($room_info, array_flip($remove));
 
