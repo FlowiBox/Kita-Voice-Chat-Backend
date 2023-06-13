@@ -55,7 +55,7 @@ class UpdateRoomUserNowCron extends Command
             ]);
         }
         $roomUpdate2 = Room::whereNotIn('uid',$rooms_owner_ids)->where('room_status',1)->get();
-        foreach($roomUpdate as $key => $room)
+        foreach($roomUpdate2 as $key => $room)
         {
             Room::where('id',$room->id)->first()->update([
                 'count_room_socket' => 0
