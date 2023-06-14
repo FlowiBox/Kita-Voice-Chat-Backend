@@ -1108,6 +1108,7 @@ class RoomController extends Controller
         }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
+        \Log::info($res. '-' .$data);
         if($res){
             $ms = [
                 'messageContent'=>[
