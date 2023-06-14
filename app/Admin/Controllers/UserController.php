@@ -178,6 +178,7 @@ class UserController extends MainController
         $grid->column('name', __('Name'));
         $grid->column('nickname', __('NickName'));
         $grid->column('profile.avatar', __('image'))->image ('',50);
+        $grid->column('profile.image_id', __('image Id'))->image ('',50);
         $grid->column('phone', __('Phone'));
 //        $grid->column('di', __('coins'));
 //        $grid->column('gold', __('silver coins'));
@@ -268,6 +269,7 @@ class UserController extends MainController
         $show->field('id', __('Id'));
         $show->field('uuid', __('uuid'));
         $show->field ('avatar',__('avatar'))->image ('',200);
+        $show->field ('image_id',__('image Id'))->image ('',200);
         $show->field('name', __('Name'));
         $show->field('nickname', __('NickName'));
         $show->field('flag', __('country'))->image ('',50);
@@ -304,6 +306,7 @@ class UserController extends MainController
 //        $form->switch ('is_gold_id',__('Gold id'))->states (Common::getSwitchStates ());
         $form->text('name', __('Name'));
         $form->image ('profile.avatar',__ ('image'));
+        $form->image ('profile.image_id',__ ('image Id'));
         $form->select ('country_id',trans ('country'))->options (function (){
             $ops = [0=>'no country'];
             $countries = Country::all ();
