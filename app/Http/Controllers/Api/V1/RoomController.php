@@ -1103,12 +1103,11 @@ class RoomController extends Controller
 
         $microphone = DB::table('rooms')->where('uid',$data['owner_id'])->value('microphone');
         $microphone = explode(',', $microphone);
-        if (@$microphone[$position]){
+        if (@$microphone[$position] == false){
             $microphone[$position] = -1;
         }
         $microphone = implode(',', $microphone);
         $res = DB::table('rooms')->where('uid',$data['owner_id'])->update(['microphone'=>$microphone]);
-        \Log::info($res. '-' .$data);
         if($res){
             $ms = [
                 'messageContent'=>[
