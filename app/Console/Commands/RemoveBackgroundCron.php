@@ -45,7 +45,7 @@ class RemoveBackgroundCron extends Command
         
         //\Log::info("Testing Cron is Running ... !");
         $bgfirst = Background::first();
-        $RequestBackgroundImage = RequestBackgroundImage::whereIn('status',[1,3])->where('created_at', '>', now()->subDays(30)->endOfDay())->get();
+        $RequestBackgroundImage = RequestBackgroundImage::whereIn('status',[1,3])->where('created_at', '>', now()->addDays(30)->endOfDay())->get();
         $owner_ids =  $RequestBackgroundImage->pluck('owner_room_id');
         $rooms = Room::whereIn('uid',$owner_ids)->update([
             'room_background' => $bgfirst ? $bgfirst->id : null
