@@ -1816,14 +1816,15 @@ class RoomController extends Controller
         if ($request->hasFile ('image')){
             $img = $request->file ('image');
             $image = Common::upload ('images',$img);
+            $RequestBackgroundImage = new RequestBackgroundImage();
+            $RequestBackgroundImage->owner_room_id = $user->id;
+            $RequestBackgroundImage->img = $image;
+            $RequestBackgroundImage->status = 0;
+            $RequestBackgroundImage->save();
+            $user->di = ($user->di - $costRequestBackGround);
+            $user->save();
+            return Common::apiResponse (1,'done',null,201);
         }
-        $RequestBackgroundImage = new RequestBackgroundImage();
-        $RequestBackgroundImage->owner_room_id = $user->id;
-        $RequestBackgroundImage->img = $image;
-        $RequestBackgroundImage->status = 0;
-        $RequestBackgroundImage->save();
-        $user->di = ($user->di - $costRequestBackGround);
-        $user->save();
-        return Common::apiResponse (1,'done',null,201);
+        return Common::apiResponse (1,'faild',null,400);
     }
 }
