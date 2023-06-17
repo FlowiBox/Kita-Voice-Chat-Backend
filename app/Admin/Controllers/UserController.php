@@ -302,7 +302,7 @@ class UserController extends MainController
         $form = new Form(new User());
 
         $form->display('id', __('id'));
-        $form->text('uuid', __('uuid'));
+        $form->text('uuid', __('uuid'))->creationRules(['required', "unique:users"])->updateRules(['required', "unique:users,uuid,{{id}}"]);
 //        $form->switch ('is_gold_id',__('Gold id'))->states (Common::getSwitchStates ());
         $form->text('name', __('Name'));
         $form->image ('profile.avatar',__ ('image'));
