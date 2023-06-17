@@ -70,8 +70,9 @@ class HomeController extends Controller
 
     public function allMyBackgrounds(Request $request){
         $user = $request->user ();
+        $costRequestBackGround = Common::getConfig('cost_request_backround');
         $data = RequestBackgroundImage::query()->where('owner_room_id',$user->id)->whereIn('status',[1,3])->select('id','img')->get();
-        return Common::apiResponse (1,'',$data,200);
+        return Common::apiResponse (1,$costRequestBackGround,$data,200);
     }
 
     public function generateAgoraToken(Request $request){
