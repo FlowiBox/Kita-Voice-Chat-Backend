@@ -1802,7 +1802,12 @@ class RoomController extends Controller
     public function RequestBackgroundImage(Request $request)
     {
         $user = $request->user();
-        if($user->di < 2000){
+        $costRequestBackGround = Common::getConfig('cost_request_backround');
+        if(!$costRequestBackGround)
+        {
+            return Common::apiResponse (0,'not found params (cost_request_backround) in config dashboard',null,404);
+        }
+        if($user->di < $costRequestBackGround){
             return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
         }
         $room = Room::query ()->where ('uid',$request->owner_id)->first ();
@@ -1817,7 +1822,7 @@ class RoomController extends Controller
         $RequestBackgroundImage->img = $image;
         $RequestBackgroundImage->status = 0;
         $RequestBackgroundImage->save();
-        $user->di = ($user->di - 2000);
+        $user->di = ($user->di - $costRequestBackGround);
         $user->save();
         return Common::apiResponse (1,'done',null,201);
     }
