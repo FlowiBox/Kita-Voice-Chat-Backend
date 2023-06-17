@@ -75,7 +75,7 @@ class RoomRepo implements RoomRepoInterface {
                 ->orderByDesc ('entered_at')
                 ->pluck ('rid')
                 ->toArray ();
-            $result->whereIn('id',$arr)->orderByRaw(DB::raw("FIELD(id, " . implode(',', $arr) . ")"));
+            $result->where('count_room_socket','>=',0)->whereIn('id',$arr)->orderByRaw(DB::raw("FIELD(id, " . implode(',', $arr) . ")"));
         }
         elseif ($req->filter == 'trend'){
             $result->orderByDesc('session');
