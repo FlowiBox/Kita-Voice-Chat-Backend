@@ -309,8 +309,9 @@ class RoomController extends Controller
         $user_id   = $request->user ()->id;
 
         if (!$owner_id) return Common::apiResponse (0,'not found',null,404);
-        $ia = DB::table ('rooms')->where ('uid',$owner_id)->value ('is_afk');
-        $rv = DB::table ('rooms')->where ('uid',$owner_id)->value ('count_room_socket');
+        $room = DB::table ('rooms')->where ('uid',$owner_id)->first();
+        $ia = $room->is_afk;
+        $rv = $room->count_room_socket;
 
 //        if($owner_id == $user_id){
 //            $res=DB::table('users')->where('id',$user_id)->value('is_idcard');
@@ -870,8 +871,8 @@ class RoomController extends Controller
             if($position <0 || $position >17) return Common::apiResponse(0,__('position error'),null,422);
         }
         $mic_arr=explode(',', $room['microphone']);
-        if(@$mic_arr[$position] == -1)   return Common::apiResponse(0,__('This slot has been locked'),null,408);
-        if(@$mic_arr[$position] != 0)   return Common::apiResponse(0,__('There is a user on the mic'),null,405);
+        //if(@$mic_arr[$position] == -1)   return Common::apiResponse(0,__('This slot has been locked'),null,408);
+        //if(@$mic_arr[$position] != 0)   return Common::apiResponse(0,__('There is a user on the mic'),null,405);
 
 
         //How to play free mic
@@ -922,7 +923,7 @@ class RoomController extends Controller
             }
             $i++;
         }
-        if (@$mic_arr[$position]){
+        if (@$mic_arr[$position] || @$mic_arr[$position] == false){
             $mic_arr[$position]=$user_id;
         }
         $mic=implode(',', $mic_arr);
