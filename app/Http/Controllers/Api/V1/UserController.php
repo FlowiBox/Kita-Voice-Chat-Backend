@@ -292,11 +292,11 @@ class UserController extends Controller
         }
         $query = GiftLog::query ()->whereHas ($rel);
         if ($type == 1) {
-            $query = $query->whereDay('created_at', Carbon::now ()->day);
+            $query = $query->where(\DB::raw('Date(created_at)'), today());
         } elseif ($type == 2) {
             $query = $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
         } elseif ($type == 3) {
-            $query = $query->whereMonth('created_at', Carbon::now()->month);
+            $query = $query->whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()] );
         }
 
         if (!in_array ($class,[1,2])){
@@ -332,6 +332,7 @@ class UserController extends Controller
             if ($v->{$keywords} == $user_id) $l = $i;
             unset($v->{$keywords});
         }
+
         unset($v);
         //empty data
         $kong['user_id']=0;
@@ -380,11 +381,14 @@ class UserController extends Controller
         }*/
         $arr['user'] = $user->only('user_id','exp','name','avatar','frame','frame_id');
 
-        $arr['top'] = array_slice($data->toArray (), 0, 3);
-        $arr['other'] = array_slice($data->toArray (), 3);
+
+        $toArray      = $data->toArray();
+        $countData      = count($data);
+        $arr['top']   = $countData < 4 ? $data : array_slice($toArray, 0, 3);
+        $arr['other'] = $countData < 4 ? [] : array_slice($toArray, 3);
 
         if ($class == 3){
-            return $data->toArray ();
+            return $toArray;
         }
         return $arr;
     }
