@@ -101,7 +101,7 @@ class UserController extends Controller
                                 ]
                             ]
                         );
-                        Common::handelFirebase ($request,'visit');
+                        //Common::handelFirebase ($request,'visit');
                     }
                 }
             }

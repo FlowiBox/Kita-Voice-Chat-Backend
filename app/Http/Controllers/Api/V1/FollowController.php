@@ -32,7 +32,7 @@ class FollowController extends Controller
                     'status'=>1
                 ]
             );
-            Common::handelFirebase ($request,'follow');
+            //Common::handelFirebase ($request,'follow');
         }
 
 
