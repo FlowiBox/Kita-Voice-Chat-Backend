@@ -54,3 +54,8 @@ Route::get('/clear', function() {
     return "Cleared!";
 
  });
+
+ Route::get('test', function(){
+    $disk = \Storage::disk('gcs');
+$disk->put('hello.txt','hello text');
+ });

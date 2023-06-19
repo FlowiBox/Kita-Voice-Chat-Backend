@@ -176,6 +176,7 @@ return [
         /*
          * Application Service Providers...
          */
+        App\Providers\GoogleStorageProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\BroadcastServiceProvider::class,
@@ -183,6 +184,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ChatServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        
         
 
     ],

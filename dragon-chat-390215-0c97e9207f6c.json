@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "dragon-chat-390215",
+  "private_key_id": "0c97e9207f6c36d000386f4911347c52d5bdc791",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCUtsHN6fDNbviQ\nBHfNuxK6kvj0/SqviA/oXMsvJUQ0jACyj7jNvBP4tcJ75VMDhJ+q36d0TYBsXWqa\nPcB+cN0AiyQjYqbRTzWmFyVvG127yXfCUwmKcotn/waKvgq37zJKEHIollsh+yN7\nr5JiBVtcr3XDGoOZ9mpz/kVU4/NJezezDJmud0cp1FdqKQpaWTRElT8w7OIUlSPq\nIFYPXjqWSzQ5F8Q4XhxKXvreBbgpoeptFzu88f2S39AAgH3C3qVq/cazf3l5Zpyu\nppdpXB5crk93SbAiy03dFNcdextpnKFK2XYugOMfMJUy9rsSdJRuUQBelfY/udGx\ncS/4ESXfAgMBAAECggEAHirWtL08rofQ33IwlWjaG0P+QcBrnNEGnRXZ19YA+IHg\nEFjsXbvF92FzsutpxCBuvVyCXSrtns3ydpiJSHz/sAEJ0y3LdlFRqkAuxVOxV4s+\ngoqSuGWVFwMaYiG8DeT1eCXO6qHZmdKWt5v9n2nDx1EGnA3wXVap8J7HlLlrHGAV\ntEW+gYg+s7+tR7qHFFKFkxcp+OyC7NvkyNmlJFMXwpcwJRIasaWwWvnhdF/F/S9I\nP2FLc3Uga/aDbD9tTX4GJhszLSanQkqXMo7QR+VhNE1kusuo/RbUx7Y98jI7lAgu\nSb76Iyk7ZykM/KoLkqTiIGfc+l5ODPfmzPck/gq0HQKBgQDPd88bbQ/q6UZdrPK1\nvcbX2lU/aEIx8gY0MCnQ2VdgnWrPBFdwkt/esAvMZ9kgSeZucgcLZ0NxqD9Pz1WJ\nmmEweHfOg1T9d2HjlttyS8sQEUI61rNZruAsaSHEiU/pLBVWH/Y2Vw3k2rTu5SCv\ng4jzzVFUFv5z+EcuaoYguW4uqwKBgQC3gHeBo6S5mJ1wB/LjyJHmnSEtt7Fc+HBs\nIqF53DPGNj8mZbltj3ACpav96/gJUm0OOkBSmJXpJKMctcmONVjKX9y92Fec3pSd\nQ9nq4Y1MiVGpHe/VompvZpXZ0CNrz5mjdUTSe8/fq/JjsXAFmEoSxf1nKkTdBKPG\nLmWJ5v+VnQKBgAfh63KFUEeCmXPRsF8LWNS2rOp90ZYINgghlFUlDNbU5Ev9RD04\nt1zEn44im/NIG4MyveXHBJ7633zuybcysGKhERw9jSscMBHvl2LeUlbH8RY/Ng1A\nQbAuRmQrO2gGjsD48efaouKBFMLG3dkNTFTHBkIFpaFOW5X94h64LOGFAoGAEY+5\n4C5JFXoFlzMri6EmVWu0QSvTTZJ5L+AglAj+63lFkecqV9HiZl50l1h95GZ/CV2J\nyl3P+wAGnDjJkVKJrNR/y6totxqWHnbf5Bqx6yE5L3Yt/cQNa5vlu3Kv8SFtErem\nXn565m0ORXw1vFNWw3UvSzBAZuaKxeyqywfQbgECgYABg7+oTLGi+DsUU2oKBrnR\neWgn0r4AOfjiKer8dRaOklsBZ/S+LAKmlPJVxHAb+0PKDcd3ESvO+wbd5nFctdKI\nZPmrKvx0seo36/CQIQmlq6ONdYO5RUJNcpzGJa3qEiYsUYXXNLu3Q3UipD1IVEbJ\nis/H7yOMXSTGepYl827EsQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "dragon-chat-app@dragon-chat-390215.iam.gserviceaccount.com",
+  "client_id": "109832474459585363027",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dragon-chat-app%40dragon-chat-390215.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
