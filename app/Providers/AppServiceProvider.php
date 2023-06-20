@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->storagePath();
         $this->app->bind (RoomRepoInterface::class,RoomRepo::class);
         $this->app->bind (UserRepoInterface::class,UserRepo::class);
     }

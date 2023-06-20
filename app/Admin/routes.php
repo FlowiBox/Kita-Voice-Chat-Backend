@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Admin\Controllers\Report_from_usersController;
 use App\Classes\Facades\Agency;
 use App\Http\Middleware\IpMiddleware;
 use Encore\Admin\Facades\Admin;
@@ -93,6 +94,7 @@ Route::group(
         $router->resource ('boxes','BoxController');
         $router->resource ('thrown_boxes','BoxUseController');
         $router->resource ('reports','ReportController');
+        $router->resource('report_users', Report_from_usersController::class);
         $router->post ('cashing','ReportController@cashing')->name ('cashing');
         $router->resource ('trxs','CoinLogController');
         $router->resource ('images','ImageController');
