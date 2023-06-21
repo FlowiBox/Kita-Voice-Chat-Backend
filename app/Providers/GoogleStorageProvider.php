@@ -25,7 +25,7 @@ class GoogleStorageProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
+    {   
         \Storage::extend('gcs', function($app, $config){
             $storageClient = new StorageClient([
                 'projectId' => $config['project_id'],
@@ -35,7 +35,11 @@ class GoogleStorageProvider extends ServiceProvider
             
             $adapter = new GoogleStorageAdapter($storageClient, $bucket);
             
-            return new Filesystem($adapter);
+            $filesystem = new Filesystem($adapter);
+            
+            $filesystem->createDir($config['path']);
+
+            return $filesystem;
         });
         
     }

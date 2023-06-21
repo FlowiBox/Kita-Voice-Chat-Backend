@@ -145,6 +145,7 @@ class ProfileController extends Controller
             $profile->country = $data['country'];
         }
         if ($request->hasFile ('image')){
+            \Storage::delete($profile->avatar);
             $img = $request->file ('image');
             $image = Common::upload ('profile',$img);
             $profile->avatar = $image;

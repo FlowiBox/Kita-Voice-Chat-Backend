@@ -98,7 +98,7 @@ class Common{
 //        $fileName = $file->hashName();
         $extension = $file->getClientOriginalExtension(); // Get the file extension
         $fileName = Str::random(10).'.'.$extension; // Generate a random filename and append the extension
-        $file->storeAs('/public/',$folder.DIRECTORY_SEPARATOR.$fileName); // Store the file with the generated filename
+        $file->storeAs($folder.DIRECTORY_SEPARATOR,$fileName); // Store the file with the generated filename
         return $folder.DIRECTORY_SEPARATOR.$fileName;
     }
 
