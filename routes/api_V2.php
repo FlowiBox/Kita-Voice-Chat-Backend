@@ -42,6 +42,7 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::post ('follow',[\App\Http\Controllers\Api\V1\FollowController::class,'follow']);
                         Route::post ('un-follow',[\App\Http\Controllers\Api\V1\FollowController::class,'unFollow']);
                         Route::post ('is_user_friend',[\App\Http\Controllers\Api\V1\HomeController::class,'check_if_friend']);
+                        Route::post ('report_user',[\App\Http\Controllers\Api\V2\Report_userController::class,'ReportUser']);
                     });
 
                     Route::prefix ('unions')->group (function (){
