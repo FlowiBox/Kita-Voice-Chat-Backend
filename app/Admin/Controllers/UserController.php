@@ -306,7 +306,7 @@ class UserController extends MainController
 //        $form->switch ('is_gold_id',__('Gold id'))->states (Common::getSwitchStates ());
         $form->text('name', __('Name'));
         $form->image ('profile.avatar',__ ('image'));
-        $form->image ('profile.image_id',__ ('image Id'));
+        $form->image ('profile.image_id',__ ('image Id'))->removable();
         $form->select ('country_id',trans ('country'))->options (function (){
             $ops = [0=>'no country'];
             $countries = Country::all ();
