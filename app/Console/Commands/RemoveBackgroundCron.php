@@ -52,9 +52,7 @@ class RemoveBackgroundCron extends Command
         ]);
         foreach($RequestBackgroundImage as $img){
             $path = $img->img;
-            if(Storage::exists(Storage::disk('images')->path($path))){
-                unlink(Storage::disk('images')->path($path));
-            }
+            Storage::delete($path));
             $img->delete();
         }
         
