@@ -66,6 +66,7 @@ class AgencyJoinRequestObserver
     }
 
     public function updating(AgencyJoinRequest $agencyJoinRequest){
+
         if ($agencyJoinRequest->status == 1){
             $user = User::query ()->find ($agencyJoinRequest->user_id);
             $agid = $user->agency_id;
@@ -73,10 +74,7 @@ class AgencyJoinRequestObserver
                 $user->agency_id = $agencyJoinRequest->agency_id;
                 $user->save ();
                 if ($agid == '' || $agid == null || $agid == 0){
-                    GiftLog::query ()->where ('receiver_id',$user->id)
-                        ->whereMonth ('created_at',Carbon::now ()->month)
-                        ->whereYear ('created_at',Carbon::now ()->year)
-                        ->delete ();
+
                     $user->coins = 0;
                     $user->save ();
                 }

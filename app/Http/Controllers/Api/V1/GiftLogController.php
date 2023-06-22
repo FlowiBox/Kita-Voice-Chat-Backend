@@ -171,14 +171,13 @@ class GiftLogController extends Controller
         }
 
 
-
         $gl = GiftLog::query()
             ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
             ->where('roomowner_id', $data['owner_id'])
             ->groupBy('sender_id')
             ->orderByDesc('total')
             ->first();
-        $fUser = User::query ()->find ($gl->sender_id);
+        $fUser = User::query ()->find ($gl->sender_id ?? -1);
 
         if ($fUser){
             $ms1 = [
@@ -257,7 +256,7 @@ class GiftLogController extends Controller
                 ]
             ];
             $json = json_encode ($d);
-            $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
             if ($gift->price >= 2000){
                 $rooms = Room::where('room_status',1)->where(function ($q){
                     $q->where('is_afk',1)->orWhere('count_room_socket','!=',0);
@@ -274,7 +273,7 @@ class GiftLogController extends Controller
                 ];
                 $json2 = json_encode ($d2);
                 foreach ($rooms as $r){
-                    $res = Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json2);
+                    Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json2);
                 }
             }
 //            else{

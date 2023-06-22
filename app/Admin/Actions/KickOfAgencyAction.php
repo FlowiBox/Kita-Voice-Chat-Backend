@@ -22,9 +22,13 @@ class KickOfAgencyAction extends RowAction
 
     public function handle(Model $model, Request $request)
     {
+
         $model->agency_id = 0;
-        AgencyJoinRequest::query ()->where ('user_id',$model->id)->delete ();
+
+//        AgencyJoinRequest::query ()->where ('user_id',$model->id)->delete ();
+
         $model->save ();
+
         return $this->response()->success ('تم بنجاح');
     }
 
