@@ -52,7 +52,7 @@ class RemoveBackgroundCron extends Command
         ]);
         foreach($RequestBackgroundImage as $img){
             $path = $img->img;
-            Storage::delete($path));
+            Storage::delete($path);
             $img->delete();
         }
         
