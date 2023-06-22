@@ -63,7 +63,7 @@ class GameController extends Controller
                 if ($item['up'] == 1){
                     $user->increment ('di',$item['amount']);
                     $am = 0 + $item['amount'];
-                }else{
+                }else {
                     $user->decrement ('di',$item['amount']);
                     $am = 0 - $item['amount'];
                 }
