@@ -95,6 +95,7 @@ class LoginController extends Controller
                         'device_token'=>@$data['device_token']
                     ]
                 );
+                $user = $user->find ($user->id);
                 if (\request ('tags') && is_array (\request ('tags'))){
                     $user->tags()->attach(\request ('tags'));
                 }
