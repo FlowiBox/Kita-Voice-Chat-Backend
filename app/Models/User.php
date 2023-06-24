@@ -298,7 +298,7 @@ class User extends Authenticatable
         if ($this->agency_id){
             $userSallary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->first();
 
-            return bcsub($userSallary->sallary, $userSallary->cut_amount, 2);
+            return bcsub($userSallary->salary, $userSallary->cut_amount, 2);
         }else{
             return 0;
         }
