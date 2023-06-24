@@ -32,9 +32,9 @@ class BoxController extends Controller
         $room = Room::query ()->where ('uid',$request->room_uid)->first ();
         if (!$room)  return Common::apiResponse (0,'not found',null,404);
         $box = Box::query ()->find ($request->box_id);
+        if (!$box) return Common::apiResponse (0,'not found',null,404);
         $user = $request->user ();
         $label = '';
-        if (!$box) return Common::apiResponse (0,'not found',null,404);
         if ($request->label && $box->type == 1 && $box->has_label == 1){
             $label = $request->label;
         }
@@ -115,7 +115,7 @@ class BoxController extends Controller
             return Common::apiResponse (1,'',new BoxUseResource($boxU),200);
         }catch (\Exception $exception){
             DB::rollBack ();
-            return $exception;
+//            return $exception;
             return Common::apiResponse (0,'fail',null,400);
         }
     }

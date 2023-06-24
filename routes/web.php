@@ -59,3 +59,5 @@ Route::get('/clear', function() {
     $disk = \Storage::disk('gcs');
 $disk->put('hello.txt','hello text');
  });
+
+ Route::get('test-table', [\App\Http\Controllers\TestController::class,'index']);
