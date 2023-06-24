@@ -296,10 +296,14 @@ class User extends Authenticatable
 
     public function getSalaryAttribute(){
         if ($this->agency_id){
-            $userSallary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->first();
+            $userSallary = UserSallary::query ()->where ('user_id',$this->id)
+                ->whereYear('created_at', Carbon::now()->year)
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->where ('is_paid',0)
+                ->first();
 
             if($userSallary)
-                return bcsub($userSallary->salary, $userSallary->cut_amount, 2);
+                return bcsub($userSallary->sallary, $userSallary->cut_amount, 2);
             else
                 return 0;
         }else{
