@@ -246,7 +246,7 @@ class UserObserver
      * @param $days
      * @return void
      */
-    private function updateSalaries(User $user, $t, $ap, $hours, $target, $days, $month_received): void
+    private function updateSalaries(User &$user, $t, $ap, $hours, $target, $days, $month_received): void
     {
         $values = [
             'user_id'             => $user->id,
@@ -264,7 +264,7 @@ class UserObserver
             'user_hours'          => $hours,
             'user_days'           => $days,
         ];
-        if (0 != $t){
+        if (0.0 < $t){
             $values['user_obtain'] = $t;
             $values['agency_obtain'] = $t * $ap;
         }
@@ -286,7 +286,7 @@ class UserObserver
             'hours'          => "$hours / $target->hours",
             'days'           => "$days / $target->days"
         ];
-        if (0 != $t){
+        if (0 < $t){
             $values['sallary'] = $t;
         }
         UserSallary::query()->updateOrCreate(
@@ -384,15 +384,18 @@ class UserObserver
     public function saving(User $user)
     {
         unset($user->is_follow);
+
+        if (!$user->enableSaving) return;
+
         try {
             if ($user->agency_id) {
                 if ($user->is_host == 0) {
                     $user->coins = 0;
-                    GiftLog::query()
+                    /*GiftLog::query()
                            ->where('receiver_id', $user->id)
                            ->whereYear('created_at', Carbon::now()->year)
                            ->whereMonth('created_at', Carbon::now()->month)
-                           ->delete();
+                           ->delete();*/
                 }
                 $user->is_host = 1;
             }
