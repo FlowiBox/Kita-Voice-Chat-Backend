@@ -293,11 +293,12 @@ class User extends Authenticatable
     {
         return $this->id == $roomId;
     }
-    
+
     public function getSalaryAttribute(){
         if ($this->agency_id){
-            $salary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
-            return $salary;
+            $userSallary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->first();
+
+            return bcsub($userSallary->sallary, $userSallary->cut_amount, 2);
         }else{
             return 0;
         }

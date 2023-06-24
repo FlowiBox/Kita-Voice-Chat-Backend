@@ -122,7 +122,7 @@ class GiftLogController extends Controller
                 $level= Common::getLevel($v,3);
                 $res_arr['nick_color'] = Common::getNickColorByVip($level);
                 $res_arr['is_first'] = 0;
-                $user=User::find($v);
+                $user= User::find($v);
                 $res_arr['userId']=$v;
                 $res_arr['nickname']=@$user->nickname;
                 $res_arr['image']=@$user->profile->avatar;
