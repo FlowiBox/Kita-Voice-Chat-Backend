@@ -307,6 +307,7 @@ class UserObserver
             if ($user->agency_id) {
                 if ($user->is_host == 0) {
                     $user->coins = 0;
+                    $user->monthly_diamond_received = 0;
                    /* GiftLog::query()
                            ->where('receiver_id', $user->id)
                            ->whereYear('created_at', Carbon::now()->year)
@@ -318,6 +319,7 @@ class UserObserver
             if ($user->agency_id == 0 || $user->agency_id == null) {
                 if ($user->is_host == 1) {
                     $user->coins = 0;
+                    $user->monthly_diamond_received = 0;
                 }
                 $user->is_host = 0;
             }
@@ -332,6 +334,7 @@ class UserObserver
             $month_received = $user->monthly_diamond_received;
             if ($month_received < 1) {
                 $user->coins = 0;
+                $user->monthly_diamond_received = 0;
             }
 
             if ($user->is_host == 1) {
@@ -386,6 +389,7 @@ class UserObserver
             if ($user->agency_id) {
                 if ($user->is_host == 0) {
                     $user->coins = 0;
+                    $user->monthly_diamond_received = 0;
                     /*GiftLog::query()
                            ->where('receiver_id', $user->id)
                            ->whereYear('created_at', Carbon::now()->year)
@@ -397,6 +401,7 @@ class UserObserver
             if ($user->agency_id == 0 || $user->agency_id == null) {
                 if ($user->is_host == 1) {
                     $user->coins = 0;
+                    $user->monthly_diamond_received = 0;
                 }
                 $user->is_host = 0;
             }
@@ -412,6 +417,8 @@ class UserObserver
 
             if ($month_received < 1) {
                 $user->coins = 0;
+                $user->monthly_diamond_received = 0;
+
             }
 
             if ($user->is_host == 1) {

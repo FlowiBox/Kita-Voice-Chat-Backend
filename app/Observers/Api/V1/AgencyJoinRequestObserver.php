@@ -72,6 +72,7 @@ class AgencyJoinRequestObserver
             $agid = $user->agency_id;
             if ($user){
                 $user->agency_id = $agencyJoinRequest->agency_id;
+
                 $user->save ();
                 if ($agid == '' || $agid == null || $agid == 0){
 
