@@ -67,7 +67,6 @@ class AgencyJoinRequestObserver
 
     public function updating(AgencyJoinRequest $agencyJoinRequest){
 
-        ddd('code here');
         if ($agencyJoinRequest->status == 1){
             $user = User::query ()->find ($agencyJoinRequest->user_id);
             $agid = $user->agency_id;

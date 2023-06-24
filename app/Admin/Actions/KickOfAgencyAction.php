@@ -25,7 +25,7 @@ class KickOfAgencyAction extends RowAction
 
         $model->agency_id = 0;
 
-        AgencyJoinRequest::query ()->where ('user_id',$model->id)->delete ();
+//        AgencyJoinRequest::query ()->where ('user_id',$model->id)->delete ();
 
         $model->save ();
 
