@@ -307,11 +307,11 @@ class UserObserver
             if ($user->agency_id) {
                 if ($user->is_host == 0) {
                     $user->coins = 0;
-                    GiftLog::query()
+                   /* GiftLog::query()
                            ->where('receiver_id', $user->id)
                            ->whereYear('created_at', Carbon::now()->year)
                            ->whereMonth('created_at', Carbon::now()->month)
-                           ->delete();
+                           ->delete();*/
                 }
                 $user->is_host = 1;
             }

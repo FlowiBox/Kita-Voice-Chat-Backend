@@ -304,7 +304,7 @@ class User extends Authenticatable
                 ->first();
 
             if($userSallary)
-                return bcsub($userSallary->sallary, $userSallary->cut_amount, 2);
+                return ($userSallary->sallary - $userSallary->cut_amount);
             else
                 return 0;
         }else{

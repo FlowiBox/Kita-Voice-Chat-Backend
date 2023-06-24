@@ -24,6 +24,7 @@ class KickOfAgencyAction extends RowAction
     {
 
         $model->agency_id = 0;
+        $model->monthly_diamond_received = 0;
 
 //        AgencyJoinRequest::query ()->where ('user_id',$model->id)->delete ();
 
