@@ -329,12 +329,7 @@ class UserObserver
                 $user->uuid = (string)rand(1000000, 9999999);
             }
 
-            $month_received = GiftLog::query()
-                                     ->where('receiver_id', $user->id)
-                                     ->whereYear('created_at', Carbon::now()->year)
-                                     ->whereMonth('created_at', Carbon::now()->month)
-                                     ->sum('receiver_obtain');
-
+            $month_received = $user->monthly_diamond_received;
             if ($month_received < 1) {
                 $user->coins = 0;
             }
@@ -413,11 +408,7 @@ class UserObserver
                 $user->uuid = (string)rand(1000000, 9999999);
             }
 
-            $month_received = GiftLog::query()
-                                     ->where('receiver_id', $user->id)
-                                     ->whereYear('created_at', Carbon::now()->year)
-                                     ->whereMonth('created_at', Carbon::now()->month)
-                                     ->sum('receiver_obtain');
+            $month_received = $user->monthly_diamond_received;
 
             if ($month_received < 1) {
                 $user->coins = 0;
