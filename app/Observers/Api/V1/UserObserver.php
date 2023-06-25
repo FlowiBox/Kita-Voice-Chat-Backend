@@ -2,6 +2,7 @@
 
 namespace App\Observers\Api\V1;
 
+use App\Facades\UserHandling;
 use App\Helpers\Common;
 use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
@@ -317,6 +318,7 @@ class UserObserver
                 $user->is_host = 1;
             }
             if ($user->agency_id == 0 || $user->agency_id == null) {
+                UserHandling::kickUserFromAgency($user);
                 if ($user->is_host == 1) {
                     $user->coins = 0;
                     $user->monthly_diamond_received = 0;
@@ -399,9 +401,10 @@ class UserObserver
                 $user->is_host = 1;
             }
             if ($user->agency_id == 0 || $user->agency_id == null) {
+                UserHandling::kickUserFromAgency($user);
                 if ($user->is_host == 1) {
                     $user->coins = 0;
-                    $user->monthly_diamond_received = 0;
+//                    $user->monthly_diamond_received = 0;
                 }
                 $user->is_host = 0;
             }
