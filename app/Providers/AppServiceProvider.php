@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Classes\UserHandling;
 use App\Models\Agency;
 use App\Models\AgencyJoinRequest;
 use App\Models\Family;
@@ -34,6 +35,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->storagePath();
         $this->app->bind (RoomRepoInterface::class,RoomRepo::class);
         $this->app->bind (UserRepoInterface::class,UserRepo::class);
+        $this->app->bind ('UserHandling',function($app){
+            return new UserHandling();
+        });
     }
 
     /**

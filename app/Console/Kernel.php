@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
          //$schedule->command('monthly_update')->monthly ();
          $schedule->command('update-room-user-now:cron')->everyMinute();
          $schedule->command('remove-background:cron')->daily();
+         $schedule->command('users:reset-monthly-diamond')->monthly();
     }
 
     /**

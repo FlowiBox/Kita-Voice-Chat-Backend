@@ -40,7 +40,7 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => '/'
+            'path' => '/test'
         ],
 
 
@@ -49,7 +49,7 @@ return [
             'root' => storage_path('app/public/conversation'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'conversation',
+            'path' => 'test/conversation',
         ],
 
         'admin' => [
@@ -60,7 +60,7 @@ return [
             'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
             'key_file' => env('GOOGLE_CLOUD_KEY_FILE'),
             'bucket' => env('GOOGLE_CLOUD_STORAGE_BUCKET'),
-            'path' => '/'
+            'path' => '/test'
         ],
 
 
@@ -69,7 +69,7 @@ return [
             'root' => storage_path('app/public/profile'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'profile',
+            'path' => 'test/profile',
         ],
 
         'ticket' => [
@@ -77,7 +77,7 @@ return [
             'root' => storage_path('app/public/ticket'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'ticket'
+            'path' => 'test/ticket'
         ],
 
         'rooms' => [
@@ -85,14 +85,14 @@ return [
             'root' => storage_path('app/public/rooms'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'rooms'
+            'path' => 'test/rooms'
         ],
         'unions' => [
             'driver' => 'gcs',
             'root' => storage_path('app/public/unions'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'unions'
+            'path' => 'test/unions'
         ],
 
         'families' => [
@@ -100,7 +100,7 @@ return [
             'root' => storage_path('app/public/families'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'families'
+            'path' => 'test/families'
         ],
 
         'images' => [
@@ -108,7 +108,7 @@ return [
             'root' => storage_path('app/public/images'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'images'
+            'path' => 'test/images'
         ],
 
         'videos' => [
@@ -116,7 +116,7 @@ return [
             'root' => storage_path('app/public/videos'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'videos'
+            'path' => 'test/videos'
         ],
 
         's3' => [
@@ -135,7 +135,7 @@ return [
             'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
             'key_file' => env('GOOGLE_CLOUD_KEY_FILE'),
             'bucket' => env('GOOGLE_CLOUD_STORAGE_BUCKET'),
-            'path' => '/',
+            'path' => '/test',
             'url' => 'https://storage.googleapis.com/'.env('GOOGLE_CLOUD_STORAGE_BUCKET'),
         ],
 
@@ -149,6 +149,7 @@ return [
     | Here you may configure the symbolic links that will be created when the
     | `storage:link` Artisan command is executed. The array keys should be
     | the locations of the links and the values should be their targets.
+
     |
     */
 

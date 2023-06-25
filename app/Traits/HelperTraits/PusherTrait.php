@@ -18,9 +18,9 @@ trait PusherTrait
             [
                 'cluster' => $connection['options']['cluster'],
                 'useTLS'  => TRUE,
-                //'host'    => $connection['options']['host'],
-                //'port'    => '6001',
-                //'scheme'  => 'http',
+                'host'    => $connection['options']['host'],
+                'port'    => $connection['options']['port'],
+                'scheme'  => $connection['options']['schema'],
                 'debug'   => TRUE,
             ]
         );
@@ -66,7 +66,7 @@ trait PusherTrait
 
     public static function getIdRoomCountUserFromPresenceChannel()
     {
-        $rooms = self::getInfoRoomsPresenceChannel();  
+        $rooms = self::getInfoRoomsPresenceChannel();
         $arr = [];
         if(count($rooms) > 0)
         {

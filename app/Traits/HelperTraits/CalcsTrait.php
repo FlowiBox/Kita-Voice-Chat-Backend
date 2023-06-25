@@ -56,32 +56,32 @@ Trait CalcsTrait
     public static function getLevel ( $user_id = null , $type = null , $is_image = false )
     {
         $user = User::query ()->find($user_id);
-        $star_num = GiftLog ::where ( 'receiver_id' , $user_id ) -> sum ( 'giftPrice' );
-        $gold_num = GiftLog ::where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
-        $vip_num  = GiftLog ::where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' ); //count by purchased coins
 
         if ( $type == 1 ) {
+            $star_num = GiftLog ::where ( 'receiver_id' , $user_id ) -> sum ( 'giftPrice' );
+
             $total = $star_num;
+            $exp = $star_num * 1;
+
         }
         elseif ( $type == 2 ) {
+            $gold_num = GiftLog ::where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
+
             $total = $gold_num;
+            $exp = $gold_num * 1;
+
         }
         elseif ( $type == 3 ) {
+            $vip_num  = GiftLog ::where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' ); //count by purchased coins
+
             $total = $vip_num;
+            $exp = $vip_num * 1;
         }
         else {
             $total = 0;
-        }
-
-        if ($type == 1){
-            $exp = $star_num * 1;
-        }elseif ($type == 2){
-            $exp = $gold_num * 1;
-        }elseif($type == 3 ){
-            $exp = $vip_num * 1;
-        }else{
             $exp = 0;
         }
+
 
         $level = Vip ::query () -> where ( ['type' => $type] ) -> where ( 'exp' , '<=' , $exp ) -> orderByDesc ( 'exp' ) -> limit ( 1 ) -> value ( 'level' );
 

@@ -17,6 +17,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable ,FollowTrait;
 
 
+    public $enableSaving = true;
     /**
      * The attributes that are mass assignable.
      *
@@ -293,11 +294,19 @@ class User extends Authenticatable
     {
         return $this->id == $roomId;
     }
-    
+
     public function getSalaryAttribute(){
         if ($this->agency_id){
-            $salary = UserSallary::query ()->where ('user_id',$this->id)->where ('is_paid',0)->sum (\DB::raw('sallary - cut_amount'));
-            return $salary;
+            $userSallary = UserSallary::query ()->where ('user_id',$this->id)
+                ->whereYear('created_at', Carbon::now()->year)
+                ->whereMonth('created_at', Carbon::now()->month)
+                ->where ('is_paid',0)
+                ->first();
+
+            if($userSallary)
+                return ($userSallary->sallary - $userSallary->cut_amount);
+            else
+                return 0;
         }else{
             return 0;
         }

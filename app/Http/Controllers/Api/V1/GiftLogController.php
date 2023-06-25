@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Classes\Gifts\UpdateUserWhenSendGift;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\GiftLogResource;
@@ -46,8 +47,10 @@ class GiftLogController extends Controller
 
     public function gift_queue_six(Request $request)
     {
-        $data=$request;
-        $data['user_id'] = $request->user ()->id;
+        $updateUserWhenSendGift = new UpdateUserWhenSendGift();
+        $data                   = $request;
+        $senderUser             = $request->user();
+        $data['user_id']        = $senderUser->id;
         if(!$data['id'] || !$data['owner_id'] || !$data['user_id'] || !$data['toUid'] || !$data['num'] )
             return Common::apiResponse(0,'Missing parameters',$data->all ());
         if($data['num'] < 1)    return Common::apiResponse(0,'The number of gifts cannot be less than 1',null,422);
@@ -113,24 +116,27 @@ class GiftLogController extends Controller
                 if($user->di < $total_price)    return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
                 $shenngyu_price=$total_price;
             }
-
+            //update sender users and level
+            $updateUserWhenSendGift->send($shenngyu_price, $senderUser);
             $i=0;
             $res=$push=[];
             foreach ($to_arr as $k => &$v) {
                 $i++;
                 $this->sendGifts($data['id'],$data['owner_id'],$data['num'],$gift->name,$gift->price,$data['user_id'],$v,0);
-                $level= Common::getLevel($v,3);
-                $res_arr['nick_color'] = Common::getNickColorByVip($level);
+
                 $res_arr['is_first'] = 0;
-                $user=User::find($v);
+                $user= User::find($v);
                 $res_arr['userId']=$v;
                 $res_arr['nickname']=@$user->nickname;
                 $res_arr['image']=@$user->profile->avatar;
+                $price = $data['num'] * $gift->price;
 
+                $level = Common::getLevel($user->id, 1);
+                $updateUserWhenSendGift->update($price, $user);
+                $res_arr['nick_color'] = Common::getNickColorByVip($level);
 
                 //numerical play
                 if($room->play_num == 1){
-                    $price = $data['num'] * $gift->price;
                     Common::add_play_num($data['owner_id'],$v,$price);
                 }
                 // increase session
@@ -171,14 +177,13 @@ class GiftLogController extends Controller
         }
 
 
-
         $gl = GiftLog::query()
             ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
             ->where('roomowner_id', $data['owner_id'])
             ->groupBy('sender_id')
             ->orderByDesc('total')
             ->first();
-        $fUser = User::query ()->find ($gl->sender_id);
+        $fUser = User::query ()->find ($gl->sender_id ?? -1);
 
         if ($fUser){
             $ms1 = [
@@ -234,7 +239,7 @@ class GiftLogController extends Controller
 //
 //        }
         $n = $data['num'];
-        $from_name = $request->user ()->name;
+        $from_name = $senderUser->name;
         Common::sendToZego_2 ('SendBroadcastMessage',$room->id,$data['user_id'],$from_name,"  $n x ارسل هدية  " ." قيمتها $gift->price ". " الى $to" );
         $return_arr['users']=$res;
         $return_arr['push']=$push;
@@ -257,7 +262,7 @@ class GiftLogController extends Controller
                 ]
             ];
             $json = json_encode ($d);
-            $res = Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
+            Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
             if ($gift->price >= 2000){
                 $rooms = Room::where('room_status',1)->where(function ($q){
                     $q->where('is_afk',1)->orWhere('count_room_socket','!=',0);
@@ -274,7 +279,7 @@ class GiftLogController extends Controller
                 ];
                 $json2 = json_encode ($d2);
                 foreach ($rooms as $r){
-                    $res = Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json2);
+                    Common::sendToZego ('SendCustomCommand',$r->id,$user->id,$json2);
                 }
             }
 //            else{

@@ -643,13 +643,13 @@ class UserController extends Controller
 
     public function chargePage(Request $request){
         $user = $request->user ();
-        $month_received = GiftLog::query ()
-            ->where ('receiver_id',$user->id)
-            ->whereYear ('created_at',Carbon::now ()->year)
-            ->whereMonth ('created_at',Carbon::now ()->month)
-            ->sum ('receiver_obtain');
+//        $month_received = GiftLog::query ()
+//            ->where ('receiver_id',$user->id)
+//            ->whereYear ('created_at',Carbon::now ()->year)
+//            ->whereMonth ('created_at',Carbon::now ()->month)
+//            ->sum ('receiver_obtain');
         $data = [
-            'diamonds'=>(string)$month_received,
+            'diamonds'=>(string)$user->monthly_diamond_received,
             'usd'=>(double)$user->salary,
             'usd_coin'=>(integer)Common::getConf ('one_usd_value_in_coins')?:10
         ];
