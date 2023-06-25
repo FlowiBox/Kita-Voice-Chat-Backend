@@ -15,7 +15,9 @@ class UpdateUserColumns extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->bigInteger('monthly_diamond_send')->default(0);
+            $table->bigInteger('total_diamond_send')->default(0);
             $table->bigInteger('monthly_diamond_received')->default(0);
+            $table->bigInteger('total_diamond_received')->default(0);
             $table->integer('sender_level')->default(0);
             $table->integer('received_level')->default(0);
         });

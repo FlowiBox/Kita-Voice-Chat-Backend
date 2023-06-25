@@ -150,7 +150,7 @@ class UserResource extends JsonResource
             'family_data'=>@$f,
             'profile'=>new ProfileResource(@$this->profile),
             'level'=>Common::level_center (@$this->id),
-            'diamonds'=>@$this->coins?:0,
+            'diamonds'=>@$this->monthly_diamond_received?:0,
             'usd'=>@$this->salary,
             'vip'=>@Common::ovip_center ($this->id),
             'income'=>@Common::user_income ($this->id),

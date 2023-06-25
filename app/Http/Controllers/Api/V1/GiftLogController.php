@@ -48,8 +48,8 @@ class GiftLogController extends Controller
     public function gift_queue_six(Request $request)
     {
         $updateUserWhenSendGift = new UpdateUserWhenSendGift();
-        $data                   =$request;
-        $senderUser                  = $request->user();
+        $data                   = $request;
+        $senderUser             = $request->user();
         $data['user_id']        = $senderUser->id;
         if(!$data['id'] || !$data['owner_id'] || !$data['user_id'] || !$data['toUid'] || !$data['num'] )
             return Common::apiResponse(0,'Missing parameters',$data->all ());
@@ -131,7 +131,8 @@ class GiftLogController extends Controller
                 $res_arr['image']=@$user->profile->avatar;
                 $price = $data['num'] * $gift->price;
 
-                $level= $updateUserWhenSendGift->update($price, $user);
+                $level = Common::getLevel($user->id, 1);
+                $updateUserWhenSendGift->update($price, $user);
                 $res_arr['nick_color'] = Common::getNickColorByVip($level);
 
                 //numerical play

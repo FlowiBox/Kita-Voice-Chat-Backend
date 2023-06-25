@@ -13,13 +13,15 @@ class UpdateUserWhenSendGift
         $receivedUser->enableSaving = false;
         //update monthly diamond for received user
         $receivedUser->monthly_diamond_received += $totalCoins;
-
+        $receivedUser->total_diamond_received   += $totalCoins;
         // update levels
-        $receivedUser->received_level = $this->getLevel(1, $receivedUser->monthly_diamond_received)->level;
+        $receivedUser->received_level = $this->getLevel(1, $receivedUser->total_diamond_received)->level;
         //
-
         $receivedUser->save();
-        return $receivedUser->received_level;
+        $receivedUser->enableSaving = true;
+
+        return $receivedUser;
+
     }
 
     public function getLevel(int $type, int $totalCoins)
@@ -36,10 +38,14 @@ class UpdateUserWhenSendGift
 
     public function send(int $totalCoins, User $senderUser)
     {
-        $senderUser->enableSaving = false;
+        $senderUser->enableSaving         = false;
         $senderUser->monthly_diamond_send += $totalCoins;
+        $senderUser->total_diamond_send   += $totalCoins;
         $senderUser->sender_level         = $this->getLevel(2, $senderUser->monthly_diamond_send)->level;
         $senderUser->save();
+        $senderUser->enableSaving = true;
+
+        return $senderUser;
 
     }
 }
