@@ -21,19 +21,7 @@ Route::get('/update-users', function () {
     $users = \App\Models\User::all();
     foreach ($users as $user){
         $user->enableSaving = false;
-//        $month_diamond_receiver = DB::table('gift_logs')
-//            ->where('receiver_id', $user->id)
-//            ->whereYear('created_at', Carbon::now()->year)
-//            ->whereMonth('created_at', Carbon::now()->month)
-//                           ->sum('giftPrice');
-//
-//        $month_diamond_send = DB::table('gift_logs')
-//                                    ->where('sender_id', $user->id)
-//                                    ->whereYear('created_at', Carbon::now()->year)
-//                                    ->whereMonth('created_at', Carbon::now()->month)
-//                                    ->sum('giftPrice');
-//
-//        $class = new \App\Classes\Gifts\UpdateUserWhenSendGift();
+
 
         $user->monthly_diamond_received = intval($user->coins) ?? 0;
 //        $user->received_level = $class->getLevel(1, $month_diamond_receiver??0)->level ?? 0;
@@ -48,15 +36,6 @@ Route::get('/t2', function () {
     return gethostname();
 });
 
-Route::get('/update', function () {
-    DB::statement("
-    UPDATE users
-    SET monthly_diamond_received = 0
-    WHERE agency_id != 0
-");
-
-    return 'Done';
-});
 
 
 

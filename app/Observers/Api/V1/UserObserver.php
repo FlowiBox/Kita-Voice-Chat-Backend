@@ -304,7 +304,7 @@ class UserObserver
     public function updating(User $user)
     {
         if (!$user->enableSaving) return;
-        
+
         unset($user->is_follow);
         try {
             if ($user->agency_id) {
