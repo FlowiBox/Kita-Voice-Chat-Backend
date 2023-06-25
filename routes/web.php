@@ -37,8 +37,8 @@ Route::get('/update-users', function () {
 
         $user->monthly_diamond_received = intval($month_diamond_receiver) ?? 0;
         $user->monthly_diamond_send = intval($month_diamond_send) ?? 0;
-        $user->received_level = $class->getLevel(1, $month_diamond_receiver??0)->level ?? 0;
-        $user->sender_level = $class->getLevel(2, $month_diamond_send??0)->level ?? 0;
+//        $user->received_level = $class->getLevel(1, $month_diamond_receiver??0)->level ?? 0;
+//        $user->sender_level = $class->getLevel(2, $month_diamond_send??0)->level ?? 0;
         $user->save();
 
     }
@@ -47,6 +47,13 @@ Route::get('/update-users', function () {
 
 Route::get('/t2', function () {
     return gethostname();
+});
+
+Route::get('/update', function () {
+    DB::table('users')->where('agency_id', '!=', 0)->orWhere('agency_id', '!=', null)
+        ->update(['monthly_diamond_received' => 0]);
+
+    return 'Done';
 });
 
 
