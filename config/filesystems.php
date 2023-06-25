@@ -73,7 +73,7 @@ return [
         ],
 
         'ticket' => [
-            'driver' => 'gsc',
+            'driver' => 'gcs',
             'root' => storage_path('app/public/ticket'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
@@ -81,14 +81,14 @@ return [
         ],
 
         'rooms' => [
-            'driver' => 'gsc',
+            'driver' => 'gcs',
             'root' => storage_path('app/public/rooms'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'path' => 'test/rooms'
         ],
         'unions' => [
-            'driver' => 'gsc',
+            'driver' => 'gcs',
             'root' => storage_path('app/public/unions'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
@@ -96,7 +96,7 @@ return [
         ],
 
         'families' => [
-            'driver' => 'gsc',
+            'driver' => 'gcs',
             'root' => storage_path('app/public/families'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
@@ -104,7 +104,7 @@ return [
         ],
 
         'images' => [
-            'driver' => 'gsc',
+            'driver' => 'gcs',
             'root' => storage_path('app/public/images'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
@@ -112,7 +112,7 @@ return [
         ],
 
         'videos' => [
-            'driver' => 'gsc',
+            'driver' => 'gcs',
             'root' => storage_path('app/public/videos'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
