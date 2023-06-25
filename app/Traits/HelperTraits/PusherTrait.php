@@ -19,8 +19,8 @@ trait PusherTrait
                 'cluster' => $connection['options']['cluster'],
                 'useTLS'  => TRUE,
                 'host'    => $connection['options']['host'],
-                'port'    => $connection['options']['port'],
-                'scheme'  => $connection['options']['schema'],
+                'port'    => '6001',
+                'scheme'  => 'http',
                 'debug'   => TRUE,
             ]
         );

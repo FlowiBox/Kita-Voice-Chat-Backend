@@ -40,7 +40,7 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => '/test'
+            'path' => ''
         ],
 
 
@@ -49,7 +49,7 @@ return [
             'root' => storage_path('app/public/conversation'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'test/conversation',
+            'path' => 'conversation',
         ],
 
         'admin' => [
@@ -60,7 +60,7 @@ return [
             'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
             'key_file' => env('GOOGLE_CLOUD_KEY_FILE'),
             'bucket' => env('GOOGLE_CLOUD_STORAGE_BUCKET'),
-            'path' => '/test'
+            'path' => ''
         ],
 
 
@@ -69,7 +69,7 @@ return [
             'root' => storage_path('app/public/profile'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'test/profile',
+            'path' => 'profile',
         ],
 
         'ticket' => [
@@ -77,7 +77,7 @@ return [
             'root' => storage_path('app/public/ticket'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'test/ticket'
+            'path' => 'ticket'
         ],
 
         'rooms' => [
@@ -85,14 +85,14 @@ return [
             'root' => storage_path('app/public/rooms'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'test/rooms'
+            'path' => 'rooms'
         ],
         'unions' => [
             'driver' => 'gcs',
             'root' => storage_path('app/public/unions'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'test/unions'
+            'path' => 'unions'
         ],
 
         'families' => [
@@ -100,7 +100,7 @@ return [
             'root' => storage_path('app/public/families'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'test/families'
+            'path' => 'families'
         ],
 
         'images' => [
@@ -108,7 +108,7 @@ return [
             'root' => storage_path('app/public/images'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'test/images'
+            'path' => 'images'
         ],
 
         'videos' => [
@@ -116,7 +116,7 @@ return [
             'root' => storage_path('app/public/videos'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
-            'path' => 'test/videos'
+            'path' => 'videos'
         ],
 
         's3' => [
@@ -135,7 +135,7 @@ return [
             'project_id' => env('GOOGLE_CLOUD_PROJECT_ID'),
             'key_file' => env('GOOGLE_CLOUD_KEY_FILE'),
             'bucket' => env('GOOGLE_CLOUD_STORAGE_BUCKET'),
-            'path' => '/test',
+            'path' => '',
             'url' => 'https://storage.googleapis.com/'.env('GOOGLE_CLOUD_STORAGE_BUCKET'),
         ],
 

@@ -31,7 +31,7 @@ return [
     'connections' => [
 
         //custom laravel websockets
-        'pusher' => [
+        /*'pusher' => [
             'driver' => env('BROADCAST_DRIVER', 'pusher'),
             'key' => env('PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
@@ -48,9 +48,9 @@ return [
                     CURLOPT_SSL_VERIFYPEER => 0,
                 ],
             ],
-        ],
+        ],*/
 
-       /* 'pusher' => [
+        'pusher' => [
             'driver' => 'pusher',
             'key' => env('PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
@@ -59,7 +59,7 @@ return [
                 'cluster' => env('PUSHER_APP_CLUSTER'),
                 'useTLS' => true,
             ],
-        ],*/
+        ],
 
         'ably' => [
             'driver' => 'ably',
