@@ -23,7 +23,7 @@ class BoxUseResource extends JsonResource
             'user'=> [
                 'id'        => $this->user->id,
                 'uuid'      => $this->user->uuid,
-                'image'     => $this->user->profile->image,
+                'image'     => $this->user->profile->avatar,
                 'name'      => $this->user->name
             ],
             'coins'=>$this->coins,
