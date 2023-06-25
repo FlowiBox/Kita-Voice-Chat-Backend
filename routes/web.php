@@ -50,8 +50,11 @@ Route::get('/t2', function () {
 });
 
 Route::get('/update', function () {
-    DB::table('users')->where('agency_id', '!=', 0)->orWhere('agency_id', '!=', null)
-        ->update(['monthly_diamond_received' => 0]);
+    DB::statement("
+    UPDATE users
+    SET monthly_diamond_received = 0
+    WHERE agency_id != 0
+");
 
     return 'Done';
 });

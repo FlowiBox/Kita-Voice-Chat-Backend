@@ -38,8 +38,11 @@ class ResetUserMonthlyDiamond extends Command
      */
     public function handle()
     {
-        DB::table('users')->where('agency_id', '!=', 0)->orWhere('agency_id', '!=', null)
-          ->update(['monthly_diamond_received' => 0]);
+        DB::statement("
+            UPDATE users
+            SET monthly_diamond_received = 0
+            WHERE agency_id != 0
+        ");
 
         //$this->info('update-room-user-now:cron Command Run Successfully !');
     }
