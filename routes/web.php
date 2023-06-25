@@ -21,22 +21,21 @@ Route::get('/update-users', function () {
     $users = \App\Models\User::all();
     foreach ($users as $user){
         $user->enableSaving = false;
-        $month_diamond_receiver = DB::table('gift_logs')
-            ->where('receiver_id', $user->id)
-            ->whereYear('created_at', Carbon::now()->year)
-            ->whereMonth('created_at', Carbon::now()->month)
-                           ->sum('giftPrice');
+//        $month_diamond_receiver = DB::table('gift_logs')
+//            ->where('receiver_id', $user->id)
+//            ->whereYear('created_at', Carbon::now()->year)
+//            ->whereMonth('created_at', Carbon::now()->month)
+//                           ->sum('giftPrice');
+//
+//        $month_diamond_send = DB::table('gift_logs')
+//                                    ->where('sender_id', $user->id)
+//                                    ->whereYear('created_at', Carbon::now()->year)
+//                                    ->whereMonth('created_at', Carbon::now()->month)
+//                                    ->sum('giftPrice');
+//
+//        $class = new \App\Classes\Gifts\UpdateUserWhenSendGift();
 
-        $month_diamond_send = DB::table('gift_logs')
-                                    ->where('sender_id', $user->id)
-                                    ->whereYear('created_at', Carbon::now()->year)
-                                    ->whereMonth('created_at', Carbon::now()->month)
-                                    ->sum('giftPrice');
-
-        $class = new \App\Classes\Gifts\UpdateUserWhenSendGift();
-
-        $user->monthly_diamond_received = intval($month_diamond_receiver) ?? 0;
-        $user->monthly_diamond_send = intval($month_diamond_send) ?? 0;
+        $user->monthly_diamond_received = intval($user->coins) ?? 0;
 //        $user->received_level = $class->getLevel(1, $month_diamond_receiver??0)->level ?? 0;
 //        $user->sender_level = $class->getLevel(2, $month_diamond_send??0)->level ?? 0;
         $user->save();
