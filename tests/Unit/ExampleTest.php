@@ -33,11 +33,15 @@ class ExampleTest extends TestCase
     {
         $users = User::query()->orderByDesc('created_at')->limit(50)->get();
 
-        $boxIds = Box::query()->orderByDesc('created_at')->limit(10)->pluck('id')->toArray();
+        $boxIds = Box::query()->orderByDesc('created_at')->limit(12)->pluck('id')->toArray();
+
         $ifSend = true;
         //        foreach ($users as $user){
         //            $response = $this->actingAs($user)->post('/api/rooms/enter_room', ['owner_id' => 2160, 'room_pass' => 111111]);
+        foreach ($users as $user){
+            $response = $this->actingAs($user)->post('/api/rooms/enter_room', ['owner_id' => 2160, 'room_pass' => 111111]);
 
+        }
         if ($ifSend){
             $user = $users->first();
             $user->di = 99999999999999;
