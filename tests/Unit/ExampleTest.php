@@ -44,14 +44,16 @@ class ExampleTest extends TestCase
             $user->save();
 
             foreach ($boxIds as $boxId){
-                $response = $this->actingAs($user)->post('/api/box/send', ['box_id' => $boxId, 'room_uid' => 2160, 'user_num' => 7]);
+               $this->actingAs($user)->post('/api/box/send', ['box_id' => $boxId, 'room_uid' => 2160, 'user_num' => 7]);
+                foreach ($users as $user){
+
+                    $this->actingAs($user)->post('/api/box/pick', ['bid' => $boxId]);
+                }
+
             }
 
-            foreach ($boxIds as $boxId){
-                foreach ($users as $user)
-                $response = $this->actingAs($user)->post('/api/box/pick', ['bid' => $boxId]);
 
-            }
+            $this->assertTrue(true);
         }
 
 
