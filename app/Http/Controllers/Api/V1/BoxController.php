@@ -126,6 +126,7 @@ class BoxController extends Controller
         $box_use = BoxUse::query ()->where ('id',$request->bid)
             ->where ('not_used_num','>',0)
             ->where ('unused_coins','>',0)
+            ->lockForUpdate()
             ->first ()
         ;
         if(!$box_use) return Common::apiResponse (0,'not found',null,404);
@@ -153,6 +154,7 @@ class BoxController extends Controller
                     'label'=>$box_use->label
                 ]
             );
+
             $box_use->increment ('used_coins',$coins);
             $box_use->increment ('used_num',1);
             $box_use->decrement ('unused_coins',$coins);
