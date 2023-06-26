@@ -33,7 +33,7 @@ class ExampleTest extends TestCase
     {
         $users = User::query()->orderByDesc('created_at')->limit(50)->get();
 
-        $boxIds = Box::query()->orderByDesc('created_at')->limit(10)->pluck('id');
+        $boxIds = Box::query()->orderByDesc('created_at')->limit(10)->pluck('id')->toArray();
         $ifSend = true;
         //        foreach ($users as $user){
         //            $response = $this->actingAs($user)->post('/api/rooms/enter_room', ['owner_id' => 2160, 'room_pass' => 111111]);
@@ -46,6 +46,12 @@ class ExampleTest extends TestCase
             foreach ($boxIds as $boxId){
                 $response = $this->actingAs($user)->post('/api/box/send', ['box_id' => $boxId, 'room_uid' => 2160, 'user_num' => 7]);
             }
+
+            foreach ($boxIds as $boxId){
+                foreach ($users as $user)
+                $response = $this->actingAs($user)->post('/api/box/pick', ['bid' => $boxId]);
+
+            }
         }
 
 
@@ -53,6 +59,5 @@ class ExampleTest extends TestCase
         // Make an authorized request and perform assertions
         //        $response = $this->actingAs($user)->post('/api/rooms/enter_room', ['owner_id' => 2160, 'room_pass' => 111111]);
         //        $response->assertStatus(200);
-        dd($response);
     }
 }
