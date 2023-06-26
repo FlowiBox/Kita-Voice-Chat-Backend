@@ -15,7 +15,7 @@ class ExampleTest extends TestCase
      */
     public function test_example()
     {
-        $users = User::query()->orderByDesc('created_at')->limit(50)->get();
+        $users = User::factory(50)->create();
 
         $boxIds = Box::query()->orderByDesc('created_at')->limit(10)->pluck('id');
         $ifSend = true;
