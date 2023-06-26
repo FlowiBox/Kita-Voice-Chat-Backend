@@ -260,29 +260,27 @@ Trait CalcsTrait
     }
 
     //مركز الصف
-    public static function level_center ( $user_id )
+    public static function level_center ( $user )
     {
-        $user = User::query ()->find ($user_id);
-        $star_num = DB ::table ( 'gift_logs' ) -> where ( 'receiver_id' , $user_id ) -> sum ( 'giftPrice' );
-        $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
+        $star_num = DB ::table ( 'gift_logs' ) -> where ( 'receiver_id' , $user->id ) -> sum ( 'giftPrice' );
+        $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user->id ) -> sum ( 'giftPrice' );
 
         //--------------------------------------
         $star_num += $user->sub_receiver_num;
         $gold_num += $user->sub_sender_num;
         //--------------------------------------
 
-        $star_level      = self ::getLevel ( $user_id , 1 );
+        $star_level      = self ::getLevel ( $user->id , 1 );
 
-
-        $star_level_img      = self ::getLevel ( $user_id , 1 ,true);
+        $star_level_img      = self ::getLevel ( $user->id , 1 ,true);
         $current_star_num = self::getCurrentLevel (1,$star_level,'exp');
         $next_star_num   = self ::getNextLevel ( 1 , $star_level , 'exp' );
         $next_star_level = self ::getNextLevel ( 1 , $star_level , 'level' );
 
-        $gold_level      = self ::getLevel ( $user_id , 2 );
+        $gold_level      = self ::getLevel ( $user->id , 2 );
 
 
-        $gold_level_img      = self ::getLevel ( $user_id , 2 ,true);
+        $gold_level_img      = self ::getLevel ( $user->id , 2 ,true);
         $current_gold_num = self::getCurrentLevel (2,$gold_level,'exp');
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
         $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
@@ -361,8 +359,16 @@ Trait CalcsTrait
         if (!$uvip) return new \stdClass();
         $vip = OVip::query ()->find ($uvip->vip_id);
         if (!$vip) return new \stdClass();
-        $p = $vip->privilegs;
-        return $vip;
+//        $p = $vip->privilegs;
+//        return $vip;
+        return [
+            'id'        => 1,
+            'level'     => $vip->level,
+            'name'      => $vip->name,
+            'price'     => $vip->price,
+            'image'     => $vip->image,
+            'expire'    => $vip->expire
+        ];
     }
 
     //حقيبتي

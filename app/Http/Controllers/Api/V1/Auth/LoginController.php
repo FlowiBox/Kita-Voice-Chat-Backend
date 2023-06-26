@@ -53,6 +53,7 @@ class LoginController extends Controller
     }
 
     protected function loginWithPhonePassword($fields){
+
         $user = User::where('phone', $fields['phone'])->first();
 
         if (!$user || !Hash::check($fields['password'], $user->password)) {
