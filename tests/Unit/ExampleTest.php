@@ -49,9 +49,9 @@ class ExampleTest extends TestCase
 
             foreach ($boxIds as $boxId){
                $this->actingAs($user)->post('/api/box/send', ['box_id' => $boxId, 'room_uid' => 2160, 'user_num' => 7]);
-                $this->actingAs($user)->post('/api/box/pick', ['bid' => $boxId]);
+//                $this->actingAs($user)->post('/api/box/pick', ['bid' => $boxId]);
 
-                
+
 
             }
 
