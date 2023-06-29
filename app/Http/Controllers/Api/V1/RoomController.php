@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateRoomRequest;
 use App\Http\Requests\EditRoomRequest;
 use App\Http\Resources\Api\V1\BoxUseResource;
+use App\Http\Resources\Api\V2\EnterRoomCollection;
 use App\Http\Resources\Api\V1\FamilyResource;
 use App\Http\Resources\Api\V1\MiniUserResource;
 use App\Http\Resources\Api\V1\PkResource;
@@ -290,7 +291,78 @@ class RoomController extends Controller
     }
 
 
+    public function enter_room2(Request $request)
+    {
+        $room_pass = $request['room_pass'];
+        $owner_id  = $request['owner_id'];
+        if ($request->type == 'random'){
+            $owner_id = Room::query ()
+                            ->where('room_status',1)
+                            ->where('uid','!=',null)
+                            ->where (function ($q){
+                                $q->where ('count_room_socket','!=',0) ->orWhere('is_afk',1);
+                            })
+                            ->pluck ('uid')
+                            ->random ();
+        }
 
+        $user_id   = $request->user ()->id;
+
+        // if owner id not path throw error
+        if (!$owner_id) return Common::apiResponse (0,'not found',null,404);
+
+        //check if this user in black-list
+        $black_list=Common::getUserBlackList($owner_id);
+        if(in_array($user_id, $black_list)) return Common::apiResponse(false,__('You have been blocked by the other party'),null,423);
+
+        // get room by owner_id
+        $room = Room::query()->where('uid', $owner_id)
+                    ->with(['owner', 'roomCategory', 'family'])
+                    ->first();
+
+        if(!$room) return Common::apiResponse (false,'No room yet, please create first',null,404);
+
+        if($room->room_pass &&  $owner_id != $user_id && !$request->ignorePassword){
+            if(!$room_pass) return Common::apiResponse(false,__('The room is locked, please enter the password'),null,409);
+            if($room->room_pass != $room_pass )  return Common::apiResponse(false,__('Password is incorrect, please re-enter'),null,410);
+        }
+//        $this->getRoomTwoLastPk($room->id);
+        $room_info = (new EnterRoomCollection($room, $user_id))->toArray($room);
+        return Common::apiResponse (true,'',$room_info);
+
+        $this->enterTheRoomCreateOrUpdate($user_id, $owner_id, $room->id);
+
+
+
+        /*
+         * kam sando2 haz
+         * check get from it or no
+         * --------------
+         * mode room
+         * */
+
+
+    }
+
+    private function updateRoomVisitors()
+    {
+
+    }
+
+
+    private function enterTheRoomCreateOrUpdate($user_id, $owner_id, $room_id)
+    {
+        EnteredRoom::query ()->updateOrCreate (
+            [
+                'uid'=>$user_id,
+                'ruid'=>$owner_id,
+                'rid'=>$room_id
+            ],
+            [
+                'entered_at'=>now ()
+            ]
+        );
+    }
     //enter the room
     public function enter_room(Request $request)
     {
@@ -531,13 +603,13 @@ class RoomController extends Controller
 //        $room_info['is_favorite'] = in_array($owner_id, $mykeep_arr)  ? 1 : 2; // stopped here
 
         //room number added
-        if($room_info['user_type'] != 1){
-            $roomVisitor=$room_info['room_visitor'];
-            $visitor_arr=explode(',',$roomVisitor);
-            if(!in_array($user_id, $visitor_arr))   array_unshift($visitor_arr,$user_id);
-            $visitor=trim(implode(",", $visitor_arr),",");
-            DB::table('rooms')->where('uid',$owner_id)->update(['room_visitor'=>$visitor]);
-            $room_info['room_visitor']=$visitor;
+        if ($room_info['user_type'] != 1) {
+            $roomVisitor = $room_info['room_visitor'];
+            $visitor_arr = explode(',', $roomVisitor);
+            if (!in_array($user_id, $visitor_arr)) array_unshift($visitor_arr, $user_id);
+            $visitor = trim(implode(",", $visitor_arr), ",");
+            DB::table('rooms')->where('uid', $owner_id)->update(['room_visitor' => $visitor]);
+            $room_info['room_visitor'] = $visitor;
         }
 
         $room_info['room_visitors_count'] = count(explode (',',$room_info['room_visitor']));

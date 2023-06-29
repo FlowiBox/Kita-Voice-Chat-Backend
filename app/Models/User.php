@@ -18,6 +18,8 @@ class User extends Authenticatable
 
 
     public $enableSaving = true;
+
+    public static $withoutAppends = false;
     /**
      * The attributes that are mass assignable.
      *
@@ -60,6 +62,13 @@ class User extends Authenticatable
 
     ];
 
+    public function scopeWithoutAppends($query)
+    {
+        self::$withoutAppends = true;
+
+        return $query;
+    }
+
     public function ips(){
         return $this->hasMany (Ip::class,'uid');
     }
@@ -76,14 +85,23 @@ class User extends Authenticatable
     }
 
     public function getMyStoreAttribute(){
+        if (self::$withoutAppends){
+            return;
+        }
         return Common::my_store ($this->attributes['id']);
     }
 
     public function getAvatarAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return @$this->profile ()->first ()->avatar?:Common::getConf ('default_img');
     }
 
     public function getGenderAttribute(){
+        if (self::$withoutAppends){
+            return;
+        }
         return @$this->profile ()->first ()->gender == 1?'male':'female';
     }
 
@@ -94,10 +112,16 @@ class User extends Authenticatable
     }
 
     public function getFlagAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return @$this->country()->first ()->flag?:'';
     }
 
     public function getLangAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return @$this->country()->first ()->language?:'en';
     }
 
@@ -132,6 +156,9 @@ class User extends Authenticatable
     }
 
     public function getUsdAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return $this->old_usd + $this->target_usd - $this->target_token_usd;
     }
 
@@ -150,6 +177,9 @@ class User extends Authenticatable
 
 
     public function getIsFamilyAdminAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         $family_user = FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->first ();
         if ($family_user){
             if ($family_user->user_type == 1 ){
@@ -161,6 +191,9 @@ class User extends Authenticatable
     }
 
     public function getIsFamilyOwnerAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         $family = Family::query ()->where ('user_id',$this->id)->exists ();
         if ($family){
             return true;
@@ -202,10 +235,16 @@ class User extends Authenticatable
     }
 
     public function getIntroAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return Common::getUserDress($this->id,$this->dress_3,6,'show_img');
     }
 
     public function getFrameAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return Common::getUserDress($this->id,$this->dress_1,4,'show_img');
     }
 

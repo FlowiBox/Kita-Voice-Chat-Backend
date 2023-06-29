@@ -54,6 +54,7 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                     Route::prefix ('rooms')->group (function (){
 
 //        Route::post ('get_other_user',[\App\Http\Controllers\Api\V1\RoomController::class,'get_other_user']);
+                        Route::post('enter_room2',[\App\Http\Controllers\Api\V1\RoomController::class,'enter_room2']);
 
                         Route::post('enter_room',[\App\Http\Controllers\Api\V1\RoomController::class,'enter_room']);
                         Route::post('quit_room',[\App\Http\Controllers\Api\V1\RoomController::class,'quit_room']);
