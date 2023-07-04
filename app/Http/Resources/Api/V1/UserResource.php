@@ -126,7 +126,7 @@ class UserResource extends JsonResource
             'profile_visitors'=>$this->profileVisits()->count(),
             'is_follow'=>@(bool)Common::IsFollow (@$request->user ()->id,$this->id),
             'is_friend'=>in_array ($this->id,$fArr),
-//            'is_in_live'=>$this->is_in_live(),
+            'is_in_live'=>$this->is_in_live(),
             'is_first'=>@(bool)$this->is_points_first,
 //            'now_room'=>[
 //                'is_in_room'=>@$this->now_room_uid != 0,
