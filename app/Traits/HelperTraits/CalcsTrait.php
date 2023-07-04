@@ -323,6 +323,52 @@ Trait CalcsTrait
         return $data;
     }
 
+
+    public static function level_center_min ( $user )
+    {
+        $star_num = DB ::table ( 'gift_logs' ) -> where ( 'receiver_id' , $user->id ) -> sum ( 'giftPrice' );
+        $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user->id ) -> sum ( 'giftPrice' );
+
+        //--------------------------------------
+        $star_num += $user->sub_receiver_num;
+        $gold_num += $user->sub_sender_num;
+        //--------------------------------------
+
+        $star_level      = self ::getLevel ( $user->id , 1 );
+
+        $star_level_img      = self ::getLevel ( $user->id , 1 ,true);
+        $current_star_num = self::getCurrentLevel (1,$star_level,'exp');
+        $next_star_num   = self ::getNextLevel ( 1 , $star_level , 'exp' );
+        $next_star_level = self ::getNextLevel ( 1 , $star_level , 'level' );
+
+        $gold_level      = self ::getLevel ( $user->id , 2 );
+
+
+        $gold_level_img      = self ::getLevel ( $user->id , 2 ,true);
+        $current_gold_num = self::getCurrentLevel (2,$gold_level,'exp');
+        $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
+        $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
+
+        $data['receiver_img']        = $star_level_img;
+      
+        $data['sender_img']          = $gold_level_img;
+
+    
+        // if ($rt > 0 && ($rc/$rt) < 1 && ($rc/$rt) > 0){
+        //     $data['receiver_per'] = (double)($rc/$rt);
+        // }else{
+        //     $data['receiver_per'] = (double)0.00;
+        // }
+        // if($st > 0 && ($sc/$st) < 1 && ($sc/$st) > 0){
+        //     $data['sender_per']=(double)($sc/$st);
+        // }else{
+        //     $data['sender_per']= (double)0.00;
+        // }
+
+        return $data;
+    }
+
+
     //مركز الأعضاء
     public static function vip_center ( $user_id ,$level = null)
     {
