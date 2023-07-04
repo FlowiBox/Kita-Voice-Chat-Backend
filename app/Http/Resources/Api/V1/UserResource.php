@@ -26,12 +26,12 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-//        $wapel = Pack::query ()
-//            ->where ('type',12)
-//            ->where ('expire','>=',time ())
-//            ->where ('user_id',$this->id)
-//            ->where ('use_num','>',0)
-//            ->first ();
+        $wapel = Pack::query ()
+            ->where ('type',12)
+            ->where ('expire','>=',time ())
+            ->where ('user_id',$this->id)
+            ->where ('use_num','>',0)
+            ->first ();
 
         Pack::query ()
             ->where ('expire','!=',0)
@@ -111,79 +111,79 @@ class UserResource extends JsonResource
 //        $this->update(['flowers'=>0]);
 
         $data = [
-            'id'=>@$this->id,
-            'uuid'=>@$this->uuid,
-            'chat_id'=>@$this->chat_id?:"",
-            'notification_id'=>@$this->notification_id?:"",
-            'is_gold'=>@$this->is_gold_id,
-            'name'=>@$this->name?:'',
-            'nick_name'=>@$this->nick_name,
-            'email'=>@$this->email?:"",
-            'phone'=>@$this->phone?:'',
-            'number_of_fans'=>$this->numberOfFans(),
-            'number_of_followings'=>$this->numberOfFollowings(),
-            'number_of_friends'=>$this->numberOfFriends(),
-            'profile_visitors'=>$this->profileVisits()->count(),
-            'is_follow'=>@(bool)Common::IsFollow (@$request->user ()->id,$this->id),
-            'is_friend'=>in_array ($this->id,$fArr),
-            'is_in_live'=>$this->is_in_live(),
-            'is_first'=>@(bool)$this->is_points_first,
+            'id'=>@$this->id, // both
+            'uuid'=>@$this->uuid, // both
+            'chat_id'=>@$this->chat_id?:"", // both
+            'notification_id'=>@$this->notification_id?:"", // both
+            'is_gold'=>@$this->is_gold_id, // both
+            'name'=>@$this->name?:'', // both
+            'nick_name'=>@$this->nick_name, // both
+            'email'=>@$this->email?:"", // both
+            'phone'=>@$this->phone?:'',// both
+            'number_of_fans'=>$this->numberOfFans(), // both
+            'number_of_followings'=>$this->numberOfFollowings(), // both
+            'number_of_friends'=>$this->numberOfFriends(), // both
+            'profile_visitors'=>$this->profileVisits()->count(), // both
+            'is_follow'=>@(bool)Common::IsFollow (@$request->user ()->id,$this->id), // user data
+            'is_friend'=>in_array ($this->id,$fArr), // user data
+            'is_in_live'=>$this->is_in_live(), // user data
+            'is_first'=>@(bool)$this->is_points_first, // my data
             'now_room'=>[
                 'is_in_room'=>@$this->now_room_uid != 0,
                 'uid'=>@(integer)$this->now_room_uid,
                 'is_mine'=>@$this->id == $this->now_room_uid,
                 'password_status'=>$pass_status
-            ],
-            'agency'=>@$agency_joined, // refactor
-            'is_agency_request'=>(bool)AgencyJoinRequest::where('user_id',@$this->id)->where ('status','!=',2)->count (),
-            'is_family_admin'=>@$this->is_family_admin,
-            'is_family_member'=>@$this->family_id?true:false,
-            'family_id'=>@$this->family_id,
-            'is_family_owner'=>@Family::query ()->where ('user_id',$this->id)->exists (), // refactor
-            'family_name'=>@$fn, // refactor
+            ], // user data
+            'agency'=>@$agency_joined, // both
+            'is_agency_request'=>(bool)AgencyJoinRequest::where('user_id',@$this->id)->where ('status','!=',2)->count (), // my
+//            'is_family_admin'=>@$this->is_family_admin, //
+//            'is_family_member'=>@$this->family_id?true:false,
+            'family_id'=>@$this->family_id, // both
+//            'is_family_owner'=>@Family::query ()->where ('user_id',$this->id)->exists (), // refactor
+//            'family_name'=>@$fn, // refactor
             'family_data'=>@$f, // refactor
-            'profile'=>new ProfileResource(@$this->profile),
-            'level'=>Common::level_center (@$this), // refactor
-            'diamonds'=>@$this->monthly_diamond_received?:0,
-            'usd'=>@$this->salary,
-            'vip'=>@Common::ovip_center ($this->id), // refactor
-            'income'=>@Common::user_income ($this->id),
-            'my_store'=>@$this->my_store,
-            'lang'=>@$this->lang,
-            'country'=>!Common::hasInPack ($this->id,13,true)?($this->country?:''):'',
-            'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'),
-            'bubble'=>Common::getUserDress($this->id,$this->dress_2,5,'img2')?:Common::getUserDress($this->id,$this->dress_2,5,'img1'),
-            'intro'=>Common::getUserDress($this->id,$this->dress_3,6,'img2')?:Common::getUserDress($this->id,$this->dress_3,6,'img1'),
-            'mic_halo'=>Common::getUserDress($this->id,$this->dress_4,7,'img1')?:Common::getUserDress($this->id,$this->dress_4,7,'img2'),
-            'frame_id'=>@$this->dress_1,
-            'bubble_id'=>@$this->dress_2,
-            'intro_id'=>@$this->dress_3,
-            'mic_halo_id'=>@$this->dress_4,
-            'can_kicked_of_room'=>!Common::hasInPack ($this->id,9),
-            'bio'=>@$this->bio?:'',
-            'facebook_bind'=>@$this->facebook_id?true:false,
-            'google_bind'=>@$this->google_id?true:false,
-            'phone_bind'=>@$this->phone?true:false,
-            'visit_time'=>'',
-            'follow_time'=>$this->getFollowDate($request->get ('pid')),
-            'has_room'=>$this->hasRoom(),
-            'intro_num'=>$this->intros_count(),
-            'frame_num'=>$this->frames_count(),
-            'bubble_num'=>$this->bubble_count(),
-            'statics'=>$this->handelStatics ($request)?:$statics,
-            'is_agent'=>$this->is_agent,
-            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first(),
-            'prev'=>$previliges,
-            'online_time'=>!Common::hasInPack ($this->id,20,true)?($this->online_time?date("Y-m-d H:i:s", $this->online_time):''):'',
-            'has_color_name'=>Common::hasInPack ($this->id,18),
-            'anonymous'=>Common::hasInPack ($this->id,17,true),
-            'country_hidden'=>Common::hasInPack ($this->id,13,true),
-            'last_active_hidden'=>Common::hasInPack ($this->id,20,true),
-            'visit_hidden'=>Common::hasInPack ($this->id,19,true),
-            'room_hidden'=>Common::hasInPack ($this->id,16,true),
-            'wapel_num'=>@(integer)$wapel->use_num?:0,
-            'salary'=>$this->salary,
-            'old'=>$this->old
+            'profile'=>new ProfileResource(@$this->profile), // both
+            'level'=>Common::level_center (@$this), // both
+            'diamonds'=>@$this->monthly_diamond_received?:0, // both
+            'usd'=>@$this->salary, // my
+            'vip'=>@Common::ovip_center ($this->id), // both
+//            'income'=>@Common::user_income ($this->id),
+            'my_store'=>@$this->my_store, // my
+            'lang'=>@$this->lang, // both
+            'country'=>!Common::hasInPack ($this->id,13,true)?($this->country?:''):'', // both
+            'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'), // both
+            'bubble'=>Common::getUserDress($this->id,$this->dress_2,5,'img2')?:Common::getUserDress($this->id,$this->dress_2,5,'img1'), // both
+            'intro'=>Common::getUserDress($this->id,$this->dress_3,6,'img2')?:Common::getUserDress($this->id,$this->dress_3,6,'img1'), // both
+//            'mic_halo'=>Common::getUserDress($this->id,$this->dress_4,7,'img1')?:Common::getUserDress($this->id,$this->dress_4,7,'img2'),
+            'frame_id'=>@$this->dress_1, // both
+            'bubble_id'=>@$this->dress_2, // both
+            'intro_id'=>@$this->dress_3, // both
+//            'mic_halo_id'=>@$this->dress_4,
+//            'can_kicked_of_room'=>!Common::hasInPack ($this->id,9),
+            'bio'=>@$this->bio?:'', // both
+            'facebook_bind'=>@$this->facebook_id?true:false, // my
+            'google_bind'=>@$this->google_id?true:false, // my
+            'phone_bind'=>@$this->phone?true:false, // my
+//            'visit_time'=>'',
+//            'follow_time'=>$this->getFollowDate($request->get ('pid')),
+            'has_room'=>$this->hasRoom(), // my
+//            'intro_num'=>$this->intros_count(),
+//            'frame_num'=>$this->frames_count(),
+//            'bubble_num'=>$this->bubble_count(),
+//            'statics'=>$this->handelStatics ($request)?:$statics,
+            'is_agent'=>$this->is_agent, // both
+            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first(), // both
+            'prev'=>$previliges, // my
+            'online_time'=>!Common::hasInPack ($this->id,20,true)?($this->online_time?date("Y-m-d H:i:s", $this->online_time):''):'', // both - calculated when get my data only
+            'has_color_name'=>Common::hasInPack ($this->id,18), // both
+            'anonymous'=>Common::hasInPack ($this->id,17,true), // both
+            'country_hidden'=>Common::hasInPack ($this->id,13,true), // both
+            'last_active_hidden'=>Common::hasInPack ($this->id,20,true), // both
+            'visit_hidden'=>Common::hasInPack ($this->id,19,true), // both
+            'room_hidden'=>Common::hasInPack ($this->id,16,true), // both
+//            'wapel_num'=>@(integer)$wapel->use_num?:0,
+//            'salary'=>$this->salary,
+//            'old'=>$this->old
         ];
 
 

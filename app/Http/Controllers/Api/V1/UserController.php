@@ -420,14 +420,6 @@ class UserController extends Controller
     }
 
 
-    public function myProfileVisitorsList(Request $request){
-        $user = $request->user();
-        $visitors = UserResource::collection ($user->profileVisits);
-        return Common::apiResponse (1,'',$visitors);
-    }
-
-
-
     //Unlock and dress up premium items
     public function unlock_dress($user_id){
         $this->unlock_dress_hand($user_id); //Automatically unlock costumes according to the user's VIP level
