@@ -44,6 +44,16 @@ class ResetUserMonthlyDiamond extends Command
             WHERE agency_id != 0
         ");
 
+        $month = now()->month;
+        $year = now()->year;
+        DB::statement("
+            UPDATE user_sallary
+            SET sallary = 0, cut_amount = 0
+            WHERE month = $month and year = $year
+        ");
+
+
+
         //$this->info('update-room-user-now:cron Command Run Successfully !');
     }
 }

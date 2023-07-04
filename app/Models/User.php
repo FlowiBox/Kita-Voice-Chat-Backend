@@ -17,6 +17,9 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable ,FollowTrait;
 
 
+    /*
+     * To enable and disable observer saving and updating methods
+     */
     public $enableSaving = true;
 
     public static $withoutAppends = false;
