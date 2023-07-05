@@ -323,10 +323,6 @@ Trait CalcsTrait
         return $data;
     }
 
-
-    public function getLevels() {
-
-    }
     public static function level_center ( $user )
     {
         $star_num = $user->total_diamond_received + $user->sub_receiver_num;
@@ -334,7 +330,7 @@ Trait CalcsTrait
 
         $star_level      = $user->received_level + $user->sub_receiver_level;
 
-//        $star_level_img         = self ::getLevel ( $user->id , 1 ,true);
+        $star_level_img         = self ::getLevel ( $user->id , 1 ,true);
         $star_level_img         = Vip::where('level', $star_level)->where('type', 1)->first()->img;
         //
 

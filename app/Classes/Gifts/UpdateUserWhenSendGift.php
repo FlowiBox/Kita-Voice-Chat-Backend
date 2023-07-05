@@ -27,7 +27,6 @@ class UpdateUserWhenSendGift
     public function getLevel(int $type, int $totalCoins)
     {
         return Vip::query()->where(['type' => $type])->where('exp', '<=', $totalCoins)->orderByDesc('exp')->limit(1)->first();
-
     }
 
 
@@ -41,7 +40,7 @@ class UpdateUserWhenSendGift
         $senderUser->enableSaving         = false;
         $senderUser->monthly_diamond_send += $totalCoins;
         $senderUser->total_diamond_send   += $totalCoins;
-        $senderUser->sender_level         = $this->getLevel(2, $senderUser->monthly_diamond_send)->level;
+        $senderUser->sender_level         = $this->getLevel(2, $senderUser->total_diamond_send)->level;
         $senderUser->save();
         $senderUser->enableSaving = true;
 
