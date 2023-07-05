@@ -6,6 +6,7 @@ use App\Http\Resources\Api\V1\MiniUserResource;
 use App\Http\Resources\Api\V1\PkCollection;
 use App\Models\GiftLog;
 use App\Models\Pk;
+use App\Models\RequestBackgroundImage;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -43,7 +44,7 @@ class EnterRoomCollection extends JsonResource
             "room_pass"           => $this->room_pass,
             "room_type"           => $this->room_type ?? '',
             "hot"                 => '',
-            "room_background"     => $this->room_background,
+            "room_background"     => $this->getRoomBackground(),
             "microphone"          => $this->microphone,
             "room_welcome"        => $this->room_welcome,
             "session"             => $this->session,
@@ -152,6 +153,14 @@ class EnterRoomCollection extends JsonResource
         }
         return $microphones;
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoomBackground()
+    {
+        return $this->room_background ?? RequestBackgroundImage::where('status',1)->where('owner_room_id',$this->uid)->first();
     }
 
     private function getUserType($roomAdmin, $roomJudge)
