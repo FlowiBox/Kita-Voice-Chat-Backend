@@ -50,6 +50,7 @@ class FamilyResource extends JsonResource
             'today_rank'=>$this->today_rank,
             'week_rank'=>$this->week_rank,
             'month_rank'=>$this->month_rank,
+            'admins' => $this->admins
         ];
     }
 }

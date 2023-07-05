@@ -178,6 +178,10 @@ class Family extends Model
     }
 
 
+    public function admins()
+    {
+        return $this->hasManyThrough(User::class, FamilyUser::class, 'family_id', 'id', 'id', 'user_id');
+    }
 
 
 
