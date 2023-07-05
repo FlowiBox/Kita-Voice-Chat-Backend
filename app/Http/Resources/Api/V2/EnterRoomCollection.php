@@ -160,7 +160,7 @@ class EnterRoomCollection extends JsonResource
      */
     public function getRoomBackground()
     {
-        return $this->room_background ?? RequestBackgroundImage::where('status',1)->where('owner_room_id',$this->uid)->first();
+        return $this->room_background ?? (RequestBackgroundImage::where('status',1)->where('owner_room_id',$this->uid)->first())->img;
     }
 
     private function getUserType($roomAdmin, $roomJudge)
