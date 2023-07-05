@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Api\V1\RoomController;
 use \App\Http\Controllers\Api\V1\Room\ResourceController;
 use \App\Http\Controllers\Api\V1\Room\MicrophoneController;
+use \App\Http\Controllers\Api\V1\Room\EnteranceController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -73,11 +74,11 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::post('mute_microphone_place',[MicrophoneController::class,'is_sound']);
                         Route::post('unmute_microphone_place',[MicrophoneController::class,'remove_sound']);
 
-                        Route::post('enter_room',[RoomController::class,'enter_room2']);
-                        Route::post('quit_room',[RoomController::class,'quit_room']);
-                        Route::post('kick_out_of_room',[RoomController::class,'out_room']);
-                        Route::post('getRoomUsers',[RoomController::class,'getRoomUsers']);
+                        Route::post('enter_room',[EnteranceController::class,'enter_room']);
+                        Route::post('quit_room',[EnteranceController::class,'quit_room']);
+                        Route::post('kick_out_of_room',[EnteranceController::class,'out_room']);
 
+                        Route::post('getRoomUsers',[RoomController::class,'getRoomUsers']);
                         Route::post('get_room_by_owner_id',[RoomController::class,'get_room_by_owner_id']);
                         Route::post('add_admin_to_room',[RoomController::class,'is_admin']);
                         Route::post('remove_admin',[RoomController::class,'remove_admin']);
