@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Api\V2;
 
 use App\Http\Resources\Api\V1\MiniUserResource;
+use App\Http\Resources\Api\V1\PkCollection;
 use App\Models\GiftLog;
 use App\Models\Pk;
 use App\Models\User;
@@ -53,8 +54,8 @@ class EnterRoomCollection extends JsonResource
                 'family_level' => @$this->family->level ?? [],
             ],
             "giftPrice"           => $this->session ?: '',
-            "pk"                  => (@$pks[0]) ? $pks[0]->toArray() : new \stdClass(),
-            "is_pk"               => (@$pks[0]) ? $pks[0]->status : false,
+            "pk"                  => (@$pks[0]) ? new PkCollection($pks[0]) : new \stdClass(),
+            "is_pk"               => (@$pks[0]) /*? $pks[0]->status : false*/,
             "show_pk"             => (@$pks[1]) ? $pks[1]->show_status : false,
             'top_user'            => $topUser ? (new MiniUserResource($topUser)) : new \stdClass(),
             'admins'              => explode(',', $this->room_admin ?? ''),
