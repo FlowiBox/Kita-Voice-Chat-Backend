@@ -63,7 +63,6 @@ class MyDataResource extends JsonResource
         }
 
         $f = null;
-//        $fn = '';
         $family = Family::query ()->where ('id',@$this->family_id)->first ();
         if ($family){
             $f = [
@@ -74,7 +73,6 @@ class MyDataResource extends JsonResource
                 'members_num'   =>$family->members_count,
                 'level'         =>$family->level
             ];
-//            $fn = $family->name;
         }
 
 
