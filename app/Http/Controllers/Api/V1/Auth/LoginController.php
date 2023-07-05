@@ -6,7 +6,7 @@ use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Resources\Api\V1\MyDataResource;
-use App\Http\Resources\Api\V1\MyDataResource;
+use App\Http\Resources\Api\V1\UserResource;
 use App\Models\Code;
 use App\Models\Country;
 use App\Models\User;
