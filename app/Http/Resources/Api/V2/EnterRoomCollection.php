@@ -53,7 +53,7 @@ class EnterRoomCollection extends JsonResource
                 'family_level' => @$this->family->level ?? [],
             ],
             "giftPrice"           => $this->session ?: '',
-            "pk"                  => $pks[0]->toArray(),
+            "pk"                  => (@$pks[0])? $pks[0]->toArray() : new \stdClass(),
             'top_user'            => $topUser ? (new MiniUserResource($topUser)) : new \stdClass(),
             'admins'              => explode(',', $this->room_admin ?? ''),
             'owner_sound'         => $this->getOwnerSound($this->uid, $this->room_sound) ? 2 : 1,
