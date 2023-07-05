@@ -62,7 +62,7 @@ class MyDataResource extends JsonResource
             }
         }
 
-        $f = new \stdClass();
+        $f = null;
 //        $fn = '';
         $family = Family::query ()->where ('id',@$this->family_id)->first ();
         if ($family){
@@ -147,7 +147,7 @@ class MyDataResource extends JsonResource
             'family_id'=>@$this->family_id, // both
 //            'is_family_owner'=>@Family::query ()->where ('user_id',$this->id)->exists (), // refactor
 //            'family_name'=>@$fn, // refactor
-            'family_data'=>@$f, // refactor
+            'family_data'=>$f, // refactor
             'profile'=>new ProfileResource(@$this->profile), // both
             'level'=>Common::level_center (@$this), // both
             'diamonds'=>@$this->monthly_diamond_received?:0, // both

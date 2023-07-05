@@ -390,8 +390,7 @@ class HomeController extends Controller
         if ($request->type == 'country'){
             if (!Ware::query ()->where('type',13)->exists ()){
                 return Common::apiResponse (0,'not found',null,404);
-            }else
-            if (!Pack::query ()->where('user_id',$user->id)->where('type',13)->where ('is_used',0)->exists ()){
+            }else if (!Pack::query ()->where('user_id',$user->id)->where('type',13)->where ('is_used',0)->exists ()){
                 return Common::apiResponse (0,'not allowed',null,403);
             }
             Pack::query ()->where('user_id',$user->id)->where('type',13)->update (['is_used'=>1]);
