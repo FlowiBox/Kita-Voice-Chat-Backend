@@ -238,7 +238,7 @@ class RoomController extends Controller
             $json = json_encode ($data);
             Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
             $request->is_update = true;
-            return $this->enter_room ($request);
+            return $this->enter_room2 ($request);
 
         }catch (\Exception $exception){
             return Common::apiResponse (false,'failed',null,400);
