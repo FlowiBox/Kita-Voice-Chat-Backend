@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
-use App\Http\Resources\Api\V1\UserResource;
+use App\Http\Resources\Api\V1\MyDataResource;
+use App\Http\Resources\Api\V1\MyDataResource;
 use App\Models\Code;
 use App\Models\Country;
 use App\Models\User;
@@ -46,7 +47,7 @@ class LoginController extends Controller
             if (!$this->canLogin($user)){
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
-            return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+            return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
         }else{
             return Common::apiResponse (false,'credentials does\'t match',[],422);
         }
@@ -65,7 +66,7 @@ class LoginController extends Controller
         if (!$this->canLogin($user)){
             return Common::apiResponse (false,'you are blocked',[],408);
         }
-        return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+        return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
     }
 
     protected function loginWithGoogle($data){
@@ -83,7 +84,7 @@ class LoginController extends Controller
             if (!$this->canLogin($user)){
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
-            return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+            return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
         }else{
             if (User::query ()->whereNotNull ('email')->where ('email',$data['email'])->exists ()){
                 return Common::apiResponse (false,'email already taken',[],405);
@@ -106,7 +107,7 @@ class LoginController extends Controller
                 $user->save();
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
-                return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+                return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
             }
         }
     }
@@ -128,7 +129,7 @@ class LoginController extends Controller
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
 
-            return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+            return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
         }else{
             if (User::query ()->whereNotNull ('email')->where ('email',$data['email'])->exists ()){
                 return Common::apiResponse (false,'email already taken',[],405);
@@ -151,7 +152,7 @@ class LoginController extends Controller
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
 
-                return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+                return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
             }
         }
     }
@@ -197,7 +198,7 @@ class LoginController extends Controller
             if (!$this->canLogin($user)){
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
-            return Common::apiResponse (true,'',new UserResource($user),200);
+            return Common::apiResponse (true,'',new MyDataResource($user),200);
         }
         return Common::apiResponse (false,'invalid code',null,422);
     }
