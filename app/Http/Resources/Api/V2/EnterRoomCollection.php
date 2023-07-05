@@ -50,7 +50,7 @@ class EnterRoomCollection extends JsonResource
             "room_welcome"        => $this->room_welcome,
             "session"             => $this->session,
             "uuid"                => $this->owner->uuid,
-            "room_family"         => is_null($this->family) ? [] :[
+            "room_family"         => is_null($this->family) ? new \stdClass() :[
                 'family_id'    => @$this->family->id ?? '',
                 'family_name'  => @$this->family->name ?? '',
                 'family_level' => @$this->family->level ?? [],
