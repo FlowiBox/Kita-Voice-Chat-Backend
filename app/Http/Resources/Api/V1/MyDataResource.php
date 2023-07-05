@@ -27,16 +27,18 @@ class MyDataResource extends JsonResource
 
 
         $agency_joined = $this->agency;
-        $owner = $agency_joined->app_owner_id == $this->id ? new \stdClass() : new MiniUserResource($agency_joined->owner);
-        if ($this->agency != null) {
-            $agency_joined = [
-                'id'=>$this->agency->id,
-                'name'=>$this->agency->name,
-                'status'=>$this->agency->status,
-                'owner'=>$owner,
-            ];
-        } else {
-            $agency_joined = null;
+        if ($agency_joined != null) {
+            $owner = $agency_joined->app_owner_id == $this->id ? new \stdClass() : new MiniUserResource($agency_joined->owner);
+            if ($this->agency != null) {
+                $agency_joined = [
+                    'id'=>$this->agency->id,
+                    'name'=>$this->agency->name,
+                    'status'=>$this->agency->status,
+                    'owner'=>$owner,
+                ];
+            } else {
+                $agency_joined = null;
+            }
         }
 
 
