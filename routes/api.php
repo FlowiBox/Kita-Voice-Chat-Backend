@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\Api\V1\RoomController;
 use \App\Http\Controllers\Api\V1\Room\ResourceController;
+use \App\Http\Controllers\Api\V1\Room\MicrophoneController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -61,19 +62,22 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::post ('/create',[ResourceController::class,'store']);
                         Route::post ('/{id}/edit',[ResourceController::class,'update']);
 
+                        // Microphone Controller
+                        Route::post('microphone_status',[MicrophoneController::class,'microphone_status']);
+                        Route::post('up_microphone',[MicrophoneController::class,'up_microphone']);
+                        Route::post('leave_microphone',[MicrophoneController::class,'go_microphone']);
+                        Route::post('mute_microphone',[MicrophoneController::class,'mute_microphone']);
+                        Route::post('unmute_microphone',[MicrophoneController::class,'unmute_microphone']);
+                        Route::post('lock_microphone_place',[MicrophoneController::class,'shut_microphone']);
+                        Route::post('unlock_microphone_place',[MicrophoneController::class,'open_microphone']);
+                        Route::post('mute_microphone_place',[MicrophoneController::class,'is_sound']);
+                        Route::post('unmute_microphone_place',[MicrophoneController::class,'remove_sound']);
+
                         Route::post('enter_room',[RoomController::class,'enter_room2']);
                         Route::post('quit_room',[RoomController::class,'quit_room']);
                         Route::post('kick_out_of_room',[RoomController::class,'out_room']);
                         Route::post('getRoomUsers',[RoomController::class,'getRoomUsers']);
-                        Route::post('microphone_status',[RoomController::class,'microphone_status']);
-                        Route::post('up_microphone',[RoomController::class,'up_microphone']);
-                        Route::post('leave_microphone',[RoomController::class,'go_microphone']);
-                        Route::post('mute_microphone',[RoomController::class,'mute_microphone']);
-                        Route::post('unmute_microphone',[RoomController::class,'unmute_microphone']);
-                        Route::post('lock_microphone_place',[RoomController::class,'shut_microphone']);
-                        Route::post('unlock_microphone_place',[RoomController::class,'open_microphone']);
-                        Route::post('mute_microphone_place',[RoomController::class,'is_sound']);
-                        Route::post('unmute_microphone_place',[RoomController::class,'remove_sound']);
+
                         Route::post('get_room_by_owner_id',[RoomController::class,'get_room_by_owner_id']);
                         Route::post('add_admin_to_room',[RoomController::class,'is_admin']);
                         Route::post('remove_admin',[RoomController::class,'remove_admin']);
