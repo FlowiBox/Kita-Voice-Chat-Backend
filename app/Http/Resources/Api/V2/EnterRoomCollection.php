@@ -55,7 +55,7 @@ class EnterRoomCollection extends JsonResource
             ],
             "giftPrice"           => $this->session ?: '',
             "pk"                  => (@$pks[0]) ? new PkCollection($pks[0]) : new \stdClass(),
-            "is_pk"               => (@$pks[0]) /*? $pks[0]->status : false*/,
+            "is_pk"               => (@$pks[0]) ? $pks[0]->status : false,
             "show_pk"             => (@$pks[1]) ? $pks[1]->show_status : false,
             'top_user'            => $topUser ? (new MiniUserResource($topUser)) : new \stdClass(),
             'admins'              => explode(',', $this->room_admin ?? ''),
