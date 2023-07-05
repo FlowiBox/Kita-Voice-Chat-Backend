@@ -323,8 +323,9 @@ Trait CalcsTrait
         return $data;
     }
 
-    public static function level_center ( $user )
+    public static function level_center ( $user_id)
     {
+        $user = User::find($user_id);
         $star_num = $user->total_diamond_received + $user->sub_receiver_num;
         $gold_num = $user->total_diamond_send + $user->sub_sender_num;
 

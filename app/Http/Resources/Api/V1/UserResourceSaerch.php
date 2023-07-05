@@ -54,7 +54,7 @@ class UserResourceSaerch extends JsonResource
             }
         }
 
-        
+
         $pass_status = false;
         $now_room = Room::query ()->where ('uid',$this->now_room_uid)->first ();
         if ($now_room){
@@ -115,12 +115,12 @@ class UserResourceSaerch extends JsonResource
         $data = [
             'id'=>@$this->id,
             'uuid'=>@$this->uuid,
-            
+
             'name'=>@$this->name?:'',
-           
+
             'profile'=>new ProfileResourcemin(@$this->profile),
-            
-//    
+
+//
         // 'mic_halo'=>Common::getUserDress($this->id,$this->dress_4,7,'img1')?:Common::getUserDress($this->id,$this->dress_4,7,'img2'),
         'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'),
 
@@ -135,10 +135,10 @@ class UserResourceSaerch extends JsonResource
            'vip'=>@Common::ovip_center ($this->id), // refactor
 
 
-           'level'=>Common::level_center_min (@$this), // refactor
+           'level'=>Common::level_center_min (@$this->id), // refactor
 //            'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first(),
             'has_color_name'=>Common::hasInPack ($this->id,18),
-           
+
         ];
 
 
