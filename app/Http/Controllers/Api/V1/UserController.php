@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\ChargeResource;
+use App\Http\Resources\Api\V1\MyDataResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Http\Resources\Api\V1\UserRelationsResource;
 use App\Http\Resources\Api\V1\GetUserDataResource;
@@ -68,7 +69,7 @@ class UserController extends Controller
         $user = $request->user ();
         $this->unlock_dress($user->id);
 //        $user->statics = $this->handelStatics ($request);
-        $data = new UserResource($user);
+        $data = new MyDataResource($user);
         return Common::apiResponse (true,'',$data,200);
     }
 
