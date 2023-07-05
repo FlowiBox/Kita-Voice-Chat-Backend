@@ -398,7 +398,7 @@ class HomeController extends Controller
             $user->country_id = null;
             $user->save();
         }
-        if ($request->type == 'last_active'){
+        else if ($request->type == 'last_active'){
             if (!Ware::query ()->where('type',20)->exists ()){
                 return Common::apiResponse (0,'not found',null,404);
             }else
@@ -407,7 +407,7 @@ class HomeController extends Controller
             }
             Pack::query ()->where('user_id',$user->id)->where('type',20)->update (['is_used'=>1]);
         }
-        if ($request->type == 'visit'){
+        else if ($request->type == 'visit'){
             if (!Ware::query ()->where('type',19)->exists ()){
                 return Common::apiResponse (0,'not found',null,404);
             }else
@@ -416,7 +416,7 @@ class HomeController extends Controller
             }
             Pack::query ()->where('user_id',$user->id)->where('type',19)->update (['is_used'=>1]);
         }
-        if ($request->type == 'anonymous'){
+        else if ($request->type == 'anonymous'){
             if (!Ware::query ()->where('type',17)->exists ()){
                 return Common::apiResponse (0,'not found',null,404);
             }else
@@ -425,7 +425,7 @@ class HomeController extends Controller
             }
             Pack::query ()->where('user_id',$user->id)->where('type',17)->update (['is_used'=>1]);
         }
-        if ($request->type == 'room'){
+        else if ($request->type == 'room'){
             if (!Ware::query ()->where('type',16)->exists ()){
                 return Common::apiResponse (0,'not found',null,404);
             }

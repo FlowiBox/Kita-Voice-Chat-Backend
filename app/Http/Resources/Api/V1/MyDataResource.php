@@ -67,7 +67,7 @@ class MyDataResource extends JsonResource
         $family = Family::query ()->where ('id',@$this->family_id)->first ();
         if ($family){
             $f = [
-                'name'=>$family->name,
+                'family_name'=>$family->name,
                 'max_num'=>$family->num,
                 'img'=>$family->image,
                 'members_num'=>$family->members_count,
@@ -154,7 +154,14 @@ class MyDataResource extends JsonResource
             'usd'=>@$this->salary, // my
             'vip'=>@Common::ovip_center ($this->id), // both
 //            'income'=>@Common::user_income ($this->id),
-            'my_store'=>@$this->my_store, // my
+//            'my_store'=>@$this->my_store, // my
+            'my_store'=> [
+                'id'=>$this->id,
+                'coins'=>$this->di,
+                'diamonds'=>$this->coins,
+                'silver_coins'=>$this->gold,
+                'usd' => (double)$this->sallary ,
+            ], // my
             'lang'=>@$this->lang, // both
             'country'=>!Common::hasInPack ($this->id,13,true)?($this->country?:''):'', // both
             'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'), // both

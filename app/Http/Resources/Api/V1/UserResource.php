@@ -127,7 +127,7 @@ class UserResource extends JsonResource
             'is_follow'=>@(bool)Common::IsFollow (@$request->user ()->id,$this->id), // user data
             'is_friend'=>in_array ($this->id,$fArr), // user data
             'is_in_live'=>$this->is_in_live(), // user data
-            'is_first'=>@(bool)$this->is_points_first, // my data
+//            'is_first'=>@(bool)$this->is_points_first, // my data
             'now_room'=>[
                 'is_in_room'=>@$this->now_room_uid != 0,
                 'uid'=>@(integer)$this->now_room_uid,
@@ -135,7 +135,7 @@ class UserResource extends JsonResource
                 'password_status'=>$pass_status
             ], // user data
             'agency'=>@$agency_joined, // both
-            'is_agency_request'=>(bool)AgencyJoinRequest::where('user_id',@$this->id)->where ('status','!=',2)->count (), // my
+//            'is_agency_request'=>(bool)AgencyJoinRequest::where('user_id',@$this->id)->where ('status','!=',2)->count (), // my
 //            'is_family_admin'=>@$this->is_family_admin, //
 //            'is_family_member'=>@$this->family_id?true:false,
             'family_id'=>@$this->family_id, // both
@@ -145,10 +145,10 @@ class UserResource extends JsonResource
             'profile'=>new ProfileResource(@$this->profile), // both
             'level'=>Common::level_center (@$this), // both
             'diamonds'=>@$this->monthly_diamond_received?:0, // both
-            'usd'=>@$this->salary, // my
+//            'usd'=>@$this->salary, // my
             'vip'=>@Common::ovip_center ($this->id), // both
 //            'income'=>@Common::user_income ($this->id),
-            'my_store'=>@$this->my_store, // my
+//            'my_store'=>@$this->my_store, // my
             'lang'=>@$this->lang, // both
             'country'=>!Common::hasInPack ($this->id,13,true)?($this->country?:''):'', // both
             'frame'=>Common::getUserDress($this->id,$this->dress_1,4,'img2')?:Common::getUserDress($this->id,$this->dress_1,4,'img1'), // both
@@ -161,19 +161,19 @@ class UserResource extends JsonResource
 //            'mic_halo_id'=>@$this->dress_4,
 //            'can_kicked_of_room'=>!Common::hasInPack ($this->id,9),
             'bio'=>@$this->bio?:'', // both
-            'facebook_bind'=>@$this->facebook_id?true:false, // my
-            'google_bind'=>@$this->google_id?true:false, // my
-            'phone_bind'=>@$this->phone?true:false, // my
+//            'facebook_bind'=>@$this->facebook_id?true:false, // my
+//            'google_bind'=>@$this->google_id?true:false, // my
+//            'phone_bind'=>@$this->phone?true:false, // my
 //            'visit_time'=>'',
 //            'follow_time'=>$this->getFollowDate($request->get ('pid')),
-            'has_room'=>$this->hasRoom(), // my
+//            'has_room'=>$this->hasRoom(), // my
 //            'intro_num'=>$this->intros_count(),
 //            'frame_num'=>$this->frames_count(),
 //            'bubble_num'=>$this->bubble_count(),
 //            'statics'=>$this->handelStatics ($request)?:$statics,
             'is_agent'=>$this->is_agent, // both
             'my_agency'=>$this->ownAgency()->select('id','name','notice','status','phone','url','img','contents')->first(), // both
-            'prev'=>$previliges, // my
+//            'prev'=>$previliges, // my
             'online_time'=>!Common::hasInPack ($this->id,20,true)?($this->online_time?date("Y-m-d H:i:s", $this->online_time):''):'', // both - calculated when get my data only
             'has_color_name'=>Common::hasInPack ($this->id,18), // both
             'anonymous'=>Common::hasInPack ($this->id,17,true), // both

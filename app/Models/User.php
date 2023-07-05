@@ -111,7 +111,7 @@ class User extends Authenticatable
 
 
     public function country(){
-        return $this->belongsTo (Country::class)->select ('id','name','flag');
+        return $this->belongsTo (Country::class)->select ('id','name','flag', 'language');
     }
 
     public function getFlagAttribute(){
@@ -125,7 +125,7 @@ class User extends Authenticatable
         if (self::$withoutAppends){
             return ;
         }
-        return @$this->country()->first ()->language?:'en';
+        return @$this->country()->language?:'en';
     }
 
     public function rooms(){
