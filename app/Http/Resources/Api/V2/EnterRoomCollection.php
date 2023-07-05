@@ -9,6 +9,7 @@ use App\Models\Pk;
 use App\Models\RequestBackgroundImage;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class EnterRoomCollection extends JsonResource
 {
@@ -56,8 +57,8 @@ class EnterRoomCollection extends JsonResource
             ],
             "giftPrice"           => $this->session ?: '',
             "pk"                  => (@$pks[0]) ? new PkCollection($pks[0]) : new \stdClass(),
-            "is_pk"               => (@$pks[0]) ? $pks[0]->status : false,
-            "show_pk"             => (@$pks[1]) ? $pks[1]->show_status : false,
+            "is_pk"               => (@$pks[0]) ? $pks[0]->status : 0,
+            "show_pk"             => (@$pks[1]) ? $pks[1]->show_status : 0,
             'top_user'            => $topUser ? (new MiniUserResource($topUser)) : new \stdClass(),
             'admins'              => explode(',', $this->room_admin ?? ''),
             'owner_sound'         => $this->getOwnerSound($this->uid, $this->room_sound) ? 2 : 1,
@@ -160,7 +161,7 @@ class EnterRoomCollection extends JsonResource
      */
     public function getRoomBackground()
     {
-        return $this->room_background ?? (RequestBackgroundImage::where('status',1)->where('owner_room_id',$this->uid)->first())->img;
+        return $this->room_background ?? ((RequestBackgroundImage::where('status',1)->where('owner_room_id',$this->uid)->first())->img ?? DB::table('backgrounds')->where('enable',1)->orderBy('id', 'asc')->limit(1)->first()->img);
     }
 
     private function getUserType($roomAdmin, $roomJudge)
