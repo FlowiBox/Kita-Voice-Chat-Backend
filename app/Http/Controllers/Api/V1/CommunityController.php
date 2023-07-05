@@ -9,7 +9,18 @@ use App\Http\Resources\Api\V1\UserResource;
 use App\Models\OfficialMessage;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\GiftLog;
+use App\Models\FamilyLevel;
+
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\Api\V1\MiniUserResource;
+use App\Http\Resources\Api\V1\ProfileResource;
+use App\Http\Resources\Api\V1\UserRelationsResource;
+use App\Http\Resources\Api\V1\UserResourceSaerch;
+use App\Models\Family;
+use App\Models\Room;
 
 class CommunityController extends Controller
 {
@@ -65,6 +76,8 @@ class CommunityController extends Controller
     //search
     public function merge_search(Request $request)
     {
+
+
         $keywords = $request->keywords;
         $user_id = $request->user()->id;
         if (!$keywords || !$user_id) return Common::apiResponse(0, 'Missing parameters');
@@ -79,18 +92,78 @@ class CommunityController extends Controller
             DB::table('search_histories')->insert($info);
         }
         //user
-//        $user = array_slice($this->user_search_hand($user_id, $keywords), 0, 2);
+        //        $user = array_slice($this->user_search_hand($user_id, $keywords), 0, 2);
         //Room
         $rooms = array_slice($this->room_search_hand($user_id, (int)$keywords), 0, 2);
-        //dynamic
-//        $dynamics = array_slice($this->dynamics_search_hand($user_id, $keywords), 0, 2);
-        //Game Category
-//        $gmskill = array_slice($this->gmskill_search_hand($user_id, $keywords), 0, 2);
-//        $arr['gmskill'] = $gmskill;
+                //dynamic
+        //        $dynamics = array_slice($this->dynamics_search_hand($user_id, $keywords), 0, 2);
+                //Game Category
+        //        $gmskill = array_slice($this->gmskill_search_hand($user_id, $keywords), 0, 2);
+        //        $arr['gmskill'] = $gmskill;
+        $i = User::query ()->where ('uuid', $request->keywords)->first();
 
-        $arr['user'] = UserResource::collection ($this->user_search_hand($user_id, (int)$keywords));//$user;
-        $arr['rooms'] = $rooms;//rooms
+        // $id =$i->id ;
+        // // return $id;
+        // $u = User::query ()->find ($id);
+
+
+        // return @$u->profile->avatar;
+        // 
+
+        // $now_room = Room::query ()->where ('uid',$id)->first ();
+        // $pass_status = false;
+        // if ($now_room){
+        //     if($now_room->room_pass){
+        //         $pass_status = true;
+        //     }
+        // }
+
+
+        $arr['user'] = UserResourceSaerch::collection ($this->user_search_hand_m($user_id, (int)$keywords));//$user;
+        // $arr['rooms'] = $rooms;//rooms
+
+
+
+        // $now_room=[
+        //        'is_in_room'=>@$now_room->uuid ?:0,
+        //        'uid'=>@(integer)$now_room->uuid?:0,
+        //        'is_mine'=>@$now_room->uuid ?:0,
+        //        'password_status'=>$pass_status ?:0
+        // ];
+
+
+        // // return $now_room;
+        // // 474|F2OJej7O88uOamPY0A5evKCLelWnuNjHpsBCsgRk
+
+
+        // $newdata['id']= $arr['user'] [0]['id'];
+        // $newdata['uuid']= $arr['user'] [0]['uuid'];
+        // $newdata['name']= $arr['user'] [0]['name'];
+        // $newdata['profile'] ['image']= @$u->profile->avatar;
+        // $newdata['profile'] ['age']=  Carbon::parse (@$u->profile->birthday)->age;
+        // $newdata['profile'] ['gender']= @$u->profile->gender;
+
+        // $newdata['frame']= $arr['user'] [0]['frame'];
+        // $newdata['frame_id']= $arr['user'] [0]['frame_id'];
+
+        
+        // $newdata['now_room'] =$now_room ;
+      
+
+
+        // $newdata['vip'] ['level']= @Common::ovip_center ($id);
+
+        // $newdata['level'] ['receiver_img']= $arr['user'] [0]['receiver_img'];
+        // $newdata['level'] ['sender_img']= $arr['user'] [0]['sender_img'];
+        
+        // $newdata['has_color_name']= $arr['user'] [0]['has_color_name'];
+        // $newdata['extra_data']= $arr['user'] [0]['storage_base_url'];
+        // $newdata['extra_data']= $arr['user'] [0]['countries'];
+      
+
 //        $arr['dynamics'] = $dynamics;
+
+
         return Common::apiResponse(1, '', $arr);
 
     }
@@ -131,6 +204,32 @@ class CommunityController extends Controller
             'uuid' => $keywords,
         ];
         $user = User::query ()
+            ->where('uuid', 'like', '%' . $keywords . '%')
+            ->where(['status' => 1])
+            ->orWhere(function ($query) use ($whereOr) {
+                $query->where($whereOr);
+            })
+            ->forPage($page, 10)
+            ->get();
+
+        foreach ($user as $ku => &$vu) {
+            $vu->is_follow = DB::table('follows')->where('user_id', $user_id)->where('followed_user_id', $vu->id)->where('status', 1)->value('id') ? 1 : 0;
+        }
+
+        unset($vu);
+        //return json_decode($user,true);
+        return $user;
+    }
+
+    public function user_search_hand_m($user_id = null, $keywords = null, $page = 1)
+    {
+        if (!$user_id || !$keywords) return [];
+        //user
+        $whereOr = [
+            'uuid' => $keywords,
+        ];
+        $user = User::query ()
+            // ->select('id')
             ->where('uuid', 'like', '%' . $keywords . '%')
             ->where(['status' => 1])
             ->orWhere(function ($query) use ($whereOr) {

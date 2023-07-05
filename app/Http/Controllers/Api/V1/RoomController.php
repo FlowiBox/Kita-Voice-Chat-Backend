@@ -507,7 +507,7 @@ class RoomController extends Controller
             ->orderByDesc('total')
             ->first();
         if ($gl){
-            $fUser = User::query ()->find ($gl->sender_id);
+            $fUser = User::query ()->find ($gl->sender_id)->get();
             $t_user = $fUser;
         }else{
             $t_user = null;

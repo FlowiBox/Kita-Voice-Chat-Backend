@@ -47,10 +47,10 @@ class ResetUserMonthlyDiamond extends Command
         $month = now()->month;
         $year = now()->year;
         DB::statement("
-            UPDATE user_sallary
+            UPDATE user_sallaries
             SET sallary = 0, cut_amount = 0
-            WHERE month = $month and year = $year
-        ");
+            WHERE month = :month and year = :year
+        ", ['month' => $month, 'year' => $year]);
 
 
 
