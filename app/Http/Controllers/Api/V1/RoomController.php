@@ -14,6 +14,7 @@ use App\Http\Resources\Api\V1\MiniUserResource;
 use App\Http\Resources\Api\V1\PkResource;
 use App\Http\Resources\Api\V1\RoomResource;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Jobs\EnterRoomZigoRequest;
 use App\Models\Agency;
 use App\Models\AgencySallary;
 use App\Models\Background;
@@ -35,6 +36,7 @@ use App\Traits\HelperTraits\RoomTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
@@ -295,6 +297,8 @@ class RoomController extends Controller
     {
         $room_pass = $request['room_pass'];
         $owner_id  = $request['owner_id'];
+
+
         if ($request->type == 'random'){
             $owner_id = Room::query ()
                             ->where('room_status',1)
@@ -306,7 +310,8 @@ class RoomController extends Controller
                             ->random ();
         }
 
-        $user_id   = $request->user ()->id;
+        $user   = $request->user();
+        $user_id = $user->id;
 
         // if owner id not path throw error
         if (!$owner_id) return Common::apiResponse (0,'not found',null,404);
@@ -326,11 +331,30 @@ class RoomController extends Controller
             if(!$room_pass) return Common::apiResponse(false,__('The room is locked, please enter the password'),null,409);
             if($room->room_pass != $room_pass )  return Common::apiResponse(false,__('Password is incorrect, please re-enter'),null,410);
         }
+
+
+        if (!$request->is_update){
+            if ($request->sendToZego != 'no') {
+                dispatch(new EnterRoomZigoRequest($user, $room->id, $request->have_vip));
+            }
+        }
 //        $this->getRoomTwoLastPk($room->id);
-        $room_info = (new EnterRoomCollection($room, $user_id))->toArray($room);
-        return Common::apiResponse (true,'',$room_info);
+        $room_info = (new EnterRoomCollection($room, $user_id));
 
         $this->enterTheRoomCreateOrUpdate($user_id, $owner_id, $room->id);
+
+        //send to zego
+        $user->enableSaving = false;
+        $user->now_room_uid = (integer)$owner_id;
+        $user->save();
+
+
+
+        // Replace this line with your existing return statement
+        return Common::apiResponse(true, '', $room_info);
+
+        // Cache the response
+//        Cache::put($cacheKey, $response, 60*60*24); // Set an appropriate expiration time
 
 
 

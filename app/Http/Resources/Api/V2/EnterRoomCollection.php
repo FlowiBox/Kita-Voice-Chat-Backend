@@ -53,7 +53,7 @@ class EnterRoomCollection extends JsonResource
                 'family_level' => @$this->family->level ?? [],
             ],
             "giftPrice"           => $this->session ?: '',
-            "pk"                  => $pks[0]->toArray(),
+            "pk"                  => (@$pks[0])? $pks[0]->toArray() : new \stdClass(),
             'top_user'            => $topUser ? (new MiniUserResource($topUser)) : new \stdClass(),
             'admins'              => explode(',', $this->room_admin ?? ''),
             'owner_sound'         => $this->getOwnerSound($this->uid, $this->room_sound) ? 2 : 1,
@@ -61,7 +61,9 @@ class EnterRoomCollection extends JsonResource
             'owner_name'          => @$this->owner->name ?? '',
             'owner_avatar'        => @$this->owner->profile->avatar ?? '',
             'room_visitors_count' => $this->getRoomVisitorCount(@$this->room_visitor ?? ''),
-            'microphones'         => $this->getMicrophones($this->microphone)
+            'microphones'         => $this->getMicrophones($this->microphone),
+            'password_status'     => !($this->room_pass == "")
+
         ];
     }
 
