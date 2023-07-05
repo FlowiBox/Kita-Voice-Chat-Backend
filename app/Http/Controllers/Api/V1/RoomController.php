@@ -60,10 +60,6 @@ class RoomController extends Controller
     {
         $result = $this->repo->all ($request);
         $user = $request->user ();
-        if (!Common::checkPackPrev ($user->id,20)){
-            $user->online_time = time();
-            $user->save();
-        }
         foreach (Agency::all () as $agency){
             AgencySallary::query ()->updateOrCreate (
                 [
