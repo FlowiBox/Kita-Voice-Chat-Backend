@@ -232,8 +232,6 @@ class MicrophoneController extends Controller
     //leave mic
     public function go_microphone(Request $request){
         $data = $request;
-        $this->calcTime($data['user_id']);
-        return Common::apiResponse(1,__('Success'));
         $result=Common::go_microphone_hand($data['owner_id'],$data['user_id']);
         $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
         if (!$room) return Common::apiResponse (0,'room not found',null,404);
