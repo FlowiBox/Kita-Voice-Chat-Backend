@@ -19,7 +19,6 @@ class TestController extends Controller
             ->where (function ($q){
                 $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
             })->get();
-
         dd($packs);
     }
 }
