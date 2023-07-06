@@ -71,11 +71,11 @@ class FamilyResource extends JsonResource
 
         $admins = $admins->map(function ($id) use($allUsers){
             return $allUsers->where('id', $id);
-        });
+        })->flatten();
 
         $members = $members->map(function ($id) use($allUsers){
             return $allUsers->where('id', $id);
-        });
+        })->flatten();
         return [$admins, $members];
 
     }
