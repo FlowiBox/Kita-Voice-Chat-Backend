@@ -134,7 +134,11 @@ class HomeController extends Controller
 
     public function getTimes(Request $request){
         $user_id = $request->user_id?:$request->user ()->id;
+        $today = false;
         if ($request->time == 'today'){
+            if ($days >= 1){
+                $today = true;
+            }
             $hours = LiveTime::query ()->where ('uid',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
@@ -179,9 +183,9 @@ class HomeController extends Controller
 
         $hours = gmdate('H:i:s', $hours * 60 * 60);
 
-        return Common::apiResponse (1,'',['diamonds'=>(integer)$diamonds?:0,'days'=>(integer)$days?:0,'hours'=>$hours?:0],200);
-
+        return Common::apiResponse (1,'',['diamonds'=>(integer)$diamonds?:0,'days'=>(integer)$days?:0,'hours'=>$hours?:0, 'today'=>$today],200);
     }
+
 
     public function hidePk(Request $request){
         if (!$request->owner_id) return Common::apiResponse (0,'missing param',null,422);
