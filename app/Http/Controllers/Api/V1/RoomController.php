@@ -29,13 +29,11 @@ use App\Models\RoomCategory;
 use App\Models\RoomView;
 use App\Models\User;
 use App\Models\RequestBackgroundImage;
+use App\Models\UserDay;
 use App\Models\UserSallary;
-use App\Repositories\Room\RoomRepo;
 use App\Repositories\Room\RoomRepoInterface;
-use App\Traits\HelperTraits\RoomTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class RoomController extends Controller
@@ -803,20 +801,37 @@ class RoomController extends Controller
     }
 
     public function calcTime($uid){
+
+        // case 1 : up_mic and go_mic in the same day
         $timer = LiveTime::query ()->where ('uid',$uid)->where('end_time',null)->first ();
         if ($timer){
             $hours = round((time () - $timer->start_time)/(60*60),2);
             $timer->end_time = time ();
             $timer->hours = $hours;
-            $d = LiveTime::query ()->where ('uid',$uid)->whereDate ('created_at',today ())->where ('days','>=',1)->exists ();
-            if (!$d){
-                if ($hours >= 1){
-                    $timer->days = 1;
-                }
-            }
-
             $timer->save ();
+            $user_day = UserDay::where('user_id', $uid)->whereDate('created_at', today())->first();
+            if (LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->sum('hours') >= 2 && $user_day->days == 0) {
+                $user_day->days = 1;
+                $user_day->save();
+            }
         }
+
+
+
+//        $timer = LiveTime::query ()->where ('uid',$uid)->where('end_time',null)->first ();
+//        if ($timer){
+//            $hours = round((time () - $timer->start_time)/(60*60),2);
+//            $timer->end_time = time ();
+//            $timer->hours = $hours;
+//            $d = LiveTime::query ()->where ('uid',$uid)->whereDate ('created_at',today ())->where ('days','>=',1)->exists ();
+//            if (!$d){
+//                if ($hours >= 1){
+//                    $timer->days = 1;
+//                }
+//            }
+//
+//            $timer->save ();
+//        }
     }
 
 
