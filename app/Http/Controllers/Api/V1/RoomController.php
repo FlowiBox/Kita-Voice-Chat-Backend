@@ -776,6 +776,20 @@ class RoomController extends Controller
 
     }
 
+    private function enterTheRoomCreateOrUpdate($user_id, $owner_id, $room_id)
+    {
+        EnteredRoom::query ()->updateOrCreate (
+            [
+                'uid'=>$user_id,
+                'ruid'=>$owner_id,
+                'rid'=>$room_id
+            ],
+            [
+                'entered_at'=>now ()
+            ]
+        );
+    }
+
 
     //exit the room
     public function quit_room(Request $request){
