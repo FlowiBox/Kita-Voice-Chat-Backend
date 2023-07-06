@@ -16,7 +16,7 @@ class CreateUserDaysTable extends Migration
         Schema::create('user_days', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('days');
+            $table->smallInteger('days')->default(0);
             $table->timestamps();
         });
     }

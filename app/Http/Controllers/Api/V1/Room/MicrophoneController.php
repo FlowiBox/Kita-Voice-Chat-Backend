@@ -8,6 +8,7 @@ use App\Models\LiveTime;
 use App\Models\Pk;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\UserDay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -186,6 +187,13 @@ class MicrophoneController extends Controller
 
             //Remove mic sequence
             Common::delMicHand($user_id);
+
+            $user_day = UserDay::where('user_id', $user_id)->whereDate('created_at', today())->first();
+            if (!$user_day) {
+                UserDay::create([
+                   'user_id'        => $user_id,
+                ]);
+            }
             LiveTime::query ()->where ('uid',$user_id)->where('end_time',null)->whereDate ('created_at','!=',today ())->delete ();
             $t = LiveTime::query ()->where ('uid',$user_id)
                 ->where('end_time',null)
@@ -474,12 +482,19 @@ class MicrophoneController extends Controller
             $hours = round((time () - $timer->start_time)/(60*60),2);
             $timer->end_time = time ();
             $timer->hours = $hours;
-            $d = LiveTime::query ()->where ('uid',$uid)->whereDate ('created_at',today ())->where ('days','>=',1)->exists ();
-            if (!$d){
-                if ($hours >= 1){
-                    $timer->days = 1;
-                }
+
+            $user_day = UserDay::where('user_id', $uid)->whereDate('created_at', today())->first();
+            if (LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->sum('hours') >= 0.3 && $user_day->day == 0) {
+                $user_day->day = 1;
+                $user_day->save();
             }
+
+//            $d = LiveTime::query ()->where ('uid',$uid)->whereDate ('created_at',today ())->where ('days','>=',1)->exists ();
+//            if (!$d){
+//                if ($hours >= 1){
+//                    $timer->days = 1;
+//                }
+//            }
 
             $timer->save ();
         }
