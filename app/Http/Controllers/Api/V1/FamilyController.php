@@ -133,7 +133,7 @@ class FamilyController extends Controller
                 'user_id' => $user->id,
                 'name'=>$request->name,
                 'introduce'=>$request->introduce,
-                'notice'=>$request->notice,
+                'notice'=>@$request->notice ?? '',
                 'image' => $img?:'',
                 'num'=>20,
                 'is_success'=>1
