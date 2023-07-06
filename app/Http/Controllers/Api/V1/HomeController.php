@@ -136,9 +136,7 @@ class HomeController extends Controller
         $user_id = $request->user_id?:$request->user ()->id;
         $today = false;
         if ($request->time == 'today'){
-            if ($days >= 1){
-                $today = true;
-            }
+
             $hours = LiveTime::query ()->where ('uid',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
@@ -150,7 +148,9 @@ class HomeController extends Controller
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
                 ->whereDay ('created_at','=',Carbon::now ()->day)
                 ->sum('days');
-
+            if ($days >= 1){
+                $today = true;
+            }
             $diamonds = GiftLog::query ()->where ('receiver_id',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
