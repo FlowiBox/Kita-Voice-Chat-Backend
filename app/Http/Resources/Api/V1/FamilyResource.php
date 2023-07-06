@@ -19,12 +19,7 @@ class FamilyResource extends JsonResource
 //        if (!$this->resource){
 //            return null;
 //        }
-        $user = User::find($this->user_id);
-        if ($user){
-            $owner = new UserResource($user);
-        }else{
-            $owner = new \stdClass();
-        }
+        $owner = User::where('id', $this->user_id)->with(['profile:id,user_id,avatar as image'])->select(['id', 'name'])->first();
 
 //        $me = new UserResource($request->user ());
 
@@ -69,7 +64,7 @@ class FamilyResource extends JsonResource
 
         $allUsers = array_merge($admins, $members);
 
-        $allUsers = User::query()->withoutAppends()->whereIn('id', $allUsers)->with('profile')->select(['id', 'name'])->get();
+        $allUsers = User::query()->withoutAppends()->whereIn('id', $allUsers)->with(['profile:id,user_id,avatar as image'])->select(['id', 'name'])->get();
 
         $admins = collect($admins);
         $members = collect($members);
