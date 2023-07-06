@@ -73,41 +73,11 @@ class UserResource extends JsonResource
                 'level'         =>$family->level
             ];
         }
-
-
-//        if ($request->user ()){
-//            $fArr = $request->user ()->friends_ids()->toArray();
-//        }else{
-//            $fArr = [];
-//        }
-
-//        $statics = [
-//            'visitor'=>0,
-//            'fans'=>0,
-//            'followers'=>0,
-//            'income'=>0,
-//            'frame'=>0,
-//            'enteirs'=>0,
-//            'bubble'=>0,
-//        ];
-//
-//        $previliges = [
-//            'no_kick'=>Common::pack_get (9,$this->id),
-//            'intro_animation'=>Common::pack_get (11,$this->id),
-//            'wapel'=>Common::pack_get (12,$this->id),
-//            'vip_gifts'=>Common::pack_get (14,$this->id),
-//            'no_pan'=>Common::pack_get (15,$this->id),
-//            'anonymous_man'=>Common::pack_get (17,$this->id),
-//            'colored_name'=>Common::pack_get (18,$this->id),
-//        ];
-
-//        $auth_token = null;
-//        if ($this->auth_token){
-//            $auth_token = $this->auth_token;
-//        }
-//        unset($this->auth_token);
-
-//        $this->update(['flowers'=>0]);
+        if ($request->user ()){
+            $fArr = $request->user ()->friends_ids()->toArray();
+        }else{
+            $fArr = [];
+        }
 
         $data = [
             'id'=>@$this->id, // both
@@ -124,7 +94,7 @@ class UserResource extends JsonResource
             'number_of_friends'=>$this->numberOfFriends(), // both
             'profile_visitors'=>$this->profileVisits()->count(), // both
             'is_follow'=>@(bool)Common::IsFollow (@$request->user ()->id,$this->id), // user data
-            'is_friend'=>in_array ($this->id,$this->friends_ids()->toArray()), // user data
+            'is_friend'=>in_array ($this->id,$fArr),
             'is_in_live'=>$this->is_in_live(), // user data
 //            'is_first'=>@(bool)$this->is_points_first, // my data
             'now_room'=>[
