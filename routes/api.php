@@ -74,9 +74,11 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::post('mute_microphone_place',[MicrophoneController::class,'is_sound']);
                         Route::post('unmute_microphone_place',[MicrophoneController::class,'remove_sound']);
 
+                        // EnteranceController
                         Route::post('enter_room',[EnteranceController::class,'enter_room']);
                         Route::post('quit_room',[EnteranceController::class,'quit_room']);
                         Route::post('kick_out_of_room',[EnteranceController::class,'out_room']);
+
 
                         Route::post('getRoomUsers',[RoomController::class,'getRoomUsers']);
                         Route::post('get_room_by_owner_id',[RoomController::class,'get_room_by_owner_id']);
