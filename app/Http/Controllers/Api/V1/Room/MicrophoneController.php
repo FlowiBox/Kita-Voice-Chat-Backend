@@ -233,6 +233,7 @@ class MicrophoneController extends Controller
     public function go_microphone(Request $request){
         $data = $request;
         $this->calcTime($data['user_id']);
+        return Common::apiResponse(1,__('Success'));
         $result=Common::go_microphone_hand($data['owner_id'],$data['user_id']);
         $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
         if (!$room) return Common::apiResponse (0,'room not found',null,404);
@@ -485,8 +486,8 @@ class MicrophoneController extends Controller
             $timer->hours = $hours;
             $timer->save ();
             $user_day = UserDay::where('user_id', $uid)->whereDate('created_at', today())->first();
-            if (LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->sum('hours') >= 0.03 && $user_day->day == 0) {
-                $user_day->day = 1;
+            if (LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->sum('hours') >= 0.03 && $user_day->days == 0) {
+                $user_day->days = 1;
                 $user_day->save();
             }
 
