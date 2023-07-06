@@ -133,7 +133,7 @@ class FamilyController extends Controller
                 'user_id' => $user->id,
                 'name'=>$request->name,
                 'introduce'=>$request->introduce,
-                'notice'=>$request->notice,
+                'notice'=>@$request->notice ?? '',
                 'image' => $img?:'',
                 'num'=>20,
                 'is_success'=>1
@@ -287,7 +287,7 @@ class FamilyController extends Controller
     }
 
     public function req_list(Request $request){
-        $family = Family::query ()->where ('family_id',$request->user ()->family_id)->first ();
+        $family = Family::query ()->where ('id',$request->user ()->family_id)->first ();
 //        if (!$family){
 //            $fu = FamilyUser::query ()->where ('user_id',$request->user ()->id)->where ('user_type',1)->first ();
 //            if ($fu){

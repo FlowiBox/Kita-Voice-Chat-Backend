@@ -394,4 +394,9 @@ class User extends Authenticatable
     }
 
 
+    public function family()
+    {
+        return $this->belongsTo(Family::class, 'id', 'user_id');
+    }
+
 }
