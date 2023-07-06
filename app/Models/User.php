@@ -17,7 +17,12 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable ,FollowTrait;
 
 
+    /*
+     * To enable and disable observer saving and updating methods
+     */
     public $enableSaving = true;
+
+    public static $withoutAppends = false;
     /**
      * The attributes that are mass assignable.
      *
@@ -60,6 +65,13 @@ class User extends Authenticatable
 
     ];
 
+    public function scopeWithoutAppends($query)
+    {
+        self::$withoutAppends = true;
+
+        return $query;
+    }
+
     public function ips(){
         return $this->hasMany (Ip::class,'uid');
     }
@@ -76,29 +88,44 @@ class User extends Authenticatable
     }
 
     public function getMyStoreAttribute(){
+        if (self::$withoutAppends){
+            return;
+        }
         return Common::my_store ($this->attributes['id']);
     }
 
     public function getAvatarAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return @$this->profile ()->first ()->avatar?:Common::getConf ('default_img');
     }
 
     public function getGenderAttribute(){
+        if (self::$withoutAppends){
+            return;
+        }
         return @$this->profile ()->first ()->gender == 1?'male':'female';
     }
 
 
 
     public function country(){
-        return $this->belongsTo (Country::class)->select ('id','name','flag');
+        return $this->belongsTo (Country::class)->select ('id','name','flag', 'language');
     }
 
     public function getFlagAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return @$this->country()->first ()->flag?:'';
     }
 
     public function getLangAttribute(){
-        return @$this->country()->first ()->language?:'en';
+        if (self::$withoutAppends){
+            return ;
+        }
+        return @$this->country()->language?:'en';
     }
 
     public function rooms(){
@@ -132,6 +159,9 @@ class User extends Authenticatable
     }
 
     public function getUsdAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return $this->old_usd + $this->target_usd - $this->target_token_usd;
     }
 
@@ -150,6 +180,9 @@ class User extends Authenticatable
 
 
     public function getIsFamilyAdminAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         $family_user = FamilyUser::query ()->where ('user_id',$this->id)->where ('status',1)->first ();
         if ($family_user){
             if ($family_user->user_type == 1 ){
@@ -161,6 +194,9 @@ class User extends Authenticatable
     }
 
     public function getIsFamilyOwnerAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         $family = Family::query ()->where ('user_id',$this->id)->exists ();
         if ($family){
             return true;
@@ -202,10 +238,16 @@ class User extends Authenticatable
     }
 
     public function getIntroAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return Common::getUserDress($this->id,$this->dress_3,6,'show_img');
     }
 
     public function getFrameAttribute(){
+        if (self::$withoutAppends){
+            return ;
+        }
         return Common::getUserDress($this->id,$this->dress_1,4,'show_img');
     }
 
@@ -351,5 +393,10 @@ class User extends Authenticatable
         return $this->hasMany (UserSallary::class)->where ('month',$month)->where ('year',$year)->first ();
     }
 
+
+    public function family()
+    {
+        return $this->belongsTo(Family::class, 'id', 'user_id');
+    }
 
 }
