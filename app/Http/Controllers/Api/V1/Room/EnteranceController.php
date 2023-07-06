@@ -170,4 +170,18 @@ class EnteranceController extends Controller
             return Common::apiResponse(0,'fail',null,400);
         }
     }
+
+    private function enterTheRoomCreateOrUpdate($user_id, $owner_id, $room_id)
+    {
+        EnteredRoom::query ()->updateOrCreate (
+            [
+                'uid'=>$user_id,
+                'ruid'=>$owner_id,
+                'rid'=>$room_id
+            ],
+            [
+                'entered_at'=>now ()
+            ]
+        );
+    }
 }
