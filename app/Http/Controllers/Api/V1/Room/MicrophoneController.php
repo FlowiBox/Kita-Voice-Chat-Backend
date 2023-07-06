@@ -478,7 +478,6 @@ class MicrophoneController extends Controller
 
         // case 1 : up_mic and go_mic in the same day
 
-
         $timer = LiveTime::query ()->where ('uid',$uid)->where('end_time',null)->first ();
         if ($timer){
             $hours = round((time () - $timer->start_time)/(60*60),2);

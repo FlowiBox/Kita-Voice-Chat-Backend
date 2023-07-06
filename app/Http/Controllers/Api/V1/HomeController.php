@@ -21,6 +21,7 @@ use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Models\UserDay;
 use App\Models\Vip;
 use App\Models\PK;
 use App\Models\VipPrivilege;
@@ -133,72 +134,52 @@ class HomeController extends Controller
 
     public function getTimes(Request $request){
         $user_id = $request->user_id?:$request->user ()->id;
-        $hours = 0;
-        $days = 0;
-        $diamonds = 0;
-        $today = false;
         if ($request->time == 'today'){
-            $times = LiveTime::query ()->where ('uid',$user_id)
+            $hours = LiveTime::query ()->where ('uid',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
                 ->whereDay ('created_at','=',Carbon::now ()->day)
-                ->selectRaw('uid, SUM(hours) as hnum, SUM(days) as dnum')
-                ->groupBy ('uid')
-                ->first ()
-            ;
-            if ($times){
-                $hours = $times->hnum;
-                $days = $times->dnum;
-            }
+                ->sum('hours');
 
-            $gifts_d = GiftLog::query ()->where ('receiver_id',$user_id)
+            $days = UserDay::query ()->where ('user_id',$user_id)
+                ->whereYear ('created_at','=',Carbon::now ()->year)
+                ->whereMonth ('created_at','=',Carbon::now ()->month)
+                ->whereDay ('created_at','=',Carbon::now ()->day)
+                ->sum('days');
+
+            $diamonds = GiftLog::query ()->where ('receiver_id',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
                 ->whereDay ('created_at','=',Carbon::now ()->day)
                 ->sum ('receiver_obtain');
-            $diamonds = $gifts_d;
-            if ($days >= 1){
-                $today = true;
-            }
         }
         elseif($request->time == 'month'){
-            $times = LiveTime::query ()->where ('uid',$user_id)
+            $hours = LiveTime::query ()->where ('uid',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
-                ->selectRaw('uid, SUM(hours) as hnum, SUM(days) as dnum')
-                ->groupBy ('uid')
-                ->first ()
-            ;
-            if ($times){
-                $hours = $times->hnum;
-                $days = $times->dnum;
-            }
+                ->sum('hours');
 
-            $gifts_d = GiftLog::query ()->where ('receiver_id',$user_id)
+            $days = UserDay::query ()->where ('user_id',$user_id)
+                ->whereYear ('created_at','=',Carbon::now ()->year)
+                ->whereMonth ('created_at','=',Carbon::now ()->month)
+                ->sum('days');
+
+            $diamonds = GiftLog::query ()->where ('receiver_id',$user_id)
                 ->whereYear ('created_at','=',Carbon::now ()->year)
                 ->whereMonth ('created_at','=',Carbon::now ()->month)
                 ->sum ('receiver_obtain');
-            $diamonds = $gifts_d;
-        }
-        else{
-            $times = LiveTime::query ()->where ('uid',$user_id)
-                ->selectRaw('uid, SUM(hours) as hnum, SUM(days) as dnum')
-                ->groupBy ('uid')
-                ->first ()
-            ;
-            if ($times){
-                $hours = $times->hnum;
-                $days = $times->dnum;
-            }
+        } else{
+            $hours = LiveTime::query ()->where('uid',$user_id)->sum('hours');
 
-            $gifts_d = GiftLog::query ()->where ('receiver_id',$user_id)
+            $days = UserDay::query ()->where('user_id',$user_id)->sum('days');
+
+            $diamonds = GiftLog::query ()->where ('receiver_id',$user_id)
                 ->sum ('receiver_obtain');
-            $diamonds = $gifts_d;
         }
 
         $hours = gmdate('H:i:s', $hours * 60 * 60);
 
-        return Common::apiResponse (1,'',['diamonds'=>(integer)$diamonds?:0,'days'=>$days?:0,'hours'=>$hours?:0, 'today'=>$today],200);
+        return Common::apiResponse (1,'',['diamonds'=>(integer)$diamonds?:0,'days'=>$days?:0,'hours'=>$hours?:0],200);
 
     }
 
