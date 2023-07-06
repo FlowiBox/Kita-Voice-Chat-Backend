@@ -19,13 +19,13 @@ class FamilyResource extends JsonResource
 //        if (!$this->resource){
 //            return null;
 //        }
-        $owner = User::where('id', $this->user_id)->with(['profile:id,user_id,avatar as image'])->select(['id', 'name'])->first();
+//        $owner = User::where('id', $this->user_id)->with(['profile:id,user_id,avatar as image'])->select(['id', 'name'])->first();
 
 //        $me = new UserResource($request->user ());
 
 //        $mems = FamilyUser::query ()->where ('family_id',@$this->id)->where ('status',1)->pluck ('user_id');
 
-        [$admins, $members] = $this->getFamilyUsers();
+        [$owner, $admins, $members] = $this->getFamilyUsers();
         return [
             'id'=>@$this->id,
             'name'=>@$this->name?:'',
@@ -56,27 +56,23 @@ class FamilyResource extends JsonResource
     public function getFamilyUsers()
     {
         $familyUsers = $this->users;
-        $admins = $familyUsers->where('user_type', 2)->pluck('user_id')->toArray();
-        $members = $familyUsers->where('user_type','!=' ,2)->pluck('user_id')->toArray();
 
-        $admins = array_unique($admins);
-        $members = array_unique($members);
+        $owner = collect([$this->user_id]);
+        $admins = $familyUsers->where('user_type', 1)->pluck('user_id')->unique();
+        $members = $familyUsers->where('user_type', 0)->pluck('user_id')->unique();
 
-        $allUsers = array_merge($admins, $members);
+        $allUsers = $admins->concat($members)->concat($owner);
 
-        $allUsers = User::query()->withoutAppends()->whereIn('id', $allUsers)->with(['profile:id,user_id,avatar as image'])->select(['id', 'name'])->get();
+        $allUsers = User::query()->whereIn('id', $allUsers)
+                        ->withoutAppends()
+                        ->select(['id', 'name'])
+                        ->with(['profile:id,user_id,avatar as image'])
+                        ->get();
 
-        $admins = collect($admins);
-        $members = collect($members);
+        $admins = $allUsers->whereIn('id', $admins)->values();
+        $members = $allUsers->whereIn('id', $members)->values();
+        $owner = $allUsers->whereIn('id', $owner)->first();
 
-        $admins = $admins->map(function ($id) use($allUsers){
-            return $allUsers->where('id', $id);
-        })->flatten();
-
-        $members = $members->map(function ($id) use($allUsers){
-            return $allUsers->where('id', $id);
-        })->flatten();
-        return [$admins, $members];
-
+        return [$owner, $admins, $members];
     }
 }
