@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\V1;
 
+use App\Http\Resources\User\FamilyUserResource as FamilyUserResourceAlias;
 use App\Models\FamilyUser;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -35,21 +36,21 @@ class FamilyResource extends JsonResource
             'max_num_of_members'=>@$this->num?:0,
             'max_num_of_admins'=>@$this->num_admins?:0,
             'rank'=>@(integer)$this->rank?:0,
-            'owner'=>$owner,
-//            'me'=>$me,
+            'owner'=>new FamilyUserResourceAlias($owner),
+            //            'me'=>$me,
             'am_i_member'=>FamilyUser::query ()->where ('user_id',$request->user ()->id)->where ('family_id',$this->id)->where ('status',1)->exists (),
             'am_i_owner'=>(@$this->user_id == $request->user ()->id) ?true:false,
             'am_i_admin'=>$request->user ()->is_family_admin ?true:false,
-//            'members'=> ShortFamilyUserResource::collection (User::query ()->whereIn ('id',$mems)->where ('id','!=',$this->user_id)->get ()),
-            'members'=> $members,
+            //            'members'=> ShortFamilyUserResource::collection (User::query ()->whereIn ('id',$mems)->where ('id','!=',$this->user_id)->get ()),
+            'members'=> FamilyUserResourceAlias::collection($members),
             'num_of_requests'=>FamilyUser::query ()->where ('family_id',$this->id)->where ('status',0)->count (),
             'num_of_members'=>$this->members_count,
             'level'=>@$this->level?:'',
             'today_rank'=>$this->today_rank,
             'week_rank'=>$this->week_rank,
             'month_rank'=>$this->month_rank,
-//            'admins' => @$this->admins ? MiniUserResource::collection($this->admins) :[],
-            'admins' => $admins
+            //            'admins' => @$this->admins ? MiniUserResource::collection($this->admins) :[],
+            'admins' => FamilyUserResourceAlias::collection($admins)
         ];
     }
 
