@@ -760,16 +760,7 @@ class RoomController extends Controller
         return Common::apiResponse(true, '', $room_info);
 
         // Cache the response
-//        Cache::put($cacheKey, $response, 60*60*24); // Set an appropriate expiration time
 
-
-
-        /*
-         * kam sando2 haz
-         * check get from it or no
-         * --------------
-         * mode room
-         * */
 
 
     }
