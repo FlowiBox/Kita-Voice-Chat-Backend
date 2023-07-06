@@ -1039,7 +1039,12 @@ class RoomController extends Controller
         $res_arr['user']=$user;
 
         if($res){
-
+            $user_day = UserDay::where('user_id', $user_id)->whereDate('created_at', today())->first();
+            if (!$user_day) {
+                UserDay::create([
+                    'user_id'        => $user_id,
+                ]);
+            }
             //Remove mic sequence
             Common::delMicHand($user_id);
             LiveTime::query ()->where ('uid',$user_id)->where('end_time',null)->whereDate ('created_at','!=',today ())->delete ();
