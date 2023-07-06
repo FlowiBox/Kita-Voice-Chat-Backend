@@ -789,8 +789,6 @@ class RoomController extends Controller
             ]
         );
     }
-
-
     //exit the room
     public function quit_room(Request $request){
         if(!$request->owner_id)   Common::apiResponse(false,__('missing owner_id'),null,422);
