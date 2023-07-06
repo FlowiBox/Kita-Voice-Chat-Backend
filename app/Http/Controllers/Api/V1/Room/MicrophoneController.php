@@ -8,6 +8,7 @@ use App\Models\LiveTime;
 use App\Models\Pk;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\UserDay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -186,6 +187,13 @@ class MicrophoneController extends Controller
 
             //Remove mic sequence
             Common::delMicHand($user_id);
+
+            $user_day = UserDay::where('user_id', $user_id)->whereDate('created_at', today())->first();
+            if (!$user_day) {
+                UserDay::create([
+                    'user_id'        => $user_id,
+                ]);
+            }
             LiveTime::query ()->where ('uid',$user_id)->where('end_time',null)->whereDate ('created_at','!=',today ())->delete ();
             $t = LiveTime::query ()->where ('uid',$user_id)
                 ->where('end_time',null)
@@ -224,6 +232,8 @@ class MicrophoneController extends Controller
     //leave mic
     public function go_microphone(Request $request){
         $data = $request;
+        $this->calcTime($data['user_id']);
+        return Common::apiResponse(1,__('Success'));
         $result=Common::go_microphone_hand($data['owner_id'],$data['user_id']);
         $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
         if (!$room) return Common::apiResponse (0,'room not found',null,404);
@@ -465,19 +475,28 @@ class MicrophoneController extends Controller
     }
 
     public function calcTime($uid){
+
+        // case 1 : up_mic and go_mic in the same day
+
+
         $timer = LiveTime::query ()->where ('uid',$uid)->where('end_time',null)->first ();
         if ($timer){
             $hours = round((time () - $timer->start_time)/(60*60),2);
             $timer->end_time = time ();
             $timer->hours = $hours;
-            $d = LiveTime::query ()->where ('uid',$uid)->whereDate ('created_at',today ())->where ('days','>=',1)->exists ();
-            if (!$d){
-                if ($hours >= 1){
-                    $timer->days = 1;
-                }
+            $timer->save ();
+            $user_day = UserDay::where('user_id', $uid)->whereDate('created_at', today())->first();
+            if (LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->sum('hours') >= 0.03 && $user_day->days == 0) {
+                $user_day->days = 1;
+                $user_day->save();
             }
 
-            $timer->save ();
+//            $d = LiveTime::query ()->where ('uid',$uid)->whereDate ('created_at',today ())->where ('days','>=',1)->exists ();
+//            if (!$d){
+//                if ($hours >= 1){
+//                    $timer->days = 1;
+//                }
+//            }
         }
     }
 

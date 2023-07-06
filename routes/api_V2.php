@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Room\EnteranceController;
+use App\Http\Controllers\Api\V1\Room\MicrophoneController;
+use App\Http\Controllers\Api\V1\Room\ResourceController;
+use App\Http\Controllers\Api\V1\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -53,48 +57,50 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
 
                     Route::prefix ('rooms')->group (function (){
 
-//        Route::post ('get_other_user',[\App\Http\Controllers\Api\V1\RoomController::class,'get_other_user']);
-                        Route::post('enter_room2',[\App\Http\Controllers\Api\V1\RoomController::class,'enter_room2']);
+                        // Resource Controller
+                        Route::get ('/',[ResourceController::class,'index']);
+                        Route::get ('/{id}',[ResourceController::class,'show']);
+                        Route::post ('/create',[ResourceController::class,'store']);
+                        Route::post ('/{id}/edit',[ResourceController::class,'update']);
 
-                        Route::post('enter_room',[\App\Http\Controllers\Api\V1\RoomController::class,'enter_room2']);
-                        Route::post('quit_room',[\App\Http\Controllers\Api\V1\RoomController::class,'quit_room']);
-                        Route::post('kick_out_of_room',[\App\Http\Controllers\Api\V1\RoomController::class,'out_room']);
-                        Route::post('getRoomUsers',[\App\Http\Controllers\Api\V1\RoomController::class,'getRoomUsers']);
-                        Route::post('microphone_status',[\App\Http\Controllers\Api\V1\RoomController::class,'microphone_status']);
-                        Route::post('up_microphone',[\App\Http\Controllers\Api\V1\RoomController::class,'up_microphone']);
-                        Route::post('leave_microphone',[\App\Http\Controllers\Api\V1\RoomController::class,'go_microphone']);
-                        Route::post('mute_microphone',[\App\Http\Controllers\Api\V1\RoomController::class,'mute_microphone']);
-                        Route::post('unmute_microphone',[\App\Http\Controllers\Api\V1\RoomController::class,'unmute_microphone']);
-                        Route::post('lock_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'shut_microphone']);
-                        Route::post('unlock_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'open_microphone']);
-                        Route::post('mute_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'is_sound']);
-                        Route::post('unmute_microphone_place',[\App\Http\Controllers\Api\V1\RoomController::class,'remove_sound']);
-                        Route::post('get_room_by_owner_id',[\App\Http\Controllers\Api\V1\RoomController::class,'get_room_by_owner_id']);
-                        Route::post('add_admin_to_room',[\App\Http\Controllers\Api\V1\RoomController::class,'is_admin']);
-                        Route::post('remove_admin',[\App\Http\Controllers\Api\V1\RoomController::class,'remove_admin']);
-                        Route::post('ban_user_from_writing',[\App\Http\Controllers\Api\V1\RoomController::class,'is_black']);
-                        Route::post('remove_ban_user_from_writing',[\App\Http\Controllers\Api\V1\RoomController::class,'removeBan']);
-                        Route::post('room_background_list',[\App\Http\Controllers\Api\V1\RoomController::class,'room_background']);
-                        Route::post('check_if_has_pass',[\App\Http\Controllers\Api\V1\RoomController::class,'is_pass']);
-                        Route::get('check_if_i_have_room',[\App\Http\Controllers\Api\V1\RoomController::class,'amIHaveRoom']);
+                        // Microphone Controller
+                        Route::post('microphone_status',[MicrophoneController::class,'microphone_status']);
+                        Route::post('up_microphone',[MicrophoneController::class,'up_microphone']);
+                        Route::post('leave_microphone',[MicrophoneController::class,'go_microphone']);
+                        Route::post('mute_microphone',[MicrophoneController::class,'mute_microphone']);
+                        Route::post('unmute_microphone',[MicrophoneController::class,'unmute_microphone']);
+                        Route::post('lock_microphone_place',[MicrophoneController::class,'shut_microphone']);
+                        Route::post('unlock_microphone_place',[MicrophoneController::class,'open_microphone']);
+                        Route::post('mute_microphone_place',[MicrophoneController::class,'is_sound']);
+                        Route::post('unmute_microphone_place',[MicrophoneController::class,'remove_sound']);
 
-                        Route::post ('remove_pass',[\App\Http\Controllers\Api\V1\RoomController::class,'removeRoomPass']);
+                        // EnteranceController
+                        Route::post('enter_room',[EnteranceController::class,'enter_room']);
+                        Route::post('quit_room',[EnteranceController::class,'quit_room']);
+                        Route::post('kick_out_of_room',[EnteranceController::class,'out_room']);
 
 
-                        Route::get ('/',[\App\Http\Controllers\Api\V1\RoomController::class,'index']);
-                        Route::get ('/{id}',[\App\Http\Controllers\Api\V1\RoomController::class,'show']);
-                        Route::post ('/create',[\App\Http\Controllers\Api\V1\RoomController::class,'store']);
-                        Route::post ('/{id}/edit',[\App\Http\Controllers\Api\V1\RoomController::class,'update']);
+                        Route::post('getRoomUsers',[RoomController::class,'getRoomUsers']);
+                        Route::post('get_room_by_owner_id',[RoomController::class,'get_room_by_owner_id']);
+                        Route::post('add_admin_to_room',[RoomController::class,'is_admin']);
+                        Route::post('remove_admin',[RoomController::class,'remove_admin']);
+                        Route::post('ban_user_from_writing',[RoomController::class,'is_black']);
+                        Route::post('remove_ban_user_from_writing',[RoomController::class,'removeBan']);
+                        Route::post('room_background_list',[RoomController::class,'room_background']);
+                        Route::post('check_if_has_pass',[RoomController::class,'is_pass']);
+                        Route::get('check_if_i_have_room',[RoomController::class,'amIHaveRoom']);
 
-                        Route::post ('createPK',[\App\Http\Controllers\Api\V1\RoomController::class,'createPK']);
-                        Route::post ('closePK',[\App\Http\Controllers\Api\V1\RoomController::class,'closePK']);
-                        Route::post ('showPK',[\App\Http\Controllers\Api\V1\RoomController::class,'showPK']);
+                        Route::post ('remove_pass',[RoomController::class,'removeRoomPass']);
+
+                        Route::post ('createPK',[RoomController::class,'createPK']);
+                        Route::post ('closePK',[RoomController::class,'closePK']);
+                        Route::post ('showPK',[RoomController::class,'showPK']);
 
 
 
-                        Route::post ('admins',[\App\Http\Controllers\Api\V1\RoomController::class,'getAdmins']);
-                        Route::post ('firstOfRoom',[\App\Http\Controllers\Api\V1\RoomController::class,'firstOfRoom']);
-                        Route::post('request-background-image',[\App\Http\Controllers\Api\V1\RoomController::class, 'RequestBackgroundImage']);
+                        Route::post ('admins',[RoomController::class,'getAdmins']);
+                        Route::post ('firstOfRoom',[RoomController::class,'firstOfRoom']);
+                        Route::post('request-background-image',[RoomController::class, 'RequestBackgroundImage']);
                     });
                     Route::prefix ('mall')->group (function (){
                         Route::get ('wares',[\App\Http\Controllers\Api\V1\MallController::class,'index']);
