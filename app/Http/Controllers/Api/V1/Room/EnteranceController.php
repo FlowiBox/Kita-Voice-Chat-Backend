@@ -14,6 +14,7 @@ use App\Models\BoxUse;
 use App\Models\EnteredRoom;
 use App\Models\Family;
 use App\Models\GiftLog;
+use App\Models\LiveTime;
 use App\Models\Pk;
 use App\Models\RequestBackgroundImage;
 use App\Models\Room;
@@ -183,5 +184,22 @@ class EnteranceController extends Controller
                 'entered_at'=>now ()
             ]
         );
+    }
+
+    public function calcTime($uid){
+        $timer = LiveTime::query ()->where ('uid',$uid)->where('end_time',null)->first ();
+        if ($timer){
+            $hours = round((time () - $timer->start_time)/(60*60),2);
+            $timer->end_time = time ();
+            $timer->hours = $hours;
+            $d = LiveTime::query ()->where ('uid',$uid)->whereDate ('created_at',today ())->where ('days','>=',1)->exists ();
+            if (!$d){
+                if ($hours >= 1){
+                    $timer->days = 1;
+                }
+            }
+
+            $timer->save ();
+        }
     }
 }
