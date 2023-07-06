@@ -117,10 +117,10 @@ class FamilyController extends Controller
         if($user->di < $familyPrice){
             return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
         }
-//        $ex = Family::query ()->where ('user_id',$user->id)->exists ();
+        $ex = Family::query ()->where ('user_id',$user->id)->exists ();
         // if user has family return error
         $userFamily = $user->family_id;
-        if ($userFamily != 0) return Common::apiResponse (0,'already have family',null,405);
+        if ($ex || $userFamily != 0) return Common::apiResponse (0,'already have family',null,405);
 
         $img = null;
         if ($request->hasFile ('image')){

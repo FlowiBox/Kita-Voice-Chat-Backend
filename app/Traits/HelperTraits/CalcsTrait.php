@@ -332,8 +332,10 @@ Trait CalcsTrait
 
         $star_level      = $user->received_level + $user->sub_receiver_level;
 
-        $star_level_img         = self ::getLevel ( $user->id , 1 ,true);
-        $star_level_img         = Vip::where('level', $star_level)->where('type', 1)->first()->img;
+        $star_level_img = self ::getLevel ( $user->id , 1 ,true);
+        $firstVip          = Vip::where('level', $star_level)->where('type', 1)->first();
+
+        $star_level_img = !is_null($firstVip) ? $firstVip->img : '';
         //
 
 
@@ -344,8 +346,8 @@ Trait CalcsTrait
         $gold_level             = $user->sender_level + $user->sub_sender_level;
 
 
-
-        $gold_level_img      = Vip::where('level', $gold_level)->where('type', 2)->first()->img;
+        $firstVip          = Vip::where('level', $gold_level)->where('type', 2)->first();
+        $gold_level_img = !is_null($firstVip) ? $firstVip->img : '';;
 
         $current_gold_num   = self::getCurrentLevel (2,$gold_level,'exp');
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
