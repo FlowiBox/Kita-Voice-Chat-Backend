@@ -179,7 +179,7 @@ class HomeController extends Controller
 
         $hours = gmdate('H:i:s', $hours * 60 * 60);
 
-        return Common::apiResponse (1,'',['diamonds'=>(integer)$diamonds?:0,'days'=>$days?:0,'hours'=>$hours?:0],200);
+        return Common::apiResponse (1,'',['diamonds'=>(integer)$diamonds?:0,'days'=>(integer)$days?:0,'hours'=>$hours?:0],200);
 
     }
 
