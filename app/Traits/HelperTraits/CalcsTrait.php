@@ -390,8 +390,9 @@ Trait CalcsTrait
     }
 
 
-    public static function level_center_min ( $user )
+    public static function level_center_min ( $user_id )
     {
+        $user = User::query()->find($user_id);
         $star_num = DB ::table ( 'gift_logs' ) -> where ( 'receiver_id' , $user->id ) -> sum ( 'giftPrice' );
         $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user->id ) -> sum ( 'giftPrice' );
 
