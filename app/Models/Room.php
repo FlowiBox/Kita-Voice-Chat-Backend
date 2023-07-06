@@ -48,4 +48,14 @@ class Room extends Model
         return $this->hasMany (GiftLog::class,'roomowner_id','uid');
     }
 
+
+    public function roomCategory()
+    {
+        return $this->belongsTo(RoomCategory::class, 'room_type');
+    }
+
+    public function family()
+    {
+        return $this->belongsTo(Family::class, 'uid', 'user_id');
+    }
 }
