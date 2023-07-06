@@ -191,7 +191,7 @@ class MicrophoneController extends Controller
             $user_day = UserDay::where('user_id', $user_id)->whereDate('created_at', today())->first();
             if (!$user_day) {
                 UserDay::create([
-                   'user_id'        => $user_id,
+                    'user_id'        => $user_id,
                 ]);
             }
             LiveTime::query ()->where ('uid',$user_id)->where('end_time',null)->whereDate ('created_at','!=',today ())->delete ();
@@ -232,6 +232,7 @@ class MicrophoneController extends Controller
     //leave mic
     public function go_microphone(Request $request){
         $data = $request;
+        $this->calcTime($data['user_id']);
         $result=Common::go_microphone_hand($data['owner_id'],$data['user_id']);
         $room = Room::query ()->where ('uid',$data['owner_id'])->first ();
         if (!$room) return Common::apiResponse (0,'room not found',null,404);
@@ -484,7 +485,7 @@ class MicrophoneController extends Controller
             $timer->hours = $hours;
 
             $user_day = UserDay::where('user_id', $uid)->whereDate('created_at', today())->first();
-            dd($user_day, LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->sum('hours'));
+            dd($user_day, LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->get());
             if (LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->sum('hours') >= 0.1 && $user_day->day == 0) {
                 $user_day->day = 1;
                 $user_day->save();
