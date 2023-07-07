@@ -15,7 +15,7 @@ class UpdateUserWhenSendGift
         $receivedUser->monthly_diamond_received += $totalCoins;
         $receivedUser->total_diamond_received   += $totalCoins;
         // update levels
-        $receivedUser->received_level = $this->getLevel(1, $receivedUser->total_diamond_received)->level;
+//        $receivedUser->received_level = $this->getLevel(1, $receivedUser->total_diamond_received)->level;
         //
         $receivedUser->save();
         $receivedUser->enableSaving = true;
@@ -41,7 +41,7 @@ class UpdateUserWhenSendGift
         $senderUser->enableSaving         = false;
         $senderUser->monthly_diamond_send += $totalCoins;
         $senderUser->total_diamond_send   += $totalCoins;
-        $senderUser->sender_level         = $this->getLevel(2, $senderUser->monthly_diamond_send)->level;
+//        $senderUser->sender_level         = $this->getLevel(2, $senderUser->monthly_diamond_send)->level;
         $senderUser->save();
         $senderUser->enableSaving = true;
 
