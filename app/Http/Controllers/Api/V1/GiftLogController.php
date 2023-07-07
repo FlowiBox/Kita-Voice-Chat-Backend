@@ -131,7 +131,7 @@ class GiftLogController extends Controller
                 $res_arr['image']=@$user->profile->avatar;
                 $price = $data['num'] * $gift->price;
 
-                $level = Common::getLevel($user->id, 1);
+                $level = Common::getLevel($user->id, 3);
                 $updateUserWhenSendGift->update($price, $user);
                 $res_arr['nick_color'] = Common::getNickColorByVip($level);
 
