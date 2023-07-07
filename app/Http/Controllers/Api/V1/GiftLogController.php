@@ -65,7 +65,7 @@ class GiftLogController extends Controller
         $vis_arr=explode(",",$room->room_visitor);
         $vis_arr[]=$data['owner_id'];
 
-        if(!in_array($data['user_id'],$vis_arr))    return Common::apiResponse(0,'you are not in this room',null,403);
+//        if(!in_array($data['user_id'],$vis_arr))    return Common::apiResponse(0,'you are not in this room',null,403);
 
         //Determine whether to send
         $vip_level=@Common::ovip_center ($data['user_id']);
