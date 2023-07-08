@@ -13,22 +13,23 @@ use Illuminate\Support\Facades\DB;
 class TestController extends Controller
 {
     public function index() {
-        dd(gettype(1890));
-        $user = User::find(1890);
-        dd($user->followers_ids()->count(), User::whereIn('id',$user->followers_ids())->count());
-        $packs = Pack::query()
-            ->where ('user_id',$user->id)
-            ->where (function ($q){
-                $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
-            })
-            ->pluck('type')
-            ->toArray();
-        $no_kick            = in_array(9, $packs);
-        $intro_animation    = in_array(11, $packs);
-        $vip_gifts          = in_array(14, $packs);
-        $no_pan             = in_array(15, $packs);
-        $anonymous_man      = in_array(17, $packs);
-        $colored_name       = in_array(18, $packs);
-        dd($no_kick, $intro_animation, $vip_gifts, $no_pan, $anonymous_man, $colored_name);
+        foreach (\App\Models\User::all() as $user) {
+            $star_num_old = \DB ::table ( 'gift_logs' ) -> where ( 'receiver_id' , $user->id ) -> sum ( 'giftPrice' );
+            $gold_num_old = \DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user->id ) -> sum ( 'giftPrice' );
+
+
+
+            $user->total_diamond_received   = $star_num_old;
+            $user->total_diamond_send   = $gold_num_old;
+
+
+            $user->received_level = \App\Models\Vip::query()->where(['type' => 1])->where('exp', '<=', $star_num_old)->orderByDesc('exp')->limit(1)->first()->level;
+
+
+            $user->sender_level   = \App\Models\Vip::query()->where(['type' => 1])->where('exp', '<=', $gold_num_old)->orderByDesc('exp')->limit(1)->first()->level;
+
+            $user->save();
+
+        }
     }
 }

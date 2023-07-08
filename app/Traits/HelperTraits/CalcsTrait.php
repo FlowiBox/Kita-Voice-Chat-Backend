@@ -332,7 +332,7 @@ Trait CalcsTrait
 
         $star_level      = $user->received_level + $user->sub_receiver_level;
 
-        $star_level_img = self ::getLevel ( $user->id , 1 ,true);
+//        $star_level_img = self ::getLevel ( $user->id , 1 ,true);
         $firstVip          = Vip::where('level', $star_level)->where('type', 1)->first();
 
         $star_level_img = !is_null($firstVip) ? $firstVip->img : '';
