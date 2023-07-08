@@ -60,15 +60,15 @@ class LoginController extends Controller
             $ip = Ban::where('ip', $user->login_ip)->first();
             $blo = Ban::where('uid', $user->uuid)->first();
 
-            if ($dev) {
+            if ($dev != null) {
                 return Common::apiResponse(0, 'You have a ban dev', null, 501);
             }
 
-            if ($ip) {
+            if ($ip != null) {
                 return Common::apiResponse(0, 'You have a ban ip', null, 501);
             }
 
-            if ($blo) {
+            if ($blo != null) {
                 return Common::apiResponse(0, 'You have a ban uuid', null, 501);
             }
             return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
@@ -95,15 +95,15 @@ class LoginController extends Controller
         $ip = Ban::where('ip', $user->login_ip)->first();
         $blo = Ban::where('uid', $user->uuid)->first();
         
-        if ($dev) {
+        if ($dev != null) {
             return Common::apiResponse(0, 'You have a ban dev', null, 501);
         }
         
-        if ($ip) {
+        if ($ip != null) {
             return Common::apiResponse(0, 'You have a ban ip', null, 501);
         }
         
-        if ($blo) {
+        if ($blo != null) {
             return Common::apiResponse(0, 'You have a ban uuid', null, 501);
         }
         
