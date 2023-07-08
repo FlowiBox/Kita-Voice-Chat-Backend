@@ -27,6 +27,7 @@ class EnteranceController extends Controller
 {
     public function enter_room(Request $request)
     {
+
         $room_pass = $request['room_pass'];
         $owner_id  = $request['owner_id'];
 
@@ -75,31 +76,31 @@ class EnteranceController extends Controller
 
         $this->enterTheRoomCreateOrUpdate($user_id, $owner_id, $room->id);
 
+
+        $this->updateRoomVisitor($user_id, $owner_id, $room);
         //send to zego
         $user->enableSaving = false;
         $user->now_room_uid = (integer)$owner_id;
         $user->save();
 
-
-
-        // Replace this line with your existing return statement
         return Common::apiResponse(true, '', $room_info);
-
-        // Cache the response
-//        Cache::put($cacheKey, $response, 60*60*24); // Set an appropriate expiration time
-
-
-
-        /*
-         * kam sando2 haz
-         * check get from it or no
-         * --------------
-         * mode room
-         * */
-
-
     }
 
+
+    private function updateRoomVisitor($user_id, $owner_id, Room $room)
+    {
+        if($user_id == $owner_id) return;
+
+        $visitors = explode(',', $room->room_vistor);
+        if(!in_array($user_id, $visitors)) {
+            $visitors[] = $user_id;
+            $visitors = array_unique($visitors);
+            $visitors=trim(implode(",", $visitors),",");
+            $room->room_visitor = $visitors;
+            $room->save();
+        }
+        //explode string to array
+    }
 
     //exit the room
     public function quit_room(Request $request){
