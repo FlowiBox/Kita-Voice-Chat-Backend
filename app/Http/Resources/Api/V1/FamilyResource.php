@@ -9,6 +9,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
+use Stripe\Collection;
 
 class FamilyResource extends JsonResource
 {
@@ -20,6 +21,7 @@ class FamilyResource extends JsonResource
      */
     public function toArray($request)
     {
+        $userId = $request->id();
         [$owner, $admins, $members] = $this->getFamilyUsers();
         return [
             'id'                 => @$this->id,
@@ -33,7 +35,10 @@ class FamilyResource extends JsonResource
             'owner'              => new FamilyUserResourceAlias($owner),
             'am_i_member'        => FamilyUser::query()->where('user_id', $request->user()->id)->where('family_id', $this->id)->where('status', 1)->exists(),
             'am_i_owner'         => (@$this->user_id == $request->user()->id) ? true : false,
-            'am_i_admin'         => $request->user()->is_family_admin ? true : false,
+//            'am_i_admin'         => $request->user()->is_family_admin ? true : false,
+            'am_i_admin'         => $admins->filter(function ($user) use($userId){
+                return $user->id = $userId;
+            }),
             'members'            => FamilyUserResourceAlias::collection($members),
             'num_of_requests'    => FamilyUser::query()->where('family_id', $this->id)->where('status', 0)->count(),
             'num_of_members'     => $this->members_count,
