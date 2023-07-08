@@ -286,6 +286,10 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         return Broadcast::auth($request);
                     });
 
+                    Route::prefix('config')->group(function() {
+                        Route::post('keys-values', [\App\Http\Controllers\Api\V1\ConfigController::class, 'getConfigValues']);
+                    });
+
                     Route::prefix('conversations')->group(function (){
                         Route::get('/', [\App\Http\Controllers\Api\V1\ConversationController::class,'index']);
                         Route::post('/start', [\App\Http\Controllers\Api\V1\ConversationController::class,'startConversationWith']);

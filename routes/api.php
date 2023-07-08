@@ -298,6 +298,10 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         });
                     });
 
+                    Route::prefix('config')->group(function() {
+                        Route::post('keys-values', [\App\Http\Controllers\Api\V1\ConfigController::class, 'getConfigValues']);
+                    });
+
 
                 });
 

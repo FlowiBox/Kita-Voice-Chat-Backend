@@ -67,6 +67,12 @@ class Common{
         );
     }
 
+    public static function getConfFromKey(array $keys )
+    {
+        $confs = Config::query()->whereIn('name', $keys)->select(['name', 'value'])->get();
+
+        return $confs ?: null;
+    }
 
     public static function  getPaginates($collection)
     {
