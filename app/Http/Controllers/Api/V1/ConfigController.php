@@ -14,6 +14,7 @@ class ConfigController extends Controller
 
     public function getConfigValues(ConfigValuesRequest $request)
     {
+        $configs = [];
         if (isset($request['keys'])){
             $configs = Common::getConfFromKey($request['keys']);
 
