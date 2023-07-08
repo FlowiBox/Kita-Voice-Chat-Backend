@@ -59,7 +59,7 @@ class EnteranceController extends Controller
             ->with(['owner', 'roomCategory', 'family'])
             ->first();
 
-        $roomBlack = $room->rooom_black;
+        $roomBlack = $room->room_black;
         if(!empty($roomBlack)){
             $is_black = explode(',', $roomBlack);
             foreach ($is_black as $k => &$v) {
