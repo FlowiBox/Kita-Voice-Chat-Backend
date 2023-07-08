@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Resources\Api\V1\MyDataResource;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Ban;
 use App\Models\Code;
 use App\Models\Country;
 use App\Models\User;
@@ -17,6 +18,11 @@ use Illuminate\Support\Facades\Hash;
 class LoginController extends Controller
 {
     public function login(LoginRequest $request){
+
+
+     
+
+        
         switch ($request['type']){
             case 'email_pass':
                 $fields = ['email'=>$request['email'],'password'=>$request['password']];
@@ -47,6 +53,24 @@ class LoginController extends Controller
             if (!$this->canLogin($user)){
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
+
+
+                
+            $dev = Ban::where('device_number', '=', $user->device_token)->first();
+            $ip = Ban::where('ip', $user->login_ip)->first();
+            $blo = Ban::where('uid', $user->uuid)->first();
+
+            if ($dev) {
+                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+            }
+
+            if ($ip) {
+                return Common::apiResponse(0, 'You have a ban ip', null, 501);
+            }
+
+            if ($blo) {
+                return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+            }
             return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
         }else{
             return Common::apiResponse (false,'credentials does\'t match',[],422);
@@ -66,6 +90,31 @@ class LoginController extends Controller
         if (!$this->canLogin($user)){
             return Common::apiResponse (false,'you are blocked',[],408);
         }
+
+        $dev = Ban::where('device_number', '=', $user->device_token)->first();
+        $ip = Ban::where('ip', $user->login_ip)->first();
+        $blo = Ban::where('uid', $user->uuid)->first();
+        
+        if ($dev) {
+            return Common::apiResponse(0, 'You have a ban dev', null, 501);
+        }
+        
+        if ($ip) {
+            return Common::apiResponse(0, 'You have a ban ip', null, 501);
+        }
+        
+        if ($blo) {
+            return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+        }
+        
+        
+        
+        
+        
+        
+        
+
+
         return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
     }
 

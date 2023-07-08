@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Requests\Api\V1\Auth\RegisterRequest;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Ban;
 use App\Models\Code;
 use App\Models\Country;
 use App\Models\User;
@@ -15,6 +16,16 @@ use Illuminate\Http\Request;
 class RegisterController extends Controller
 {
     public function register(RegisterRequest $request){
+         
+    
+        $devi_num = $request->device_token;
+        $dev=  Ban::where('device_number',$devi_num)->first();
+        if ($dev){
+            return Common::apiResponse (0,'You have a ban',null,501);
+        }
+
+       
+         
         if ($request->type == 'phone_pass'){
             if (!Code::query ()->whereNotNull (['phone','code'])->where ('phone',$request->phone)->where ('code',$request->code)->exists ()){
                 return Common::apiResponse (0,'code not valid',null,422);
