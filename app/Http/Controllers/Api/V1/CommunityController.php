@@ -108,7 +108,7 @@ class CommunityController extends Controller
 
 
         // return @$u->profile->avatar;
-        // 
+        //
 
         // $now_room = Room::query ()->where ('uid',$id)->first ();
         // $pass_status = false;
@@ -120,7 +120,7 @@ class CommunityController extends Controller
 
 
         $arr['user'] = UserResourceSaerch::collection ($this->user_search_hand_m($user_id, (int)$keywords));//$user;
-        // $arr['rooms'] = $rooms;//rooms
+        $arr['rooms'] = $rooms;//rooms
 
 
 
@@ -146,20 +146,20 @@ class CommunityController extends Controller
         // $newdata['frame']= $arr['user'] [0]['frame'];
         // $newdata['frame_id']= $arr['user'] [0]['frame_id'];
 
-        
+
         // $newdata['now_room'] =$now_room ;
-      
+
 
 
         // $newdata['vip'] ['level']= @Common::ovip_center ($id);
 
         // $newdata['level'] ['receiver_img']= $arr['user'] [0]['receiver_img'];
         // $newdata['level'] ['sender_img']= $arr['user'] [0]['sender_img'];
-        
+
         // $newdata['has_color_name']= $arr['user'] [0]['has_color_name'];
         // $newdata['extra_data']= $arr['user'] [0]['storage_base_url'];
         // $newdata['extra_data']= $arr['user'] [0]['countries'];
-      
+
 
 //        $arr['dynamics'] = $dynamics;
 
