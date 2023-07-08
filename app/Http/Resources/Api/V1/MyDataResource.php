@@ -65,22 +65,16 @@ class MyDataResource extends JsonResource
             ->where ('user_id',$this->id)
             ->where (function ($q){
                 $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
-            })->get();
-        $previliges= [];
-        $previliges['no_kick']            = false;
-        $previliges['intro_animation']    = false;
-        $previliges['vip_gifts']          = false;
-        $previliges['no_pan']             = false;
-        $previliges['anonymous_man']      = false;
-        $previliges['colored_name']       = false;
-        foreach ($packs as $pack) {
-            $previliges['no_kick']            = !$previliges['no_kick'] ? $pack->type == 9 : $previliges['no_kick'];
-            $previliges['intro_animation']    = !$previliges['intro_animation'] ? $pack->type == 11 : $previliges['intro_animation'];
-            $previliges['vip_gifts']          = !$previliges['vip_gifts'] ? $pack->type == 14 : $previliges['vip_gifts'];
-            $previliges['no_pan']             = !$previliges['no_pan'] ? $pack->type == 15 : $previliges['no_pan'];
-            $previliges['anonymous_man']      = !$previliges['anonymous_man'] ? $pack->type == 17 : $previliges['anonymous_man'];
-            $previliges['colored_name']       = !$previliges['colored_name'] ? $pack->type == 18 : $previliges['colored_name'];
-        }
+            })
+            ->pluck('type')
+            ->toArray();
+        $previliges = [];
+        $previliges['no_kick']            = in_array(9, $packs);
+        $previliges['intro_animation']    = in_array(11, $packs);
+        $previliges['vip_gifts']          = in_array(14, $packs);
+        $previliges['no_pan']             = in_array(15, $packs);
+        $previliges['anonymous_man']      = in_array(17, $packs);
+        $previliges['colored_name']       = in_array(18, $packs);
 
 
 //        $previliges = [
