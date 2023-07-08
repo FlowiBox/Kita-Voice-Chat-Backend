@@ -111,20 +111,16 @@ class FamilyController extends Controller
     public function store(Request $request)
     {
         $user = $request->user ();
-        if($user->di < 15000){
+        // get family price from configs in database
+        $familyPrice = Common::getConf('family_price_in_coins') ?? 15000;
+        //check if diamond of user is less than family price to create family return error
+        if($user->di < $familyPrice){
             return Common::apiResponse(0,'Insufficient balance, please go to recharge!',null,407);
         }
         $ex = Family::query ()->where ('user_id',$user->id)->exists ();
-        if ($ex) return Common::apiResponse (0,'already have family',null,405);
-        $data = [
-            'name'=>$request->name,
-            'introduce'=>$request->introduce,
-            'notice'=>$request->notice,
-            'user_id'=>$user->id,
-            'num'=>20,
-            'is_success'=>1,
-        ];
-
+        // if user has family return error
+        $userFamily = $user->family_id;
+        if ($ex || $userFamily != 0) return Common::apiResponse (0,'already have family',null,405);
 
         $img = null;
         if ($request->hasFile ('image')){
@@ -133,7 +129,17 @@ class FamilyController extends Controller
 
         try {
             DB::beginTransaction ();
-            $family = new Family();
+            $data = [
+                'user_id' => $user->id,
+                'name'=>$request->name,
+                'introduce'=>$request->introduce,
+                'notice'=>@$request->notice ?? '',
+                'image' => $img?:'',
+                'num'=>20,
+                'is_success'=>1
+            ];
+            $family = $user->family()->create($data);
+            /*$family = new Family();
             $family->name = $request->name;
             $family->introduce = $request->introduce;
             $family->notice = $request->notice;
@@ -141,7 +147,7 @@ class FamilyController extends Controller
             $family->num = 20;
             $family->image = $img?:'';
             $family->is_success = 1;
-            $family->save ();
+            $family->save ();*/
             $family_user = new FamilyUser();
             $family_user->user_id = $user->id;
             $family_user->family_id = $family->id;
@@ -149,7 +155,7 @@ class FamilyController extends Controller
             $family_user->status = 1;
             $family_user->save ();
             $user->family_id = $family->id;
-            $user->di = ($user->di - 15000);
+            $user->di = ($user->di - $familyPrice);
             $user->save();
             DB::commit ();
         }catch (\Exception $exception){
@@ -282,13 +288,13 @@ class FamilyController extends Controller
 
     public function req_list(Request $request){
         $family = Family::query ()->where ('id',$request->user ()->family_id)->first ();
-        //        if (!$family){
-        //            $fu = FamilyUser::query ()->where ('user_id',$request->user ()->id)->where ('user_type',1)->first ();
-        //            if ($fu){
-        //                $family = Family::query ()->where ('id',$fu->family_id)->first ();
-        //            }
-        //
-        //        }
+//        if (!$family){
+//            $fu = FamilyUser::query ()->where ('user_id',$request->user ()->id)->where ('user_type',1)->first ();
+//            if ($fu){
+//                $family = Family::query ()->where ('id',$fu->family_id)->first ();
+//            }
+//
+//        }
         if (!$family) return Common::apiResponse (0,'not found',null,404);
         $req = FamilyUserResource::collection (FamilyUser::query ()->where ('family_id',$family->id)->where ('user_id','!=',$request->user ()->id)->where ('status',0)->get ());
         return Common::apiResponse (1,'',$req,200);

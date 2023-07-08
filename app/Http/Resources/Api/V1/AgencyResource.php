@@ -14,7 +14,6 @@ class AgencyResource extends JsonResource
      */
     public function toArray($request)
     {
-        $owner = new \stdClass();
         if ($request->user () && ($this->app_owner_id == $request->user ()->id)){
             $owner = new \stdClass();
         }else{

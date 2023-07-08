@@ -1,12 +1,11 @@
 <?php
 
-namespace Tests\Unit;
 
 use App\Models\Box;
 use App\Models\User;
 use Tests\TestCase;
 
-class ExampleTest extends TestCase
+class EnterRoomTest extends TestCase
 {
     /**
      * A basic test example.

@@ -20,21 +20,21 @@ class BoxUseResource extends JsonResource
         }
         return [
             'id'=>$this->id,
-            'user'=>[
+            'user'=> [
                 'id'        => $this->user->id,
                 'uuid'      => $this->user->uuid,
-                'image'     => $this->user->image,
-                'name'        => $this->user->name,
+                'image'     => $this->user->profile->avatar,
+                'name'      => $this->user->name
             ],
             'coins'=>$this->coins,
-            'end_at'=>$this->end_at,
-            'room_uid'=>$this->room_uid,
-            'room_id'=>$this->room_id,
-            'users_num'=>$this->users_num,
-            'not_used_num'=>$this->not_used_num,
+//            'end_at'=>$this->end_at,
+//            'room_uid'=>$this->room_uid,
+//            'room_id'=>$this->room_id,
+//            'users_num'=>$this->users_num,
+//            'not_used_num'=>$this->not_used_num,
             'type'=>$this->type == 1?'super':'normal',
-            'label'=>$this->label,
-            'image'=>$this->image,
+//            'label'=>$this->label,
+//            'image'=>$this->image,
             'rem_time'=>$this->type == 1 ? $rem_time : 0
         ];
     }

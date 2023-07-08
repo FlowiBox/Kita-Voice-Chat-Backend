@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\ChargeResource;
+use App\Http\Resources\Api\V1\MyDataResource;
 use App\Http\Resources\Api\V1\UserResource;
 use App\Http\Resources\Api\V1\UserRelationsResource;
 use App\Http\Resources\Api\V1\GetUserDataResource;
@@ -66,9 +67,13 @@ class UserController extends Controller
 
     public function my_data(Request $request){
         $user = $request->user ();
+        if (!Common::checkPackPrev ($user->id,20)){
+            $user->online_time = time();
+            $user->save();
+        }
         $this->unlock_dress($user->id);
 //        $user->statics = $this->handelStatics ($request);
-        $data = new UserResource($user);
+        $data = new MyDataResource($user);
         return Common::apiResponse (true,'',$data,200);
     }
 
@@ -418,14 +423,6 @@ class UserController extends Controller
         $data = Common::user_income ($request->user ()->id);
         return Common::apiResponse (1,'',$data);
     }
-
-
-    public function myProfileVisitorsList(Request $request){
-        $user = $request->user();
-        $visitors = UserResource::collection ($user->profileVisits);
-        return Common::apiResponse (1,'',$visitors);
-    }
-
 
 
     //Unlock and dress up premium items

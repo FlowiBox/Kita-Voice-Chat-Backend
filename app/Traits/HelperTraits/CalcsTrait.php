@@ -53,7 +53,7 @@ Trait CalcsTrait
         }
     }
 
-    public static function getLevel ( $user_id = null , $type = null , $is_image = false )
+    public static function getLevel ( $user_id = null , $type = null , $is_image = false)
     {
         $user = User::query ()->find($user_id);
 
@@ -83,7 +83,7 @@ Trait CalcsTrait
         }
 
 
-        $level = Vip ::query () -> where ( ['type' => $type] ) -> where ( 'exp' , '<=' , $exp ) -> orderByDesc ( 'exp' ) -> limit ( 1 ) -> value ( 'level' );
+        $level = Vip ::query () -> where ( ['type' => $type] ) -> where ( 'exp' , '<=' , $exp ) -> orderByDesc ( 'exp' ) -> limit ( 1 ) -> value ( 'level');
 
         //------------------------------------------------
         if ($type == 1){
@@ -260,29 +260,28 @@ Trait CalcsTrait
     }
 
     //مركز الصف
-    public static function level_center ( $user_id )
+    public static function level_center_deprecated ( $user_id )
     {
-        $user = User::query ()->find ($user_id);
-        $star_num = DB ::table ( 'gift_logs' ) -> where ( 'receiver_id' , $user_id ) -> sum ( 'giftPrice' );
-        $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user_id ) -> sum ( 'giftPrice' );
+        $user = User::find($user_id);
+        $star_num = DB ::table ( 'gift_logs' ) -> where ( 'receiver_id' , $user->id ) -> sum ( 'giftPrice' );
+        $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user->id ) -> sum ( 'giftPrice' );
 
         //--------------------------------------
         $star_num += $user->sub_receiver_num;
         $gold_num += $user->sub_sender_num;
         //--------------------------------------
 
-        $star_level      = self ::getLevel ( $user_id , 1 );
+        $star_level      = self ::getLevel ( $user->id , 1 );
 
-
-        $star_level_img      = self ::getLevel ( $user_id , 1 ,true);
+        $star_level_img      = self ::getLevel ( $user->id , 1 ,true);
         $current_star_num = self::getCurrentLevel (1,$star_level,'exp');
         $next_star_num   = self ::getNextLevel ( 1 , $star_level , 'exp' );
         $next_star_level = self ::getNextLevel ( 1 , $star_level , 'level' );
 
-        $gold_level      = self ::getLevel ( $user_id , 2 );
+        $gold_level      = self ::getLevel ( $user->id , 2 );
 
 
-        $gold_level_img      = self ::getLevel ( $user_id , 2 ,true);
+        $gold_level_img      = self ::getLevel ( $user->id , 2 ,true);
         $current_gold_num = self::getCurrentLevel (2,$gold_level,'exp');
         $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
         $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
@@ -325,6 +324,120 @@ Trait CalcsTrait
         return $data;
     }
 
+    public static function level_center ( $user_id)
+    {
+        $user = User::find($user_id);
+        $star_num = $user->total_diamond_received + $user->sub_receiver_num;
+        $gold_num = $user->total_diamond_send + $user->sub_sender_num;
+
+        $star_level      = $user->received_level + $user->sub_receiver_level;
+
+        $star_level_img = self ::getLevel ( $user->id , 1 ,true);
+        $firstVip          = Vip::where('level', $star_level)->where('type', 1)->first();
+
+        $star_level_img = !is_null($firstVip) ? $firstVip->img : '';
+        //
+
+
+        $current_star_num       = self::getCurrentLevel (1, $star_level,'exp');
+        $next_star_num          = self::getNextLevel ( 1 , $star_level , 'exp' );
+        $next_star_level        = self::getNextLevel ( 1 , $star_level , 'level' );
+
+        $gold_level             = $user->sender_level + $user->sub_sender_level;
+
+
+        $firstVip          = Vip::where('level', $gold_level)->where('type', 2)->first();
+        $gold_level_img = !is_null($firstVip) ? $firstVip->img : '';;
+
+        $current_gold_num   = self::getCurrentLevel (2,$gold_level,'exp');
+        $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
+        $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
+
+        $data['receiver_num']        = (integer)$star_num;
+        $data['receiver_img']        = $star_level_img;
+        $data['sender_num']          = (integer)$gold_num;
+        $data['sender_rem']          = (integer)(($next_gold_num - $current_gold_num) -($gold_num - $current_gold_num));
+        $data['receiver_rem']        = (integer)(($next_star_num - $current_star_num) - ($star_num - $current_star_num));
+        $data['sender_img']          = $gold_level_img;
+
+        $data['receiver_level']      = (integer)$star_level;
+        $data['next_receiver_num']   = (integer)$next_star_num?:0;
+        $data['next_receiver_level'] = (integer)$next_star_level?:0;
+
+        $data['sender_level']      = (integer)$gold_level;
+        $data['next_sender_num']   = (integer)($next_gold_num);
+        $data['next_sender_level'] = (integer)$next_gold_level?:0;
+
+        $data['prev_receiver_num'] = (integer)$current_star_num?:0;
+        $data['prev_sender_num'] = (integer)($current_gold_num);
+        $data['current_receiver_num'] = $current_star_num;
+        $data['current_sender_num'] = $current_gold_num;
+
+        $rt = $data['next_receiver_num']-$data['prev_receiver_num'];
+        $st = $data['next_sender_num']-$data['prev_sender_num'];
+        $rc = $data['receiver_num'] - $data['prev_receiver_num'];
+        $sc = $data['sender_num'] - $data['prev_sender_num'];
+        if ($rt > 0 && ($rc/$rt) < 1 && ($rc/$rt) > 0){
+            $data['receiver_per'] = (double)($rc/$rt);
+        }else{
+            $data['receiver_per'] = (double)0.00;
+        }
+        if($st > 0 && ($sc/$st) < 1 && ($sc/$st) > 0){
+            $data['sender_per']=(double)($sc/$st);
+        }else{
+            $data['sender_per']= (double)0.00;
+        }
+
+        return $data;
+    }
+
+
+    public static function level_center_min ( $user_id )
+    {
+        $user = User::query()->find($user_id);
+        $star_num = DB ::table ( 'gift_logs' ) -> where ( 'receiver_id' , $user->id ) -> sum ( 'giftPrice' );
+        $gold_num = DB ::table ( 'gift_logs' ) -> where ( 'sender_id' , $user->id ) -> sum ( 'giftPrice' );
+
+        //--------------------------------------
+        $star_num += $user->sub_receiver_num;
+        $gold_num += $user->sub_sender_num;
+        //--------------------------------------
+
+        $star_level      = self ::getLevel ( $user->id , 1 );
+
+        $star_level_img      = self ::getLevel ( $user->id , 1 ,true);
+        $current_star_num = self::getCurrentLevel (1,$star_level,'exp');
+        $next_star_num   = self ::getNextLevel ( 1 , $star_level , 'exp' );
+        $next_star_level = self ::getNextLevel ( 1 , $star_level , 'level' );
+
+        $gold_level      = self ::getLevel ( $user->id , 2 );
+
+
+        $gold_level_img      = self ::getLevel ( $user->id , 2 ,true);
+        $current_gold_num = self::getCurrentLevel (2,$gold_level,'exp');
+        $next_gold_num   = self ::getNextLevel ( 2 , $gold_level , 'exp' );
+        $next_gold_level = self ::getNextLevel ( 2 , $gold_level , 'level' );
+
+        $data['receiver_img']        = $star_level_img;
+
+        $data['sender_img']          = $gold_level_img;
+
+
+        // if ($rt > 0 && ($rc/$rt) < 1 && ($rc/$rt) > 0){
+        //     $data['receiver_per'] = (double)($rc/$rt);
+        // }else{
+        //     $data['receiver_per'] = (double)0.00;
+        // }
+        // if($st > 0 && ($sc/$st) < 1 && ($sc/$st) > 0){
+        //     $data['sender_per']=(double)($sc/$st);
+        // }else{
+        //     $data['sender_per']= (double)0.00;
+        // }
+
+        return $data;
+    }
+
+
     //مركز الأعضاء
     public static function vip_center ( $user_id ,$level = null)
     {
@@ -355,14 +468,26 @@ Trait CalcsTrait
 
     public static function ovip_center ( $user_id)
     {
-        $user = User::query ()->find ($user_id);
-        if (!$user) return new \stdClass();
+        if (gettype($user_id) == 'integer') {
+            $user = User::query ()->find ($user_id);
+            if (!$user) return new \stdClass();
+        } else {
+            $user = $user_id;
+        }
         $uvip = UserVip::query ()->find ($user->vip);
         if (!$uvip) return new \stdClass();
         $vip = OVip::query ()->find ($uvip->vip_id);
         if (!$vip) return new \stdClass();
-        $p = $vip->privilegs;
-        return $vip;
+//        $p = $vip->privilegs;
+//        return $vip;
+        return [
+            'id'        => 1,
+            'level'     => $vip->level,
+            'name'      => $vip->name,
+            'price'     => $vip->price,
+            'image'     => $vip->image,
+            'expire'    => $vip->expire
+        ];
     }
 
     //حقيبتي

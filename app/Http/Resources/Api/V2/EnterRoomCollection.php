@@ -84,11 +84,11 @@ class EnterRoomCollection extends JsonResource
     private function getTopUser(int $roomOwner)
     {
         $gl = GiftLog::query()
-            ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
-            ->where('roomowner_id', $roomOwner)
-            ->groupBy('sender_id')
-            ->orderByDesc('total')
-            ->first();
+                ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
+                ->where('roomowner_id', $roomOwner)
+                ->groupBy('sender_id')
+                ->orderByDesc('total')
+                ->first();
         if ($gl) {
 
             $t_user = User::query()->find($gl->sender_id);

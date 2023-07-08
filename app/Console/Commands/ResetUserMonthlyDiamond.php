@@ -52,6 +52,8 @@ class ResetUserMonthlyDiamond extends Command
             WHERE month = :month and year = :year
         ", ['month' => $month, 'year' => $year]);
 
+
+
         //$this->info('update-room-user-now:cron Command Run Successfully !');
     }
 }

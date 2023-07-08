@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Room extends Model
 {
+
+    public static $withoutAppends = false;
+
     protected $guarded = ['id'];
     protected $appends = ['lang','country'];
 //    protected $attributes = ['room_background'];
@@ -16,6 +19,12 @@ class Room extends Model
     ];
 
 
+    public function scopeWithoutAppends($query)
+    {
+        self::$withoutAppends = true;
+
+        return $query;
+    }
 
     public function getRoomBackgroundAttribute($val){
         return @Background::query ()->where ('id',$val)->first ()->img;
@@ -26,10 +35,16 @@ class Room extends Model
     }
 
     public function getLangAttribute(){
+        if (self::$withoutAppends){
+            return;
+        }
         return @$this->owner->country->language;
     }
 
     public function getCountryAttribute(){
+        if (self::$withoutAppends){
+            return;
+        }
         $country = @$this->owner->country;
         return $country;
 
@@ -58,4 +73,5 @@ class Room extends Model
     {
         return $this->belongsTo(Family::class, 'uid', 'user_id');
     }
+
 }

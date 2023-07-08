@@ -33,7 +33,7 @@ class Family extends Model
     }
 
     public function getLevelAttribute(){
-        $giftLogs = GiftLog::query ()->where (function ($q){
+        $giftLogs = GiftLog::query ()->where (function ($q) {
             $q->where ('receiver_family_id',$this->id)->orWhere('sender_family_id',$this->id);
         })->sum ('giftPrice');
         $cur_level = FamilyLevel::query ()->where ('exp','<=',$giftLogs)->orderByDesc ('exp')->first ();
@@ -178,8 +178,15 @@ class Family extends Model
     }
 
 
+    public function admins()
+    {
+        return $this->hasManyThrough(User::class, FamilyUser::class, 'family_id', 'id', 'id', 'user_id')->where('family_user.user_type', 1);
+    }
 
 
-
+    public function users()
+    {
+        return $this->hasMany( FamilyUser::class, 'family_id', 'id');
+    }
 
 }

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Helpers\Common;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\LoginRequest;
+use App\Http\Resources\Api\V1\MyDataResource;
 use App\Http\Resources\Api\V1\UserResource;
+use App\Models\Ban;
 use App\Models\Code;
 use App\Models\Country;
 use App\Models\User;
@@ -16,21 +18,26 @@ use Illuminate\Support\Facades\Hash;
 class LoginController extends Controller
 {
     public function login(LoginRequest $request){
+
+
+
+
+
         switch ($request['type']){
             case 'email_pass':
-                $fields = ['email'=>$request['email'],'password'=>$request['password']];
+                $fields = ['email'=>$request['email'],'password'=>$request['password'], 'device_token' => $request['device_token']];
                 return $this->loginWithEmailPassword ($fields);
             case 'phone_pass':
-                $fields = ['phone'=>$request['phone'],'password'=>$request['password']];
+                $fields = ['phone'=>$request['phone'],'password'=>$request['password'], 'device_token' => $request['device_token']];
                 return $this->loginWithPhonePassword ($fields);
             case 'google':
-                $fields = ['name'=>$request->name,'email' => $request->email,'google_id' => $request->google_id];
+                $fields = ['name'=>$request->name,'email' => $request->email,'google_id' => $request->google_id, 'device_token' => $request['device_token']];
                 return $this->loginWithGoogle ($fields);
             case 'facebook':
-                $fields = ['name'=>$request->name,'email' => $request->email,'facebook_id' => $request->facebook_id];
+                $fields = ['name'=>$request->name,'email' => $request->email,'facebook_id' => $request->facebook_id, 'device_token' => $request['device_token']];
                 return $this->loginWithFacebook ($fields);
             case 'phone_code':
-                $fields = ['phone' => $request->phone,'code'=>$request->code];
+                $fields = ['phone' => $request->phone,'code'=>$request->code, 'device_token' => $request['device_token']];
                 return $this->loginWithPhoneCode ($fields);
             default :
                 return Common::apiResponse (false,'invalid login method',null,422);
@@ -46,13 +53,32 @@ class LoginController extends Controller
             if (!$this->canLogin($user)){
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
-            return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+
+
+
+            $dev = Ban::where('device_number', $fields['device_token'])->first();
+//            $ip = Ban::where('ip', $user->login_ip)->first();
+            $blo = Ban::where('uid', $user->uuid)->first();
+
+            if ($dev != null) {
+                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+            }
+
+//            if ($ip != null) {
+//                return Common::apiResponse(0, 'You have a ban ip', null, 501);
+//            }
+
+            if ($blo != null) {
+                return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+            }
+            return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
         }else{
             return Common::apiResponse (false,'credentials does\'t match',[],422);
         }
     }
 
     protected function loginWithPhonePassword($fields){
+
         $user = User::where('phone', $fields['phone'])->first();
 
         if (!$user || !Hash::check($fields['password'], $user->password)) {
@@ -64,7 +90,32 @@ class LoginController extends Controller
         if (!$this->canLogin($user)){
             return Common::apiResponse (false,'you are blocked',[],408);
         }
-        return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+
+        $dev = Ban::where('device_number',  $fields['device_token'])->first();
+//        $ip = Ban::where('ip', $user->login_ip)->first();
+        $blo = Ban::where('uid', $user->uuid)->first();
+
+        if ($dev != null) {
+            return Common::apiResponse(0, 'You have a ban dev', null, 501);
+        }
+
+//        if ($ip != null) {
+//            return Common::apiResponse(0, 'You have a ban ip', null, 501);
+//        }
+
+        if ($blo != null) {
+            return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+        }
+
+
+
+
+
+
+
+
+
+        return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
     }
 
     protected function loginWithGoogle($data){
@@ -82,7 +133,24 @@ class LoginController extends Controller
             if (!$this->canLogin($user)){
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
-            return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+
+            $dev = Ban::where('device_number', $data['device_token'])->first();
+//            $ip = Ban::where('ip', $user->login_ip)->first();
+            $blo = Ban::where('uid', $user->uuid)->first();
+
+            if ($dev != null) {
+                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+            }
+
+//            if ($ip != null) {
+//                return Common::apiResponse(0, 'You have a ban ip', null, 501);
+//            }
+
+            if ($blo != null) {
+                return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+            }
+
+            return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
         }else{
             if (User::query ()->whereNotNull ('email')->where ('email',$data['email'])->exists ()){
                 return Common::apiResponse (false,'email already taken',[],405);
@@ -105,7 +173,10 @@ class LoginController extends Controller
                 $user->save();
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
-                return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+
+
+
+                return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
             }
         }
     }
@@ -127,7 +198,23 @@ class LoginController extends Controller
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
 
-            return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+            $dev = Ban::where('device_number',  $data['device_token'])->first();
+//            $ip = Ban::where('ip', $user->login_ip)->first();
+            $blo = Ban::where('uid', $user->uuid)->first();
+
+            if ($dev) {
+                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+            }
+
+//            if ($ip) {
+//                return Common::apiResponse(0, 'You have a ban ip', null, 501);
+//            }
+
+            if ($blo) {
+                return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+            }
+
+            return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
         }else{
             if (User::query ()->whereNotNull ('email')->where ('email',$data['email'])->exists ()){
                 return Common::apiResponse (false,'email already taken',[],405);
@@ -150,7 +237,9 @@ class LoginController extends Controller
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
 
-                return Common::apiResponse (true,'logged in successfully',new UserResource($user),200);
+
+
+                return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
             }
         }
     }
@@ -196,7 +285,7 @@ class LoginController extends Controller
             if (!$this->canLogin($user)){
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
-            return Common::apiResponse (true,'',new UserResource($user),200);
+            return Common::apiResponse (true,'',new MyDataResource($user),200);
         }
         return Common::apiResponse (false,'invalid code',null,422);
     }
