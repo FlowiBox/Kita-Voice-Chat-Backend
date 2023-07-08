@@ -468,8 +468,12 @@ Trait CalcsTrait
 
     public static function ovip_center ( $user_id)
     {
-        $user = User::query ()->find ($user_id);
-        if (!$user) return new \stdClass();
+        if (gettype($user_id) == 'integer') {
+            $user = User::query ()->find ($user_id);
+            if (!$user) return new \stdClass();
+        } else {
+            $user = $user_id;
+        }
         $uvip = UserVip::query ()->find ($user->vip);
         if (!$uvip) return new \stdClass();
         $vip = OVip::query ()->find ($uvip->vip_id);

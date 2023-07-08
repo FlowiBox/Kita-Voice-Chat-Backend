@@ -96,8 +96,10 @@ class MyDataResource extends JsonResource
             'nick_name'=>@$this->nick_name, // both
             'email'=>@$this->email?:"", // both
             'phone'=>@$this->phone?:'',// both
-            'number_of_fans'=>$this->numberOfFans(), // both
-            'number_of_followings'=>$this->numberOfFollowings(), // both
+//            'number_of_fans'=>$this->numberOfFans(), // both
+            'number_of_fans'=>$this->followers_ids()->count(), // both
+//            'number_of_followings'=>$this->numberOfFollowings(), // both
+            'number_of_followings'=>$this->followeds_ids()->count(), // both
             'number_of_friends'=>$this->numberOfFriends(), // both
             'profile_visitors'=>$this->profileVisits()->count(), // both
             'is_first'=>@(bool)$this->is_points_first, // my data
@@ -115,7 +117,7 @@ class MyDataResource extends JsonResource
             'level'=>Common::level_center (@$this->id), // both
             'diamonds'=>@$this->monthly_diamond_received?:0, // both
             'usd'=>@$this->salary, // my
-            'vip'=>@Common::ovip_center ($this->id), // both
+            'vip'=>@Common::ovip_center ($this), // both
             'my_store'=> [
                 'id'=>$this->id,
                 'coins'=>$this->di,

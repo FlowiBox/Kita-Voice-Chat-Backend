@@ -130,7 +130,7 @@ class UserResourceSaerch extends JsonResource
                'is_in_room'=>@$this->now_room_uid ?:0,
                'uid'=>@(integer)$this->now_room_uid?:0,
                'is_mine'=>@$this->id == $this->now_room_uid ?:0,
-               'password_status'=>$pass_status ?:0
+               'password_status'=>$pass_status
            ],
            'vip'=>@Common::ovip_center ($this->id), // refactor
 

@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\DB;
 class TestController extends Controller
 {
     public function index() {
+        dd(gettype(1890));
         $user = User::find(1890);
+        dd($user->followers_ids()->count(), User::whereIn('id',$user->followers_ids())->count());
         $packs = Pack::query()
             ->where ('user_id',$user->id)
             ->where (function ($q){
