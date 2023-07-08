@@ -733,6 +733,29 @@ class RoomController extends Controller
 
         if(!$room) return Common::apiResponse (false,'No room yet, please create first',null,404);
 
+        $roomBlack = $room->room_black;
+        if(!empty($roomBlack)){
+            $is_black = explode(',', $roomBlack);
+            foreach ($is_black as $k => &$v) {
+                $arr=explode("#",$v);
+                $sjc= time() - $arr[1];
+                $rt = $arr[2] - $sjc;
+                $h = floor ($rt/3600);
+                $r = $rt%3600;
+                $m = floor($r/60);
+                $s = $r%60;
+                if($sjc < $arr[2] && $arr[0] == $user_id ){
+                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"],200);
+                }
+
+                if($sjc >= $arr[2]){
+                    unset($is_black[$k]);
+                }
+            }
+            $roomBlack = implode(",", $is_black);
+            DB::table('rooms')->where('uid',$owner_id)->update(['room_black'=>trim($roomBlack,',')]);
+        }
+
         if($room->room_pass &&  $owner_id != $user_id && !$request->ignorePassword){
             if(!$room_pass) return Common::apiResponse(false,__('The room is locked, please enter the password'),null,409);
             if($room->room_pass != $room_pass )  return Common::apiResponse(false,__('Password is incorrect, please re-enter'),null,410);
