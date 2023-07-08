@@ -749,21 +749,33 @@ class RoomController extends Controller
 
         $this->enterTheRoomCreateOrUpdate($user_id, $owner_id, $room->id);
 
+        $this->updateRoomVisitor($user_id, $owner_id, $room);
+
         //send to zego
         $user->enableSaving = false;
         $user->now_room_uid = (integer)$owner_id;
         $user->save();
 
 
-
         // Replace this line with your existing return statement
         return Common::apiResponse(true, '', $room_info);
 
-        // Cache the response
-
-
-
     }
+
+    private function updateRoomVisitor($user_id, $owner_id, Room $room)
+    {
+        if($user_id == $owner_id) return;
+
+        $visitors = explode(',', $room->room_vistor);
+        if(!in_array($user_id, $visitors)) {
+            $visitors[] = $user_id;
+            $visitors = array_unique($visitors);
+            $visitors=trim(implode(",", $visitors),",");
+            $room->room_visitor = $visitors;
+            $room->save();
+        }
+    }
+
 
     private function enterTheRoomCreateOrUpdate($user_id, $owner_id, $room_id)
     {
