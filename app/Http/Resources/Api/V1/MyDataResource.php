@@ -61,14 +61,36 @@ class MyDataResource extends JsonResource
             ];
         }
 
-        $previliges = [
-            'no_kick'=>Common::pack_get (9,$this->id),
-            'intro_animation'=>Common::pack_get (11,$this->id),
-            'vip_gifts'=>Common::pack_get (14,$this->id),
-            'no_pan'=>Common::pack_get (15,$this->id),
-            'anonymous_man'=>Common::pack_get (17,$this->id),
-            'colored_name'=>Common::pack_get (18,$this->id),
-        ];
+        $packs = Pack::query()
+            ->where ('user_id',$this->id)
+            ->where (function ($q){
+                $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
+            })->get();
+        $previliges= [];
+        $previliges['no_kick']            = false;
+        $previliges['intro_animation']    = false;
+        $previliges['vip_gifts']          = false;
+        $previliges['no_pan']             = false;
+        $previliges['anonymous_man']      = false;
+        $previliges['colored_name']       = false;
+        foreach ($packs as $pack) {
+            $previliges['no_kick']            = !$previliges['no_kick'] ? $pack->type == 9 : $previliges['no_kick'];
+            $previliges['intro_animation']    = !$previliges['intro_animation'] ? $pack->type == 11 : $previliges['intro_animation'];
+            $previliges['vip_gifts']          = !$previliges['vip_gifts'] ? $pack->type == 14 : $previliges['vip_gifts'];
+            $previliges['no_pan']             = !$previliges['no_pan'] ? $pack->type == 15 : $previliges['no_pan'];
+            $previliges['anonymous_man']      = !$previliges['anonymous_man'] ? $pack->type == 17 : $previliges['anonymous_man'];
+            $previliges['colored_name']       = !$previliges['colored_name'] ? $pack->type == 18 : $previliges['colored_name'];
+        }
+
+
+//        $previliges = [
+//            'no_kick'=>Common::pack_get (9,$this->id),
+//            'intro_animation'=>Common::pack_get (11,$this->id),
+//            'vip_gifts'=>Common::pack_get (14,$this->id),
+//            'no_pan'=>Common::pack_get (15,$this->id),
+//            'anonymous_man'=>Common::pack_get (17,$this->id),
+//            'colored_name'=>Common::pack_get (18,$this->id),
+//        ];
 
         $data = [
             'id'=>@$this->id, // both
