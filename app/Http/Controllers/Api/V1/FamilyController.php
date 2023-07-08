@@ -281,14 +281,14 @@ class FamilyController extends Controller
     }
 
     public function req_list(Request $request){
-        $family = Family::query ()->where ('user_id',$request->user ()->id)->first ();
-        if (!$family){
-            $fu = FamilyUser::query ()->where ('user_id',$request->user ()->id)->where ('user_type',1)->first ();
-            if ($fu){
-                $family = Family::query ()->where ('id',$fu->family_id)->first ();
-            }
-
-        }
+        $family = Family::query ()->where ('id',$request->user ()->family_id)->first ();
+        //        if (!$family){
+        //            $fu = FamilyUser::query ()->where ('user_id',$request->user ()->id)->where ('user_type',1)->first ();
+        //            if ($fu){
+        //                $family = Family::query ()->where ('id',$fu->family_id)->first ();
+        //            }
+        //
+        //        }
         if (!$family) return Common::apiResponse (0,'not found',null,404);
         $req = FamilyUserResource::collection (FamilyUser::query ()->where ('family_id',$family->id)->where ('user_id','!=',$request->user ()->id)->where ('status',0)->get ());
         return Common::apiResponse (1,'',$req,200);
