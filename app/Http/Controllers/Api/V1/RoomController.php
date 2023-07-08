@@ -332,47 +332,58 @@ class RoomController extends Controller
 
 
     //set as admin
-    public function is_admin(Request $request){
-        $uid=$request->owner_id;
-        $admin_id=$request->user_id;
-        if ($request->user ()->id != $uid){
-            return Common::apiResponse(0,'not allowed',null,403);
+    public function is_admin(Request $request)
+    {
+        $roomOwnerId = $request->owner_id;
+        $admin_id    = $request->user_id;
+        if ($request->user()->id != $roomOwnerId) {
+            return Common::apiResponse(0, 'not allowed', null, 403);
         }
-        if(!$uid || !$admin_id) return Common::apiResponse(0,'invalid data',null,422);
-        if($uid == $admin_id)    return Common::apiResponse(0,'invalid data',null,422);
-        $roomVisitor=DB::table('rooms')->where('uid',$uid)->value('room_visitor');
-        $vis_arr= !$roomVisitor ? [] : explode(",", $roomVisitor);
-        if(!in_array($admin_id, $vis_arr))   return Common::apiResponse(0,'This user is not in this room',null,404);
+        if (!$roomOwnerId || !$admin_id) return Common::apiResponse(0, 'invalid data', null, 422);
+        if ($roomOwnerId == $admin_id) return Common::apiResponse(0, 'invalid data', null, 422);
+        // search with owner id in room
+        $room = Room::query()->where('uid', $roomOwnerId)->first();
+        if (!$room) return Common::apiResponse(0, 'Room not exist', null, 422);
 
+        $roomVisitor = $room->room_visitor;
+        $vis_arr     = !$roomVisitor ? [] : explode(",", $roomVisitor);
+        if (!in_array($admin_id, $vis_arr)) return Common::apiResponse(0, 'This user is not in this room', null, 404);
 
-        $roomAdmin=DB::table('rooms')->where('uid',$uid)->value('room_admin');
-        $roomMax =DB::table('rooms')->where('uid',$uid)->first();
-        $adm_arr= !$roomAdmin ? [] : explode(",", $roomAdmin);
-        if(in_array($admin_id, $adm_arr))   return Common::apiResponse(0,'This user is already an administrator, please do not repeat the settings',null,444);
-        if(count($adm_arr) >= 15)    return Common::apiResponse(0,'room manager is full',null,403);
-        if(count($adm_arr) >= $roomMax->max_admin)    return Common::apiResponse(0,'room manager is full',null,403);
-        $adm_arr=array_merge($adm_arr,[$admin_id]);
-        $str=implode(",",$adm_arr);
+        $roomAdmin = $room->room_admin;
+        $roomMax   = $room->max_admin;
+        $adm_arr   = ($roomAdmin == '') ? [] : explode(",", $roomAdmin);
+        $adm_arr   = array_unique($adm_arr);
 
-        $res=DB::table('rooms')->where(['uid'=>$uid])->update(['room_admin'=>$str]);
-        $rid=DB::table('rooms')->where(['uid'=>$uid])->value('id');
-        $ms = [
-            'messageContent'=>[
-                'message'=>'updateAdmins',
-                'admins'=>$adm_arr
+        if (in_array($admin_id, $adm_arr)) return Common::apiResponse(0, 'This user is already an administrator, please do not repeat the settings', null, 444);
+        if (count($adm_arr) >= 15) return Common::apiResponse(0, 'room manager is full', null, 403);
+        if (count($adm_arr) >= $roomMax->max_admin) return Common::apiResponse(0, 'room manager is full', null, 403);
+
+        $adm_arr[] = $admin_id;
+        $str       = trim(implode(",", $adm_arr));
+
+        //update room admins
+        $room->room_admin = $str;
+        $res              = $room->save();
+
+        //        $res=DB::table('rooms')->where(['uid'=>$roomOwnerId])->update(['room_admin'=>$str]);
+        $rid = $room->id;
+        $ms  = [
+            'messageContent' => [
+                'message' => 'updateAdmins',
+                'admins'  => $adm_arr
             ]
         ];
-        $resu = Common::sendToZego ('SendCustomCommand',$rid,$uid,json_encode ($ms));
-        $a = User::find($admin_id);
+        Common::sendToZego('SendCustomCommand', $rid, $roomOwnerId, json_encode($ms));
+        $a = User::query()->select(['id', 'name'])->find($admin_id);
         $n = 'nan';
-        if ($a){
-            $n = $a->name?:'nan';
+        if ($a) {
+            $n = $a->name ?: 'nan';
         }
-        Common::sendToZego_2 ('SendBroadcastMessage',$rid,$uid,'room'," اصبح ادمن $n" );
-        if($res){
-            return Common::apiResponse(1,'Set administrator successfully',$adm_arr,200);
-        }else{
-            return Common::apiResponse(0,'Failed to set administrator',null,400);
+        Common::sendToZego_2('SendBroadcastMessage', $rid, $roomOwnerId, 'room', " اصبح ادمن $n");
+        if ($res) {
+            return Common::apiResponse(1, 'Set administrator successfully', $adm_arr, 200);
+        } else {
+            return Common::apiResponse(0, 'Failed to set administrator', null, 400);
         }
     }
 
