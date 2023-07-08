@@ -127,10 +127,10 @@ class UserResourceSaerch extends JsonResource
         'frame_id'=>@$this->dress_1,
 
          'now_room'=>[
-               'is_in_room'=>@$this->now_room_uid ?:0,
-               'uid'=>@(integer)$this->now_room_uid?:0,
-               'is_mine'=>@$this->id == $this->now_room_uid ?:0,
-               'password_status'=>$pass_status
+             'is_in_room'=>@$this->now_room_uid != 0,
+             'uid'=>@(integer)$this->now_room_uid,
+             'is_mine'=>@$this->id == $this->now_room_uid,
+             'password_status'=>$pass_status
            ],
            'vip'=>@Common::ovip_center ($this->id), // refactor
 
