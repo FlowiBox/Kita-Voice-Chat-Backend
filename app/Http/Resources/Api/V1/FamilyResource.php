@@ -21,7 +21,7 @@ class FamilyResource extends JsonResource
      */
     public function toArray($request)
     {
-        $userId = $request->id();
+        $userId = $request->user()->id;
         [$owner, $admins, $members] = $this->getFamilyUsers();
         return [
             'id'                 => @$this->id,
