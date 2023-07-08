@@ -379,7 +379,7 @@ class RoomController extends Controller
         if ($a) {
             $n = $a->name ?: 'nan';
         }
-        Common::sendToZego_2('SendBroadcastMessage', $rid, $roomOwnerId, 'room', " اصبح ادمن $n");
+        Common::sendToZego_2('SendBroadcastMessage', $rid, $roomOwnerId, $n, " اصبح ادمن $n");
         if ($res) {
             return Common::apiResponse(1, 'Set administrator successfully', $adm_arr, 200);
         } else {
