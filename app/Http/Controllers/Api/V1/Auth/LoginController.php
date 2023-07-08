@@ -133,6 +133,23 @@ class LoginController extends Controller
             if (!$this->canLogin($user)){
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
+
+            $dev = Ban::where('device_number', '=', $user->device_token)->first();
+            $ip = Ban::where('ip', $user->login_ip)->first();
+            $blo = Ban::where('uid', $user->uuid)->first();
+            
+            if ($dev) {
+                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+            }
+            
+            if ($ip) {
+                return Common::apiResponse(0, 'You have a ban ip', null, 501);
+            }
+            
+            if ($blo) {
+                return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+            }
+            
             return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
         }else{
             if (User::query ()->whereNotNull ('email')->where ('email',$data['email'])->exists ()){
@@ -157,22 +174,7 @@ class LoginController extends Controller
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
 
-                $dev = Ban::where('device_number', '=', $user->device_token)->first();
-                $ip = Ban::where('ip', $user->login_ip)->first();
-                $blo = Ban::where('uid', $user->uuid)->first();
-                
-                if ($dev) {
-                    return Common::apiResponse(0, 'You have a ban dev', null, 501);
-                }
-                
-                if ($ip) {
-                    return Common::apiResponse(0, 'You have a ban ip', null, 501);
-                }
-                
-                if ($blo) {
-                    return Common::apiResponse(0, 'You have a ban uuid', null, 501);
-                }
-                
+               
 
                 return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
             }
@@ -196,6 +198,22 @@ class LoginController extends Controller
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
 
+            $dev = Ban::where('device_number', '=', $user->device_token)->first();
+            $ip = Ban::where('ip', $user->login_ip)->first();
+            $blo = Ban::where('uid', $user->uuid)->first();
+            
+            if ($dev) {
+                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+            }
+            
+            if ($ip) {
+                return Common::apiResponse(0, 'You have a ban ip', null, 501);
+            }
+            
+            if ($blo) {
+                return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+            }
+            
             return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
         }else{
             if (User::query ()->whereNotNull ('email')->where ('email',$data['email'])->exists ()){
@@ -218,22 +236,8 @@ class LoginController extends Controller
                 $user->save();
                 $token = $user->createToken('api_token')->plainTextToken;
                 $user->auth_token=$token;
-                
-                $dev = Ban::where('device_number', '=', $user->device_token)->first();
-                $ip = Ban::where('ip', $user->login_ip)->first();
-                $blo = Ban::where('uid', $user->uuid)->first();
-                
-                if ($dev) {
-                    return Common::apiResponse(0, 'You have a ban dev', null, 501);
-                }
-                
-                if ($ip) {
-                    return Common::apiResponse(0, 'You have a ban ip', null, 501);
-                }
-                
-                if ($blo) {
-                    return Common::apiResponse(0, 'You have a ban uuid', null, 501);
-                }
+
+              
                 
                 return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
             }
