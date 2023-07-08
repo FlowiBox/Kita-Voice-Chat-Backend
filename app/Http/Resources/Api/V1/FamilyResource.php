@@ -36,9 +36,7 @@ class FamilyResource extends JsonResource
             'am_i_member'        => FamilyUser::query()->where('user_id', $request->user()->id)->where('family_id', $this->id)->where('status', 1)->exists(),
             'am_i_owner'         => (@$this->user_id == $request->user()->id) ? true : false,
 //            'am_i_admin'         => $request->user()->is_family_admin ? true : false,
-            'am_i_admin'         => $admins->filter(function ($user) use($userId){
-                return $user->id = $userId;
-            }),
+            'am_i_admin'         => $admins->contains('id', $userId),
             'members'            => FamilyUserResourceAlias::collection($members),
             'num_of_requests'    => FamilyUser::query()->where('family_id', $this->id)->where('status', 0)->count(),
             'num_of_members'     => $this->members_count,
