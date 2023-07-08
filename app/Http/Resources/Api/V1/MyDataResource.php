@@ -61,14 +61,30 @@ class MyDataResource extends JsonResource
             ];
         }
 
-        $previliges = [
-            'no_kick'=>Common::pack_get (9,$this->id),
-            'intro_animation'=>Common::pack_get (11,$this->id),
-            'vip_gifts'=>Common::pack_get (14,$this->id),
-            'no_pan'=>Common::pack_get (15,$this->id),
-            'anonymous_man'=>Common::pack_get (17,$this->id),
-            'colored_name'=>Common::pack_get (18,$this->id),
-        ];
+        $packs = Pack::query()
+            ->where ('user_id',$this->id)
+            ->where (function ($q){
+                $q->where('expire',0)->orWhere('expire','>=',now ()->timestamp);
+            })
+            ->pluck('type')
+            ->toArray();
+        $previliges = [];
+        $previliges['no_kick']            = in_array(9, $packs);
+        $previliges['intro_animation']    = in_array(11, $packs);
+        $previliges['vip_gifts']          = in_array(14, $packs);
+        $previliges['no_pan']             = in_array(15, $packs);
+        $previliges['anonymous_man']      = in_array(17, $packs);
+        $previliges['colored_name']       = in_array(18, $packs);
+
+
+//        $previliges = [
+//            'no_kick'=>Common::pack_get (9,$this->id),
+//            'intro_animation'=>Common::pack_get (11,$this->id),
+//            'vip_gifts'=>Common::pack_get (14,$this->id),
+//            'no_pan'=>Common::pack_get (15,$this->id),
+//            'anonymous_man'=>Common::pack_get (17,$this->id),
+//            'colored_name'=>Common::pack_get (18,$this->id),
+//        ];
 
         $data = [
             'id'=>@$this->id, // both
