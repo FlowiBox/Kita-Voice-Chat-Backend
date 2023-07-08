@@ -14,13 +14,15 @@ class ConfigController extends Controller
 
     public function getConfigValues(ConfigValuesRequest $request)
     {
-        $configs = Common::getConfFromKey($request['keys']);
+        if (isset($request['keys'])){
+            $configs = Common::getConfFromKey($request['keys']);
 
-        $configs = $configs->flatMap(function($value) {
-            return [
-                $value->name => $value->value,
-            ];
-        } );
+            $configs = $configs->flatMap(function($value) {
+                return [
+                    $value->name => $value->value,
+                ];
+            } );
+        }
         if($request['enable-special'] == 1){
             $wapel = Pack::query ()
                          ->where ('type',12)

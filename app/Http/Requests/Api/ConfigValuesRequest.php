@@ -26,7 +26,7 @@ class ConfigValuesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'keys' => ['required', 'array', 'max:11'],
+            'keys' => ['sometimes', 'array', 'max:11'],
             'enable-special' => ['sometimes', 'bool'],
         ];
     }
