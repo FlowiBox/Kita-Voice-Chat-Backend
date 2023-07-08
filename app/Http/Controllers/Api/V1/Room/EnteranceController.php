@@ -53,10 +53,34 @@ class EnteranceController extends Controller
         $black_list=Common::getUserBlackList($owner_id);
         if(in_array($user_id, $black_list)) return Common::apiResponse(false,__('You have been blocked by the other party'),null,423);
 
+
         // get room by owner_id
         $room = Room::query()->where('uid', $owner_id)
             ->with(['owner', 'roomCategory', 'family'])
             ->first();
+
+        $roomBlack = $room->rooom_black;
+        if(!empty($roomBlack)){
+            $is_black = explode(',', $roomBlack);
+            foreach ($is_black as $k => &$v) {
+                $arr=explode("#",$v);
+                $sjc= time() - $arr[1];
+                $rt = $arr[2] - $sjc;
+                $h = floor ($rt/3600);
+                $r = $rt%3600;
+                $m = floor($r/60);
+                $s = $r%60;
+                if($sjc < $arr[2] && $arr[0] == $user_id ){
+                    return Common::apiResponse(false,__('No entry for '). $arr[2]/60 .__(' minutes after being kicked out of the room'),['remaining_time'=>"$h:$m:$s"],200);
+                }
+
+                if($sjc >= $arr[2]){
+                    unset($is_black[$k]);
+                }
+            }
+            $roomBlack = implode(",", $is_black);
+            DB::table('rooms')->where('uid',$owner_id)->update(['room_black'=>trim($roomBlack,',')]);
+        }
 
         if(!$room) return Common::apiResponse (false,'No room yet, please create first',null,404);
 
