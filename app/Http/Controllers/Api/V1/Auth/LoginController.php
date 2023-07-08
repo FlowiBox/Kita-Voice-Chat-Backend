@@ -56,7 +56,7 @@ class LoginController extends Controller
 
 
                 
-            $dev = Ban::where('device_number', '=', $user->device_token)->first();
+            $dev = Ban::where('device_number', $user->device_token)->first();
             $ip = Ban::where('ip', $user->login_ip)->first();
             $blo = Ban::where('uid', $user->uuid)->first();
 
@@ -91,7 +91,7 @@ class LoginController extends Controller
             return Common::apiResponse (false,'you are blocked',[],408);
         }
 
-        $dev = Ban::where('device_number', '=', $user->device_token)->first();
+        $dev = Ban::where('device_number',  $user->device_token)->first();
         $ip = Ban::where('ip', $user->login_ip)->first();
         $blo = Ban::where('uid', $user->uuid)->first();
         
@@ -198,7 +198,7 @@ class LoginController extends Controller
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
 
-            $dev = Ban::where('device_number', '=', $user->device_token)->first();
+            $dev = Ban::where('device_number',  $user->device_token)->first();
             $ip = Ban::where('ip', $user->login_ip)->first();
             $blo = Ban::where('uid', $user->uuid)->first();
             
