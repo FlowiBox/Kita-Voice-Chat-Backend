@@ -17,7 +17,7 @@ class TestController extends Controller
 
             $duplicates = DB::table('users')
                 ->select('device_token', DB::raw('COUNT(*) as `device_token`'))
-                ->groupBy('device_token', 'location')
+                ->groupBy('device_token')
                 ->havingRaw('COUNT(*) > 1')
                 ->get();
 
