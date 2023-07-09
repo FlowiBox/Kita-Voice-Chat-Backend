@@ -18,8 +18,8 @@ class TestController extends Controller
             $query->select('device_token')->from('users')->groupBy('device_token')->havingRaw('count(*) > 1');
         })->get();
 
-        $nulled_users = DB::table('users')->where('device_token', null)->count();
-        $un_nulled_users = DB::table('users')->where('device_token', '!=', null)->count();
+        $nulled_users = DB::table('users')->whereNull('device_token')->count();
+        $un_nulled_users = DB::table('users')->whereNotNull('device_token')->count();
 
         dd($duplicated, $nulled_users, $un_nulled_users);
 
