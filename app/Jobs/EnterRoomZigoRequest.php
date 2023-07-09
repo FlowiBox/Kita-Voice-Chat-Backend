@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Helpers\Common;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -42,14 +41,15 @@ class EnterRoomZigoRequest implements ShouldQueue
     public function handle()
     {
         $this->user->withoutAppends = false;
-        $d = [
+        $d                          = [
             "messageContent" => [
                 "message"    => "userEntro",
                 "entroImg"   => $this->user->intro ?? '',
                 "entroImgId" => $this->user->dress_3 ? (string)$this->user->dress_3 : "",
                 'userName'   => $this->user->name ?: $this->user->nickname,
                 'userImge'   => $this->user->avatar,
-                'vip'        => $this->hasVip
+                'vip'        => $this->hasVip,
+                'uid'        => $this->user->id
             ]
         ];
 
