@@ -13,18 +13,14 @@ use Illuminate\Support\Facades\DB;
 class TestController extends Controller
 {
     public function index() {
-        foreach (\App\Models\User::all() as $user) {
 
-            $duplicates = DB::table('users')
-                ->select('device_token', DB::raw('COUNT(*) as `device_token`'))
-                ->groupBy('device_token')
-                ->havingRaw('COUNT(*) > 1')
-                ->get();
+        $duplicated = User::whereIn('device_token', function ( $query ) {
+            $query->select('device_token')->from('users')->groupBy('device_token')->havingRaw('count(*) > 1');
+        })->get();
 
-            $nulled_users = DB::table('users')->where('device_token', null)->get();
+        $nulled_users = DB::table('users')->where('device_token', null)->count();
 
-            dd($duplicates, $nulled_users);
+        dd($duplicated, $nulled_users);
 
-        }
     }
 }
