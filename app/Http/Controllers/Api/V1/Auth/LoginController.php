@@ -51,13 +51,13 @@ class LoginController extends Controller
 
 
 
-            $dev = Ban::where('device_number', $fields['device_token'])->first();
+//            $dev = Ban::where('device_number', $fields['device_token'])->first();
 //            $ip = Ban::where('ip', $user->login_ip)->first();
             $blo = Ban::where('uid', $user->uuid)->first();
 
-            if ($dev != null) {
-                return Common::apiResponse(0, 'You have a ban dev', null, 501);
-            }
+//            if ($dev != null) {
+//                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+//            }
 
 //            if ($ip != null) {
 //                return Common::apiResponse(0, 'You have a ban ip', null, 501);
@@ -86,13 +86,13 @@ class LoginController extends Controller
             return Common::apiResponse (false,'you are blocked',[],408);
         }
 
-        $dev = Ban::where('device_number',  $fields['device_token'])->first();
+//        $dev = Ban::where('device_number',  $fields['device_token'])->first();
 //        $ip = Ban::where('ip', $user->login_ip)->first();
         $blo = Ban::where('uid', $user->uuid)->first();
 
-        if ($dev != null) {
-            return Common::apiResponse(0, 'You have a ban dev', null, 501);
-        }
+//        if ($dev != null) {
+//            return Common::apiResponse(0, 'You have a ban dev', null, 501);
+//        }
 
 //        if ($ip != null) {
 //            return Common::apiResponse(0, 'You have a ban ip', null, 501);
@@ -129,13 +129,13 @@ class LoginController extends Controller
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
 
-            $dev = Ban::where('device_number', $data['device_token'])->first();
+//            $dev = Ban::where('device_number', $data['device_token'])->first();
 //            $ip = Ban::where('ip', $user->login_ip)->first();
             $blo = Ban::where('uid', $user->uuid)->first();
 
-            if ($dev != null) {
-                return Common::apiResponse(0, 'You have a ban dev', null, 501);
-            }
+//            if ($dev != null) {
+//                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+//            }
 
 //            if ($ip != null) {
 //                return Common::apiResponse(0, 'You have a ban ip', null, 501);
@@ -155,7 +155,7 @@ class LoginController extends Controller
                         'name'=>$data['name'],
                         'email'=>$data['email'],
                         'google_id'=>$data['google_id'],
-                        'device_token'=>@$data['device_token']
+//                        'device_token'=>@$data['device_token']
                     ]
                 );
                 $user = $user->find ($user->id);
@@ -181,10 +181,10 @@ class LoginController extends Controller
         if ($user){
 //            $user->is_points_first = 0;
 //            $user->save ();
-            if(!$user->device_token){
-                $user->device_token = @$data['device_token'];
-                $user->save ();
-            }
+//            if(!$user->device_token){
+//                $user->device_token = @$data['device_token'];
+//                $user->save ();
+//            }
             $this->logoutAsConfiguration($user);
             $token = $user->createToken('api_token')->plainTextToken;
             $user->auth_token=$token;
@@ -193,13 +193,13 @@ class LoginController extends Controller
                 return Common::apiResponse (false,'you are blocked',[],408);
             }
 
-            $dev = Ban::where('device_number',  $data['device_token'])->first();
+//            $dev = Ban::where('device_number',  $data['device_token'])->first();
 //            $ip = Ban::where('ip', $user->login_ip)->first();
             $blo = Ban::where('uid', $user->uuid)->first();
 
-            if ($dev) {
-                return Common::apiResponse(0, 'You have a ban dev', null, 501);
-            }
+//            if ($dev) {
+//                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+//            }
 
 //            if ($ip) {
 //                return Common::apiResponse(0, 'You have a ban ip', null, 501);
@@ -219,7 +219,7 @@ class LoginController extends Controller
                         'name'=>$data['name'],
                         'email'=>$data['email'],
                         'facebook_id'=>$data['facebook_id'],
-                        'device_token'=>@$data['device_token']
+//                        'device_token'=>@$data['device_token']
                     ]
                 );
                 if (\request ('tags') && is_array (\request ('tags'))){
@@ -268,7 +268,7 @@ class LoginController extends Controller
                 ],
                 [
                     'phone'=>$fields['phone'],
-                    'device_token'=>@$fields['device_token']
+//                    'device_token'=>@$fields['device_token']
 
                 ]
             );
