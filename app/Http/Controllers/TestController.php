@@ -19,8 +19,9 @@ class TestController extends Controller
         })->get();
 
         $nulled_users = DB::table('users')->where('device_token', null)->count();
+        $un_nulled_users = DB::table('users')->where('device_token', '!=', null)->count();
 
-        dd($duplicated, $nulled_users);
+        dd($duplicated, $nulled_users, $un_nulled_users);
 
     }
 }
