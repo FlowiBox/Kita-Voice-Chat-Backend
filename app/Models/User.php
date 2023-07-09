@@ -241,7 +241,7 @@ class User extends Authenticatable
         if (self::$withoutAppends){
             return ;
         }
-        return Common::getUserDress($this->id,$this->dress_3,6,'show_img');
+        return Common::getUserDress($this->id,$this->dress_3,6,'img2');
     }
 
     public function getFrameAttribute(){
