@@ -13,15 +13,10 @@ use Illuminate\Support\Facades\DB;
 class TestController extends Controller
 {
     public function index() {
+        foreach (\App\Models\User::all() as $user) {
+            User::query()->update(['device_token' => null]);
+            dd('ff');
 
-        $duplicated = User::whereIn('device_token', function ( $query ) {
-            $query->select('device_token')->from('users')->groupBy('device_token')->havingRaw('count(*) > 1');
-        })->get();
-
-        $nulled_users = DB::table('users')->whereNull('device_token')->count();
-        $un_nulled_users = DB::table('users')->whereNotNull('device_token')->count();
-
-        dd($duplicated, $nulled_users, $un_nulled_users);
-
+        }
     }
 }
