@@ -246,7 +246,7 @@ class EnteranceController extends Controller
 
 
 
-        try {
+//        try {
             $room = $this->repo->find ($id);
             if(!$room){
                 return Common::apiResponse (false,'not found',null,404);
@@ -310,7 +310,7 @@ class EnteranceController extends Controller
             }
               //    $this->repo->save ($room);
 
-        $room->save();
+            $room->save();
             // if($room->save ()){
             // return "ايوووه يا باشا ";
             //             }else{
@@ -336,9 +336,9 @@ class EnteranceController extends Controller
             $request->is_update = true;
             return $this->enter_room($request);
 
-        }catch (\Exception $exception){
+        /*}catch (\Exception $exception){
             return Common::apiResponse (false,'failed',null,400);
-        }
+        }*/
     }
 
 }
