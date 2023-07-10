@@ -118,7 +118,6 @@ class EnteranceController extends Controller
         $user->enableSaving = false;
         $user->now_room_uid = (integer)$owner_id;
         $user->save();
-        $room_info['room_rule'] = Common::getConfig('room_rule');
 
         return Common::apiResponse(true, '', $room_info);
     }

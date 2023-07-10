@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Api\V2;
 
+use App\Helpers\Common;
 use App\Http\Resources\Api\V1\MiniUserResource;
 use App\Http\Resources\Api\V1\PkCollection;
 use App\Models\GiftLog;
@@ -50,7 +51,7 @@ class EnterRoomCollection extends JsonResource
             "room_welcome"        => $this->room_welcome,
             "session"             => $this->session,
             "uuid"                => $this->owner->uuid,
-            "room_family"         => is_null($this->family) ? new \stdClass() :[
+            "room_family"         => is_null($this->family) ? new \stdClass() : [
                 'family_id'    => @$this->family->id ?? '',
                 'family_name'  => @$this->family->name ?? '',
                 'family_level' => @$this->family->level ?? [],
@@ -67,28 +68,28 @@ class EnterRoomCollection extends JsonResource
             'owner_avatar'        => @$this->owner->profile->avatar ?? '',
             'room_visitors_count' => $this->getRoomVisitorCount(@$this->room_visitor ?? ''),
             'microphones'         => $this->getMicrophones($this->microphone),
-            'password_status'     => !($this->room_pass == "")
-
+            'password_status'     => !($this->room_pass == ""),
+            'room_rule'           => Common::getConfig('room_rule'),
         ];
     }
 
     private function getRoomTwoLastPk(int $roomId)
     {
         return Pk::query()
-            ->where('room_id', $roomId)
-            ->orderByDesc('created_at')
-            ->limit(2)
-            ->get();
+                 ->where('room_id', $roomId)
+                 ->orderByDesc('created_at')
+                 ->limit(2)
+                 ->get();
     }
 
     private function getTopUser(int $roomOwner)
     {
         $gl = GiftLog::query()
-                ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
-                ->where('roomowner_id', $roomOwner)
-                ->groupBy('sender_id')
-                ->orderByDesc('total')
-                ->first();
+                     ->selectRaw('sender_id, SUM(giftNum * giftPrice) AS total')
+                     ->where('roomowner_id', $roomOwner)
+                     ->groupBy('sender_id')
+                     ->orderByDesc('total')
+                     ->first();
         if ($gl) {
 
             $t_user = User::query()->find($gl->sender_id);
@@ -97,6 +98,16 @@ class EnterRoomCollection extends JsonResource
         }
 
         return $t_user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoomBackground()
+    {
+        return $this->room_background ??
+            ((RequestBackgroundImage::where('status', 1)->where('owner_room_id', $this->uid)->first())->img ??
+                DB::table('backgrounds')->where('enable', 1)->orderBy('id', 'asc')->limit(1)->first()->img);
     }
 
     public function getOwnerSound($ownerId, $roomSound)
@@ -154,14 +165,6 @@ class EnterRoomCollection extends JsonResource
         }
         return $microphones;
 
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRoomBackground()
-    {
-        return $this->room_background ?? ((RequestBackgroundImage::where('status',1)->where('owner_room_id',$this->uid)->first())->img ?? DB::table('backgrounds')->where('enable',1)->orderBy('id', 'asc')->limit(1)->first()->img);
     }
 
     private function getUserType($roomAdmin, $roomJudge)
