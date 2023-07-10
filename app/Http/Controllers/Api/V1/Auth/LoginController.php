@@ -25,10 +25,10 @@ class LoginController extends Controller
                 $fields = ['email'=>$request['email'],'password'=>$request['password'], 'device_token' => $request['device_token']];
                 return $this->loginWithEmailPassword ($fields);
             case 'phone_pass':
-                $fields = ['phone'=>$request['phone'],'password'=>$request['password'], 'device_token' => $request['device_token']];
+                $fields = ['phone'=>$request['phone'],'password'=>$request['password'], 'device_token' => $request->header('device')];
                 return $this->loginWithPhonePassword ($fields);
             case 'google':
-                $fields = ['name'=>$request->name,'email' => $request->email,'google_id' => $request->google_id, 'device_token' => $request['device_token']];
+                $fields = ['name'=>$request->name,'email' => $request->email,'google_id' => $request->google_id, 'device_token' => $request->header('device')];
                 return $this->loginWithGoogle ($fields);
             case 'facebook':
                 $fields = ['name'=>$request->name,'email' => $request->email,'facebook_id' => $request->facebook_id, 'device_token' => $request['device_token']];
@@ -55,7 +55,7 @@ class LoginController extends Controller
 
             $dev = Ban::where('device_number', $fields['device_token'])->first();
 //            $ip = Ban::where('ip', $user->login_ip)->first();
-            $blo = Ban::where('uid', $user->uuid)->first();
+            $blo = Ban::where('uid', $u/ser->uuid)->first();
 
             if ($dev != null) {
                 return Common::apiResponse(0, 'You have a ban dev', null, 501);
@@ -93,20 +93,18 @@ class LoginController extends Controller
             return Common::apiResponse (false,'you are blocked',[],408);
         }
 
-        $dev = Ban::where('device_number',  $fields['device_token'])->first();
-        //        $ip = Ban::where('ip', $user->login_ip)->first();
-        $blo = Ban::where('uid', $user->uuid)->first();
-
-        if ($dev != null) {
-            return Common::apiResponse(0, 'You have a ban dev', null, 501);
-        }
-
-        //        if ($ip != null) {
-        //            return Common::apiResponse(0, 'You have a ban ip', null, 501);
-        //        }
-
-        if ($blo != null) {
-            return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+        if ($fields['device_token']) {
+            $dev =
+                Ban::where('device_number', $fields['device_token'])->first();//        $ip = Ban::where('ip', $user->login_ip)->first();
+            $blo = Ban::where('uid', $user->uuid)->first();
+            if ($dev != null) {
+                return Common::apiResponse(0, 'You have a ban dev', null, 501);
+            }//        if ($ip != null) {
+            //            return Common::apiResponse(0, 'You have a ban ip', null, 501);
+            //        }
+            if ($blo != null) {
+                return Common::apiResponse(0, 'You have a ban uuid', null, 501);
+            }
         }
 
         return Common::apiResponse (true,'logged in successfully',new MyDataResource($user),200);
