@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Helpers\Common;
 use App\Models\Ban;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,14 @@ class GeneralBanMiddleware
     public function handle(Request $request, Closure $next)
     {
         $user = $request->user ();
+
+        //Todo remove it in 12-7-2023
+        if(!$user->device_token && $user instanceof User){
+            $user->enableSaving = false;
+            $user->device_token = $request->header ('device');
+            $user->save ();
+        }
+
         $now = now();
         $is_user_ban = Ban::query ()
             ->where ('uid',$user->uuid)
