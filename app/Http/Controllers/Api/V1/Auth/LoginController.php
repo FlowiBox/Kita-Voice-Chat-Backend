@@ -19,7 +19,7 @@ class LoginController extends Controller
 {
     public function login(LoginRequest $request){
 
-        
+
         switch ($request['type']){
             case 'email_pass':
                 $fields = ['email'=>$request['email'],'password'=>$request['password'], 'device_token' => $request['device_token']];
@@ -81,16 +81,16 @@ class LoginController extends Controller
         if (!$user || !Hash::check($fields['password'], $user->password)) {
             return Common::apiResponse(0,'credentials does\'t match',null, 503);
         }
+
+        if(!$user->device_token){
+            $user->device_token = @$fields['device_token'];
+            $user->save ();
+        }
         $this->logoutAsConfiguration($user);
         $token = $user->createToken('api_token')->plainTextToken;
         $user->auth_token=$token;
         if (!$this->canLogin($user)){
             return Common::apiResponse (false,'you are blocked',[],408);
-        }
-
-        if(!$user->device_token){
-            $user->device_token = @$fields['device_token'];
-            $user->save ();
         }
 
         $dev = Ban::where('device_number',  $fields['device_token'])->first();
