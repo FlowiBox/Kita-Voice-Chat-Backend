@@ -246,6 +246,7 @@ class GiftLogController extends Controller
         if ($request->to_zego == 1){
 //            $gp = GiftLog::query ()->where('roomowner_id',$data['owner_id'])->sum ('giftPrice');
             $gp = Room::query ()->where ('uid',$request->owner_id)->value ('session');
+            $result=$gift->price +$n;
             $d = [
                 "messageContent"=>[
                     "message"=>"showGifts",
@@ -254,7 +255,7 @@ class GiftLogController extends Controller
                     'gift_id'=>$gift->id,
                     'send_id' => (integer)$data['user_id'],
                     'receiver_id'=>(integer)$to_id,
-                    'isExpensive'=>($gift->price >= 2000)?true:false,
+                    'isExpensive'=>($result >= 2000)?true:false,
                     'num_gift'=>$send_num,
                     "plural"=>(is_array($to_arr) && count ($to_arr) > 1)?true:false,
                     'gift_price'=>(integer)$gp,
@@ -263,7 +264,7 @@ class GiftLogController extends Controller
             ];
             $json = json_encode ($d);
             Common::sendToZego ('SendCustomCommand',$room->id,$user->id,$json);
-            if ($gift->price >= 2000){
+            if ($result >= 2000){
                 $rooms = Room::where('room_status',1)->where(function ($q){
                     $q->where('is_afk',1)->orWhere('count_room_socket','!=',0);
                 })->get();
