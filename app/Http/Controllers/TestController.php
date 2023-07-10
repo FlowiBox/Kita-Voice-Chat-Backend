@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class TestController extends Controller
 {
     public function index(Request $request) {
-        $today = LiveTime::where ('uid',$request->id)->whereDate('created_at',today ())->sum('hours');
+        $today = LiveTime::where ('uid',$request->id)->whereDate('created_atq',today ())->sum('hours');
         $today_1 = LiveTime::where ('uid',$request->id)->whereDate('created_at', Carbon::yesterday())->sum('hours');
         $today_2 = LiveTime::where ('uid',$request->id)->whereDate('created_at',Carbon::today()->subDays(2))->sum('hours');
         $today_3 = LiveTime::where ('uid',$request->id)->whereDate('created_at',Carbon::today()->subDays(3))->sum('hours');
