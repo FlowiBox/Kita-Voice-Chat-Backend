@@ -371,7 +371,8 @@ class RoomController extends Controller
 
         $roomAdmin = $room->room_admin;
         $roomMax   = $room->max_admin;
-        $adm_arr   = ($roomAdmin == '') ? [] : explode(",", $roomAdmin);
+        $adm_arr   = ($roomAdmin == '') ? [] : explode(",", trim($roomAdmin));
+        if ($adm_arr[0] == '') unset($adm_arr[0]);
         $adm_arr   = array_unique($adm_arr);
 
         if (in_array($admin_id, $adm_arr)) return Common::apiResponse(0, 'This user is already an administrator, please do not repeat the settings', null, 444);
@@ -379,7 +380,7 @@ class RoomController extends Controller
         if (count($adm_arr) >= $roomMax) return Common::apiResponse(0, 'room manager is full', null, 403);
 
         $adm_arr[] = $admin_id;
-        $str       = trim(implode(",", trim($adm_arr)));
+        $str       = trim(implode(",", $adm_arr));
 
         //update room admins
         $room->room_admin = $str;
@@ -710,5 +711,5 @@ class RoomController extends Controller
 
 
 
-    
+
 }
