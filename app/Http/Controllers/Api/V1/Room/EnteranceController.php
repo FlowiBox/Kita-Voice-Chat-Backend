@@ -21,10 +21,20 @@ use App\Models\Room;
 use App\Models\RoomCategory;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Repositories\Room\RoomRepoInterface;
+use App\Http\Requests\EditRoomRequest;
 use Illuminate\Support\Facades\DB;
 
 class EnteranceController extends Controller
 {
+
+    protected $repo;
+
+    public function __construct (RoomRepoInterface $repo)
+    {
+        $this->repo = $repo;
+    }
+
     public function enter_room(Request $request)
     {
 
@@ -227,4 +237,106 @@ class EnteranceController extends Controller
             $timer->save ();
         }
     }
+
+
+    public function update(EditRoomRequest $request, $id)
+    {
+
+
+
+        try {
+            $room = $this->repo->find ($id);
+            if(!$room){
+                return Common::apiResponse (false,'not found',null,404);
+            }
+            // return  $request->user ()->id;
+            if ($room->uid != $request->user ()->id && !in_array ($request->user ()->id,explode (',',$room->room_admin))){
+                return Common::apiResponse (false,'not allowed',null,403);
+            }
+            if ($request->room_name){
+                $room->room_name = $request->room_name;
+            }
+
+            if ($request->hasFile ('room_cover')){
+                $room->room_cover = Common::upload ('rooms',$request->file ('room_cover'));
+            }
+
+            if ($request->free_mic){
+                $room->free_mic = $request->free_mic;
+            }
+
+            if ($request->room_intro){
+                $room->room_intro = $request->room_intro;
+            }
+
+            if ($request->room_pass){
+                $room->room_pass = $request->room_pass;
+            }
+
+            if ($request->room_type){
+                if (!RoomCategory::query ()->where ('id',$request->room_type)->where ('enable',1)->exists ()) return Common::apiResponse (0,'type not found',null,404);
+                $room->room_type = $request->room_type;
+            }
+
+            if ($request->room_class){
+                if (!RoomCategory::query ()->where ('id',$request->room_class)->where ('enable',1)->exists ()) return Common::apiResponse (0,'class not found',null,404);
+                $room->room_type = $request->room_type;
+            }
+            $background_me = '';
+
+
+            if ($request->room_background){
+                /*if (!Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
+                    return Common::apiResponse (0,'background not found',null,404);
+                }*/
+                if($request->change == 'app'){
+                    $room->room_background = $request->room_background;
+
+                    RequestBackgroundImage::query()->where('owner_room_id',$room->uid)->where('status',1)->update(['status' => 3]);
+
+                }
+                if($request->change == 'me'){
+
+                    RequestBackgroundImage::query()->where('owner_room_id',$room->uid)->where('id','!=',$request->room_background)->where('status',1)->update(['status' => 3]);
+                    $background_update = RequestBackgroundImage::where('id',$request->room_background)->first();
+                    $background_update->status = 1;
+                    $background_update->save();
+                    $background_me = $background_update->img;
+                    $room->room_background = null;
+                }
+
+            }
+              //    $this->repo->save ($room);
+            
+        $room->save();
+            // if($room->save ()){
+            // return "ايوووه يا باشا ";
+            //             }else{
+            // return "لا يا باشا ";
+
+            //             }
+
+
+            $request['owner_id'] = $room->uid;
+
+            $data = [
+                "messageContent"=>[
+                    "message"=>"changeBackground",
+                    "imgbackground"=>$room->room_background?:@$background_me,
+                    "roomIntro"=>$room->room_intro?:"",
+                    "roomImg"=>$room->room_cover?:"",
+                    "room_type"=>@$room->myType->name?:"",
+                    "room_name"=>@$room->room_name?:""
+                ]
+            ];
+            $json = json_encode ($data);
+            Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
+            $request->is_update = true;
+            return $this->enter_room($request);
+
+        }catch (\Exception $exception){
+            return Common::apiResponse (false,'failed',null,400);
+        }
+    }
+
 }

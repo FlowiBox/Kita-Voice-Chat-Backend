@@ -118,6 +118,7 @@ class ResourceController extends Controller
             if(!$room){
                 return Common::apiResponse (false,'not found',null,404);
             }
+            // return  $request->user ()->id;
             if ($room->uid != $request->user ()->id && !in_array ($request->user ()->id,explode (',',$room->room_admin))){
                 return Common::apiResponse (false,'not allowed',null,403);
             }
@@ -151,15 +152,20 @@ class ResourceController extends Controller
                 $room->room_type = $request->room_type;
             }
             $background_me = '';
+
+
             if ($request->room_background){
                 /*if (!Background::query ()->where ('id',$request->room_background)->where ('enable',1)->exists ()){
                     return Common::apiResponse (0,'background not found',null,404);
                 }*/
                 if($request->change == 'app'){
                     $room->room_background = $request->room_background;
+
                     RequestBackgroundImage::query()->where('owner_room_id',$room->uid)->where('status',1)->update(['status' => 3]);
+
                 }
                 if($request->change == 'me'){
+
                     RequestBackgroundImage::query()->where('owner_room_id',$room->uid)->where('id','!=',$request->room_background)->where('status',1)->update(['status' => 3]);
                     $background_update = RequestBackgroundImage::where('id',$request->room_background)->first();
                     $background_update->status = 1;
@@ -169,24 +175,32 @@ class ResourceController extends Controller
                 }
 
             }
+              //    $this->repo->save ($room);
+            
+        $room->save();
+            // if($room->save ()){
+            // return "ايوووه يا باشا ";
+            //             }else{
+            // return "لا يا باشا ";
 
-//            $this->repo->save ($room);
-            $room->save ();
+            //             }
+
+
             $request['owner_id'] = $room->uid;
 
             $data = [
                 "messageContent"=>[
                     "message"=>"changeBackground",
-                    "imgbackground"=>$room->room_background?:$background_me,
+                    "imgbackground"=>$room->room_background?:@$background_me,
                     "roomIntro"=>$room->room_intro?:"",
                     "roomImg"=>$room->room_cover?:"",
                     "room_type"=>@$room->myType->name?:"",
                     "room_name"=>@$room->room_name?:""
                 ]
             ];
-            $json = json_encode ($data);
-            Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
-            $request->is_update = true;
+            // $json = json_encode ($data);
+            // Common::sendToZego ('SendCustomCommand',$room->id,$request->user ()->id,$json);
+            // $request->is_update = true;
             return $this->enter_room2 ($request);
 
         }catch (\Exception $exception){

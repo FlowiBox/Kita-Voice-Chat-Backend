@@ -61,7 +61,8 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::get ('/',[ResourceController::class,'index']);
                         Route::get ('/{id}',[ResourceController::class,'show']);
                         Route::post ('/create',[ResourceController::class,'store']);
-                        Route::post ('/{id}/edit',[ResourceController::class,'update']);
+                        // Route::post ('/{id}/edit',[ResourceController::class,'update']);
+                        Route::post ('/{id}/edit',[EnteranceController::class,'update']);
 
 
                         // Microphone Controller
