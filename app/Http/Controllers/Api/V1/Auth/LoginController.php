@@ -19,10 +19,7 @@ class LoginController extends Controller
 {
     public function login(LoginRequest $request){
 
-
-
-
-
+        
         switch ($request['type']){
             case 'email_pass':
                 $fields = ['email'=>$request['email'],'password'=>$request['password'], 'device_token' => $request['device_token']];
