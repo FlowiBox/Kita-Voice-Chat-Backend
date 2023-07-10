@@ -107,6 +107,7 @@ class EnteranceController extends Controller
         }
 //        $this->getRoomTwoLastPk($room->id);
         $room_info = (new EnterRoomCollection($room, $user_id));
+        $room_info['room_rule'] = Common::getConfig('room_rule');
 
         $this->enterTheRoomCreateOrUpdate($user_id, $owner_id, $room->id);
 
@@ -125,7 +126,8 @@ class EnteranceController extends Controller
     {
         if($user_id == $owner_id) return;
 
-        $visitors = explode(',', $room->room_vistor);
+        $visitors = explode(',', $room->room_visitor);
+        if ($visitors[0] == '') $visitors = [];
         if(!in_array($user_id, $visitors)) {
             $visitors[] = $user_id;
             $visitors = array_unique($visitors);
@@ -133,7 +135,6 @@ class EnteranceController extends Controller
             $room->room_visitor = $visitors;
             $room->save();
         }
-        //explode string to array
     }
 
     //exit the room
