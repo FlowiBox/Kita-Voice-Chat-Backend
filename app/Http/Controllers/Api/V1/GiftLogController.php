@@ -65,11 +65,11 @@ class GiftLogController extends Controller
         $vis_arr=explode(",",$room->room_visitor);
         $vis_arr[]=$data['owner_id'];
 
-        if(!in_array($data['user_id'],$vis_arr))    return Common::apiResponse(0,'you are not in this room',null,403);
+//        if(!in_array($data['user_id'],$vis_arr))    return Common::apiResponse(0,'you are not in this room',null,403);
 
         //Determine whether to send
         $vip_level=@Common::ovip_center ($data['user_id']);
-        if(@$vip_level->level < $gift->vip_level)   return Common::apiResponse(0,'vip '.$gift->vip_level.' to send this gift');
+//        if(@$vip_level->level < $gift->vip_level)   return Common::apiResponse(0,'vip '.$gift->vip_level.' to send this gift');
         $to_arr=explode(',', $data['toUid']);
 //        foreach ($to_arr as $k1 => &$v1) {
 //            if(!in_array($v1,$vis_arr))    return Common::apiResponse(0,'User is not in this room',null,403);

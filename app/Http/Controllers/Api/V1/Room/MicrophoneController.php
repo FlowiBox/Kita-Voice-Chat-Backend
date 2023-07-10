@@ -483,7 +483,7 @@ class MicrophoneController extends Controller
             $timer->hours = $hours;
             $timer->save ();
             $user_day = UserDay::where('user_id', $uid)->whereDate('created_at', today())->first();
-            if (LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->sum('hours') >= 0.03 && $user_day->days == 0) {
+            if (LiveTime::where ('uid',$uid)->whereDate('created_at',today ())->sum('hours') >= 2 && $user_day->days == 0) {
                 $user_day->days = 1;
                 $user_day->save();
             }
