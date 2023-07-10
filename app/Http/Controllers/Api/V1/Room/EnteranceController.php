@@ -310,7 +310,7 @@ class EnteranceController extends Controller
             }
               //    $this->repo->save ($room);
 
-        $room->save();
+            $room->save();
             // if($room->save ()){
             // return "ايوووه يا باشا ";
             //             }else{
