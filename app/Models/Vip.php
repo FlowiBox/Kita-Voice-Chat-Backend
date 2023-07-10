@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Vip extends Model
 {
     use HasFactory;
+
+    protected $table = 'vips';
+
+    protected $guarded = [];
 }

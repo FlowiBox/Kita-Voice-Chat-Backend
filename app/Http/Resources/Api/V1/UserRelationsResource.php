@@ -33,12 +33,12 @@ class UserRelationsResource extends JsonResource
                 $pass_status = true;
             }
         }
-        
+
         $data = [
             'id'=>@$this->id,
             'uuid'=>@$this->uuid,
             'name'=>@$this->name?:'',
-            'profile'=> [ 
+            'profile'=> [
                 'image' => @$this->profile->avatar,
                 'age' => Carbon::parse (@$this->profile->birthday)->age,
                 'gender'=> @$this->profile->gender == 1 ? __ ('male') : __ ('female'),
@@ -56,7 +56,7 @@ class UserRelationsResource extends JsonResource
             ],
             'level'=> [
                 'receiver_img' => $this->getImageReceiverOrSender('receiver_id',1)->img,
-                'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img, 
+                'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img,
             ],
             'online_time'=>$this->online_time?date("Y-m-d H:i:s", $this->online_time):'',
             'has_color_name'=>Common::hasInPack ($this->id,18),
