@@ -55,7 +55,7 @@ class LoginController extends Controller
 
             $dev = Ban::where('device_number', $fields['device_token'])->first();
 //            $ip = Ban::where('ip', $user->login_ip)->first();
-            $blo = Ban::where('uid', $u/ser->uuid)->first();
+            $blo = Ban::where('uid', $user->uuid)->first();
 
             if ($dev != null) {
                 return Common::apiResponse(0, 'You have a ban dev', null, 501);
