@@ -107,16 +107,18 @@ class EnteranceController extends Controller
         }
 //        $this->getRoomTwoLastPk($room->id);
         $room_info = (new EnterRoomCollection($room, $user_id));
-        $room_info['room_rule'] = Common::getConfig('room_rule');
+
 
         $this->enterTheRoomCreateOrUpdate($user_id, $owner_id, $room->id);
 
 
         $this->updateRoomVisitor($user_id, $owner_id, $room);
+
         //send to zego
         $user->enableSaving = false;
         $user->now_room_uid = (integer)$owner_id;
         $user->save();
+        $room_info['room_rule'] = Common::getConfig('room_rule');
 
         return Common::apiResponse(true, '', $room_info);
     }
@@ -308,7 +310,7 @@ class EnteranceController extends Controller
 
             }
               //    $this->repo->save ($room);
-            
+
         $room->save();
             // if($room->save ()){
             // return "ايوووه يا باشا ";
