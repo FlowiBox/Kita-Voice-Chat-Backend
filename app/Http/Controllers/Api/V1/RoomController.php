@@ -379,7 +379,7 @@ class RoomController extends Controller
         if (count($adm_arr) >= $roomMax) return Common::apiResponse(0, 'room manager is full', null, 403);
 
         $adm_arr[] = $admin_id;
-        $str       = trim(implode(",", $adm_arr));
+        $str       = trim(implode(",", trim($adm_arr)));
 
         //update room admins
         $room->room_admin = $str;
