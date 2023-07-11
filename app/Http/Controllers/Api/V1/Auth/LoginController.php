@@ -25,10 +25,10 @@ class LoginController extends Controller
                 $fields = ['email'=>$request['email'],'password'=>$request['password'], 'device_token' => $request['device_token']];
                 return $this->loginWithEmailPassword ($fields);
             case 'phone_pass':
-                $fields = ['phone'=>$request['phone'],'password'=>$request['password'], 'device_token' => $request->header('device')];
+                $fields = ['phone'=>$request['phone'],'password'=>$request['password'], 'device_token' => $request['device_token']];
                 return $this->loginWithPhonePassword ($fields);
             case 'google':
-                $fields = ['name'=>$request->name,'email' => $request->email,'google_id' => $request->google_id, 'device_token' => $request->header('device')];
+                $fields = ['name'=>$request->name,'email' => $request->email,'google_id' => $request->google_id, 'device_token' => $request['device_token']];
                 return $this->loginWithGoogle ($fields);
             case 'facebook':
                 $fields = ['name'=>$request->name,'email' => $request->email,'facebook_id' => $request->facebook_id, 'device_token' => $request['device_token']];
