@@ -23,6 +23,7 @@ class ForgotPasswordController extends Controller
             return Common::apiResponse(0, 'Un expected error', null, 422);
         }
         $user = User::query ()->where ('phone',$request->phone)->first ();
+        if (!$user)  return Common::apiResponse(0, 'validate your phone', null, 422);
         $user->password = $request->password;
         $user->save();
         return Common::apiResponse (1,'reset successful',null);
