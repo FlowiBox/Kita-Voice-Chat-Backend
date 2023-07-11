@@ -34,6 +34,9 @@ class UserVisitorResource extends JsonResource
             }
         }
 
+        $imageReceiver = $this->getImageReceiverOrSender('receiver_id', 1);
+        $imageSender   = $this->getImageReceiverOrSender('sender_id', 2);
+
         $data = [
             'id'=>@$this->id,
             'uuid'=>@$this->uuid,
@@ -56,9 +59,9 @@ class UserVisitorResource extends JsonResource
                 'level' => @$this->UserVip->level,
             ],
             'level'=> [
-                'receiver_img' => $this->getImageReceiverOrSender('receiver_id',1)->img,
-                'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img,
-            ],
+                'receiver_img' => $imageReceiver ? $imageReceiver->img : '',
+                'sender_img' => $imageSender ? $imageSender->img : '',
+                ],
 
         ];
 

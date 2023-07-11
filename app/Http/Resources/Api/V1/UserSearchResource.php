@@ -33,13 +33,13 @@ class UserSearchResource extends JsonResource
                 $pass_status = true;
             }
         }
-        
+
         $data = [
             'id'=>@$this->id,
             'uuid'=>@$this->uuid,
             'name'=>@$this->name?:'',
             'visit_time' => '',
-            'profile'=> [ 
+            'profile'=> [
                 'image' => @$this->profile->avatar,
                 'age' => Carbon::parse (@$this->profile->birthday)->age,
                 'gender'=>@$this->profile->gender == 1 ? __ ('male') : __ ('female'),
@@ -56,11 +56,11 @@ class UserSearchResource extends JsonResource
                 'level' => @$this->UserVip->level,
             ],
             'level'=> [
-                'receiver_img' => $this->getImageReceiverOrSender('receiver_id',1)->img,
-                'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img, 
+                'receiver_img' => @$this->getImageReceiverOrSender('receiver_id',1)->img ?? '',
+                'sender_img' => @$this->getImageReceiverOrSender('sender_id',2)->img??'',
             ],
 
-            
+
         ];
 
         return $data;
