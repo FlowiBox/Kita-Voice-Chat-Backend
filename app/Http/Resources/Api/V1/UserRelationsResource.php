@@ -34,7 +34,9 @@ class UserRelationsResource extends JsonResource
             }
         }
 
-        $data = [
+        $imageReceiver = $this->getImageReceiverOrSender('receiver_id', 1);
+        $imageSender   = $this->getImageReceiverOrSender('sender_id', 2);
+        $data                  = [
             'id'=>@$this->id,
             'uuid'=>@$this->uuid,
             'name'=>@$this->name?:'',
@@ -55,8 +57,8 @@ class UserRelationsResource extends JsonResource
                 'level' => @$this->UserVip->level,
             ],
             'level'=> [
-                'receiver_img' => $this->getImageReceiverOrSender('receiver_id',1)->img,
-                'sender_img' => $this->getImageReceiverOrSender('sender_id',2)->img,
+                'receiver_img' => $imageReceiver ? $imageReceiver->img : '',
+                'sender_img' => $imageSender ? $imageSender->img : '',
             ],
             'online_time'=>$this->online_time?date("Y-m-d H:i:s", $this->online_time):'',
             'has_color_name'=>Common::hasInPack ($this->id,18),
