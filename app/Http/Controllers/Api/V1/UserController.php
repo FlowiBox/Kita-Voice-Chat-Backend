@@ -67,9 +67,15 @@ class UserController extends Controller
 
     public function my_data(Request $request){
         $user = $request->user ();
+        if ($user->device_token  != $request->header('device')){
+            $user->device_token = $request->header('device');
+        }
         if (!Common::checkPackPrev ($user->id,20)){
             $user->online_time = time();
             $user->save();
+        }else{
+            $user->save();
+
         }
         $this->unlock_dress($user->id);
 //        $user->statics = $this->handelStatics ($request);
