@@ -305,22 +305,6 @@ Route::prefix (config ('app.api_prefix'))->group (function (){
                         Route::post('keys-values', [\App\Http\Controllers\Api\V1\ConfigController::class, 'getConfigValues']);
                     });
 
-                    Route::post('app-check', function () {
-                        return response()->json([
-                            'is_auth' => true,
-                            'is_force' => true,
-                            'is_last_version' => true,
-                            'cache_update' => [
-                                'extras' => request()->extra_time,
-                                'frames' => request()->frame_time,
-                                'gifts' => request()->gift_time,
-                                'emoji' => request()->emoji_time,
-                                'intro' => request()->intro_time,
-                            ]
-                        ]);
-                    });
-
-
                 });
 
         }
@@ -360,4 +344,19 @@ Route::get('/pusher', function(Request $request){
     }else{
         return App\Traits\HelperTraits\PusherTrait::getIdRoomCountUserFromPresenceChannel();
     }
+});
+
+Route::post('app-check', function () {
+    return response()->json([
+        'is_auth' => true,
+        'is_force' => true,
+        'is_last_version' => true,
+        'cache_update' => [
+            'extras' => request()->extra_time,
+            'frames' => request()->frame_time,
+            'gifts' => request()->gift_time,
+            'emoji' => request()->emoji_time,
+            'intro' => request()->intro_time,
+        ]
+    ]);
 });
