@@ -346,7 +346,7 @@ Route::get('/pusher', function(Request $request){
     }
 });
 
-Route::post('app-check', function () {
+Route::post('config/app-check', function () {
     return response()->json([
         'is_auth' => true,
         'is_force' => true,
