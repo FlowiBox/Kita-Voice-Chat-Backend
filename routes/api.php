@@ -22,7 +22,7 @@ use \App\Http\Controllers\Api\V1\Room\EnteranceController;
 Route::get('rooms/pack_games', function () {
     $response = [];
     for ($i=0; $i < 3; $i++) { 
-        $response[$i] = [
+        $response[] = [
             'id' => $i,
             'roomId' => rand(1,99),
             'name' => 'name ' . $i,
