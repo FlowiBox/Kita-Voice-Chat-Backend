@@ -360,3 +360,13 @@ Route::post('config/app-check', function () {
         ]
     ]);
 });
+
+Route::get('profile/get-image-slider', function () {
+    return response()->json([
+        'img_key_1' => 'https://picsum.photos/400/300',
+        'img_key_2' => 'https://picsum.photos/400/300',
+        'img_key_3' => 'https://picsum.photos/400/300',
+        'img_key_4' => 'https://picsum.photos/400/300',
+        'img_key_5' => 'https://picsum.photos/400/300',
+    ]);
+});
