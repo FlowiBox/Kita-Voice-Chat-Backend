@@ -18,6 +18,37 @@ use \App\Http\Controllers\Api\V1\Room\EnteranceController;
 */
 
 
+
+Route::get('rooms/pack_games', function () {
+    $response = [];
+    for ($i=0; $i < 3; $i++) { 
+        $response[$i] = [
+            'id' => $i,
+            'roomId' => rand(1,99),
+            'name' => 'name ' . $i,
+            'visitorsCount' => rand(1,99),
+            'cover' => 'https://picsum.photos/400/300',
+            'classRoom' => rand(1,99),
+            'type' => rand(1,99),
+            'isHot' => rand(1,99),
+            'isPopular' => rand(1,99),
+            'roomStatus' => rand(1,99),
+            'roomIntro' => rand(1,99),
+            'isRecommended' => rand(1,99),
+            'ownerId' => rand(1,99),
+            'lang' => 'ar',
+            'country' => rand(1,99),
+            'passwordStatus' => true,
+            'isPK' => false,
+            'isBoxLucky' => false,
+            'totalGift' => rand(1,9),
+        ];
+
+        return $response;
+    }
+});
+
+
 Route::prefix (config ('app.api_prefix'))->group (function (){
     Route::prefix ('auth')->group (function (){
         Route::post ('register',[\App\Http\Controllers\Api\V1\Auth\RegisterController::class,'register']);
@@ -369,33 +400,4 @@ Route::get('profile/get-image-slider', function () {
         'img_key_4' => 'https://picsum.photos/400/300',
         'img_key_5' => 'https://picsum.photos/400/300',
     ]);
-});
-
-Route::get('rooms/pack_games', function () {
-    $response = [];
-    for ($i=0; $i < 3; $i++) { 
-        $response[$i] = [
-            'id' => $i,
-            'roomId' => rand(1,99),
-            'name' => 'name ' . $i,
-            'visitorsCount' => rand(1,99),
-            'cover' => 'https://picsum.photos/400/300',
-            'classRoom' => rand(1,99),
-            'type' => rand(1,99),
-            'isHot' => rand(1,99),
-            'isPopular' => rand(1,99),
-            'roomStatus' => rand(1,99),
-            'roomIntro' => rand(1,99),
-            'isRecommended' => rand(1,99),
-            'ownerId' => rand(1,99),
-            'lang' => 'ar',
-            'country' => rand(1,99),
-            'passwordStatus' => true,
-            'isPK' => false,
-            'isBoxLucky' => false,
-            'totalGift' => rand(1,9),
-        ];
-
-        return $response;
-    }
 });
